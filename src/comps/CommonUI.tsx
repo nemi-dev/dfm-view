@@ -79,7 +79,7 @@ export function EmblemIcon({ spec: [type, level], className = "", accept, ...pro
 
 
 export function CrackIcon({ item, className, ...props }: { item: Attrs } & DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>) {
-  return <RoundIcon className={className} src={im`/img/crack/${item.name}.png`} frame={`/img/crack/${item.rarity}.png`} {...props} />
+  return <RoundIcon className={className} src={im`/img/item/${item}.png`} frame={`/img/crack/${item.rarity}.png`} {...props} />
 }
 
 interface NumberInputProps extends Omit<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, "onChange"> {
