@@ -14,9 +14,10 @@ export const percentee = (n : number) => `${Math.round(n * 10000) / 100}%`
  */
 export function im(strings: TemplateStringsArray, attrs: string | BaseAttrs) {
   if (attrs == null) return ""
-  if (typeof attrs === "string") return strings[0] + attrs.replace(/[\/\:]/g, "-") + strings[1]
+  const regex = /[\<\>\:\"\'\?\*\\\/\|]/g
+  if (typeof attrs === "string") return strings[0] + attrs.replace(regex, "-") + strings[1]
   if (attrs.image) return strings[0] + attrs.image + strings[1]
-  else return strings[0] + attrs.name.replace(/[\/\:]/g, "-") + strings[1]
+  else return strings[0] + attrs.name.replace(regex, "-") + strings[1]
 }
 
 
