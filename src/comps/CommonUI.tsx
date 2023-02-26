@@ -134,13 +134,19 @@ export function AttrIcon({attrKey, className = "", ...props}: AttrIconProps) {
   )
 }
 
-export function ItemName({ item, alt = "아이템 없음", className }: { item: BaseAttrs, alt?: string, className?: string }) {
+interface ItemNameProps {
+  item: BaseAttrs
+  alt?: string
+  className?: string
+  onClick?: React.MouseEventHandler<HTMLSpanElement>
+}
+export function ItemName({ item, alt = "아이템 없음", className, onClick }: ItemNameProps) {
   const { name, rarity } = item ?? {}
   if (!name) return <span className="ItemName Empty">{alt}</span>
   const classList = ["ItemName"]
   if (rarity) classList.push("Rarity_" + rarity.at(0).toUpperCase() + rarity.slice(1))
   if (className) classList.push(className)
   return (
-    <span className={classList.join(" ")}>{name}</span>
+    <span className={classList.join(" ")} onClick={onClick}>{name}</span>
   )
 }

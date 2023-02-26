@@ -2,10 +2,6 @@ import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { SetArtifactValue, SetCreatureSkill, SetCreatureStat } from '../feats/slice'
 import { LabeledInput } from './CommonUI'
 
-
-
-
-
 export function Creatures() {
   const
     stat = useAppSelector(state => state.Creature.stat),

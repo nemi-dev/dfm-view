@@ -57,7 +57,7 @@ function CurrentPart() {
   const accept = acceptEmblem(part as EquipPart | "칭호")
   return (
     <header>
-      <div className="EquipSlot CurrentPartItem">
+      <div className="EquipSlot EquipPartInnerGrid CurrentPartItem">
       <ItemIcon2 attrs={equip} />
       <div className="SlotHeading">
         <ItemName item={equip} alt={`${part} 없음`} />

@@ -1,3 +1,4 @@
+@import "./Defs";
 
 /* See https://reactcommunity.org/react-modal/styles/classes/#for-the-documentbody-and-html-tag */
 .ReactModal__Body--open {
@@ -82,7 +83,34 @@
   flex-wrap: wrap;
   flex-direction: row;
 
+}
 
+.ItemShotgunArray {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  gap: 0.1rem;
+
+  .EquipShotgun {
+    
+    @extend %hovering-df;
+    padding: 8px;
+
+    .IsetName {
+      margin-block: 0.1rem;
+      font-weight: 700;
+    }
+
+    .IsetIconArray {
+
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+    }
+  }
 }
 
 .EmblemSelectArray {

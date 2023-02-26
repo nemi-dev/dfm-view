@@ -1,9 +1,13 @@
 import { useCallback, useContext } from "react"
 import { useAppDispatch } from "../../feats/hooks"
 import { _action_card_, _action_equip_ } from "../../feats/modalIntergrating"
-import { getCardsForPart, getItemsByPart } from "../../items"
+import { getCardsForPart, getItem, getItemsByPart, isAccessPart, isArmorPart } from "../../items"
 import { ItemIcon2, ItemName } from "../CommonUI"
 import { ModalContext } from "../modalContext"
+
+import _left from "../../../data/sets/left.json"
+import _right from "../../../data/sets/right.json"
+import { SetEquipShotgun } from "../../feats/slices/equipSlice"
 
 function EquipSelect({ item }: { item: Attrs }) {
   const { itarget: [part,,], setOpen } = useContext(ModalContext)
@@ -20,9 +24,60 @@ function EquipSelect({ item }: { item: Attrs }) {
   )
 }
 
+
+
+interface IsetCatalog {
+  name: string
+  itemChildren: Attrs[]
+  useThisForPayload: Record<string, string>
+}
+
+function EquipShotgun({ name, itemChildren, useThisForPayload }: IsetCatalog) {
+  const dispatch = useAppDispatch()
+  const { setOpen } = useContext(ModalContext)
+  return (
+    <div className="EquipShotgun" onClick={() => {dispatch(SetEquipShotgun(useThisForPayload)); setOpen(false) }}>
+      <div className="IsetName">{name}</div>
+      <div className="IsetIconArray">
+      {itemChildren.map((item) => (
+        <ItemIcon2 key={item.name} attrs={item} />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+
+function inflate(m: Record<string, string>) {
+  const n: Attrs[] = []
+  for (const part in m) {
+    n.push(getItem(m[part]))
+  }
+  return n
+}
+
+function loadShotgun(part: WholePart) {
+  let v: Record<string, Record<string, string>>
+  if (isArmorPart(part as ArmorPart)) v = _left
+  else if (part === "무기" || part === "보조장비" || isAccessPart(part as EquipPart)) v = _right
+  else return
+
+  const w: IsetCatalog[] = []
+  for (const isetname of Object.keys(v).sort()) {
+    w.push({
+      name: isetname,
+      itemChildren: inflate(v[isetname]),
+      useThisForPayload: v[isetname]
+    })
+  }
+
+  return w
+}
+
 export function EquipModalFragment() {
   const { itarget: [part,,] } = useContext(ModalContext)
   const items = getItemsByPart(part)
+  const isets = loadShotgun(part) ?? []
   return (
     <>
     <div className="ItemSelectScrollable">
@@ -32,10 +87,17 @@ export function EquipModalFragment() {
         <EquipSelect key={item.name} item={item} />
       ))}
       </div>
-      <h4>세트 한번에 끼기</h4>
-      <div className="ItemSelectArray">
-
-      </div>
+      {
+        isets.length > 0?
+        <>
+        <h4>세트 한번에 끼기</h4>
+        <div className="ItemShotgunArray">
+          {isets.map(({name, itemChildren, useThisForPayload}) => {
+            return <EquipShotgun key={name} name={name} itemChildren={itemChildren} useThisForPayload={useThisForPayload} />
+          })}
+        </div>
+        </> : null
+      }
     </div>
     </>
   )
