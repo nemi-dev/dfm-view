@@ -1,0 +1,38 @@
+$Epic-color: #ffd15b;
+$Unique-color: #ff7cf4;
+$Rare-color: #9e6aff;
+$Uncommon-color: #6ad5ff;
+$Common-color: #ededed;
+
+%hovering-df {
+  box-sizing: border-box;
+  border-width: 1px;
+  border-radius: 4px;
+  border-color: transparent;
+  border-style: solid;
+
+  transition-duration: 0.1s;
+  transition-timing-function: linear;
+  transition-property: background-color, border-color, color;
+
+  &:hover {
+    background-color: rgba($color: #ffae00, $alpha: 0.1);
+    border-color: rgba($color: #ffd67e, $alpha: 1.0);
+  }
+}
+
+%unset-hovering-df {
+  transition: unset;
+    
+  &:hover {
+    background-color: unset;
+    border-color: transparent;
+  }
+}
+
+
+%bordered {
+  border: 1px solid rgba($color: #ffffff, $alpha: 0.5);
+  border-radius: 4px;
+  box-sizing: border-box;
+}

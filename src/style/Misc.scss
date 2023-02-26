@@ -1,0 +1,189 @@
+@use "sass:math";
+@import "./_Defs.scss";
+
+$guild-icon-size: 64px;
+
+.InputArea.Guilds {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+
+  .GuildsInput {
+    @extend %hovering-df;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0.5rem;
+    flex-grow: 1;
+  }
+  .GuildsIconGroup {
+    border: 1px solid #524d42;
+    padding: 1px;
+    height: $guild-icon-size;
+  }
+  .InputView {
+    @extend %unset-hovering-df;
+    padding: 0;
+
+    label {
+      font-size: 0.9rem;
+    }
+
+    input {
+      width: 45px;
+    }
+    
+  }
+
+  img {
+    width: $guild-icon-size;
+  }
+  
+}
+
+@mixin polygonal($n: 3, $distance: 150px) {
+  $angle: math.div(360deg, $n);
+  min-height: 450px;
+  position: relative;
+
+  > * {
+    position: absolute;
+    transform: translate(-50%, -50%);
+
+    @for $i from 1 through $n {
+      &:nth-child(#{$i}) {
+        $t: $angle * ($i - 1) - 90deg;
+        $x: $distance * math.cos($t);
+        $y: $distance * math.sin($t);
+        
+        left: calc(50% + $x);
+        top: calc(50% + $y);
+      }
+    }
+
+    &:nth-child(#{$n + 1}) {
+      left: 50%;
+      top: 50%;
+    }
+  }
+}
+
+.TonicGems {
+  @include polygonal(6);
+
+  .TonicGem {
+    @extend %hovering-df;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 120px;
+
+    .GemImageWrapper {
+      position: relative;
+      display: block;
+      width: 64px;
+      height: 32px;
+      img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.75);
+      }
+    }
+
+
+    &:nth-child(7) {
+      width: 150px;
+      height: 150px;
+
+      .GemImageWrapper {
+        height: 48px;
+        img {
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
+    }
+
+    label {
+      color: white;
+      font-weight: bolder;
+      text-shadow: black 0 3px 5px;
+      white-space: nowrap;
+    }
+    label, input {
+      text-align: center;
+      z-index: 1;
+    }
+  }
+}
+
+.Cracks {
+  .MagicPropsArray {
+    flex-direction: row;
+    height: 50px;
+  }
+}
+
+.CrackWrapper {
+
+  position: relative;
+  scale: 0.8;
+  
+  .CrackUnderlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    > img {
+      position: absolute;
+      display: block;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+  .CrackSpellSockets {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    > img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      display: block;
+      transform-origin: top left;
+      --translate: translate(-50%, calc(-100% - 50px));
+      --angle: 72deg;
+      @for $i from 1 through 5 {
+        &:nth-child(#{$i}) {
+          transform: rotate(calc(var(--angle) * #{$i - 1})) var(--translate);
+        }
+      }
+    }
+  }
+}
+
+
+.Crack {
+  @include polygonal(5, 168px);
+
+  --icon-size: 60px;
+
+  .RoundIcon {
+    position: absolute;
+    
+  }
+
+  > .RoundIcon:nth-child(6) {
+    --icon-size: 145px;
+  }
+  
+}

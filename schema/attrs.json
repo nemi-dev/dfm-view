@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "definitions": {
+    "when_combined_attrs": {
+      "allOf": [
+        { "$ref": "./base_attrs.json" },
+        { "$ref": "./when.json" }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "$ref": "./base_attrs.json"
+    },
+    {
+      "properties": {
+        "branch" : {
+          "type" : "array",
+          "description": "특정 조건에만 적용되는 효과",
+          "items" : { "$ref": "#/definitions/when_combined_attrs" }
+        },
+        "give_us" : { "description": "모든 파티원에게 적용되는 효과", "$ref": "#/definitions/when_combined_attrs" },
+        "exclusive" : {
+          "type" : "array",
+          "description": "이 중에서 동시에 하나의 효과만 적용된다.",
+          "items" : {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "브랜치 옵션 이름"
+              },
+              "label": {
+                "type": "string",
+                "description": "앱에 표시될 설명"
+              },
+              "children": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/when_combined_attrs"
+                }
+              }
+            },
+            "required": ["name", "label", "children"]
+          }
+        }
+      }
+    }
+  ]
+}

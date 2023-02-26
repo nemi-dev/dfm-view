@@ -1,0 +1,233 @@
+@import "./Defs";
+
+$Physc: rgb(255, 145, 0);
+$Magic: rgb(92, 163, 255);
+
+$Fire: rgb(253, 136, 113);
+$Ice: rgb(84, 151, 252);
+$Light: rgb(223, 246, 133);
+$Dark: rgb(209, 165, 238);
+
+.AttrOne {
+  display: inline-block;
+  border: 1px solid rgba($color: #71581d, $alpha: 0.5);
+  margin-right: -1px;
+  margin-bottom: -1px;
+  padding: 0.1rem 0.5rem;
+}
+
+.IconAttrs {
+  display: flex;
+  .IconAttrOne {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    span {
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+  }
+}
+
+img.AttrIcon {
+  height: 1.2rem;
+  mix-blend-mode: screen;
+}
+
+.AttrValue {
+  &.Physc {
+    color: $Physc;
+  }
+  
+  &.Magic {
+    color: $Magic;
+  }
+
+  .el_fire &, .eldmg_fire & {
+    color: $Fire;
+  }
+
+  .el_ice & , .eldmg_ice & {
+    color: $Ice;
+  }
+
+  .el_lght &, .eldmg_lght & {
+    color: $Light;
+  }
+
+  .el_dark &, .eldmg_dark & {
+    color: $Dark;
+  }
+}
+
+%grid-gap {
+  gap: 0.5rem;
+
+  @media (max-width: 768px) {
+    gap: 1px;
+  }
+}
+.VerboseAttrsView, .SkillTestSet {
+
+  .AttrName {
+    color: white;
+  }
+
+  .AttrValue {
+    font-weight: 900;
+    font-size: 1.5rem;
+  }
+
+  .AttrOne {
+    border: none;
+    border-radius: 10px;
+    background-color: rgba($color: #000000, $alpha: 0.2);
+    height: 65px;
+    padding: 0.5rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .Result {
+    @extend %hovering-df;
+    font-size: 1.1rem;
+    padding: 1rem 0;
+    box-sizing: content-box!important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+
+    .AttrValue {
+      font-size: 1.8rem;
+    }
+
+    &.Vertical {
+      flex-direction: column;
+      height: 75px;
+      gap: 0.1rem;
+    }
+    
+  }
+
+}
+
+.VerboseAttrsView {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-block-end: 1rem;
+
+  .Duplex, .Quadplex {
+    @extend %grid-gap;
+  }
+
+}
+
+.SkillTestSet {
+  
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  .SkillInputAndOutputRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr 1fr;
+      grid-auto-rows: auto;
+
+      .SkillInputOne {
+        grid-column: 1 / 3;
+      }
+    }
+
+  }
+  .Result {
+    justify-content: unset
+  }
+}
+
+.SkillInputOne {
+
+  padding: 0.1rem;
+  display: grid;
+  grid-template-areas:
+  "name name name name name name"
+  "val val val fixed fixed fixed"
+  "inc inc phy phy mag mag"
+  ;
+  grid-template-columns: repeat(6, 1fr);
+  grid-auto-rows: auto;
+
+  justify-items: center;
+
+  gap: 8px;
+  
+  input {
+    width: unset !important;
+  }
+
+  .InputView {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    input {
+      width: 60px !important;
+    }
+  }
+
+  > .SkillName {
+    grid-area: name;
+    justify-self: stretch;
+    text-align: left;
+  } 
+
+  > :nth-child(2) {
+    grid-area: val;
+  }
+
+  > :nth-child(3) {
+    grid-area: fixed;
+  }
+
+  > .SkillUsesInc {
+    grid-area: inc;
+  }
+
+  > .SkillIsPhysc {
+    grid-area: phy;
+  }
+
+  > .SkillIsMagic {
+    grid-area: mag;
+  }
+}
+
+@media (max-width: 768px) {
+  .VerboseAttrsView {
+    gap: 0;
+    .AttrOne {
+      height: 50px;
+    }
+    .AttrName {
+      font-size: 0.7rem;
+    }
+    .AttrValue {
+      font-size: 1.2rem;
+    }
+    .Result {
+      .AttrValue {
+        font-size: 1.3rem;
+      }
+    }
+
+
+  }
+  
+}

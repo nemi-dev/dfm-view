@@ -1,0 +1,88 @@
+:root {
+  font-family: "Pretendard", system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+
+  color-scheme: light dark;
+  color: rgba(247, 224, 195, 0.8);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+
+  background-image: url('/img/bg.png');
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  
+  --modal-back: rgba(0, 0, 0, 0.5);
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #1e191580;
+
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+h2 {
+  font-size: 2.4em;
+  font-weight: 900;
+  text-align: center;
+  line-height: 1.1;
+}
+
+h3 {
+  font-size: 1.6rem;
+  font-weight: 900;
+  text-align: center;
+}
+
+h4 {
+  font-size: 1.2rem;
+  font-weight: 900;
+  text-align: center;
+}
+
+input[type=text], input[type=number] {
+  background-color: #090704;
+  border: 1px solid rgba(111, 102, 93, 0.843);
+  outline: none;
+  border-radius: 2px;
+  padding: 0.2rem;
+  font-size: 0.9rem;
+  width: 50px;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.25em 0.5em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #cc6c0c;
+  cursor: pointer;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
