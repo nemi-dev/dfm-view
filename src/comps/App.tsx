@@ -113,19 +113,6 @@ function App() {
         <Tab name="조정"><Calibrate /></Tab>
         <VerboseAttrsView />
         <SkillTestSet />
-        <div className="InputArea">
-          <h3>적</h3>
-          <LabeledInput label="적 방어력" value={targetDefense} onChange={v => dispatch(SetTargetDefense(v))} />
-          <LabeledInput label="적 속성저항" value={targetElementResist} onChange={v => dispatch(SetTragetResist(v))} />
-          <OutputView tag="방어율" value={defRate} />
-        </div>
-        
-        <div className="InputArea">
-          {/* <OutputView tag="평타 데미지" value={beautyNumber(damageOutput)} />
-          <OutputView tag="평타 데미지 (크리티컬)" value={beautyNumber(damageOutputWithCrit)} />
-          <OutputView tag="스킬 데미지" value={beautyNumber(damageOutput * skillIncVal)} />
-          <OutputView tag="스킬 데미지 (크리티컬)" value={beautyNumber(damageOutputWithCrit * skillIncVal)} /> */}
-        </div>
       </div>
     </ModalContext.Provider>
     </TabContext.Provider>

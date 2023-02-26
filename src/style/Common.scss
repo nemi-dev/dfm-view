@@ -129,6 +129,8 @@ input::-webkit-outer-spin-button {
 
 .ItemName {
 
+  cursor: pointer;
+
   &.Rarity_Common {
     color: #{$Common-color};
   }
@@ -147,6 +149,10 @@ input::-webkit-outer-spin-button {
 
   &.Rarity_Epic {
     color: #{$Epic-color};
+  }
+
+  &:hover {
+    text-decoration: underline;
   }
 
 }

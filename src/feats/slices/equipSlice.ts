@@ -73,7 +73,10 @@ export const equipSlice = createSlice({
       s[part].material = value
     },
     SetEquipShotgun: (s, { payload }: PayloadAction<Record<EquipPart, string>>) => {
-      Object.assign(s, payload)
+      for (const key in payload) {
+        s[key as EquipPart].name = payload[key]
+      }
+      // Object.assign(s, payload)
     },
     NextMagicProps: (s, { payload: [part, index] }: PayloadAction<[EquipPart, number]>)=> {
       const { level, rarity } = getItem(s[part].name)
@@ -93,7 +96,8 @@ export const {
   SetEmblem,
   SetEquipUpgradeValue,
   SetMaterial,
-  NextMagicProps
+  NextMagicProps,
+  SetEquipShotgun
 } = equipSlice.actions
 
 

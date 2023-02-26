@@ -1,6 +1,6 @@
 import { collectSpecial, combine, percent_inc_mul } from "./attrs"
 import { RootState } from "./feats/store"
-import { getActiveISetAttrs, getArmorBase, countISetsFrom, getItem, armorParts, equipParts, getActiveBranch, isActiveGives, getActiveExclusive, getBlessing } from "./items"
+import { getActiveISetAttrs, getArmorBase, countISetsFrom, getItem, armorParts, equipParts, getActiveBranch, isActiveGives, getActiveExclusive, getBlessing, isArmorPart } from "./items"
 import { getEmblem } from "./emblem"
 import { getMagicPropsAttrs } from "./magicProps"
 import { createSelector } from "@reduxjs/toolkit"
@@ -15,7 +15,7 @@ export function selectArmorUpgradeValues(state: RootState): [boolean, number] {
 }
 
 
-function combineMagicPropsSelector(part: EquipPart) {
+function magicPropsSelector(part: EquipPart) {
   return (state: RootState) => {
     const { name, magicProps } = state.Equips[part]
     if (name == null) return {} 
@@ -28,23 +28,23 @@ function combineMagicPropsSelector(part: EquipPart) {
 }
 
 const selectMagicProps = {
-  "무기": combineMagicPropsSelector("무기"),
-  "상의": combineMagicPropsSelector("상의"),
-  "하의": combineMagicPropsSelector("하의"),
-  "머리어깨": combineMagicPropsSelector("머리어깨"),
-  "벨트": combineMagicPropsSelector("벨트"),
-  "신발": combineMagicPropsSelector("신발"),
-  "팔찌": combineMagicPropsSelector("팔찌"),
-  "목걸이": combineMagicPropsSelector("목걸이"),
-  "반지": combineMagicPropsSelector("반지"),
-  "보조장비": combineMagicPropsSelector("보조장비")
+  "무기": magicPropsSelector("무기"),
+  "상의": magicPropsSelector("상의"),
+  "하의": magicPropsSelector("하의"),
+  "머리어깨": magicPropsSelector("머리어깨"),
+  "벨트": magicPropsSelector("벨트"),
+  "신발": magicPropsSelector("신발"),
+  "팔찌": magicPropsSelector("팔찌"),
+  "목걸이": magicPropsSelector("목걸이"),
+  "반지": magicPropsSelector("반지"),
+  "보조장비": magicPropsSelector("보조장비")
 }
 
 /**
  * 주어진 아이템에서 "내가 체크한" 조건부 옵션들을 배열로 얻는다.
  * @param item 아이템일 수도 있고, 세트일 수도 있다. 하지만 `combine()`으로 만든거는 안된다
  */
-function getActiveOptional(item: Attrs, state: RootState) {
+function activeOptionalSelector(item: Attrs, state: RootState) {
   if (item == null) return []
   const array: BaseAttrs[] = []
   array.push(...getActiveBranch(item, state.Switch.branches))
@@ -56,27 +56,45 @@ function getActiveOptional(item: Attrs, state: RootState) {
   return array
 }
 
-/** 어떤 한 장비 부의의 아이템 옵션, 활성화시킨 조건부 옵션, 업그레이드 보너스, 마법봉인, 엠블렘, 카드 옵션을 얻는다. */
+
+function armorBaseSelector(part: EquipPart) {
+  return (state: RootState) => {
+    const itemName = state.Equips[part as ArmorPart]
+    const item = getItem(itemName.name)
+    
+    const { level, rarity } = item
+    return getArmorBase(level, rarity, itemName.material, part as ArmorPart)
+  }
+}
+
+const itsNotArmorPart = (state: RootState): BaseAttrs => ({})
+
+
+export const selectArmorBase = {
+  상의: armorBaseSelector("상의"),
+  하의: armorBaseSelector("하의"),
+  머리어깨: armorBaseSelector("머리어깨"),
+  벨트: armorBaseSelector("벨트"),
+  신발: armorBaseSelector("신발"),
+  무기: itsNotArmorPart,
+  팔찌: itsNotArmorPart,
+  목걸이: itsNotArmorPart,
+  반지: itsNotArmorPart,
+  보조장비: itsNotArmorPart
+}
+
+
 function equipSelector(part: EquipPart) {
   return (state: RootState) => {
     const equipPart = state.Equips[part]
     const item = getItem(equipPart.name)
     const upgradeAttr = explode(equipPart.upgrade, part === "무기"? "atk" : "stat")
-    return combine(item, ...getActiveOptional(item, state), upgradeAttr, selectMagicProps[part](state), ...equipPart.emblems.map(getEmblem), getItem(equipPart.card))
+    const armorbase = selectArmorBase[part](state)
+    return combine(item, armorbase, ...activeOptionalSelector(item, state), upgradeAttr, selectMagicProps[part](state), ...equipPart.emblems.map(getEmblem), getItem(equipPart.card))
   }
 }
 
-
-function armorBaseSelector(part: ArmorPart) {
-  return (state: RootState) => {
-    const itemName = state.Equips[part]
-    const item = getItem(itemName.name)
-    
-    const {level, rarity} = item
-    return getArmorBase(level, rarity, itemName.material, part)
-  }
-}
-
+/** 어떤 한 장비 부의의 아이템 옵션, 활성화시킨 조건부 옵션, 업그레이드 보너스, 마법봉인, 엠블렘, 카드 옵션을 얻는다. */
 export const selectEquip = {
   무기: equipSelector("무기"),
   상의: equipSelector("상의"),
@@ -88,14 +106,6 @@ export const selectEquip = {
   목걸이: equipSelector("목걸이"),
   반지: equipSelector("반지"),
   보조장비: equipSelector("보조장비")
-}
-
-const selectArmorBase = {
-  상의: armorBaseSelector("상의"),
-  하의: armorBaseSelector("하의"),
-  머리어깨: armorBaseSelector("머리어깨"),
-  벨트: armorBaseSelector("벨트"),
-  신발: armorBaseSelector("신발")
 }
 
 /**
@@ -123,12 +133,12 @@ export function selectEquips(state: RootState) {
   const isetattrs = selectISetAttrs(state)
   const J: Attrs[] = []
   for (const k in isetattrs) {
-    J.push(isetattrs[k], ...getActiveOptional(isetattrs[k], state))
+    J.push(isetattrs[k], ...activeOptionalSelector(isetattrs[k], state))
   }
 
   return combine(
     ...equipParts.map(part => selectEquip[part](state)),
-    ...armorParts.map(part => selectArmorBase[part](state)),
+    // ...armorParts.map(part => selectArmorBase[part](state)),
     ...J
   )
 }

@@ -14,7 +14,7 @@ export function DFTitle() {
   const card = useAppSelector(selectDFTitleCard)
   const emblem = useAppSelector(selectDFTitleEmblemSpec)[0]
   return (
-    <div className="EquipSlot">
+    <div className="EquipSlot EquipPartInnerGrid">
       <ItemIcon2 attrs={dftitle} onClick={() => openModal("칭호", "Equip")}/>
       <div className="SlotHeading">
         <ItemName item={dftitle} alt="칭호 없음" />
@@ -63,8 +63,10 @@ export function Avatars() {
   }, [rareCount])
   return (
     <div className="Avatars">
-      <h3 style={{ marginBlockEnd: 0 }}>칭호 + 아바타</h3>
-      <h4 style={{ marginBlockStart: 0, textAlign: "center" }}>아바타 부위를 클릭해서 바꿀 수 있어요</h4>
+      <header>
+        <h3>칭호 + 아바타</h3>
+        <h4>아바타 부위를 클릭해서 바꿀 수 있어요</h4>
+      </header>
       <div className="AvatarsGridBox">
         <DFTitle />
         <AvatarPart part="모자" />
@@ -96,10 +98,6 @@ export function Avatars() {
       <div>
         <h4>아바타 세트 효과</h4>
         <SimpleBaseAttrView attrs={useAppSelector(selectAvatarSetAttr)} />
-      </div>
-      <div>
-        <h3>칭호 + 아바타에서 오는 효과</h3>
-        <SimpleBaseAttrView attrs={useAppSelector(selectWholeAvatarAttrs)}/>
       </div>
     </div>
   )

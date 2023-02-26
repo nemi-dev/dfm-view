@@ -1,7 +1,6 @@
 {
   "name": "dfm-view",
-  "version": "0.0.1",
-  "type": "module",
+  "version": "0.1.0",
   "scripts": {
     "dev": "vite --host",
     "build": "tsc && vite build",

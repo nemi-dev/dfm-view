@@ -32,8 +32,13 @@
   gap: 4px;
 }
 
-
 .EquipSlot {
+
+  @extend %hovering-df;
+  @extend %bordered;
+}
+
+.EquipPartInnerGrid {
   display: grid;
   grid-template-areas: 
   "im nm mgp"
@@ -43,8 +48,6 @@
   grid-template-rows: auto 1fr auto;
   grid-template-columns: auto 1fr auto;
   
-  @extend %hovering-df;
-  @extend %bordered;
 
   .ItemIcon {
     grid-area: im;
@@ -68,7 +71,7 @@
 
 
 @media screen and (min-width:769px) {
-.EquipGridBox .EquipSlot {
+.EquipGridBox > * {
   &:nth-child(1) {
     grid-area: 1 / 2 / 2 / 3;
   }
@@ -132,16 +135,13 @@
   flex-direction: row;
 }
 
-.ConditionalAttrs {
-  grid-area: op;
-}
 
 
 .DF_Title {
   .DF_Titles {
     display: flex;
     
-    .EquipSlot {
+    .EquipPartInnerGrid {
       flex-grow: 1;
     }
   }

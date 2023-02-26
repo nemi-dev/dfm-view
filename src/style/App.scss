@@ -6,13 +6,6 @@
   --icon-size: 80px;
 }
 
-
-@media (max-width: 768px) {
-  #root {
-    padding: 0.5rem;
-  }
-}
-
 .App > nav.Navigator {
   display: flex;
   align-items: center;
@@ -47,4 +40,30 @@
 .SkillIncCaliArea {
   padding-inline: 2rem;
   padding-bottom: 2rem;
+}
+
+
+@media (max-width: 768px) {
+  #root {
+    padding: 0.25rem;
+  }
+  .App > nav.Navigator {
+    overflow-x: scroll;
+    flex-wrap: nowrap;
+    align-items: normal;
+    justify-content: unset;
+    
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+
+    > span.NavLink {
+      white-space: nowrap;
+      font-size: 1rem;
+      padding: 0.7rem;
+    }
+  }
 }

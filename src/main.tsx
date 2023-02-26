@@ -7,11 +7,12 @@ import { Provider } from 'react-redux'
 import './index.css'
 
 const root = document.getElementById('root') as HTMLElement
+const version = document.querySelector('footer .about .version') as HTMLElement
+version.append(APP_VERSION)
 
 Modal.setAppElement(root)
 
 ReactDOM.createRoot(root).render(
-
   <React.StrictMode>
     <Provider store={store}>
       <App />

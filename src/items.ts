@@ -32,7 +32,7 @@ function _part(s: Itype): WholePart {
 
 const items = _items as Attrs[]
 const isets = _isets as ISet[]
-const armorbases = _armorbases as Attrs[]
+const armorbases = _armorbases as BaseAttrs[]
 
 const cards: Card[] = []
 
