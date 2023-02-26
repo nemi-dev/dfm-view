@@ -1,0 +1,167 @@
+@import "./_Defs.scss";
+
+input {
+  font-family: inherit;
+  font-weight: inherit;
+  text-align: right;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+input::-webkit-inner-spin-button,
+input::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+.TwoOneRow {
+  display: flex;
+  gap: 1rem;
+  >:nth-child(1) {
+    flex-grow: 2;
+  }
+  >:nth-child(2) {
+    flex-grow: 1;
+  }
+}
+
+
+.Duplex {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: auto;
+
+}
+
+.Quadplex {
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: auto;
+
+}
+
+:is(.InputArea, .OutputArea) {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+
+  :is(.InputView, .OutputView) {
+
+    @extend %hovering-df;
+
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.2rem;
+    align-items: center;
+    justify-content: space-around;
+
+
+    input {
+      flex-grow: 1;
+    }
+
+    .Value {
+      text-align: right;
+      flex-grow: 1;
+      font-size: 1.2rem;
+      font-weight: bolder;
+      color: #77bfff;
+    }
+
+  }
+}
+
+.SlotHeading {
+  display: flex;
+  color: var(--color);
+  font-size: 1.1rem;
+  padding: 4px 8px;
+}
+
+.SkillIncCali {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: 1fr 1fr 1fr;
+
+  .DisposableInput {
+    display: flex;
+
+    input {
+      flex-grow: 1;
+    }
+  }
+}
+
+%FramedIcon {
+
+  --frame-offset: calc(var(--icon-size) * 3 / 80);
+  --frame-size: calc(var(--icon-size) + var(--frame-offset) * 2);
+  
+  user-select: none;
+  position: relative;
+
+  width: var(--frame-size);
+  height: var(--frame-size);
+
+  img.IconImage {
+    display: block;
+    position: relative;
+    width: var(--icon-size);
+    left: var(--frame-offset);
+    top: var(--frame-offset);
+  }
+
+  img.IconFrame {
+    display: block;
+    position: absolute;
+    width: var(--frame-size);
+    top: 0;
+    left: 0;
+  }
+}
+
+.ItemIcon {
+  @extend %FramedIcon;
+}
+
+.ItemName {
+
+  &.Rarity_Common {
+    color: #{$Common-color};
+  }
+
+  &.Rarity_Uncommon {
+    color: #{$Uncommon-color};
+  }
+
+  &.Rarity_Rare {
+    color: #{$Rare-color};
+  }
+
+  &.Rarity_Unique {
+    color: #{$Unique-color};
+  }
+
+  &.Rarity_Epic {
+    color: #{$Epic-color};
+  }
+
+}
+
+
+.RoundIcon {
+  @extend %FramedIcon;
+  clip-path: circle(50%);
+  
+  img.IconImage {
+    border-radius: 50%;
+  }
+
+}
+
+.SwitchNotification {
+  color: $Unique-color;
+}

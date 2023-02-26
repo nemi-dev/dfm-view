@@ -1,0 +1,50 @@
+@import "./Defs";
+
+#root {
+  padding-block: 2rem;
+  padding-inline: max(calc(50vw - 500px), 2rem);
+  --icon-size: 80px;
+}
+
+
+@media (max-width: 768px) {
+  #root {
+    padding: 0.5rem;
+  }
+}
+
+.App > nav.Navigator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  > span.NavLink {
+    cursor: pointer;
+    text-align: center;
+    font-size: 1.2rem;
+    padding: 1rem;
+    flex-grow: 1;
+    border-bottom: 0px solid transparent;
+    transition-property: color, padding, border;
+    transition-duration: 0.2s;
+    transition-timing-function: linear;
+
+    &:hover  {
+      color: $Uncommon-color;
+      padding-bottom: calc(1rem - 3px);
+      border-bottom: 3px solid $Uncommon-color;
+    }
+
+    &.Active {
+      color: $Epic-color;
+      padding-bottom: calc(1rem - 6px);
+      border-bottom: 6px solid $Epic-color;
+    }
+  }
+}
+
+
+.SkillIncCaliArea {
+  padding-inline: 2rem;
+  padding-bottom: 2rem;
+}
