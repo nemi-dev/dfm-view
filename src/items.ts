@@ -140,12 +140,13 @@ export function countISetsFrom(...names: string[]) {
   const counts: Record<string, number> = {}
   for (const name of names) {
     if (!name) continue
-    if (name === "all") {
+    
+    const s = getItem(name)?.setOf
+    if (!s) continue
+    if (s === "all") {
       for (const key in counts) counts[key]++
       continue
     }
-    const s = getItem(name)?.setOf
-    if (!s) continue
     if (typeof s === "string") {
       if (!counts[s]) counts[s] = 0
       counts[s]++
