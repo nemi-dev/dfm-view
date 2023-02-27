@@ -1,9 +1,8 @@
 import { useAppSelector } from '../feats/hooks'
-import { selectMe } from '../selectors'
-import { attrDefsMap, elMap, elMap2, whatElType } from '../attrs'
+import { selectMe, selectMyFinalEltype } from '../selectors'
+import { attrDefsMap } from '../attrs'
 import { beautyNumber, percentee, signed } from '../utils'
 import { calcAtk, calcDamageNoDef, calcStat, criticalChance, criticize } from '../damage'
-import { createSelector } from '@reduxjs/toolkit'
 
 function getPhysicalDamage(attrs: Attrs, atkFix: number, el: number, eldmg:number, skillValue: number, skillFixed: number) {
   return calcDamageNoDef(attrs["strn"], attrs["str_inc"], skillValue, skillFixed, attrs["atk_ph"], attrs["atk_ph_inc"], atkFix, attrs["dmg_inc"], attrs["dmg_add"], el, eldmg)
@@ -13,7 +12,7 @@ function getMagicalDamage(attrs: Attrs, atkFix: number, el: number, eldmg:number
   return calcDamageNoDef(attrs["intl"], attrs["int_inc"], skillValue, skillFixed, attrs["atk_mg"], attrs["atk_mg_inc"], atkFix, attrs["dmg_inc"], attrs["dmg_add"], el, eldmg)
 }
 
-export function getDamage(attrs: Attrs, atkFix: number, el: number, eldmg: number, { value, fixed, atype, useSkillInc }: SkillSpec) {
+export function getDamage(atype: "Physc" | "Magic", attrs: Attrs, atkFix: number, el: number, eldmg: number, { value, fixed, useSkillInc }: SkillSpec) {
   let a = (atype === "Physc")?
     getPhysicalDamage(attrs, atkFix, el, eldmg, value, fixed)
   : getMagicalDamage(attrs, atkFix, el, eldmg, value, fixed)
@@ -21,19 +20,6 @@ export function getDamage(attrs: Attrs, atkFix: number, el: number, eldmg: numbe
   return a
 }
 
-
-export const selectMyFinalEltype = createSelector(
-  selectMe,
-  attrs => {
-    const eltype = whatElType(attrs, attrs.eltype)
-    if (!eltype) return [null, 0, 0]
-    const el_attrKey = elMap2[eltype]
-    const eldmg_attrKey = el_attrKey.replace("el_", "eldmg_")
-    const el = attrs[el_attrKey]
-    const eldmg = attrs[eldmg_attrKey] ?? 0
-    return [eltype, el, eldmg]
-  }
-)
 
 interface VerboseOneAttrViewProps {
   attrKey: keyof BaseAttrs
@@ -123,7 +109,8 @@ export function VerboseAttrsView() {
         <VerboseOneAttrView attrKey="dmg_inc" />
         <VerboseOneAttrView attrKey="dmg_add" />
       </div>
-      <div className="Quadplex">
+      <VerboseResult name="" value={eltype? `${eltype}공격속성` : "(속성 없음)"} />
+      <div className={eltype? "Quadplex": "Quadplex Transparent"}>
         <VerboseOneAttrView attrKey="el_fire" />
         <VerboseOneAttrView attrKey="el_ice" />
         <VerboseOneAttrView attrKey="el_lght" />
@@ -133,19 +120,16 @@ export function VerboseAttrsView() {
         <VerboseOneAttrView attrKey="eldmg_lght" />
         <VerboseOneAttrView attrKey="eldmg_dark" />
       </div>
-        {eltype? <VerboseResult name="" value={`${eltype}공격속성`} /> : null}
-      <div>
-        <div className="Duplex">
+      <div className="Duplex">
         <VerboseResult name="예상 물리 데미지" className="Physc Vertical"
         value={beautyNumber(predictPhysc)} />
         <VerboseResult name="예상 마법 데미지" className="Magic Vertical"
         value={beautyNumber(predictMagic)} />  
-        </div>
       </div>
       <VerboseOneAttrView attrKey="cdmg_inc" />
       <div className="Duplex">
-        <VerboseResult name="예상 물리 데미지 (크리티컬 적용)" className="Physc Vertical" value={beautyNumber(prePhyscCrit)} />
-        <VerboseResult name="예상 마법 데미지 (크리티컬 적용)" className="Magic Vertical" value={beautyNumber(preMagicCrit)} />
+        <VerboseResult name="예상 물리 크리티컬 데미지" className="Physc Vertical" value={beautyNumber(prePhyscCrit)} />
+        <VerboseResult name="예상 마법 크리티컬 데미지" className="Magic Vertical" value={beautyNumber(preMagicCrit)} />
       </div>
       <div className="Quadplex">
         <VerboseOneAttrView attrKey="crit_ph" className="Physc" />

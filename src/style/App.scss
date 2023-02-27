@@ -11,26 +11,29 @@
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
+
   > span.NavLink {
+    height: 50px;
+    line-height: 50px;
     cursor: pointer;
     text-align: center;
     font-size: 1.2rem;
-    padding: 1rem;
+    padding-inline: 1rem;
     flex-grow: 1;
+    justify-content: center;
     border-bottom: 0px solid transparent;
     transition-property: color, padding, border;
     transition-duration: 0.2s;
     transition-timing-function: linear;
+    box-sizing: border-box;
 
     &:hover  {
       color: $Uncommon-color;
-      padding-bottom: calc(1rem - 3px);
       border-bottom: 3px solid $Uncommon-color;
     }
 
     &.Active {
       color: $Epic-color;
-      padding-bottom: calc(1rem - 6px);
       border-bottom: 6px solid $Epic-color;
     }
   }

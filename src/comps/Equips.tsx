@@ -3,14 +3,15 @@ import { useCallback, useContext, useState } from "react"
 import "../style/Equips.scss"
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
 import { SimpleBaseAttrView } from "./AttrsView"
-import { getItem, isArmorPart } from "../items"
+import { armorParts, getItem, isArmorPart } from "../items"
 import { acceptEmblem } from "../emblem"
-import { selectArmorUpgradeValues, selectEquip } from "../selectors"
-import { AttrIcon, EmblemIcon, ItemIcon2, ItemName, LabeledInput, NumberInput } from "./CommonUI"
-import { NextMagicProps, SetArmorUpgradeValueAll, SetEquipUpgradeValue, SetMaterial } from "../feats/slices/equipSlice"
+import { selectAccessUpgradeValues, selectArmorUpgradeValues, selectWholeFromPart } from "../selectors"
+import { AttrIcon, EmblemIcon, ItemIcon2, ItemName, LabeledInput, NumberInput, OneClickButtonGroup, RadioGroup } from "./CommonUI"
+import { NextMagicProps, SetAccessUpgradeValueAll, SetArmorUpgradeValueAll, SetEquipUpgradeValue, SetMaterial, SetMaterialAll } from "../feats/slices/equipSlice"
 import { BranchView, ExclusiveView, GivesView, ISetOptionalAttrsView } from "./ConditionalAttrs"
 import { ModalContext } from "./modalContext"
 import { MagicPropsArray } from "./MagicProps"
+import { RootState } from "../feats/store"
 
 interface EquipProps {
   part: EquipPart
@@ -72,11 +73,11 @@ function EquipCardEmblemUpgrade({ part }: EquipProps) {
 
 function EquipPartInnerGrid({ part }: EquipProps) {
   const { openModal } = useContext(ModalContext)
-  const itemName = useAppSelector(state => state.Equips[part].name)
-  const item = getItem(itemName)
+  const item = getItem(useAppSelector(state => state.Equips[part].name))
+  const itemName = item.name
   const { branch, exclusive, give_us } = item ?? {}
   const [detail, setDetail] = useState(false)
-  const equipPartAttr = useAppSelector(selectEquip[part])
+  const equipPartAttr = useAppSelector(selectWholeFromPart[part])
   const clickHandler = useCallback(() => setDetail(!detail), [detail])
   return (
     <div className="EquipSlot">
@@ -111,15 +112,23 @@ function EquipPartInnerGrid({ part }: EquipProps) {
   )
 }
 
+function selectSynchronizedMaterial(state: RootState) {
+  const mats = armorParts.map(p => state.Equips[p].material)
+  const mat = mats[0]
+  if (mats.find(m => mat != m)) return null
+  return mat
+}
 
 export function Equips() {
   const dispatch = useAppDispatch()
   const [armorUpgradeSynced, armorUpgradeValue] = useAppSelector(selectArmorUpgradeValues)
+  const [accessUpgradeSynced, accessUpgradeValue] = useAppSelector(selectAccessUpgradeValues)
+  const mat = useAppSelector(selectSynchronizedMaterial)
   return (
     <div className="Equips">
       <header>
         <h3>장비</h3>
-        <div>※ 여기서 입력한 장비 데이터는 항상 칼박 100%로 계산하기 때문에 여기서 설정한 스탯이 더 뻥튀기되어있을 수 있습니다.</div>
+        <div>※ 여기서 입력한 장비는 항상 칼박 100%이므로 실제 셋팅보다 더 뻥튀기되어있을 수 있습니다.</div>
       </header>
       <div className="EquipGridBox">
         <EquipPartInnerGrid part="무기"/>
@@ -133,10 +142,23 @@ export function Equips() {
         <EquipPartInnerGrid part="반지"/>
         <EquipPartInnerGrid part="보조장비"/>
       </div>
-      <div className="EquipBatch">
-      <LabeledInput label={"방어구 강화보너스 모두 바꾸기"} value={armorUpgradeValue} onChange={v => {
-        dispatch(SetArmorUpgradeValueAll(v))
-      }} />  
+      <div>
+        <h4>장비 모두 설정</h4>
+        <div className="EquipBatch">
+        <LabeledInput className={armorUpgradeSynced? "" : "Transparent"} label="방어구 강화보너스" value={armorUpgradeValue} onChange={v => {
+          dispatch(SetArmorUpgradeValueAll(v))
+        }} />
+        <LabeledInput className={accessUpgradeSynced? "" : "Transparent"} label="악세서리 강화보너스" value={accessUpgradeValue} onChange={v => {
+          dispatch(SetAccessUpgradeValueAll(v))
+        }} />
+        <RadioGroup name="방어구 재질" values={["천", "가죽", "경갑", "중갑", "판금"]} value={mat}
+          dispatcher={v => dispatch(SetMaterialAll(v))}
+        />
+        <OneClickButtonGroup name="마법봉인 모두" groupName="마법봉인" dispatcher={() => {}}
+          values={["magicPropLeft", "magicPropFire", "magicPropIce", "magicPropLight", "magicPropDark"]}
+          labels={["내 스탯", "화속강", "수속강", "명속강", "암속강"]}
+         />
+        </div>
       </div>
       <ISetOptionalAttrsView />
     </div>

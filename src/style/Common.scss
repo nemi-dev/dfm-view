@@ -1,32 +1,105 @@
 @import "./_Defs.scss";
 
-input {
-  font-family: inherit;
-  font-weight: inherit;
-  text-align: right;
-}
 
-input[type=number] {
-  -moz-appearance: textfield;
-  appearance: textfield;
-}
-input::-webkit-inner-spin-button,
-input::-webkit-outer-spin-button {
-  appearance: none;
-  margin: 0;
-}
 
-.TwoOneRow {
+%FormGroup {
+
   display: flex;
-  gap: 1rem;
-  >:nth-child(1) {
+  align-items: center;
+  justify-content: space-evenly;
+
+  margin: 2px;
+  border: 1px solid rgba(255, 225, 154, 0.586);
+  padding-block: 2px;
+  padding-inline: 8px 2px;
+  background-color: rgb(22, 18, 17, 0.5);
+
+  border-radius: 20px;
+
+  box-sizing: border-box;
+
+  > .FormGroupName {
+    font-weight: 900;
+    text-align: center;
+    flex-grow: 1;
+    color: white;
+    font-size: 0.9rem;
+    cursor: default;
+    line-height: 26px;
+  }
+
+  .FormGroupValue {
     flex-grow: 2;
   }
-  >:nth-child(2) {
-    flex-grow: 1;
+
+  input {
+    padding: 0!important;
+  }
+
+}
+
+.InputGroup {
+  @extend %FormGroup;
+
+  > input[type=number], > input[type=text] {
+    text-align: center;
+    font-size: 1em;
+    border: none;
+    background-color: transparent;
+    min-height: 28px;
+    box-sizing: border-box;
   }
 }
 
+.RadioGroup {
+  @extend %FormGroup;
+
+
+  > .RadioOne {
+    > input[type=radio] {
+      display: none;
+
+      + label {
+        flex-grow: 1;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        min-height: 28px;
+        padding-inline: 5px;
+        border-radius: 19px;
+        box-sizing: border-box;
+        border-width: 1px;
+        border-style: solid;
+        border-color: transparent;
+        transition-property: color, border-color, background-color;
+        transition-duration: 0.1s;
+        transition-timing-function: linear;
+
+        &:hover {
+          border-color: rgba($color: #ffd67e, $alpha: 1.0);
+        }
+      }
+
+      &:checked + label {
+        background-color: rgb(255, 217, 92);
+        color: black;
+      }
+    }
+  }
+}
+
+.OneClickGroup {
+  @extend %FormGroup;
+
+  button {
+    min-height: 28px;
+    box-sizing: border-box;
+    border-radius: 19px;
+  }
+}
 
 .Duplex {
   display: grid;
@@ -36,42 +109,38 @@ input::-webkit-outer-spin-button {
 }
 
 .Quadplex {
-
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-auto-rows: auto;
+}
+
+.OutputView {
+  @extend %hovering-df;
+}
+
+:is(.InputGroup, .OutputView) {
+
+
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
+
+
+  .Value {
+    text-align: right;
+    flex-grow: 1;
+    font-size: 1.2rem;
+    font-weight: bolder;
+    color: #77bfff;
+  }
 
 }
 
-:is(.InputArea, .OutputArea) {
+.InputArea {
   display: flex;
   flex-direction: column;
   gap: 0.1rem;
-
-  :is(.InputView, .OutputView) {
-
-    @extend %hovering-df;
-
-    display: flex;
-    gap: 0.25rem;
-    padding: 0.2rem;
-    align-items: center;
-    justify-content: space-around;
-
-
-    input {
-      flex-grow: 1;
-    }
-
-    .Value {
-      text-align: right;
-      flex-grow: 1;
-      font-size: 1.2rem;
-      font-weight: bolder;
-      color: #77bfff;
-    }
-
-  }
 }
 
 .SlotHeading {

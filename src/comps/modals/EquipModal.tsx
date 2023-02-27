@@ -7,7 +7,7 @@ import { ModalContext } from "../modalContext"
 
 import _left from "../../../data/sets/left.json"
 import _right from "../../../data/sets/right.json"
-import { SetEquipShotgun } from "../../feats/slices/equipSlice"
+import { SetEquips } from "../../feats/slices/equipSlice"
 
 function EquipSelect({ item }: { item: Attrs }) {
   const { itarget: [part,,], setOpen } = useContext(ModalContext)
@@ -36,7 +36,7 @@ function EquipShotgun({ name, itemChildren, useThisForPayload }: IsetCatalog) {
   const dispatch = useAppDispatch()
   const { setOpen } = useContext(ModalContext)
   return (
-    <div className="EquipShotgun" onClick={() => {dispatch(SetEquipShotgun(useThisForPayload)); setOpen(false) }}>
+    <div className="EquipShotgun" onClick={() => {dispatch(SetEquips(useThisForPayload)); setOpen(false) }}>
       <div className="IsetName">{name}</div>
       <div className="IsetIconArray">
       {itemChildren.map((item) => (

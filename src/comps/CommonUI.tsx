@@ -1,4 +1,5 @@
-import React, { DetailedHTMLProps, useCallback } from 'react'
+import React, { DetailedHTMLProps, useCallback, useEffect, useState } from 'react'
+import { v4 as uuidv4 } from "uuid"
 import { im } from '../utils'
 import '../style/Common.scss'
 
@@ -99,12 +100,21 @@ export function NumberInput({onWheel, value, type, onChange, ...props}: NumberIn
   return <input type="number" value={value} onChange={_onChange} ref={ref} {...props}/>
 }
 
-export function LabeledInput({ label, value, onChange }: { label: string, value: number, onChange: (val: number) => void }) {
+
+interface LabeledInputProps {
+  className?: string
+  label: string
+  value: number
+  onChange: (val: number) => void
+}
+export function LabeledInput({ className = "", label, value, onChange }: LabeledInputProps) {
+  const [id, setId] = useState("")
+  useEffect(() => { setId(uuidv4()) } , [])
   if (Number.isNaN(value)) value = 0
   return (
-    <div className="InputView">
-      <label htmlFor={label}>{label}</label>
-      <NumberInput name={label} value={value} onChange={onChange} />
+    <div className={("InputGroup NumberInput "+className).trim()}>
+      <label className="FormGroupName" htmlFor={id}>{label}</label>
+      <NumberInput className="FormGroupValue"  id={id} value={value} onChange={onChange} placeholder={label} />
     </div>
   )
 }
@@ -148,5 +158,46 @@ export function ItemName({ item, alt = "아이템 없음", className, onClick }:
   if (className) classList.push(className)
   return (
     <span className={classList.join(" ")} onClick={onClick}>{name}</span>
+  )
+}
+
+
+interface RadioGroupProps<T extends number | string> {
+  name: string
+  groupName?: string
+  className?: string
+  values: T[]
+  labels?: (string | number)[]
+  value: T
+  dispatcher: (value: T) => any
+}
+
+export function RadioGroup<T extends string | number>({ name, groupName = name, className = "", values, labels = values, value, dispatcher }: RadioGroupProps<T>) {
+  const onChange = useCallback((ev: React.ChangeEvent<HTMLInputElement>) => {
+    dispatcher(ev.target.value as T)
+  }, [])
+  return (
+    <span className={("RadioGroup "+className).trim()}>
+      <span className="FormGroupName">{groupName}</span>
+      {values.map((v, i) => (
+        <span key={v} className="RadioOne FormGroupValue">
+          <input type="radio" name={name} value={v} id={`Radio-${name}-${v}`} checked={v === value} onChange={onChange} />
+          <label htmlFor={`Radio-${name}-${v}`}>{labels[i]}</label>
+        </span>
+      ))}
+    </span>
+  )
+}
+
+type ButtonGroupProps<T extends string | number> = Omit<RadioGroupProps<T>, "value">
+
+export function OneClickButtonGroup<T extends string | number>({ name, groupName = name, className = "", values, labels = values, dispatcher }:ButtonGroupProps<T>) {
+  return (
+    <span className={("OneClickGroup "+className).trim()}>
+      <span className="FormGroupName">{groupName}</span>
+      {values.map((v, i) => (
+        <button id={v.toString()} onClick={() => dispatcher(v)}>{labels[i]}</button>
+      ))}
+    </span>
   )
 }

@@ -4,7 +4,6 @@
 $guild-icon-size: 64px;
 
 .InputArea.Guilds {
-  display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-around;
@@ -15,7 +14,6 @@ $guild-icon-size: 64px;
     flex-direction: column;
     align-items: center;
     justify-content: flex-end;
-    padding: 0.5rem;
     flex-grow: 1;
   }
   .GuildsIconGroup {
@@ -23,12 +21,12 @@ $guild-icon-size: 64px;
     padding: 1px;
     height: $guild-icon-size;
   }
-  .InputView {
-    @extend %unset-hovering-df;
-    padding: 0;
+  .InputGroup {
+    padding: 1px 6px;
+    align-self: stretch;
 
     label {
-      font-size: 0.9rem;
+      font-size: 0.8rem;
     }
 
     input {
@@ -186,4 +184,11 @@ $guild-icon-size: 64px;
     --icon-size: 145px;
   }
   
+}
+
+
+.Calibrate {
+  .InputGroup label {
+    flex-basis: 50px;
+  }
 }

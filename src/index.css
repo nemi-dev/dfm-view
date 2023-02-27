@@ -69,6 +69,22 @@ header :is(h1, h2, h3, h4, h5, h6) {
   margin-block: 0;
 }
 
+input {
+  font-family: inherit;
+  font-weight: inherit;
+  text-align: right;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+input::-webkit-inner-spin-button,
+input::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
 input[type=text], input[type=number] {
   background-color: #090704;
   border: 1px solid rgba(111, 102, 93, 0.843);
@@ -102,4 +118,8 @@ footer {
 footer .about {
   opacity: 0.6;
   font-size: 0.9rem;
+}
+
+.Transparent {
+  opacity: 0.5;
 }
