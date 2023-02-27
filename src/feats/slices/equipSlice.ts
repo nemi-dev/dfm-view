@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { getItem } from "../../items"
+import { armorParts, getItem } from "../../items"
 import { getAvailableMagicPropsForEquip } from "../../magicProps"
 
 import _equipInit from "./equipInit.json"
@@ -63,20 +63,21 @@ export const equipSlice = createSlice({
       s[part].upgrade = value
     },
     SetArmorUpgradeValueAll: (s, { payload }: PayloadAction<number>) => {
-      s["상의"].upgrade = payload
-      s["하의"].upgrade = payload
-      s["머리어깨"].upgrade = payload
-      s["벨트"].upgrade = payload
-      s["신발"].upgrade = payload
+      armorParts.forEach(part => s[part].upgrade = payload)
+    },
+    SetAccessUpgradeValueAll: (s, { payload }: PayloadAction<number>) => {
+      ["팔찌", "목걸이", "반지"].forEach(part => s[part].upgrade = payload)
     },
     SetMaterial: (s, { payload: [part, value] }: PayloadAction<[ArmorPart, ArmorMaterial]>) => {
       s[part].material = value
     },
-    SetEquipShotgun: (s, { payload }: PayloadAction<Record<EquipPart, string>>) => {
+    SetMaterialAll: (s, { payload }: PayloadAction<ArmorMaterial>) => {
+      armorParts.forEach(part => s[part].material = payload)
+    },
+    SetEquips: (s, { payload }: PayloadAction<Record<EquipPart, string>>) => {
       for (const key in payload) {
         s[key as EquipPart].name = payload[key]
       }
-      // Object.assign(s, payload)
     },
     NextMagicProps: (s, { payload: [part, index] }: PayloadAction<[EquipPart, number]>)=> {
       const { level, rarity } = getItem(s[part].name)
@@ -90,14 +91,16 @@ export const equipSlice = createSlice({
 
 
 export const {
-  SetArmorUpgradeValueAll,
   SetEquip,
   SetCard,
   SetEmblem,
   SetEquipUpgradeValue,
+  SetArmorUpgradeValueAll,
+  SetAccessUpgradeValueAll,
   SetMaterial,
+  SetMaterialAll,
+  SetEquips,
   NextMagicProps,
-  SetEquipShotgun
 } = equipSlice.actions
 
 

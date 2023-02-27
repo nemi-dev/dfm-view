@@ -3,6 +3,7 @@ import { SimpleBaseAttrView } from "./AttrsView"
 import { SetBranch, SetExclusive, SetGives } from "../feats/slices/equipSlice"
 import { useEffect } from "react"
 import { selectISetConditionalsAll } from "../selectors"
+import { RadioGroup } from "./CommonUI"
 
 interface Named {
   name: string
@@ -63,20 +64,13 @@ export function GivesView({ name, attrs, showName = false }: GivesViewProps) {
   )
 }
 
-function ExclusiveRadioButtonView({ prefix, attrs }: { prefix: string, attrs: BaseAttrs }) {
-  const dispatch = useAppDispatch()
-  const checked = useAppSelector(state => state.Switch.exclusives[prefix] == attrs.name)
-  const key = `${prefix}::${attrs.name}`
-  return <span>
-    <input type="radio" id={key} name={prefix} checked={checked} onChange={ev => dispatch(SetExclusive([prefix, attrs.name]))} />
-    <label htmlFor={key}>{attrs.name}</label>
-  </span>
-}
-
 function ExclusiveOneBranchView({ prefix, node }: { prefix: string, node: ExclusiveGroup }) {
-  return <div>{node.label}
-    {node.children.map((attrs) => <ExclusiveRadioButtonView key={`${prefix}::${attrs.name}`} prefix={prefix} attrs={attrs} />)}
-  </div>
+  const values = node.children.map(n => n.name)
+  const value = useAppSelector(state => state.Switch.exclusives[prefix])
+  const dispatch = useAppDispatch()
+  return <RadioGroup groupName={node.label} name={prefix} values={values} value={value}
+    dispatcher={val => dispatch(SetExclusive([prefix, val]))}
+  />
 }
 
 interface ExclusiveViewProps extends Named {
@@ -84,8 +78,8 @@ interface ExclusiveViewProps extends Named {
 }
 export function ExclusiveView({ name, exclusives, showName = false }: ExclusiveViewProps) {
   return (
-    <div>
-      {showName? <div>{name}</div> : null}
+    <div className="ISetCondOne">
+      {showName? <div className="ISetName">{name}</div> : null}
       {exclusives.map((node) => {
         const prefix = `${name}::${node.name}`
         return <ExclusiveOneBranchView key={prefix} prefix={prefix} node={node} />
@@ -99,16 +93,18 @@ export function ISetOptionalAttrsView() {
   const { branches, exclusives, gives } = useAppSelector(selectISetConditionalsAll)
   return(
     <div className="ISetOptionalAttrsView">
-      <h4>조건부 세트 효과</h4>
-      {Object.keys(branches).sort().map((key) => 
-        <BranchView key={key} name={key} branches={branches[key]} showName={true} />
-      )}
-      {Object.keys(exclusives).sort().map((isetname) => 
-        <ExclusiveView key={isetname} name={isetname} exclusives={exclusives[isetname]} showName={true} />
-      )}
-      {Object.keys(gives).sort().map((key) => 
-        <GivesView key={key} name={key} attrs={gives[key]} showName={true} />
-      )}
+      <h3>조건부 세트 효과</h3>
+      <div className="ISetCondArray">
+        {Object.keys(branches).sort().map((key) => 
+          <BranchView key={key} name={key} branches={branches[key]} showName={true} />
+        )}
+        {Object.keys(exclusives).sort().map((isetname) => 
+          <ExclusiveView key={isetname} name={isetname} exclusives={exclusives[isetname]} showName={true} />
+        )}
+        {Object.keys(gives).sort().map((key) => 
+          <GivesView key={key} name={key} attrs={gives[key]} showName={true} />
+        )}
+      </div>
     </div>
   )
 }

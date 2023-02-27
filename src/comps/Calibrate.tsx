@@ -49,10 +49,11 @@ export function Calibrate() {
   const sk_inc_real = cattr.sk_inc.reduce(percent_inc_mul, 0)
   return (
     <div className="Calibrate">
-      <h3>스탯 조정</h3>
-      <div style={{ textAlign: "center"}}>
-        계산된 수치가 실제와 다르다면 여기서 조정할 수 있습니다.
-      </div>
+      <header>
+        <h3>스탯 조정</h3>
+        <div>계산된 수치가 실제와 다르다면 여기서 조정할 수 있습니다.</div>
+      </header>
+      
       <SwitchGroup />
       <div className="InputArea">
         <div className="Duplex">

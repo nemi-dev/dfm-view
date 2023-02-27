@@ -8,9 +8,10 @@ import {
   SetLevel,
   SetTargetDefense,
   SetAchieveLevel,
-  SetTragetResist
+  SetTragetResist,
+  SetAtype
 } from '../feats/slice'
-import { LabeledInput, OutputView } from './CommonUI'
+import { LabeledInput, OutputView, RadioGroup } from './CommonUI'
 import { Equips } from './Equips'
 import { Creatures } from './Creature'
 import { Guilds } from "./Guilds"
@@ -50,9 +51,7 @@ function App() {
   const
     my_level = useAppSelector(state => state.Profile.level),
     AchieveLevel = useAppSelector(state => state.Profile.achieveLevel),
-    atk_fixed = useAppSelector(state => state.Profile.atk_fixed),
-    targetDefense = useAppSelector(state => state.Profile.targetDefense),
-    targetElementResist = useAppSelector(state => state.Profile.targetElementResist)
+    atk_fixed = useAppSelector(state => state.Profile.atk_fixed)
 
   const [portrait, setPortrait] = useState(false)
   const [activeTab, setActiveTab] = useState("장비")
@@ -80,7 +79,6 @@ function App() {
     return () => window.removeEventListener('reset', onResize)
   })
 
-  const defRate = getDefRate(my_level, targetDefense)
 
   return (
     <TabContext.Provider value={{ activeTab, setActiveTab }}>
@@ -88,12 +86,12 @@ function App() {
 
       <div className="App">
         <ItemSelectModal isOpen={isOpen}/>
-
-        <div className="InputArea">
+        <div className="Duplex">
           <LabeledInput label="캐릭터 레벨" value={my_level} onChange={v => dispatch(SetLevel(v))} />
+          <LabeledInput label="독립 공격력" value={atk_fixed} onChange={v => dispatch(set_atk_fixed(v))} />
           <LabeledInput label="캐릭터 업적 달성 레벨" value={AchieveLevel} onChange={v => dispatch(SetAchieveLevel(v))} />
           <OutputView tag="업적 달성 보너스: 모든스탯 증가" value={AchieveLevel * 7 - 2} />
-          <LabeledInput label="독립 공격력" value={atk_fixed} onChange={v => dispatch(set_atk_fixed(v))} />
+
         </div>
         <nav className="Navigator">
           <NavLink name="장비">장비</NavLink>

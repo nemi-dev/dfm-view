@@ -267,9 +267,8 @@ declare interface Card extends BaseAttrs {
 
 
 declare interface SkillSpec {
-  value: number  
+  name: string
+  value: number
   fixed: number  
   useSkillInc: boolean 
-  name: string
-  atype: "Physc" | "Magic"
 }

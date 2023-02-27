@@ -24,9 +24,7 @@ interface CreatureType {
     /** 초록색 아티팩트에서 얻는 모든속성 강화 수치 */
     el_all: number
 
-
     speed_atk: number
-
     speed_cast: number
 
   }
@@ -74,9 +72,8 @@ interface Profile {
 
   /** 업적 레벨 (최대 9) */
   achieveLevel: number
-  skill_value: number
-  skill_fixedvalue: number
   atk_fixed: number
+  atype: "Physc" | "Magic"
   targetDefense: number
   targetElementResist: number
 }
@@ -84,9 +81,7 @@ interface Profile {
 const profileInit : Profile = {
   level: 65,
   achieveLevel: 9,
-
-  skill_value: 1883,
-  skill_fixedvalue: 1883,
+  atype: "Magic",
   atk_fixed: 317,
   targetDefense: 19500,
   targetElementResist: 0,
@@ -99,6 +94,9 @@ export const profileSlice = createSlice({
 
     SetLevel: (s, { payload }: PayloadAction<number>) => { s.level = payload },
     SetAchieveLevel: (s, { payload }: PayloadAction<number>) => { s.achieveLevel = payload },
+    SetAtype: (s, { payload }: PayloadAction<"Physc" | "Magic">) => {
+      s.atype = payload
+    },
     set_atk_fixed: (s, pay : PayloadAction<number>) => {
       s.atk_fixed = pay.payload
     },
@@ -114,6 +112,7 @@ export const profileSlice = createSlice({
 export const {
   SetLevel,
   SetAchieveLevel,
+  SetAtype,
   set_atk_fixed,
   SetTargetDefense,
   SetTragetResist,

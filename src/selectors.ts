@@ -1,4 +1,4 @@
-import { collectSpecial, combine, percent_inc_mul } from "./attrs"
+import { collectSpecial, combine, elMap2, percent_inc_mul, whatElType } from "./attrs"
 import { RootState } from "./feats/store"
 import { getActiveISetAttrs, getArmorBase, countISetsFrom, getItem, armorParts, equipParts, getActiveBranch, isActiveGives, getActiveExclusive, getBlessing, isArmorPart } from "./items"
 import { getEmblem } from "./emblem"
@@ -11,6 +11,12 @@ import { selectWholeAvatarAttrs } from "./feats/avatarSelectors"
 export function selectArmorUpgradeValues(state: RootState): [boolean, number] {
   const value = Math.max(...armorParts.map(p => state.Equips[p].upgrade))
   const synced = armorParts.every(v => state.Equips[v].upgrade === value)
+  return [synced, value]
+}
+
+export function selectAccessUpgradeValues(state: RootState): [boolean, number] {
+  const value = Math.max(...["팔찌", "목걸이", "반지"].map(p => state.Equips[p].upgrade))
+  const synced = ["팔찌", "목걸이", "반지"].every(v => state.Equips[v].upgrade === value)
   return [synced, value]
 }
 
@@ -95,7 +101,7 @@ function equipSelector(part: EquipPart) {
 }
 
 /** 어떤 한 장비 부의의 아이템 옵션, 활성화시킨 조건부 옵션, 업그레이드 보너스, 마법봉인, 엠블렘, 카드 옵션을 얻는다. */
-export const selectEquip = {
+export const selectWholeFromPart = {
   무기: equipSelector("무기"),
   상의: equipSelector("상의"),
   하의: equipSelector("하의"),
@@ -137,11 +143,12 @@ export function selectEquips(state: RootState) {
   }
 
   return combine(
-    ...equipParts.map(part => selectEquip[part](state)),
+    ...equipParts.map(part => selectWholeFromPart[part](state)),
     // ...armorParts.map(part => selectArmorBase[part](state)),
     ...J
   )
 }
+
 
 
 
@@ -170,6 +177,8 @@ export function selectCreatures(state: RootState): BaseAttrs {
     speed_cast
   }
 }
+
+
 
 
 
@@ -284,3 +293,17 @@ export const selectMe = createSelector(
   (me, cal) => combine(me, cal)
 )
 
+
+
+export const selectMyFinalEltype = createSelector(
+  selectMe,
+  attrs => {
+    const eltype = whatElType(attrs, attrs.eltype)
+    if (!eltype) return [null, 0, 0]
+    const el_attrKey = elMap2[eltype]
+    const eldmg_attrKey = el_attrKey.replace("el_", "eldmg_")
+    const el = attrs[el_attrKey]
+    const eldmg = attrs[eldmg_attrKey] ?? 0
+    return [eltype, el, eldmg]
+  }
+)

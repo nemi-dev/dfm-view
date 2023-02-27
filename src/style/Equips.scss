@@ -28,7 +28,7 @@
   grid-template-columns: 1fr 1fr;
   grid-template-rows: repeat(5, auto);
   grid-auto-flow: column;
-  align-items: start;
+  align-items: stretch;
   gap: 4px;
 }
 
@@ -36,6 +36,11 @@
 
   @extend %hovering-df;
   @extend %bordered;
+
+  .RadioGroup > .RadioOne > input[type=radio] + label {
+    font-size: 0.9rem;
+    min-height: 24px;
+  }
 }
 
 .EquipPartInnerGrid {
@@ -64,6 +69,16 @@
     display: flex;
     align-items: flex-end;
     flex-wrap: wrap;
+  }
+}
+
+.EquipBatch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  @media screen and (max-width:768px) {
+    display: flex;
+    flex-direction: column;
   }
 }
 
@@ -135,6 +150,25 @@
   flex-direction: row;
 }
 
+.ISetCondArray {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+
+  .ISetCondOne {
+    display: flex;
+    flex-direction: column;
+
+    .ISetName {
+      font-weight: 800;
+      color: white;
+      text-align: center;
+      margin-block: 0.5rem;
+    }
+  }
+}
+
+
 
 
 .DF_Title {
@@ -202,5 +236,10 @@
     display: flex;
     flex-direction: column;
     align-items: normal;
+  }
+
+  .ISetCondArray {
+    display: flex;
+    flex-direction: column;
   }
 }
