@@ -26,7 +26,7 @@ export function Guilds() {
   return (
     <div>
       <h3>길드 버프</h3>
-      <div className="InputArea Guilds">
+      <div className="Guilds">
         <GuildsInput label="힘/지능" value={stat} target="stat">
           <img src="/img/guild/strn.png" alt="힘.png" />
           <img src="/img/guild/intl.png" alt="지능.png" />

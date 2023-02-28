@@ -2,6 +2,8 @@ import { defineConfig, splitVendorChunkPlugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
 
+const vendors = ['react', 'react-dom', 'styled-components']
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
@@ -12,8 +14,7 @@ export default defineConfig({
       },
       output: {
         manualChunks (id) {
-          if (id.includes('react')) return 'react'
-          if (id.includes('redux')) return 'redux'
+          if (vendors.includes(id)) return id
           if (id.startsWith(__dirname + '/data/') && id.endsWith('.json')) return 'data'
         }
       }

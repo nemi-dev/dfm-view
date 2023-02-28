@@ -8,24 +8,24 @@
   align-items: center;
   justify-content: space-evenly;
 
-  margin: 2px;
-  border: 1px solid rgba(255, 225, 154, 0.586);
+  margin: 1px;
+  // border: 1px solid rgba(255, 225, 154, 0.4);
   padding-block: 2px;
   padding-inline: 8px 2px;
-  background-color: rgb(22, 18, 17, 0.5);
+  background-color: rgba($color: #000000, $alpha: 0.3);
+  
 
   border-radius: 20px;
 
   box-sizing: border-box;
 
   > .FormGroupName {
-    font-weight: 900;
+    font-weight: 400;
     text-align: center;
     flex-grow: 1;
-    color: white;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     cursor: default;
-    line-height: 26px;
+    line-height: 24px;
   }
 
   .FormGroupValue {
@@ -38,49 +38,55 @@
 
 }
 
+%hovergraph {
+
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
+  border-radius: 19px;
+  transition-property: color, border-color, background-color;
+  transition-duration: 0.1s;
+  transition-timing-function: linear;
+
+  &:hover, &:focus {
+    border-color: rgba($color: #ffd67e, $alpha: 1.0);
+  }
+}
+
 .InputGroup {
   @extend %FormGroup;
 
   > input[type=number], > input[type=text] {
     text-align: center;
     font-size: 1em;
-    border: none;
     background-color: transparent;
-    min-height: 28px;
+    background-color: rgba($color: #000000, $alpha: 0.3);
+    min-height: 26px;
     box-sizing: border-box;
+
+    @extend %hovergraph;
   }
 }
 
 .RadioGroup {
   @extend %FormGroup;
-
-
   > .RadioOne {
-    > input[type=radio] {
+    > input {
       display: none;
 
       + label {
         flex-grow: 1;
+        color: white;
 
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
 
-        min-height: 28px;
+        min-height: 26px;
         padding-inline: 5px;
-        border-radius: 19px;
         box-sizing: border-box;
-        border-width: 1px;
-        border-style: solid;
-        border-color: transparent;
-        transition-property: color, border-color, background-color;
-        transition-duration: 0.1s;
-        transition-timing-function: linear;
-
-        &:hover {
-          border-color: rgba($color: #ffd67e, $alpha: 1.0);
-        }
+        @extend %hovergraph;
       }
 
       &:checked + label {
@@ -95,23 +101,43 @@
   @extend %FormGroup;
 
   button {
-    min-height: 28px;
+    font-size: 0.8rem;
+    min-height: 26px;
     box-sizing: border-box;
     border-radius: 19px;
   }
 }
 
-.Duplex {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-auto-rows: auto;
+.DisposableInput {
+  // @extend %FormGroup;
+  background-color: rgba($color: #000000, $alpha: 3.5);
+  margin: 1px;
+  display: flex;
+  padding-inline: 2px;
 
-}
+  input[type=number], input[type=text] {
+    text-align: center;
+    font-size: 1em;
+    background-color: transparent;
+    height: 20px;
+    box-sizing: border-box;
+    padding: 0;
+    @extend %hovergraph;
+  }
 
-.Quadplex {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: auto;
+  button {
+    outline: none;
+    border-radius: 20px;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    vertical-align: baseline;
+    background-color: transparent;
+  }
+
+  &:only-child button {
+    display: none;
+  }
 }
 
 .OutputView {
@@ -120,12 +146,9 @@
 
 :is(.InputGroup, .OutputView) {
 
-
   display: flex;
   align-items: center;
   justify-content: space-around;
-
-
 
   .Value {
     text-align: right;
@@ -146,23 +169,9 @@
 .SlotHeading {
   display: flex;
   color: var(--color);
-  font-size: 1.1rem;
-  padding: 4px 8px;
+  padding: 2px;
 }
 
-.SkillIncCali {
-  display: grid;
-  gap: 0.5rem;
-  grid-template-columns: 1fr 1fr 1fr;
-
-  .DisposableInput {
-    display: flex;
-
-    input {
-      flex-grow: 1;
-    }
-  }
-}
 
 %FramedIcon {
 
@@ -198,31 +207,17 @@
 
 .ItemName {
 
-  cursor: pointer;
+  align-self: center;
 
-  &.Rarity_Common {
-    color: #{$Common-color};
-  }
+  &.Rarity_Common { color: #{$Common-color}; }
 
-  &.Rarity_Uncommon {
-    color: #{$Uncommon-color};
-  }
+  &.Rarity_Uncommon { color: #{$Uncommon-color}; }
 
-  &.Rarity_Rare {
-    color: #{$Rare-color};
-  }
+  &.Rarity_Rare { color: #{$Rare-color}; }
 
-  &.Rarity_Unique {
-    color: #{$Unique-color};
-  }
+  &.Rarity_Unique { color: #{$Unique-color}; }
 
-  &.Rarity_Epic {
-    color: #{$Epic-color};
-  }
-
-  &:hover {
-    text-decoration: underline;
-  }
+  &.Rarity_Epic { color: #{$Epic-color}; }
 
 }
 

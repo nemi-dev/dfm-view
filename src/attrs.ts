@@ -60,13 +60,17 @@ interface AttrDef {
   expression: AttrExpressionType
 }
 
+export const attrDefs : { [k in keyof BaseAttrs]: AttrDef } & { array?: AttrDef[] } = {}
+
 function a(key: keyof BaseAttrs, name: string, reducer: (a: any, b: any) => any, expression: AttrExpressionType) {
+  const _a = { key, name, reducer, expression }
+  attrDefs[key] = _a
   reducers[key] = reducer
-  return { key, name, reducer, expression }
+  return _a
 }
 
 
-export const attrDefs = [
+const attrDefsArray = [
   a("strn", "힘", add, "Scalar"),
   a("intl", "지능", add, "Scalar"),
   a("str_inc", "힘 증가", add, "Percent"),
@@ -132,11 +136,7 @@ export const attrDefs = [
   a("misc", "기타 관심없는 효과", combineArray, "Misc")
 ]
 
-export const attrDefsMap : { [k in keyof BaseAttrs]: AttrDef } = {}
-
-for (const at of attrDefs) {
-  attrDefsMap[at.key] = at
-}
+attrDefs.array = attrDefsArray
 
 export function combine(...attrsList: BaseAttrs[]) {
   const prev: BaseAttrs = {}

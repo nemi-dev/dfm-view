@@ -2,7 +2,7 @@
 
 
 .Emblem {
-  --icon-size: 40px;
+  --icon-size: 36px;
   
   
   .EmblemLevel {
@@ -18,9 +18,14 @@
   }
 }
 
-.ItemIcon.CardSocket {
-  --icon-size: 48px;
+
+.Equips {
+  .ItemName:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
 }
+
 
 
 .EquipGridBox {
@@ -28,7 +33,7 @@
   grid-template-columns: 1fr 1fr;
   grid-template-rows: repeat(5, auto);
   grid-auto-flow: column;
-  align-items: stretch;
+  align-items: start;
   gap: 4px;
 }
 
@@ -37,7 +42,15 @@
   @extend %hovering-df;
   @extend %bordered;
 
-  .RadioGroup > .RadioOne > input[type=radio] + label {
+  .ItemIcon {
+    --icon-size: 64px;
+  }
+
+  .ItemIcon.CardSocket {
+    --icon-size: 36px;
+  }
+
+  .RadioGroup > .RadioOne > input + label {
     font-size: 0.9rem;
     min-height: 24px;
   }
@@ -50,10 +63,10 @@
   "im xt mgp"
   "op op op"
   ;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto auto auto;
   grid-template-columns: auto 1fr auto;
   
-
+  
   .ItemIcon {
     grid-area: im;
   }
@@ -123,24 +136,36 @@
   align-items: stretch;
   justify-content: stretch;
   flex-direction: column;
+  &.ForEpic {
+
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+
+    > .IconAttrs:first-child {
+      background-color: rgba($color: #0d0905, $alpha: 0.5);
+      grid-column: 1 / -1;
+    }
+  }
+
   
   .IconAttrs {
     @extend %hovering-df;
     flex-grow: 1;
 
+    cursor: pointer;
+
     display: flex;
     align-items: center;
     justify-content: center;
 
-    padding-inline: 0.5rem;
+    padding-inline: 0.1rem;
+
     img.AttrIcon {
-      height: 1.25rem;
+      height: 1rem;
     }
   }
   
-  &.ForEpic .IconAttrs:first-child {
-    background-color: rgba($color: #0d0905, $alpha: 0.5)
-  }
 }
 
 

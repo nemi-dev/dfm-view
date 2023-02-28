@@ -6,6 +6,7 @@ export const signed = (n: number)=> {
 
 export const beautyNumber = (n: number) => Math.floor(n).toLocaleString()
 
+/** n을 100배한 후, 소숫점 둘째 자리에서 반올림하고 "%"를 붙인다. */
 export const percentee = (n : number) => `${Math.round(n * 10000) / 100}%`
 
 /** 

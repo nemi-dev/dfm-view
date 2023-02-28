@@ -3,10 +3,12 @@
 
 $guild-icon-size: 64px;
 
-.InputArea.Guilds {
+.Guilds {
+  display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-around;
+  gap: 2px;
 
   .GuildsInput {
     @extend %hovering-df;
@@ -112,10 +114,10 @@ $guild-icon-size: 64px;
       font-weight: bolder;
       text-shadow: black 0 3px 5px;
       white-space: nowrap;
-    }
-    label, input {
-      text-align: center;
-      z-index: 1;
+      &, + input {
+        text-align: center;
+        z-index: 1;
+      }
     }
   }
 }
@@ -184,11 +186,4 @@ $guild-icon-size: 64px;
     --icon-size: 145px;
   }
   
-}
-
-
-.Calibrate {
-  .InputGroup label {
-    flex-basis: 50px;
-  }
 }

@@ -293,8 +293,6 @@ export const selectMe = createSelector(
   (me, cal) => combine(me, cal)
 )
 
-
-
 export const selectMyFinalEltype = createSelector(
   selectMe,
   attrs => {

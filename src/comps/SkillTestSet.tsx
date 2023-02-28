@@ -4,8 +4,9 @@ import { beautyNumber } from '../utils'
 import { criticalChance, criticize } from '../damage'
 import { SetSkillFixValue, SetSkillInputName, SetSkillUsesSkillInc, SetSkillValue } from '../feats/slices/skillInputSlice'
 import { LabeledInput, RadioGroup } from './CommonUI'
-import { getDamage, VerboseResult } from './VerboseAttrsView'
+import { getDamage } from './VerboseAttrsView'
 import { SetAtype } from '../feats/slice'
+import { VerboseResult } from './AttrsView'
 
 
 interface SkillInputOneProps extends SkillSpec {
@@ -60,17 +61,9 @@ function SkillTestOne({ index, skillSpec }: SkillOutputOneProps) {
 
 export function SkillTestSet() {
   const cases = useAppSelector(state => state.SkillInput.cases)
-  const atype = useAppSelector(state => state.Profile.atype)
-  const dispatch = useAppDispatch()
   return (
     <div style={{ position: "relative" }}>
       <h3>스킬</h3>
-      <RadioGroup name="공격 타입" className="AtypeSelector"
-        labels={["물리공격", "마법공격"]}
-        values={["Physc", "Magic"]}
-        value={atype}
-        dispatcher={v => dispatch(SetAtype(v))}
-      />
       <div className="SkillTestSet">
       {cases.map((a, index) => (
         <SkillTestOne key={index} index={index} skillSpec={a} />
