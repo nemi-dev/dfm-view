@@ -7,7 +7,7 @@ import { armorParts, getItem, isArmorPart } from "../items"
 import { acceptEmblem } from "../emblem"
 import { selectAccessUpgradeValues, selectArmorUpgradeValues, selectWholeFromPart } from "../selectors"
 import { AttrIcon, EmblemIcon, ItemIcon2, ItemName, LabeledInput, NumberInput, OneClickButtonGroup, RadioGroup } from "./CommonUI"
-import { NextMagicProps, SetAccessUpgradeValueAll, SetArmorUpgradeValueAll, SetEquipUpgradeValue, SetMaterial, SetMaterialAll } from "../feats/slices/equipSlice"
+import { NextMagicProps, SetAccessUpgradeValueAll, SetArmorUpgradeValueAll, SetEquipUpgradeValue, SetMaterial, SetMaterialAll, SetPerfectMagicPropsEl, SetPerfectMagicPropsStat } from "../feats/slices/equipSlice"
 import { BranchView, ExclusiveView, GivesView, ISetOptionalAttrsView } from "./ConditionalAttrs"
 import { ModalContext } from "./modalContext"
 import { MagicPropsArray } from "./MagicProps"
@@ -119,11 +119,28 @@ function selectSynchronizedMaterial(state: RootState) {
   return mat
 }
 
+
 export function Equips() {
   const dispatch = useAppDispatch()
   const [armorUpgradeSynced, armorUpgradeValue] = useAppSelector(selectArmorUpgradeValues)
   const [accessUpgradeSynced, accessUpgradeValue] = useAppSelector(selectAccessUpgradeValues)
   const mat = useAppSelector(selectSynchronizedMaterial)
+  const myAtype = useAppSelector(state => state.Profile.atype)
+  
+  const onButtonClick = useCallback((v: string) => {
+    switch (v) {
+      case "magicPropLeft":
+        switch (myAtype) {
+          case "Physc": return dispatch(SetPerfectMagicPropsStat("strn"))
+          case "Magic": return dispatch(SetPerfectMagicPropsStat("intl"))
+        }
+      case "magicPropFire": return dispatch(SetPerfectMagicPropsEl("el_fire"))
+      case "magicPropIce":  return dispatch(SetPerfectMagicPropsEl("el_ice"))
+      case "magicPropLight":return dispatch(SetPerfectMagicPropsEl("el_lght"))
+      case "magicPropDark": return dispatch(SetPerfectMagicPropsEl("el_dark"))
+
+    }
+  }, [myAtype])
   return (
     <div className="Equips">
       <header>
@@ -145,16 +162,16 @@ export function Equips() {
       <div>
         <h4>장비 모두 설정</h4>
         <div className="EquipBatch">
-        <LabeledInput className={armorUpgradeSynced? "" : "Transparent"} label="방어구 강화보너스" value={armorUpgradeValue} onChange={v => {
+        <LabeledInput label="방어구 강화보너스" value={armorUpgradeValue} onChange={v => {
           dispatch(SetArmorUpgradeValueAll(v))
         }} />
-        <LabeledInput className={accessUpgradeSynced? "" : "Transparent"} label="악세서리 강화보너스" value={accessUpgradeValue} onChange={v => {
+        <LabeledInput label="악세서리 강화보너스" value={accessUpgradeValue} onChange={v => {
           dispatch(SetAccessUpgradeValueAll(v))
         }} />
         <RadioGroup name="방어구 재질" values={["천", "가죽", "경갑", "중갑", "판금"]} value={mat}
           dispatcher={v => dispatch(SetMaterialAll(v))}
         />
-        <OneClickButtonGroup name="마법봉인 모두" groupName="마법봉인" dispatcher={() => {}}
+        <OneClickButtonGroup name="완벽한 마봉작" groupName="완벽한 마봉작" dispatcher={onButtonClick}
           values={["magicPropLeft", "magicPropFire", "magicPropIce", "magicPropLight", "magicPropDark"]}
           labels={["내 스탯", "화속강", "수속강", "명속강", "암속강"]}
          />

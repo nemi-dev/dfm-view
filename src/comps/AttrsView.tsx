@@ -88,7 +88,7 @@ function IconAttrOne({ attrKey, value, alt = "" }: IconAttrOneProps) {
 
 export function IconicAttrView({ attrs, onClick }: { attrs: BaseAttrs, onClick?: React.MouseEventHandler<HTMLDivElement> }) {
   const views: JSX.Element[] = []
-  for (const { key, name } of attrDefs) {
+  for (const { key, name } of attrDefs.array) {
     const value = attrs[key]
     if ((key in attrs) && (typeof value === "number")) {
       views.push(<IconAttrOne key={key} attrKey={key} value={value} />)
@@ -103,7 +103,7 @@ export function IconicAttrView({ attrs, onClick }: { attrs: BaseAttrs, onClick?:
 
 export function SimpleBaseAttrView({ attrs }: { attrs: BaseAttrs }) {
   const views: JSX.Element[] = []
-  for (const { key, expression, name } of attrDefs) {
+  for (const { key, expression, name } of attrDefs.array) {
     if (key in attrs) {
       const compo = expressionToComponent[expression]
       if (key === "sk_lv") {
@@ -128,3 +128,20 @@ export function SimpleBaseAttrView({ attrs }: { attrs: BaseAttrs }) {
 }
 
 
+
+interface VerboseResultProps {
+  name: string
+  value: number | string | JSX.Element
+  className?: string
+}
+
+export function VerboseResult({ name, value = 0, className = ""}: VerboseResultProps) {
+  return (
+  <span className={"AttrOne Result " + className}>
+    {name? <div className="AttrName">{name}</div> : null}
+    <div className={"AttrValue " + className}>
+      {value}
+    </div>
+  </span>
+  )
+}

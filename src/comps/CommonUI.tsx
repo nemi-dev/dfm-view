@@ -2,11 +2,35 @@ import React, { DetailedHTMLProps, useCallback, useEffect, useState } from 'reac
 import { v4 as uuidv4 } from "uuid"
 import { im } from '../utils'
 import '../style/Common.scss'
+import styled from 'styled-components'
 
 function prevent(ev : WheelEvent) {
   (ev.target as HTMLElement).blur()
 }
 
+
+const SignSymbol = styled.span`
+  font-size: 0.85em;
+  font-weight: 400;
+  vertical-align: text-top;
+`
+const PercentSymbol = styled.span.attrs({ children: "%" })`
+  font-size: 0.6em;
+  font-weight: 400;
+`
+
+export function Percent({ value, signed = false }: { value: number, signed?: boolean }) {
+  value = value ?? 0
+  const ve = Math.round(value * 100) / 100
+  const sign = ve > 0? ( signed? "+" : null ) : ve < 0? "-" : null
+  return (
+    <span>
+      {sign? <SignSymbol>{sign}</SignSymbol> : null}
+      {Math.abs(ve)}
+      <PercentSymbol />
+    </span>
+  )
+}
 
 interface ItemIconProps extends DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
   src: string
@@ -122,7 +146,7 @@ export function LabeledInput({ className = "", label, value, onChange }: Labeled
 export function DisposableInput({ index, value, update, del }: { index: number, value: number, update: (a: number, b: number) => void, del: (a: number) => void, }) {
   return (
     <div className="DisposableInput">
-      <NumberInput value={value} onChange={v => update(v, index)} />
+      <NumberInput className="FormGroupValue" value={value} onChange={v => update(v, index)} />
       <button onClick={() => del(index)}>⨯</button>
     </div>
   )
@@ -189,6 +213,33 @@ export function RadioGroup<T extends string | number>({ name, groupName = name, 
   )
 }
 
+interface CheckboxGroupProps<T extends number | string> {
+  name: string
+  groupName?: string
+  className?: string
+  values: T[]
+  value: T[]
+  labels?: (string | number)[]
+  dispatcher: (value: T, checked: boolean) => any
+}
+export function CheckboxGroup<T extends string | number>({ name, groupName = name, className = "", values, labels = values, value, dispatcher }: CheckboxGroupProps<T>) {
+  const onChange = useCallback((ev: React.ChangeEvent<HTMLInputElement>) => {
+    dispatcher(ev.target.value as T, ev.target.checked)
+  }, [])
+  return (
+    <span className={("RadioGroup "+className).trim()}>
+      <span className="FormGroupName">{groupName}</span>
+      {values.map((v, i) => (
+        <span key={v} className="RadioOne FormGroupValue">
+          <input type="checkbox" name={name} value={v} id={`Radio-${name}-${v}`} checked={value.includes(v)} onChange={onChange} />
+          <label htmlFor={`Radio-${name}-${v}`}>{labels[i]}</label>
+        </span>
+      ))}
+    </span>
+  )
+}
+
+
 type ButtonGroupProps<T extends string | number> = Omit<RadioGroupProps<T>, "value">
 
 export function OneClickButtonGroup<T extends string | number>({ name, groupName = name, className = "", values, labels = values, dispatcher }:ButtonGroupProps<T>) {
@@ -196,8 +247,15 @@ export function OneClickButtonGroup<T extends string | number>({ name, groupName
     <span className={("OneClickGroup "+className).trim()}>
       <span className="FormGroupName">{groupName}</span>
       {values.map((v, i) => (
-        <button id={v.toString()} onClick={() => dispatcher(v)}>{labels[i]}</button>
+        <button key={v.toString()} id={v.toString()} onClick={() => dispatcher(v)}>{labels[i]}</button>
       ))}
     </span>
   )
 }
+
+export const Gridy = styled.div<{ columns: number, colSize?: string }>`
+  display: grid;
+  grid-template-columns: repeat(${props => props.columns}, ${props => props.colSize ?? "auto"});
+  grid-auto-rows: auto;
+  gap: 2px;
+`

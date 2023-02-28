@@ -85,6 +85,18 @@ export const equipSlice = createSlice({
       const current = s[part].magicProps[index]
       const next = mint.cycle[current]
       s[part].magicProps[index] = next
+    },
+    SetPerfectMagicPropsStat: (s, { payload: p }: PayloadAction<"strn" | "intl">)=> {
+      armorParts.forEach(part => {
+        s[part].magicProps = [p, p, p]
+      })
+      s.무기.magicProps[0] = "dmg_inc"
+      s.무기.magicProps.fill(p, 1, 3)
+    },
+    SetPerfectMagicPropsEl: (s, { payload: p }: PayloadAction<"el_fire" | "el_ice" | "el_lght" | "el_dark"> ) => {
+      s.팔찌.magicProps = [p, p, p]
+      s.목걸이.magicProps = [p, p, p]
+      s.반지.magicProps = [p, p, p]
     }
   }
 })
@@ -101,6 +113,8 @@ export const {
   SetMaterialAll,
   SetEquips,
   NextMagicProps,
+  SetPerfectMagicPropsStat,
+  SetPerfectMagicPropsEl
 } = equipSlice.actions
 
 

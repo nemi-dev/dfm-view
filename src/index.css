@@ -36,6 +36,9 @@ body {
 
 }
 
+h1, h2, h3, h4, h5, h6 {
+  margin-block: 0.9em;
+}
 h1 {
   font-size: 3em;
   line-height: 1.1;
@@ -97,18 +100,15 @@ input[type=text], input[type=number] {
 
 button {
   border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.25em 0.5em;
+  border: none;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #cc6c0c;
+  background-color: #af6b04;
   cursor: pointer;
+  color: white; /* for iOS */
 }
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
+
 
 footer {
   padding: 4rem;

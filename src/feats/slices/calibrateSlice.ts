@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface CalibrateInitType {
+export interface CalibrateInitType {
   strn: number,
   intl: number,
   str_inc: number,
@@ -19,6 +19,8 @@ interface CalibrateInitType {
   dmg_inc: number,
   cdmg_inc: number,
   dmg_add: number,
+
+  eltype: Eltype[]
   
   el_fire: number,
   el_ice: number,
@@ -57,6 +59,8 @@ const attrs: CalibrateInitType = {
   cdmg_inc: 0,
   dmg_add: 0,
   
+  eltype: [],
+
   el_fire: 0,
   el_ice: 0,
   el_lght: 0,
@@ -74,11 +78,11 @@ const attrs: CalibrateInitType = {
   target_res: 0
 }
 
-type SetAttrAction = PayloadAction<[keyof Omit<CalibrateInitType, "sk_inc">, number]>
+type SetAttrAction = PayloadAction<[keyof Omit<CalibrateInitType, "sk_inc" | "eltype">, number]>
 type SkillIncPayloadType = PayloadAction<[number, number]>
 
 export const calibrateSlice = createSlice({
-  name: 'Calibrate',
+  name: 'MyStat',
   initialState: attrs,
   reducers: {
     SetBasicAttr: (s, { payload: [key, value] }: SetAttrAction) => {
@@ -92,6 +96,10 @@ export const calibrateSlice = createSlice({
     },
     RemoveSkillInc: (s, { payload }: PayloadAction<number>) => {
       if (s.sk_inc.length > 1) s.sk_inc.splice(payload, 1)
+    },
+    SetEltype: (s, { payload: [ el, on ] }: PayloadAction<[Eltype, boolean]>) => {
+      if (on && !s.eltype.includes(el)) s.eltype.push(el)
+      else if (!on && s.eltype.includes(el)) s.eltype.splice(s.eltype.indexOf(el), 1)
     }
   }
 })
@@ -100,5 +108,6 @@ export const {
   SetBasicAttr,
   SetSkillInc,
   AddSkillInc,
-  RemoveSkillInc
+  RemoveSkillInc,
+  SetEltype
 } = calibrateSlice.actions

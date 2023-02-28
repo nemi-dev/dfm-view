@@ -2,7 +2,7 @@
 
 #root {
   padding-block: 2rem;
-  padding-inline: max(calc(50vw - 500px), 2rem);
+  padding-inline: max(calc(50vw - 600px), 2rem);
   --icon-size: 80px;
 }
 
@@ -13,13 +13,14 @@
   flex-wrap: wrap;
 
   > span.NavLink {
-    height: 50px;
-    line-height: 50px;
+    height: 45px;
     cursor: pointer;
     text-align: center;
     font-size: 1.2rem;
     padding-inline: 1rem;
     flex-grow: 1;
+    display: flex;
+    align-items: center;
     justify-content: center;
     border-bottom: 0px solid transparent;
     transition-property: color, padding, border;
@@ -38,13 +39,6 @@
     }
   }
 }
-
-
-.SkillIncCaliArea {
-  padding-inline: 2rem;
-  padding-bottom: 2rem;
-}
-
 
 @media (max-width: 768px) {
   #root {
@@ -66,7 +60,7 @@
     > span.NavLink {
       white-space: nowrap;
       font-size: 1rem;
-      padding: 0.7rem;
+      padding-inline: 0.7rem;
     }
   }
 }
