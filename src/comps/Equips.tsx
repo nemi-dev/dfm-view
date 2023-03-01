@@ -61,10 +61,6 @@ function EquipCardEmblemUpgrade({ part }: EquipProps) {
       <ItemIcon2 className="CardSocket" attrs={card} onClick={() => openModal(part, "Card", 0)} />
       <EmblemArray part={part} />
       <div className="EquipUpgradeValue">
-        {part === "무기"?
-        <><AttrIcon attrKey="atk_ph" /><AttrIcon attrKey="atk_mg" /></>
-        :<><AttrIcon attrKey="strn" /><AttrIcon attrKey="intl" /></>
-        }
         +<NumberInput value={upgradeBonus} onChange={v => dispatch(SetEquipUpgradeValue([part, v]))} />
       </div>
     </div>
@@ -145,7 +141,7 @@ export function Equips() {
     <div className="Equips">
       <header>
         <h3>장비</h3>
-        <div>※ 여기서 입력한 장비는 항상 칼박 100%이므로 실제 셋팅보다 더 뻥튀기되어있을 수 있습니다.</div>
+        <div>※ 칼박 100%로 계산합니다.</div>
       </header>
       <div className="EquipGridBox">
         <EquipPartInnerGrid part="무기"/>
@@ -159,9 +155,9 @@ export function Equips() {
         <EquipPartInnerGrid part="반지"/>
         <EquipPartInnerGrid part="보조장비"/>
       </div>
-      <div>
+      <div className="EquipBatch">
         <h4>장비 모두 설정</h4>
-        <div className="EquipBatch">
+        <div className="EquipBatchLayout">
         <LabeledInput label="방어구 강화보너스" value={armorUpgradeValue} onChange={v => {
           dispatch(SetArmorUpgradeValueAll(v))
         }} />

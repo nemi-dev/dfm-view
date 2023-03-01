@@ -29,7 +29,6 @@ a {
 
 body {
   margin: 0;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
   background-color: #1e191580;
@@ -38,30 +37,15 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   margin-block: 0.9em;
-}
-h1 {
-  font-size: 3em;
-  line-height: 1.1;
-}
-
-h2 {
-  font-size: 2.2em;
-  font-weight: 900;
-  text-align: center;
-  line-height: 1.1;
-}
-
-h3 {
-  font-size: 1.5rem;
-  font-weight: 900;
+  font-weight: 800;
   text-align: center;
 }
 
-h4 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  text-align: center;
-}
+h1 { font-size: 2rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.25rem; }
+h4 { font-size: 1rem; }
+h5 { font-size: 0.75rem; }
 
 header {
   margin-block: 1.5rem;
@@ -70,6 +54,10 @@ header {
 
 header :is(h1, h2, h3, h4, h5, h6) {
   margin-block: 0;
+}
+
+header > :is(h1, h2, h3, h4, h5, h6, div):not(:first-child) {
+  font-weight: 300;
 }
 
 input {
@@ -89,8 +77,8 @@ input::-webkit-outer-spin-button {
 }
 
 input[type=text], input[type=number] {
-  background-color: #090704;
-  border: 1px solid rgba(111, 102, 93, 0.843);
+  background-color: rgba(0, 0, 0, 0.51);
+  border: 1px solid rgba(111, 102, 93, 0.8);
   outline: none;
   border-radius: 2px;
   padding: 0.2rem;
@@ -99,9 +87,9 @@ input[type=text], input[type=number] {
 }
 
 button {
-  border-radius: 8px;
+  border-radius: 20px;
   border: none;
-  font-size: 1em;
+  font-size: 1rem;
   font-weight: 500;
   font-family: inherit;
   background-color: #af6b04;

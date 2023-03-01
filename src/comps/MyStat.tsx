@@ -5,7 +5,7 @@ import { AddSkillInc, CalibrateInitType, RemoveSkillInc, SetBasicAttr, SetEltype
 import { DeleteSwitch } from "../feats/slices/equipSlice"
 import { selectMe, selectMeWithoutCalibrate, selectMyFinalEltype } from "../selectors"
 import { beautyNumber } from "../utils"
-import { CheckboxGroup, DisposableInput, Gridy, LabeledInput, NumberInput, OutputView, Percent, RadioGroup } from "./CommonUI"
+import { CheckboxGroup, DisposableInput, LabeledInput, NumberInput, Percent, RadioGroup } from "./CommonUI"
 
 import styled from 'styled-components'
 import { VerboseResult } from "./AttrsView"
@@ -60,82 +60,78 @@ type OneAttrTripletProps = {
 }
 
 function OneAttrTriplet({ className = "", name, aKey, percent = false, signed = false }: OneAttrTripletProps) {
-  const me_nocal = useAppSelector(selectMeWithoutCalibrate)
   const cattr = useAppSelector(state => state.Calibrate)
   const me = useAppSelector(selectMe)
-  const pure = percent? <Percent value={me_nocal[aKey]} signed={signed} /> : beautyNumber(me_nocal[aKey] as number)
   const cValue = percent? <Percent value={me[aKey]} signed={signed} /> : beautyNumber(me[aKey] as number)
   const dispatch = useAppDispatch()
   return (
     <div className={"AttrOne " + (percent? "Percented " : "") +  className}>
-      <div className="Pure">
-        {name? <div className="AttrName">{name}</div>: null}
-        <div className="AttrValue"> ({pure})</div>
-      </div>
-      <div>
-      <NumberInput value={cattr[aKey]} onChange={v => dispatch(SetBasicAttr([aKey, v]))} />
-      </div>
+      {name? <div className="AttrName">{name}</div>: null}
       <div className="AttrValue">{cValue}</div>
+      <NumberInput value={cattr[aKey]} onChange={v => dispatch(SetBasicAttr([aKey, v]))} />
+    </div>
+  )
+}
+
+const GridyTwo = styled.div`
+  display: grid;
+  grid-template-columns: 5fr 3fr;
+  gap: 2px;
+`
+
+function StatAtkCrit({ atype, className = "" }: { atype: "Physc" | "Magic", className? : string }) {
+  const me = useAppSelector(selectMe)
+  const at_keys: (keyof NumberCalibrate)[] = atype === "Physc"?
+  ["strn", "str_inc", "atk_ph", "atk_ph_inc", "crit_ph", "crit_ph_pct"]
+  : ["intl", "int_inc", "atk_mg", "atk_mg_inc", "crit_mg", "crit_mg_pct"]
+  const
+    [key_stat, key_stat_inc, key_atk, key_atk_inc, key_crit, key_crit_pct] = at_keys,
+    [name_stat,, name_atk, ,name_crit] = at_keys.map(k => attrDefs[k].name)
+  const chance = criticalChance(me[key_crit], me[key_crit_pct])
+  return (
+    <div className={"StatAtkCrit "+atype+" "+className} >
+      <GridyTwo>
+        <OneAttrTriplet aKey={key_stat} name={name_stat} />
+        <OneAttrTriplet aKey={key_stat_inc} name="증가" percent signed />
+      </GridyTwo>
+      <div className="Result">
+        <div className="AttrName">(마을) {name_stat}</div>
+        <div className="AttrValue">{beautyNumber(calcStat(me[key_stat], me[key_stat_inc]))}</div>
+      </div>
+      <GridyTwo>
+        <OneAttrTriplet aKey={key_atk} name={name_atk[0]+"공"} />
+        <OneAttrTriplet aKey={key_atk_inc} name="증가" percent signed />
+      </GridyTwo>
+      <div className="Result">
+        <div className="AttrName">(마을) {name_atk}</div>
+        <div className="AttrValue">{beautyNumber(calcAtk(me[key_atk], me[key_atk_inc], me[key_stat], me[key_stat_inc]))}</div>
+      </div>
+      <GridyTwo>
+        <OneAttrTriplet aKey={key_crit} name={name_crit[0]+"크"} />
+        <OneAttrTriplet aKey={key_crit_pct} name="확률" percent signed />
+      </GridyTwo>
+      <div className="Result">
+        <div className="AttrName">크리티컬 확률</div>
+        <div className="AttrValue"><Percent value={chance * 100} /></div>
+      </div>
     </div>
   )
 }
 
 
-function StatAndAtk({ atype, className = "" }: { atype: "Physc" | "Magic", className? : string }) {
-  const me = useAppSelector(selectMe)
-  const at_keys: (keyof NumberCalibrate)[] = atype === "Physc"? ["strn", "str_inc", "atk_ph", "atk_ph_inc"] : ["intl", "int_inc", "atk_mg", "atk_mg_inc"]
-  const
-    [key_stat, key_stat_inc, key_atk, key_atk_inc] = at_keys,
-    [name_stat,, name_atk] = at_keys.map(k => attrDefs[k].name)
-  return (
-    <Gridy className={"StatAndAtk "+atype+" "+className} columns={3} colSize="auto" >
-      <OneAttrTriplet aKey={key_stat} name={name_stat} />
-      <OneAttrTriplet aKey={key_stat_inc} name="증가" percent signed />
-      <div className="AttrOne Result">
-        <div className="AttrValue">{beautyNumber(calcStat(me[key_stat], me[key_stat_inc]))}</div>
-      </div>
-      <OneAttrTriplet aKey={key_atk} name={name_atk[0]+"공"} />
-      <OneAttrTriplet aKey={key_atk_inc} name="증가" percent signed />
-      <div className="AttrOne Result">
-        <div className="AttrValue">{beautyNumber(calcAtk(me[key_atk], me[key_atk_inc], me[key_stat], me[key_stat_inc]))}</div>
-      </div>
-    </Gridy>
-  )
-}
-
-
-function Crit({ atype }: { atype: "Physc" | "Magic" }) {
-  const me = useAppSelector(selectMe)
-  const at_keys: (keyof NumberCalibrate)[] = atype === "Physc"? ["crit_ph", "crit_ph_pct"] : ["crit_mg", "crit_mg_pct"]
-  const
-    [key_crit, key_crit_pct] = at_keys,
-    [name_crit, ] = at_keys.map(k => attrDefs[k].name)
-  const chance = criticalChance(me[key_crit], me[key_crit_pct])
-  return (
-    <Gridy className={"Crits "+atype} columns={3} colSize="auto" >
-      <OneAttrTriplet aKey={key_crit} name={name_crit[0]+"크"} />
-      <OneAttrTriplet aKey={key_crit_pct} name="크확증" percent signed />
-      <div className="AttrOne Result">
-        <div className="AttrName">{"확률"}</div>
-        <div className="AttrValue"><Percent value={chance * 100} /></div>
-      </div>
-    </Gridy>
-  )
-}
-
-
 const SkillIncValues = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-grow: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
 `
 
 function SkillInc() {
   const cattr = useAppSelector(state => state.Calibrate)
   const dispatch = useAppDispatch()
   return (
-    <div className="SkillInc AttrOne Vertical">
-      <span className="AttrName">스증 (장비+무녀)<button onClick={() => dispatch(AddSkillInc())}>+</button></span>
+    <div className="SkillInc AttrOne">
+      <span className="AttrName">스증 (장비)<button onClick={() => dispatch(AddSkillInc())}>+</button></span>
       <SkillIncValues>
         {cattr.sk_inc.map((v, i) => {
           return <DisposableInput key={i} index={i} value={v}
@@ -149,16 +145,9 @@ function SkillInc() {
 }
 
 const FieldArray = styled.div`
-  display: grid;
-  grid-auto-flow: column;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto;
+  display: flex;
+  flex-direction: column;
   gap: 2px;
-
-  @media (max-width: 768px) {
-    display: flex;
-    flex-direction: column;
-  }
 `
 
 export function MyStat() {
@@ -181,48 +170,38 @@ export function MyStat() {
       <SwitchGroup />
       <div className="InputArea">
 
-        <Gridy columns={2} colSize="1fr">
+        <GridyTwo>
           <LabeledInput label="캐릭터 레벨" value={my_level} onChange={v => dispatch(SetLevel(v))} />
+          <LabeledInput label="업적 레벨" value={AchieveLevel} onChange={v => dispatch(SetAchieveLevel(v))} />
           <LabeledInput label="독립 공격력" value={atk_fixed} onChange={v => dispatch(set_atk_fixed(v))} />
-          <LabeledInput label="캐릭터 업적 달성 레벨" value={AchieveLevel} onChange={v => dispatch(SetAchieveLevel(v))} />
-          <OutputView tag="업적 달성 보너스: 모든스탯 증가" value={AchieveLevel * 7 - 2} />
-        </Gridy>
-        <RadioGroup name="공격 타입" className="AtypeSelector"
-          labels={["물리공격", "마법공격"]}
-          values={["Physc", "Magic"]}
-          value={atype}
-          dispatcher={v => dispatch(SetAtype(v))}
-        />
+        </GridyTwo>
+          <RadioGroup name="공격타입" className="AtypeSelector"
+            labels={["물리", "마법"]}
+            values={["Physc", "Magic"]}
+            value={atype}
+            dispatcher={v => dispatch(SetAtype(v))}
+          />
+          <CheckboxGroup name="공격속성" values={["화", "수", "명", "암"]} value={calibrateEltypes} dispatcher={(el, on) => dispatch(SetEltype([el, on]))} />
         <FieldArray>
-          <StatAndAtk atype="Physc" />
-          <Crit atype="Physc" />
-          <StatAndAtk atype="Magic" />
-          <Crit atype="Magic" />
-        </FieldArray>
-        <Gridy columns={3} colSize="1fr">
-          <OneAttrTriplet className="Responsive" aKey="dmg_inc" name="데미지증가" percent signed />
-          <OneAttrTriplet className="Responsive" aKey="cdmg_inc" name="크뎀증" percent signed />
-          <OneAttrTriplet className="Responsive" aKey="dmg_add" name="추가데미지" percent signed />
-        </Gridy>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr 1fr", gap: "2px" }}>
-          <OneAttrTriplet className="Responsive" aKey="sk_inc_sum" name="스증(단리합)" percent signed />
+          <StatAtkCrit atype={atype} />
+          <OneAttrTriplet aKey="cdmg_inc" name="크뎀증" percent signed />
+          <OneAttrTriplet aKey="dmg_inc" name="데미지증가" percent signed />
+          <OneAttrTriplet aKey="dmg_add" name="추가데미지" percent signed />
+          <OneAttrTriplet aKey="sk_inc_sum" name="스증 (패시브)" percent signed />
           <SkillInc />
-          <VerboseResult name="스킬공격력" className="Responsive" value={<Percent value={me["sk_inc"] + me["sk_inc_sum"]} signed />} />
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "3fr 1fr", gap: "2px" }}>
-        <CheckboxGroup name="공격속성 추가" values={["화", "수", "명", "암"]} value={calibrateEltypes} dispatcher={(el, on) => dispatch(SetEltype([el, on]))} />
-        <VerboseResult name="" value={eltype? `${eltype}속성` : "(속성없음)"} />
-        </div>
-        <Gridy columns={4} colSize="1fr">
-          <OneAttrTriplet className="Responsive el_fire" aKey="el_fire" name="화속강" />
-          <OneAttrTriplet className="Responsive el_ice"  aKey="el_ice"  name="수속강" />
-          <OneAttrTriplet className="Responsive el_lght" aKey="el_lght" name="명속강" />
-          <OneAttrTriplet className="Responsive el_dark" aKey="el_dark" name="암속강" />
-          <OneAttrTriplet className="Responsive el_fire" aKey="eldmg_fire" name="화속추" percent signed />
-          <OneAttrTriplet className="Responsive el_ice"  aKey="eldmg_ice"  name="수속추" percent signed />
-          <OneAttrTriplet className="Responsive el_lght" aKey="eldmg_lght" name="명속추" percent signed />
-          <OneAttrTriplet className="Responsive el_dark" aKey="eldmg_dark" name="암속추" percent signed />
-        </Gridy>
+        </FieldArray>
+        <VerboseResult name="스킬공격력" value={<Percent value={me["sk_inc"] + me["sk_inc_sum"]} signed />} />
+        <GridyTwo>
+          <OneAttrTriplet className="el_fire" aKey="el_fire" name="화속강" />
+          <OneAttrTriplet className="el_fire" aKey="eldmg_fire" name="화속추" percent signed />
+          <OneAttrTriplet className="el_ice"  aKey="el_ice"  name="수속강" />
+          <OneAttrTriplet className="el_ice"  aKey="eldmg_ice"  name="수속추" percent signed />
+          <OneAttrTriplet className="el_lght" aKey="el_lght" name="명속강" />
+          <OneAttrTriplet className="el_lght" aKey="eldmg_lght" name="명속추" percent signed />
+          <OneAttrTriplet className="el_dark" aKey="el_dark" name="암속강" />
+          <OneAttrTriplet className="el_dark" aKey="eldmg_dark" name="암속추" percent signed />
+        </GridyTwo>
+        <VerboseResult name="공격속성" value={eltype? `${eltype}` : "(속성없음)"} />
       </div>
     </div>
   )

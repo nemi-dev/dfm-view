@@ -32,9 +32,20 @@ function Tab({ name, children }: React.PropsWithChildren<{ name: string }> ) {
   return name === activeTab ? (children as JSX.Element) : null
 }
 
+function Navigator() {
+  return (
+    <nav className="Navigator">
+      <NavLink name="장비">장비</NavLink>
+      <NavLink name="아바타">칭호/아바타</NavLink>
+      <NavLink name="크리쳐">크리쳐</NavLink>
+      <NavLink name="마력결정">마력 결정</NavLink>
+      <NavLink name="봉인석">성안의 봉인</NavLink>
+      <NavLink name="길드">길드 버프</NavLink>
+    </nav>
+  )
+}
 
 function App() {
-
 
   const [portrait, setPortrait] = useState(false)
   const [activeTab, setActiveTab] = useState("장비")
@@ -69,21 +80,20 @@ function App() {
 
       <div className="App">
         <ItemSelectModal isOpen={isOpen}/>
-        <nav className="Navigator">
-          <NavLink name="장비">장비</NavLink>
-          <NavLink name="아바타">칭호/아바타</NavLink>
-          <NavLink name="크리쳐">크리쳐</NavLink>
-          <NavLink name="마력결정">마력 결정</NavLink>
-          <NavLink name="봉인석">성안의 봉인</NavLink>
-          <NavLink name="길드">길드 버프</NavLink>
-        </nav>
-        <Tab name="장비"><Equips /></Tab>
-        <Tab name="아바타"><Avatars /></Tab>
-        <Tab name="크리쳐"><Creatures /></Tab>
-        <Tab name="마력결정"><Tonic /></Tab>
-        <Tab name="봉인석"><Cracks /></Tab>
-        <Tab name="길드"><Guilds /></Tab>
-        <MyStat />
+        <div className="MainWrapper">
+          <div className="LeftSide">
+            <Navigator />
+            <Tab name="장비"><Equips /></Tab>
+            <Tab name="아바타"><Avatars /></Tab>
+            <Tab name="크리쳐"><Creatures /></Tab>
+            <Tab name="마력결정"><Tonic /></Tab>
+            <Tab name="봉인석"><Cracks /></Tab>
+            <Tab name="길드"><Guilds /></Tab>
+          </div>
+          <div className="RightSide">
+            <MyStat />
+          </div>
+        </div>
         <SkillTestSet />
       </div>
     </ModalContext.Provider>

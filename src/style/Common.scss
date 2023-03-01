@@ -8,16 +8,11 @@
   align-items: center;
   justify-content: space-evenly;
 
-  margin: 1px;
-  // border: 1px solid rgba(255, 225, 154, 0.4);
+
   padding-block: 2px;
-  padding-inline: 8px 2px;
+  padding-inline: 2px;
   background-color: rgba($color: #000000, $alpha: 0.3);
-  
-
   border-radius: 20px;
-
-  box-sizing: border-box;
 
   > .FormGroupName {
     font-weight: 400;
@@ -59,10 +54,9 @@
   > input[type=number], > input[type=text] {
     text-align: center;
     font-size: 1em;
-    background-color: transparent;
-    background-color: rgba($color: #000000, $alpha: 0.3);
     min-height: 26px;
     box-sizing: border-box;
+    background-color: rgba($color: #000000, $alpha: 0.3);
 
     @extend %hovergraph;
   }
@@ -77,6 +71,7 @@
       + label {
         flex-grow: 1;
         color: white;
+        font-size: 0.9rem;
 
         display: flex;
         align-items: center;
@@ -84,7 +79,6 @@
         cursor: pointer;
 
         min-height: 26px;
-        padding-inline: 5px;
         box-sizing: border-box;
         @extend %hovergraph;
       }
@@ -109,20 +103,19 @@
 }
 
 .DisposableInput {
-  // @extend %FormGroup;
-  background-color: rgba($color: #000000, $alpha: 3.5);
-  margin: 1px;
+  background-color: rgba($color: #000000, $alpha: 0.3);
+  border-radius: 20px;
+  padding: 2px;
   display: flex;
-  padding-inline: 2px;
+  height: 20px;
 
   input[type=number], input[type=text] {
     text-align: center;
-    font-size: 1em;
+    font-size: 0.9rem;
     background-color: transparent;
-    height: 20px;
     box-sizing: border-box;
     padding: 0;
-    @extend %hovergraph;
+    flex-grow: 1;
   }
 
   button {
@@ -140,30 +133,18 @@
   }
 }
 
-.OutputView {
-  @extend %hovering-df;
-}
-
-:is(.InputGroup, .OutputView) {
+.InputGroup {
 
   display: flex;
   align-items: center;
   justify-content: space-around;
-
-  .Value {
-    text-align: right;
-    flex-grow: 1;
-    font-size: 1.2rem;
-    font-weight: bolder;
-    color: #77bfff;
-  }
 
 }
 
 .InputArea {
   display: flex;
   flex-direction: column;
-  gap: 0.1rem;
+  gap: 2px;
 }
 
 .SlotHeading {
