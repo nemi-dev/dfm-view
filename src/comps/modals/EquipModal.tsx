@@ -24,8 +24,6 @@ function EquipSelect({ item }: { item: Attrs }) {
   )
 }
 
-
-
 interface IsetCatalog {
   name: string
   itemChildren: Attrs[]
@@ -81,23 +79,21 @@ export function EquipModalFragment() {
   return (
     <>
     <div className="ItemSelectScrollable">
+      {isets.length > 0?
+        <>
+          <h4>세트 한번에 끼기</h4>
+          <div className="ItemShotgunArray">
+            {isets.map(({name, itemChildren, useThisForPayload}) => {
+              return <EquipShotgun key={name} name={name} itemChildren={itemChildren} useThisForPayload={useThisForPayload} />
+            })}
+          </div>
+      </> : null}
       <h4>단일 장비</h4>
       <div className="ItemSelectArray">
       {items.map((item) => (
         <EquipSelect key={item.name} item={item} />
       ))}
       </div>
-      {
-        isets.length > 0?
-        <>
-        <h4>세트 한번에 끼기</h4>
-        <div className="ItemShotgunArray">
-          {isets.map(({name, itemChildren, useThisForPayload}) => {
-            return <EquipShotgun key={name} name={name} itemChildren={itemChildren} useThisForPayload={useThisForPayload} />
-          })}
-        </div>
-        </> : null
-      }
     </div>
     </>
   )

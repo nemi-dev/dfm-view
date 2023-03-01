@@ -1,6 +1,6 @@
 import _items from "../data/items.json"
 import _isets from "../data/itemsets.json"
-import _armorbases from "../data/armorbase.json"
+import _armorbases from "./armorbase.json"
 
 import memoizee from "memoizee"
 import { explode } from "./utils"
