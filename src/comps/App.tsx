@@ -2,18 +2,12 @@ import { useCallback, useContext, useEffect, useState } from 'react'
 import '../style/App.scss'
 import '../style/Misc.scss'
 
-import {
-  set_atk_fixed,
-  SetLevel,
-  SetAchieveLevel} from '../feats/slice'
-import { Gridy, LabeledInput, OutputView } from './CommonUI'
 import { Equips } from './Equips'
 import { Creatures } from './Creature'
 import { Guilds } from "./Guilds"
 import { Cracks } from "./Cracks"
 import { Tonic } from "./Tonic"
 import { Avatars } from "./Avatar"
-import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { TabContext } from '../responsiveContext'
 import { ItemSelectModal } from './Modal'
 import { ModalContext } from "./modalContext"

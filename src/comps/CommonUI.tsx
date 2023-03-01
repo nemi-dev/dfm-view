@@ -1,5 +1,4 @@
-import React, { DetailedHTMLProps, useCallback, useEffect, useState } from 'react'
-import { v4 as uuidv4 } from "uuid"
+import React, { DetailedHTMLProps, useCallback, useId } from 'react'
 import { im } from '../utils'
 import '../style/Common.scss'
 import styled from 'styled-components'
@@ -132,8 +131,7 @@ interface LabeledInputProps {
   onChange: (val: number) => void
 }
 export function LabeledInput({ className = "", label, value, onChange }: LabeledInputProps) {
-  const [id, setId] = useState("")
-  useEffect(() => { setId(uuidv4()) } , [])
+  const id = useId()
   if (Number.isNaN(value)) value = 0
   return (
     <div className={("InputGroup NumberInput "+className).trim()}>
