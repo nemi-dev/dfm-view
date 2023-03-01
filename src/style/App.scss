@@ -1,21 +1,33 @@
 @import "./Defs";
 
 #root {
-  --icon-size: 80px;
+  padding-block: 4px;
+  max-width: 99vw;
+  margin-inline: auto;
+  box-sizing: border-box;
+  --icon-size: 64px;
 }
 
-.App > nav.Navigator {
+nav.Navigator {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
 
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
   > span.NavLink {
-    height: 45px;
     cursor: pointer;
     text-align: center;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     padding-inline: 1rem;
+    padding-block-start: 8px;
+    padding-block-end: 12px;
     flex-grow: 1;
     display: flex;
     align-items: center;
@@ -24,37 +36,39 @@
     transition-property: color, padding, border;
     transition-duration: 0.2s;
     transition-timing-function: linear;
-    box-sizing: border-box;
+    box-sizing: content-box;
 
-    &:hover  {
+    &:hover {
       color: $Uncommon-color;
       border-bottom: 3px solid $Uncommon-color;
+      padding-block-end: 9px;
     }
 
     &.Active {
       color: $Epic-color;
       border-bottom: 6px solid $Epic-color;
+      padding-block-end: 6px;
     }
   }
+
+}
+
+@media (min-width:1000px) {
+  
+  .MainWrapper {
+    display: grid;
+    grid-template-columns: 1fr 480px;
+  }
+
 }
 
 @media (max-width: 768px) {
-  #root {
-    padding: 0.25rem;
-  }
-  .App > nav.Navigator {
+  nav.Navigator {
     overflow-x: scroll;
     flex-wrap: nowrap;
     align-items: normal;
     justify-content: unset;
     
-    &::-webkit-scrollbar {
-      display: none;
-    }
-
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-
     > span.NavLink {
       white-space: nowrap;
       font-size: 1rem;

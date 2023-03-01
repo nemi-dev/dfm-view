@@ -3,9 +3,8 @@ import { selectMe, selectMyFinalEltype } from '../selectors'
 import { beautyNumber } from '../utils'
 import { criticalChance, criticize } from '../damage'
 import { SetSkillFixValue, SetSkillInputName, SetSkillUsesSkillInc, SetSkillValue } from '../feats/slices/skillInputSlice'
-import { LabeledInput, RadioGroup } from './CommonUI'
+import { LabeledInput } from './CommonUI'
 import { getDamage } from './VerboseAttrsView'
-import { SetAtype } from '../feats/slice'
 import { VerboseResult } from './AttrsView'
 
 

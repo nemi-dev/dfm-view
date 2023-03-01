@@ -137,7 +137,7 @@ interface VerboseResultProps {
 
 export function VerboseResult({ name, value = 0, className = ""}: VerboseResultProps) {
   return (
-  <span className={"AttrOne Result " + className}>
+  <span className={"Result " + className}>
     {name? <div className="AttrName">{name}</div> : null}
     <div className={"AttrValue " + className}>
       {value}

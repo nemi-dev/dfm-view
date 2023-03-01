@@ -136,7 +136,7 @@ export function LabeledInput({ className = "", label, value, onChange }: Labeled
   return (
     <div className={("InputGroup NumberInput "+className).trim()}>
       <label className="FormGroupName" htmlFor={id}>{label}</label>
-      <NumberInput className="FormGroupValue"  id={id} value={value} onChange={onChange} placeholder={label} />
+      <NumberInput className="FormGroupValue" id={id} value={value} onChange={onChange} placeholder={label} />
     </div>
   )
 }
@@ -150,14 +150,6 @@ export function DisposableInput({ index, value, update, del }: { index: number, 
   )
 }
 
-export function OutputView({ tag, value }: { tag: string, value: number | string }) {
-  return (
-    <div className="OutputView">
-      <div>{tag}</div>
-      <div className="Value">{value}</div>
-    </div>
-  )
-}
 
 type AttrIconProps = { attrKey: keyof BaseAttrs } & Omit<React.DetailedHTMLProps<React.ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>, "src" | "alt" >
 export function AttrIcon({attrKey, className = "", ...props}: AttrIconProps) {

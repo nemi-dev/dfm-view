@@ -24,17 +24,11 @@ $guild-icon-size: 64px;
     height: $guild-icon-size;
   }
   .InputGroup {
-    padding: 1px 6px;
-    align-self: stretch;
+    padding-block: 1px;
 
     label {
       font-size: 0.8rem;
     }
-
-    input {
-      width: 45px;
-    }
-    
   }
 
   img {
