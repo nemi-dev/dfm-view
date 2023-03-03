@@ -49,6 +49,15 @@
     ["atk_ph", 5], ["atk_mg", 5],
     ["speed_atk", 2], ["Accu", 30]
   ],
+  "55/Epic/악세서리-고유": [
+    ["el_fire", 8], ["el_ice", 8], ["el_lght", 8], ["el_dark", 8],
+    ["strn", 37], ["intl", 37]
+  ],
+  "55/Epic/악세서리": [
+    ["el_fire", 3], ["el_ice", 3], ["el_lght", 3], ["el_dark", 3],
+    ["strn", 18], ["intl", 18],
+    ["speed_atk", 0.8], ["Accu", 50]
+  ],
   "55/Unique/봉인석": [
     ["strn", 7], ["intl", 7],
     ["atk_ph", 5], ["atk_mg", 5],

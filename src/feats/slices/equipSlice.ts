@@ -5,20 +5,6 @@ import { getAvailableMagicPropsForEquip } from "../../magicProps"
 import _equipInit from "./equipInit.json"
 const equipInit: EquipsType = _equipInit as EquipsType
 
-interface EquipPartType {
-  name: string
-
-  /** 힘/지능 또는 물리/마법 공격력 증가 수치 */
-  upgrade: number
-  magicProps: MagicPropsCareAbout[]
-  emblems: EmblemSpec[]
-  card: string
-}
-
-interface ArmorPartType extends EquipPartType {
-  material: ArmorMaterial
-}
-
 interface DF_TitlePartType {
   name: string
   emblems: EmblemSpec[]

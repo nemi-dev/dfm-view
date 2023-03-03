@@ -5,6 +5,8 @@
  * and run json-schema-to-typescript to regenerate this file.
   */
 
+declare type NumberZ = number | ""
+
 declare type Itype = "소검"|"도"|"둔기"|"대검"|"광검"|"너클"|"건틀릿"|"클로"|"권투글러브"|"통파"|"리볼버"|"자동권총"|"머스켓"|"핸드캐넌"|"보우건"|"창"|"봉"|"로드"|"스탭"|"빗자루"|"십자가"|"염주"|"토템"|"낫"|"배틀액스"|"락소드"|"윙블레이드"|"상의"|"하의"|"머리어깨"|"벨트"|"신발"|"목걸이"|"팔찌"|"반지"|"보조장비"|"카드"|"엠블렘"|"칭호"|"봉인석"|"정수"|"오라"|"무기아바타"
 
 declare type EquipPart = "무기" | "상의" | "하의" | "머리어깨" | "벨트" | "신발" | "팔찌" | "목걸이" | "반지" | "보조장비"
@@ -271,4 +273,19 @@ declare interface SkillSpec {
   value: number
   fixed: number  
   useSkillInc: boolean 
+}
+
+
+declare interface EquipPartType {
+  name: string
+
+  /** 힘/지능 또는 물리/마법 공격력 증가 수치 */
+  upgrade: number
+  magicProps: MagicPropsCareAbout[]
+  emblems: EmblemSpec[]
+  card: string
+}
+
+declare interface ArmorPartType extends EquipPartType {
+  material: ArmorMaterial
 }
