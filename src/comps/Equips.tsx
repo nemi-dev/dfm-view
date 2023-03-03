@@ -6,7 +6,7 @@ import { SimpleBaseAttrView } from "./AttrsView"
 import { armorParts, getItem, isArmorPart } from "../items"
 import { acceptEmblem } from "../emblem"
 import { selectAccessUpgradeValues, selectArmorUpgradeValues, selectWholeFromPart } from "../selectors"
-import { AttrIcon, EmblemIcon, ItemIcon2, ItemName, LabeledInput, NumberInput, OneClickButtonGroup, RadioGroup } from "./CommonUI"
+import { EmblemIcon, ItemIcon2, ItemName, LabeledInput, NumberInput, OneClickButtonGroup, RadioGroup } from "./CommonUI"
 import { NextMagicProps, SetAccessUpgradeValueAll, SetArmorUpgradeValueAll, SetEquipUpgradeValue, SetMaterial, SetMaterialAll, SetPerfectMagicPropsEl, SetPerfectMagicPropsStat } from "../feats/slices/equipSlice"
 import { BranchView, ExclusiveView, GivesView, ISetOptionalAttrsView } from "./ConditionalAttrs"
 import { ModalContext } from "./modalContext"
@@ -18,7 +18,7 @@ interface EquipProps {
 }
 
 
-function ArmorMaterialSelector({ part }: EquipProps) {
+function ArmorMaterialSelectElement({ part }: EquipProps) {
   const name = useAppSelector(state => state.Equips[part].name)
   if (!isArmorPart(part) || !name) return null
   const material = useAppSelector(state => state.Equips[part].material)
@@ -69,7 +69,7 @@ function EquipCardEmblemUpgrade({ part }: EquipProps) {
 
 function EquipPartInnerGrid({ part }: EquipProps) {
   const { openModal } = useContext(ModalContext)
-  const item = getItem(useAppSelector(state => state.Equips[part].name))
+  const item = useAppSelector(state => getItem(state.Equips[part].name))
   const itemName = item.name
   const { branch, exclusive, give_us } = item ?? {}
   const [detail, setDetail] = useState(false)
@@ -81,7 +81,7 @@ function EquipPartInnerGrid({ part }: EquipProps) {
         <ItemIcon2 attrs={item} onClick={() => openModal(part, "Equip", 0)} />
         <div className="SlotHeading">
           <ItemName item={item} alt={`${part} 없음`} className="EquipName" onClick={clickHandler} />
-          <ArmorMaterialSelector part={part} />
+          <ArmorMaterialSelectElement part={part} />
         </div>
         {itemName? <>
         <EquipCardEmblemUpgrade part={part}/>

@@ -1,4 +1,4 @@
-import React, { DetailedHTMLProps, useCallback, useId } from 'react'
+import React, { DetailedHTMLProps, useCallback, useEffect, useId, useState } from 'react'
 import { im } from '../utils'
 import '../style/Common.scss'
 import styled from 'styled-components'
@@ -18,12 +18,25 @@ const PercentSymbol = styled.span.attrs({ children: "%" })`
   font-weight: 400;
 `
 
-export function Percent({ value, signed = false }: { value: number, signed?: boolean }) {
+export const Gridy = styled.div<{ columns: number, colSize?: string }>`
+  display: grid;
+  grid-template-columns: repeat(${props => props.columns}, ${props => props.colSize ?? "auto"});
+  grid-auto-rows: auto;
+  gap: 2px;
+`
+
+interface PercentProps {
+  value : number
+  signed? : boolean
+  className? : string
+}
+
+export function Percent({ value, className = "", signed = false }: PercentProps) {
   value = value ?? 0
   const ve = Math.round(value * 100) / 100
   const sign = ve > 0? ( signed? "+" : null ) : ve < 0? "-" : null
   return (
-    <span>
+    <span className={className}>
       {sign? <SignSymbol>{sign}</SignSymbol> : null}
       {Math.abs(ve)}
       <PercentSymbol />
@@ -106,7 +119,8 @@ export function CrackIcon({ item, className, ...props }: { item: Attrs } & Detai
   return <RoundIcon className={className} src={im`/img/item/${item}.png`} frame={`/img/crack/${item.rarity}.png`} {...props} />
 }
 
-interface NumberInputProps extends Omit<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, "onChange"> {
+interface NumberInputProps extends Omit<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, "onChange"|"value"> {
+  value: number
   onChange: (val: number) => void
 }
 export function NumberInput({onWheel, value, type, onChange, ...props}: NumberInputProps) {
@@ -115,12 +129,21 @@ export function NumberInput({onWheel, value, type, onChange, ...props}: NumberIn
     ref.current.addEventListener("wheel", prevent, { passive: false })
   }, [])
 
+  const [innerValue, setInnerValue] = useState<NumberZ>(value)
+  useEffect(() => {
+    if (value != 0) setInnerValue(value)
+
+  }, [value])
+
   const _onChange = useCallback((ev: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = parseInt(ev.target.value)
-    Number.isNaN(newValue)? onChange(0) : onChange(newValue)
+    setInnerValue(ev.target.value as NumberZ)
+    if (Number.isNaN(newValue)) onChange(0)
+    else onChange(newValue)
+
   }, [])
   
-  return <input type="number" value={value} onChange={_onChange} ref={ref} {...props}/>
+  return <input type="number" value={innerValue} onChange={_onChange} ref={ref} {...props}/>
 }
 
 
@@ -242,10 +265,3 @@ export function OneClickButtonGroup<T extends string | number>({ name, groupName
     </span>
   )
 }
-
-export const Gridy = styled.div<{ columns: number, colSize?: string }>`
-  display: grid;
-  grid-template-columns: repeat(${props => props.columns}, ${props => props.colSize ?? "auto"});
-  grid-auto-rows: auto;
-  gap: 2px;
-`

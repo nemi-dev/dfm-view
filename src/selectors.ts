@@ -20,38 +20,42 @@ export function selectAccessUpgradeValues(state: RootState): [boolean, number] {
   return [synced, value]
 }
 
-
-function magicPropsSelector(part: EquipPart) {
-  return (state: RootState) => {
-    const { name, magicProps } = state.Equips[part]
-    if (name == null) return {} 
-    const species = getItem(name)
-    const { level, rarity } = species
-    const array = magicProps.map((name, index) => getMagicPropsAttrs(name, part, level, rarity, index == 0))
-    if (rarity != "Epic") array.shift()
-    return combine(...array)
-  }
+function noot<T>(func: (part: EquipPart, s: RootState) => T): { [k in EquipPart]: (state: RootState) => T } {
+  const _o = {}
+  equipParts.forEach(part => _o[part] = func.bind(null, part))
+  return _o as any
 }
 
-const selectMagicProps = {
-  "무기": magicPropsSelector("무기"),
-  "상의": magicPropsSelector("상의"),
-  "하의": magicPropsSelector("하의"),
-  "머리어깨": magicPropsSelector("머리어깨"),
-  "벨트": magicPropsSelector("벨트"),
-  "신발": magicPropsSelector("신발"),
-  "팔찌": magicPropsSelector("팔찌"),
-  "목걸이": magicPropsSelector("목걸이"),
-  "반지": magicPropsSelector("반지"),
-  "보조장비": magicPropsSelector("보조장비")
+function noot2<T>(func: (part: EquipPart) => ((s: RootState) => T)): { [k in EquipPart]: (state: RootState) => T } {
+  const _o = {}
+  equipParts.forEach(part => _o[part] = func(part))
+  return _o as any
 }
+
+export const selectPart: { [k in EquipPart]: (state: RootState) => k extends ArmorPart? ArmorPartType : EquipPartType }
+= noot2(part => state => state.Equips[part]) as any
+
+
+export const selectMagicProps = noot2(
+  part => createSelector(
+    selectPart[part],
+    (equipPart) => {
+      const { name, magicProps } = equipPart
+      if (!name || !magicProps || !magicProps.length) return {} 
+      const { level, rarity } = getItem(name)
+      const _magicProps = magicProps.slice(rarity === "Epic" ? 0 : 1)
+      const array = _magicProps.map((name, index) => getMagicPropsAttrs(name, part, level, rarity, index == 0))
+      return combine(...array)
+    }
+  )
+)
 
 /**
  * 주어진 아이템에서 "내가 체크한" 조건부 옵션들을 배열로 얻는다.
  * @param item 아이템일 수도 있고, 세트일 수도 있다. 하지만 `combine()`으로 만든거는 안된다
  */
 function activeOptionalSelector(item: Attrs, state: RootState) {
-  if (item == null) return []
+  if (!item) return []
   const array: BaseAttrs[] = []
   array.push(...getActiveBranch(item, state.Switch.branches))
 
@@ -62,57 +66,41 @@ function activeOptionalSelector(item: Attrs, state: RootState) {
   return array
 }
 
-
-function armorBaseSelector(part: EquipPart) {
-  return (state: RootState) => {
-    const itemName = state.Equips[part as ArmorPart]
-    const item = getItem(itemName.name)
-    
-    const { level, rarity } = item
-    return getArmorBase(level, rarity, itemName.material, part as ArmorPart)
+export const selectActiveOption = noot(
+  (part, state) => {
+    const item = getItem(state.Equips[part].name)
+    return activeOptionalSelector(item, state)
   }
-}
+)
 
-const itsNotArmorPart = (state: RootState): BaseAttrs => ({})
-
-
-export const selectArmorBase = {
-  상의: armorBaseSelector("상의"),
-  하의: armorBaseSelector("하의"),
-  머리어깨: armorBaseSelector("머리어깨"),
-  벨트: armorBaseSelector("벨트"),
-  신발: armorBaseSelector("신발"),
-  무기: itsNotArmorPart,
-  팔찌: itsNotArmorPart,
-  목걸이: itsNotArmorPart,
-  반지: itsNotArmorPart,
-  보조장비: itsNotArmorPart
-}
-
-
-function equipSelector(part: EquipPart) {
-  return (state: RootState) => {
-    const equipPart = state.Equips[part]
-    const item = getItem(equipPart.name)
-    const upgradeAttr = explode(equipPart.upgrade, part === "무기"? "atk" : "stat")
-    const armorbase = selectArmorBase[part](state)
-    return combine(item, armorbase, ...activeOptionalSelector(item, state), upgradeAttr, selectMagicProps[part](state), ...equipPart.emblems.map(getEmblem), getItem(equipPart.card))
-  }
-}
+export const selectArmorBase = noot2(
+  (part) => createSelector(
+    selectPart[part],
+    equipPart => {
+      if (!isArmorPart(part)) return {}
+      const armorPart = equipPart as ArmorPartType
+      const item = getItem(armorPart.name)
+      
+      const { level, rarity } = item
+      return getArmorBase(level, rarity, armorPart.material, part)
+    }
+  )
+)
 
 /** 어떤 한 장비 부의의 아이템 옵션, 활성화시킨 조건부 옵션, 업그레이드 보너스, 마법봉인, 엠블렘, 카드 옵션을 얻는다. */
-export const selectWholeFromPart = {
-  무기: equipSelector("무기"),
-  상의: equipSelector("상의"),
-  하의: equipSelector("하의"),
-  머리어깨: equipSelector("머리어깨"),
-  벨트: equipSelector("벨트"),
-  신발: equipSelector("신발"),
-  팔찌: equipSelector("팔찌"),
-  목걸이: equipSelector("목걸이"),
-  반지: equipSelector("반지"),
-  보조장비: equipSelector("보조장비")
-}
+export const selectWholeFromPart = noot2(
+  part => createSelector(
+    selectPart[part],
+    selectMagicProps[part],
+    selectArmorBase[part],
+    selectActiveOption[part],
+    (equipPart, magicProps, armorbase, activeOption) => {
+      const item = getItem(equipPart.name)
+      const upgradeAttr = explode(equipPart.upgrade, part === "무기"? "atk" : "stat")
+      return combine(item, armorbase, ...activeOption, upgradeAttr, magicProps, ...equipPart.emblems.map(getEmblem), getItem(equipPart.card))
+    }
+  )
+)
 
 /**
  * 현재 착용한 장비들로부터 활성화되는 모든 세트 옵션을 얻는다.
@@ -144,7 +132,6 @@ export function selectEquips(state: RootState) {
 
   return combine(
     ...equipParts.map(part => selectWholeFromPart[part](state)),
-    // ...armorParts.map(part => selectArmorBase[part](state)),
     ...J
   )
 }
