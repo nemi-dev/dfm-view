@@ -7,36 +7,6 @@
 		"**/.DS_Store": true,
 		"**/Thumbs.db": true
 	},
-	"json.schemas": [
-		{
-			"fileMatch": [
-				"/data/item/access.json",
-				"/data/item/armorbase.json",
-				"/data/item/armors.json",
-				"/data/item/cracks.json",
-				"/data/item/weapons.json"
-			],
-			"url": "/schema/items.json"
-		},
-		{
-			"fileMatch": [
-				"/data/item/cards.json"
-			],
-			"url": "/schema/cards.json"
-		},
-		{
-			"fileMatch": [
-				"/data/item/avatar.json"
-			],
-			"url": "/schema/misc.json"
-		},
-		{
-			"fileMatch": [
-				"/data/sets/sets.json", "/data/sets/cracks_sets.json"
-			],
-			"url": "/schema/sets.json"
-		}
-	],
 	"search.exclude": {
 		"**/node_modules": true,
 		"**/bower_components": true,
