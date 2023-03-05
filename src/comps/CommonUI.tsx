@@ -49,9 +49,9 @@ interface ItemIconProps extends DetailedHTMLProps<React.HTMLAttributes<HTMLDivEl
   frame: string
 }
 
-export function ItemIcon({ src, frame, className = "", children, ...props }: ItemIconProps) {
+export function SquareIcon({ src, frame, className, children, ...props }: ItemIconProps) {
   return (
-    <div className={className? "ItemIcon "+className : "ItemIcon"} {...props} >
+    <div className={"SquareIcon " + (className ?? "")} {...props} >
       <img className="IconImage" src={src} alt="" />
       {children}
       <img className="IconFrame" src={frame} alt="" />
@@ -80,10 +80,10 @@ interface ItemIcon2Props extends DetailedHTMLProps<React.HTMLAttributes<HTMLDivE
   attrs: Attrs
 }
 
-export function ItemIcon2({ attrs, children, className, ...props }: ItemIcon2Props) {
-  if (!attrs) return <ItemIcon className={className} children={children} src="" frame="/img/frame/Common.png" {...props} />
+export function ItemIcon({ attrs, children, className, ...props }: ItemIcon2Props) {
+  if (!attrs) return <SquareIcon className={"ItemIcon " + (className ?? "")} children={children} src="" frame="/img/frame/Common.png" {...props} />
   const [src, frame] = imageSource(attrs)
-  return <ItemIcon className={className} children={children}
+  return <SquareIcon className={"ItemIcon " + (className ?? "")} children={children}
     src={src} frame={frame} {...props} />
 }
 
@@ -147,19 +147,19 @@ export function NumberInput({onWheel, value, type, onChange, ...props}: NumberIn
 }
 
 
-interface LabeledInputProps {
+interface LabeledInputProps extends Omit<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, "className" | "label" | "value" | "onChange"> {
   className?: string
   label: string
   value: number
   onChange: (val: number) => void
 }
-export function LabeledInput({ className = "", label, value, onChange }: LabeledInputProps) {
+export function LabeledInput({ className = "", label, value, onChange, placeholder, ...props }: LabeledInputProps) {
   const id = useId()
   if (Number.isNaN(value)) value = 0
   return (
     <div className={("InputGroup NumberInput "+className).trim()}>
       <label className="FormGroupName" htmlFor={id}>{label}</label>
-      <NumberInput className="FormGroupValue" id={id} value={value} onChange={onChange} placeholder={label} />
+      <NumberInput className="FormGroupValue" id={id} value={value} onChange={onChange} placeholder={label} {...props} />
     </div>
   )
 }
@@ -263,5 +263,21 @@ export function OneClickButtonGroup<T extends string | number>({ name, groupName
         <button key={v.toString()} id={v.toString()} onClick={() => dispatcher(v)}>{labels[i]}</button>
       ))}
     </span>
+  )
+}
+
+interface EmblemArrayProps {
+  emblems: EmblemSpec[]
+  accept: "Weapon" | "Red" | "Yellow" | "Blue" | "Green" | "Platinum"
+  onItemClick?: (n: number) => any
+}
+
+export function EmblemArray({ emblems, accept, onItemClick }: EmblemArrayProps) {
+  return (
+    <>
+    {emblems.map((spec, index) => (
+      <EmblemIcon key={index} spec={spec} accept={accept} onClick={() => onItemClick(index)} />
+    ))}
+    </>
   )
 }

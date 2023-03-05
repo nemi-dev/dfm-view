@@ -3,10 +3,10 @@ import Modal from "react-modal"
 import { useAppSelector } from "../feats/hooks"
 import { getItem } from "../items"
 import { acceptEmblem } from "../emblem"
-import { EmblemIcon, ItemIcon2, ItemName } from "./CommonUI"
+import { EmblemIcon, ItemIcon, ItemName } from "./CommonUI"
 import { useContext } from "react"
 import { RootState } from "../feats/store"
-import { ModalContext } from "./modalContext"
+import { ModalContext } from "../modalContext"
 import { CardModalFragment, EquipModalFragment } from "./modals/EquipModal"
 import { EmblemModalFragment } from "./modals/EmblemModal"
 import { RuneModalFragment, SpellModalFragment } from "./modals/CrackModal"
@@ -57,15 +57,15 @@ function CurrentPart() {
   const accept = acceptEmblem(part as EquipPart | "칭호")
   return (
     <header>
-      <div className="EquipSlot EquipPartInnerGrid CurrentPartItem">
-      <ItemIcon2 attrs={equip} />
+      <div className="EquipSlot AlwaysEquipPartLayout CurrentPartItem">
+      <ItemIcon attrs={equip} />
       <div className="SlotHeading">
         <ItemName item={equip} alt={`${part} 없음`} />
       </div>
       {
         (equip != null && part !== "무기아바타" && part !== "오라")? 
-        <div className="EquipCardEmblemUpgrade">
-          <ItemIcon2 className="CardSocket" attrs={card}/>
+        <div className="EquipAddons">
+          <ItemIcon className="Card" attrs={card}/>
           {emblems.map((spec, index) => <EmblemIcon key={index} spec={spec} accept={accept}/>
           )}
         </div> : null

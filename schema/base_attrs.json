@@ -66,9 +66,10 @@
     "eldmg_dark": { "type" : "number", "description": "암속성 추가 데미지 (%)" },
     "sk_inc" :   { "type" : "number", "description": "스킬 공격력 증가 (%)" },
     "sk_inc_sum" :   { "type" : "number", "description": "단리 적용되는 (ex. 패시브 스킬) 스킬 공격력 증가 (%)" },
-    "sk_inc_for" :  { "type" : "object", "description": "특정 스킬 공격력 증가", "patternProperties": { ".*" : { "type" : "number" } } },
+    "sk_val" :  { "type" : "object", "description": "특정 스킬 공격력 증가", "patternProperties": { ".*" : { "type" : "number" } } },
+    "sk_hit" :  { "type" : "object", "description": "스킬 1회 사용 시 타격횟수 증가", "patternProperties": { ".*" : { "type" : "number" } } },
     "sk_lv" :  { "type" : "object", "description": "특정 스킬 레벨 증가", "patternProperties": { ".*" : { "type" : "number" } } },
-    "sk_cool" :  { "type" : "object", "description": "특정 스킬 쿨타임 감소 (%; 증가일 경우 음수로 표현)", "patternProperties": { ".*" : { "type" : "number" } }},
+    "sk_cool" :  { "type" : "object", "description": "특정 스킬 쿨타임 증가/감소 (%)", "patternProperties": { ".*" : { "type" : "number" } }},
     "target_def" : { "type" : "number", "description": "적 방어력 변화 (내가 공격한 적 + 방어 감소 오라 모두 포함)" },
     "target_res" : { "type" : "number", "description": "적 속성저항 변화 (모든속성)" },
 

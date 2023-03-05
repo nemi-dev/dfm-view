@@ -1,6 +1,6 @@
 import '../style/Attrs.scss'
 import React from "react"
-import { AttrIcon, Percent } from "./CommonUI"
+import { Percent } from "./CommonUI"
 import { attrDefs, AttrExpressionType } from '../attrs'
 import { signed } from '../utils'
 
@@ -76,31 +76,6 @@ const expressionToComponent: Record<AttrExpressionType, React.FC<any>> = {
 
 
 
-type IconAttrOneProps = { attrKey: keyof BaseAttrs, value: number, alt?: string }
-function IconAttrOne({ attrKey, value, alt = "" }: IconAttrOneProps) {
-  return (
-    <div className="IconAttrOne">
-      <AttrIcon attrKey={attrKey} />
-      <span>{signed(value)}</span>
-    </div>
-  )
-}
-
-export function IconicAttrView({ attrs, onClick }: { attrs: BaseAttrs, onClick?: React.MouseEventHandler<HTMLDivElement> }) {
-  const views: JSX.Element[] = []
-  for (const { key, name } of attrDefs.array) {
-    const value = attrs[key]
-    if ((key in attrs) && (typeof value === "number")) {
-      views.push(<IconAttrOne key={key} attrKey={key} value={value} />)
-    }
-  }
-  return (
-    <div className="IconAttrs" onClick={onClick}>
-      {views}
-    </div>
-  )
-}
-
 export function SimpleBaseAttrView({ attrs }: { attrs: BaseAttrs }) {
   const views: JSX.Element[] = []
   for (const { key, expression, name } of attrDefs.array) {
@@ -110,7 +85,7 @@ export function SimpleBaseAttrView({ attrs }: { attrs: BaseAttrs }) {
         views.push(<SkillValue key={key} midfix={name} skills={attrs[key]} percent={false} negate={false} />)
         continue
       }
-      if (key === "sk_inc_for") {
+      if (key === "sk_val") {
         views.push(<SkillValue key={key} midfix={name} skills={attrs[key]} percent={true} negate={false} />)
         continue
       }

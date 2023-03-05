@@ -1,41 +1,8 @@
 @use "sass:math";
 @import "./_Defs.scss";
 
-$guild-icon-size: 64px;
+$guild-icon-size: 60px;
 
-.Guilds {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  gap: 2px;
-
-  .GuildsInput {
-    @extend %hovering-df;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    flex-grow: 1;
-  }
-  .GuildsIconGroup {
-    border: 1px solid #524d42;
-    padding: 1px;
-    height: $guild-icon-size;
-  }
-  .InputGroup {
-    padding-block: 1px;
-
-    label {
-      font-size: 0.8rem;
-    }
-  }
-
-  img {
-    width: $guild-icon-size;
-  }
-  
-}
 
 @mixin polygonal($n: 3, $distance: 150px) {
   $angle: math.div(360deg, $n);
@@ -64,11 +31,44 @@ $guild-icon-size: 64px;
   }
 }
 
+.Guilds {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 2px;
+
+  .GuildsInput {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    flex-grow: 1;
+  }
+  .GuildsIconGroup {
+    border: 1px solid #524d42;
+    padding: 1px;
+    height: $guild-icon-size;
+  }
+  .InputGroup {
+    padding-block: 1px;
+
+    label {
+      font-size: 0.8rem;
+    }
+  }
+
+  img {
+    width: $guild-icon-size;
+  }
+  
+}
+
+
 .TonicGems {
   @include polygonal(6);
 
   .TonicGem {
-    @extend %hovering-df;
 
     display: flex;
     flex-direction: column;
@@ -116,12 +116,6 @@ $guild-icon-size: 64px;
   }
 }
 
-.Cracks {
-  .MagicPropsArray {
-    flex-direction: row;
-    height: 50px;
-  }
-}
 
 .CrackWrapper {
 

@@ -3,10 +3,24 @@ import { CrackIcon } from './CommonUI';
 import { NextMagicProps } from '../feats/slices/cracksSlice';
 import { MagicPropsArray } from './MagicProps';
 import React, { useContext } from 'react';
-import { ModalContext } from './modalContext';
+import { ModalContext } from '../modalContext';
 import { selectCrackISetAttrs, selectSpells, selectRune, selectCracksAll, selectBlessing } from '../selectors';
 import { SimpleBaseAttrView } from './AttrsView';
+import styled from 'styled-components';
 
+
+
+const MagicPropsLayout = styled.div`
+  flex-grow: 1;
+  align-self: stretch;
+  height: max(calc(100vw / 9 - 20px), 36px);
+
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: center;
+  
+`
 
 export function Cracks() {
   const { openModal } = useContext(ModalContext)
@@ -39,11 +53,13 @@ export function Cracks() {
           <CrackIcon item={rune} onClick={() => openModal("봉인석", "Equip")} />
         </div>
       </div>
-      {rune? 
+      {rune?
+      <MagicPropsLayout>
       <MagicPropsArray level={rune.level} rarity={rune.rarity} part={"봉인석"}
         arraySelector={state => state.Crack.MagicProps}
         actionCreator={(_, index) => NextMagicProps(index)}
-      />: null}
+      />
+      </MagicPropsLayout>: null}
       {
         blessing?
         <div>

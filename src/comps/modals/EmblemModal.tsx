@@ -4,7 +4,7 @@ import { SetEmblem } from "../../feats/slices/equipSlice"
 import { RootState } from "../../feats/store"
 import { acceptEmblem } from "../../emblem"
 import { NumberInput, EmblemIcon } from "../CommonUI"
-import { ModalContext } from "../modalContext"
+import { ModalContext } from "../../modalContext"
 import { selectDFTitleEmblemSpec } from "../../feats/avatarSelectors"
 import { SetDFTitleEmblem } from "../../feats/slices/avatarSlice"
 

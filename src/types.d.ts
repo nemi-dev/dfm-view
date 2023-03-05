@@ -17,29 +17,22 @@ declare type MaterialType = "천" | "가죽" | "경갑" | "중갑" | "판금"
 declare type Eltype = "화" | "수" | "명" | "암"
 
 
+declare type AvatarPart = "모자" | "얼굴" | "상의" | "목가슴" | "신발" | "머리" | "하의" | "허리"
+
+declare type WholePart = EquipPart | "칭호" | "오라" | "무기아바타" | "봉인석" | "정수"
+declare type ModalTargetSelector = "Equip" | "Card" | "Emblem"
+
 declare type MagicPropsCareAbout = "dmg_inc" | "strn" | "intl" | "atk_ph" | "atk_mg" | "el_fire" | "el_ice" | "el_lght" | "el_dark"
 | "crit_ph" | "crit_mg" | "speed_atk" | "Accu" | null
 
 
 declare type EmblemLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 
-declare type EmblemColor = "Red" | "Yellow" | "Green" | "Blue"
-declare type EmblemStat = "Stren" | "Intel"
-declare type EmblemElemental = "Fire" | "Ice" | "Light" | "Dark"
-declare type EmblemType = EmblemColor | EmblemStat | EmblemElemental
+declare type EmblemType = "Red" | "Yellow" | "Green" | "Blue" | "Stren" | "Intel" | "Fire" | "Ice" | "Light" | "Dark"
+
+declare type EmblemSpec = [EmblemType, EmblemLevel]
 
 
-
-declare type ColorEmblem = [EmblemColor, EmblemLevel]
-declare type PlatinumElementalEmblem = [EmblemElemental, EmblemLevel]
-declare type PlatinumStatEmblem = [EmblemStat, EmblemLevel]
-declare type EmblemSpec = ColorEmblem | PlatinumStatEmblem | PlatinumElementalEmblem
-
-
-declare type AvatarPart = "모자" | "얼굴" | "상의" | "목가슴" | "신발" | "머리" | "하의" | "허리"
-
-declare type WholePart = EquipPart | "칭호" | "오라" | "무기아바타" | "봉인석" | "정수"
-declare type ModalTargetSelector = "Equip" | "Card" | "Emblem"
 
 
 declare type ExclusiveGroup = {
@@ -178,7 +171,7 @@ declare interface BaseAttrs {
   sk_inc_sum?: number
 
   /** 특정 스킬 공격력 증가 */
-  sk_inc_for?: { [k: string]: number }
+  sk_val?: { [k: string]: number }
 
   /** 특정 스킬 레벨 증가 */
   sk_lv?: { [k: string]: number }

@@ -2,21 +2,41 @@
 
 
 .Emblem {
-  --icon-size: 36px;
-  
+  --icon-size: var(--emblem-size, 30px);
   
   .EmblemLevel {
     position: absolute;
-    left: 0;
+    right: 0.25rem;
     bottom: 0;
     width: var(--frame-size);
-    text-align: center;
+    text-align: right;
     z-index: 2;
     color: white;
     font-weight: 900;
     text-shadow: 0px 3px 6px black, 0px 3px 5px black, 0px 2px 4px black, 0px 1px 3px black;
+    @extend %no_selection;
+  }
+
+}
+
+.ItemIcon {
+  --icon-size: var(--item-size, 64px) !important;
+}
+
+.Card {
+  --icon-size: var(--card-size, 30px) !important;
+}
+
+@media screen and (max-width: 999px) {
+  .Equips .Emblem {
+    --emblem-size: 21px;
+
+    .EmblemLevel {
+      font-size: 0.75rem;
+    }
   }
 }
+
 
 
 .Equips {
@@ -28,26 +48,36 @@
 
 
 
-.EquipGridBox {
+.EquipsArrayLayout {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: repeat(5, auto);
   grid-auto-flow: column;
   align-items: start;
   gap: 4px;
+
+  @media screen and (max-width: 999px) {
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(2, auto);
+    grid-auto-flow: row;
+  }
 }
+
 
 .EquipSlot {
 
-  @extend %hovering-df;
-  @extend %bordered;
-
   .ItemIcon {
-    --icon-size: 64px;
+    --item-size: 64px;
   }
 
-  .ItemIcon.CardSocket {
-    --icon-size: 36px;
+  .Card {
+    --card-size: 36px;
+  }
+
+  @media screen and (max-width: 999px) {
+    .SquareIcon.Card {
+      --card-size: 21px;
+    }
   }
 
   .RadioGroup > .RadioOne > input + label {
@@ -56,7 +86,8 @@
   }
 }
 
-.EquipPartInnerGrid {
+
+.AlwaysEquipPartLayout {
   display: grid;
   grid-template-areas: 
   "im nm mgp"
@@ -67,15 +98,19 @@
   grid-template-columns: auto 1fr auto;
   
   
-  .ItemIcon {
+  .SquareIcon {
     grid-area: im;
+  }
+
+  .SquareIcon.Card {
+    --card-size: 36px;
   }
   
   .SlotHeading {
     grid-area: nm; 
   }
 
-  .EquipCardEmblemUpgrade {
+  .EquipAddons {
     grid-area: xt;
     align-self: end;
     
@@ -83,38 +118,74 @@
     align-items: flex-end;
     flex-wrap: wrap;
   }
+
+  .AvatarAttrs {
+    grid-area: xt;
+  }
 }
+
+@media screen and (min-width: 1000px) {
+
+  .EquipPartLayout {
+    display: grid;
+    grid-template-areas: 
+    "im nm mgp"
+    "im xt mgp"
+    "op op op"
+    ;
+    grid-template-rows: auto auto auto;
+    grid-template-columns: auto 1fr auto;
+    
+    
+    .SquareIcon {
+      grid-area: im;
+    }
+    
+    .SlotHeading {
+      grid-area: nm; 
+    }
+
+    .EquipAddons {
+      grid-area: xt;
+      align-self: end;
+      
+      display: flex;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+  }
+}
+
+@media screen and (max-width: 999px) {
+  .Equips {
+    .EquipPartLayout {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+  
+    }
+    .EquipAddons {
+      display: flex;
+      align-items: flex-end;
+      flex-direction: row;
+    }
+  }
+  
+}
+
 
 .EquipBatchLayout {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2px;
 
-  @media screen and (max-width:768px) {
+  @media screen and (max-width: 999px) {
     display: flex;
     flex-direction: column;
     bottom: 0;
   }
 }
-
-
-
-
-@media screen and (min-width:769px) {
-  .EquipGridBox > * {
-    &:nth-child(1) {
-      grid-area: 1 / 2 / 2 / 3;
-    }
-    &:nth-child(2) {
-      grid-area: 2 / 1 / 3 / 2;
-    }
-    &:nth-child(3) {
-      grid-area: 3 / 1 / 4 / 2;
-    }
-  }
-
-}
-
 
 .EquipUpgradeValue {
   display: flex;
@@ -148,129 +219,23 @@
     grid-template-rows: 1fr 1fr;
     grid-template-columns: 1fr 1fr;
 
-    > .IconAttrs:first-child {
+    > .MagicPropOne:first-child {
       background-color: rgba($color: #0d0905, $alpha: 0.5);
       grid-column: 1 / -1;
     }
   }
 
   
-  .IconAttrs {
-    @extend %hovering-df;
-    flex-grow: 1;
-
-    cursor: pointer;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    padding-inline: 0.1rem;
-
-    img.AttrIcon {
-      height: 1rem;
-    }
-  }
   
 }
-
-
-
-.EmblemArray {
-  display: flex;
-  flex-direction: row;
-}
-
-.ISetCondArray {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-
-
-  .ISetCondOne {
-    display: flex;
-    flex-direction: column;
-
-    .ISetName {
-      font-weight: 800;
-      color: white;
-      text-align: center;
-      margin-block: 0.5rem;
-    }
-  }
-}
-
-
 
 
 .DF_Title {
   .DF_Titles {
     display: flex;
     
-    .EquipPartInnerGrid {
+    .EquipPartLayout {
       flex-grow: 1;
     }
-  }
-}
-
-.Avatars {
-  
-  .AvatarsGridBox {
-    
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto auto auto auto auto;
-    grid-auto-flow: column;
-    gap: 4px;
-
-    > :first-child {
-      grid-area: 1 / 1 / 2 / 3
-    }
-    
-    .AvatarPart {
-      @extend %hovering-df;
-      @extend %bordered;
-      
-      display: grid;
-      grid-template-areas: 
-      "icon heading"
-      "icon attrs"
-      ;
-
-      grid-template-rows: auto 1fr;
-      grid-template-columns: auto 1fr;
-
-      .AvatarIcon {
-        grid-area: icon;
-      }
-
-      .SlotHeading {
-        grid-area: heading;
-      }
-
-      .AvatarAttrs {
-        grid-area: attrs;
-      }
-    }
-  }
-}
-
-@media (max-width: 768px) {
-  .Equips {
-    .EquipGridBox {
-      display: flex;
-      flex-direction: column;
-      align-items: normal;
-    }
-  }
-
-  .Avatars .AvatarsGridBox {
-    display: flex;
-    flex-direction: column;
-    align-items: normal;
-  }
-
-  .ISetCondArray {
-    display: flex;
-    flex-direction: column;
   }
 }

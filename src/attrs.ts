@@ -104,7 +104,7 @@ const attrDefsArray = [
 
   a("sk_inc", "스킬 공격력 증가", percent_inc_mul, "Percent"),
   a("sk_inc_sum", "스킬 공격력 증가(단리합)", add, "Percent"),
-  a("sk_inc_for", "스킬 공격력 증가", mul_object, "ComplexPercent"),
+  a("sk_val", "스킬 공격력 증가", mul_object, "ComplexPercent"),
   a("sk_lv", "스킬 레벨 증가", add_object, "ComplexScalar"),
   a("sk_cool", "스킬 쿨타임 감소", add_object, "ComplexPercent"),
 

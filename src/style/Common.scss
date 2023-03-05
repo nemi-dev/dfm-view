@@ -1,6 +1,10 @@
 @import "./_Defs.scss";
 
-
+.Rarity_Common { color: #{$Common-color}; }
+.Rarity_Uncommon { color: #{$Uncommon-color}; }
+.Rarity_Rare { color: #{$Rare-color}; }
+.Rarity_Unique { color: #{$Unique-color}; }
+.Rarity_Epic { color: #{$Epic-color}; }
 
 %FormGroup {
 
@@ -182,23 +186,13 @@
   }
 }
 
-.ItemIcon {
+.SquareIcon {
   @extend %FramedIcon;
 }
 
 .ItemName {
 
   align-self: center;
-
-  &.Rarity_Common { color: #{$Common-color}; }
-
-  &.Rarity_Uncommon { color: #{$Uncommon-color}; }
-
-  &.Rarity_Rare { color: #{$Rare-color}; }
-
-  &.Rarity_Unique { color: #{$Unique-color}; }
-
-  &.Rarity_Epic { color: #{$Epic-color}; }
 
 }
 

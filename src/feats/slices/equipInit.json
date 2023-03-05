@@ -1,30 +1,30 @@
 
 {
   "무기": {
-    "name": "워터 토쳐 사이드",
+    "name": "계약의 인장",
     "upgrade": 549,
     "magicProps": ["dmg_inc", "intl", "intl"],
     "emblems": [["Red", 7], ["Red", 7]],
-    "card": "모디스 카드"
+    "card": "스페셜 데미지 보주"
   },
   "머리어깨": {
-    "name": "예언자의 칠흑 숄더",
+    "name": "암살자의 서슬 스트랩",
     "upgrade": 31,
-    "magicProps": ["crit_mg", "intl", "intl"],
+    "magicProps": ["intl", "intl", "intl"],
     "emblems": [["Yellow", 7], ["Yellow", 7]],
     "card": "기어의 디샤 카드",
     "material": "천"
   },
   "상의": {
-    "name": "예언자의 칠흑 코트",
+    "name": "암살자의 서슬 자켓",
     "upgrade": 31,
-    "magicProps": ["crit_mg", "Accu", "intl"],
+    "magicProps": ["intl", "Accu", "intl"],
     "emblems": [["Red", 7], ["Red", 7]],
     "card": "여제 스테로페 카드",
     "material": "천"
   },
   "하의": {
-    "name": "예언자의 칠흑 스커트",
+    "name": "암살자의 서슬 팬츠",
     "upgrade": 31,
     "magicProps": ["intl", "intl", "intl"],
     "emblems": [["Red", 7], ["Red", 7]],
@@ -32,46 +32,46 @@
     "material": "천"
   },
   "벨트": {
-    "name": "예언자의 칠흑 벨트",
+    "name": "암살자의 서슬 벨트",
     "upgrade": 31,
-    "magicProps": ["crit_mg", "crit_mg", "intl"],
+    "magicProps": ["intl", "intl", "intl"],
     "emblems": [["Yellow", 7], ["Yellow", 7]],
     "card": "사룡 스피라찌의 머리 카드",
     "material": "천"
   },
   "신발": {
-    "name": "예언자의 칠흑 신발",
+    "name": "암살자의 서슬 부츠",
     "upgrade": 31,
-    "magicProps": ["crit_mg", "intl", "intl"],
+    "magicProps": ["intl", "intl", "intl"],
     "emblems": [["Blue", 7], ["Blue", 7]],
     "card": "허의 환혼 카드",
     "material": "천"
   },
   "팔찌": {
-    "name": "광기의 선율 - 아첼레란도",
-    "upgrade": 47,
-    "magicProps": ["intl", "el_ice", "intl"],
+    "name": "영념의 정화수",
+    "upgrade": 41,
+    "magicProps": ["intl", "intl", "intl"],
     "emblems": [["Blue", 7], ["Blue", 7]],
     "card": "긴발의 로터스 카드"
   },
   "목걸이": {
-    "name": "미혹하는 지휘 - 안단테",
-    "upgrade": 47,
-    "magicProps": ["intl", "el_ice", "speed_atk"],
+    "name": "생명의 이슬",
+    "upgrade": 41,
+    "magicProps": ["intl", "intl", "speed_atk"],
     "emblems": [["Green", 7], ["Green", 7]],
     "card": "긴발의 로터스 카드"
   },
   "반지": {
-    "name": "파멸의 연주 - 크레센도",
+    "name": "유랑하는 바람",
     "upgrade": 41,
-    "magicProps": ["el_ice", "intl", "el_ice"],
+    "magicProps": ["intl", "intl", "intl"],
     "emblems": [["Green", 7], ["Green", 7]],
     "card": "긴발의 로터스 카드"
   },
   "보조장비": {
     "name": "브왕가의 족장 완장",
     "upgrade": 46,
-    "magicProps": ["crit_mg", "Accu", "intl"],
+    "magicProps": ["crit_mg", "crit_mg", "crit_mg"],
     "emblems": [["Intel", 5]],
     "card": "불의 사념체 카드"
   },

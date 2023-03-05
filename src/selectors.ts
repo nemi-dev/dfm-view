@@ -8,17 +8,6 @@ import { explode } from "./utils"
 import { selectWholeAvatarAttrs } from "./feats/avatarSelectors"
 
 
-export function selectArmorUpgradeValues(state: RootState): [boolean, number] {
-  const value = Math.max(...armorParts.map(p => state.Equips[p].upgrade))
-  const synced = armorParts.every(v => state.Equips[v].upgrade === value)
-  return [synced, value]
-}
-
-export function selectAccessUpgradeValues(state: RootState): [boolean, number] {
-  const value = Math.max(...["팔찌", "목걸이", "반지"].map(p => state.Equips[p].upgrade))
-  const synced = ["팔찌", "목걸이", "반지"].every(v => state.Equips[v].upgrade === value)
-  return [synced, value]
-}
 
 function noot<T>(func: (part: EquipPart, s: RootState) => T): { [k in EquipPart]: (state: RootState) => T } {
   const _o = {}
@@ -35,6 +24,7 @@ function noot2<T>(func: (part: EquipPart) => ((s: RootState) => T)): { [k in Equ
 export const selectPart: { [k in EquipPart]: (state: RootState) => k extends ArmorPart? ArmorPartType : EquipPartType }
 = noot2(part => state => state.Equips[part]) as any
 
+export const selectItem = noot((part, state) => getItem(state.Equips[part].name))
 
 export const selectMagicProps = noot2(
   part => createSelector(
