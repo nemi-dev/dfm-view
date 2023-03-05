@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { SetGuild } from "../feats/slices/guildSlice"
-import { LabeledInput } from './CommonUI'
+import { LabeledInput } from "./widgets/Forms"
 
 interface GuildsInputProps extends React.PropsWithChildren {
   label: string

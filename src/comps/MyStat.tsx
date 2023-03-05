@@ -2,56 +2,22 @@ import { attrDefs } from "../attrs"
 import { calcAtk, calcStat, criticalChance } from "../damage"
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
 import { AddSkillInc, CalibrateInitType, RemoveSkillInc, SetBasicAttr, SetEltype, SetSkillInc } from "../feats/slices/calibrateSlice"
-import { DeleteSwitch } from "../feats/slices/equipSlice"
-import { selectMe, selectMeWithoutCalibrate, selectMyFinalEltype } from "../selectors"
+import { selectMe, selectMeWithoutOptional, selectMyFinalEltype } from "../selectors"
 import { beautyNumber } from "../utils"
-import { CheckboxGroup, DisposableInput, Gridy, LabeledInput, NumberInput, Percent, RadioGroup } from "./CommonUI"
+import { Gridy, Num } from "./CommonUI"
+import { CheckboxGroup, DisposableInput, LabeledInput, NumberInput, RadioGroup, Checkie } from "./widgets/Forms"
 
 import styled from 'styled-components'
 import { VerboseResult } from "./AttrsView"
 import { SetAchieveLevel, SetAtype, SetLevel, set_atk_fixed } from "../feats/slice"
+import { createContext, useContext, useState } from "react"
 
 
-interface SwitchNotificationProps {
-  what: "branches" | "gives" | "exclusives"
-  switchKey: string
-  value?: string
-}
-
-
-function SwitchNotification({ what, switchKey, value }: SwitchNotificationProps) {
-  const chop = switchKey.split("::")
-  const dispatch = useAppDispatch()
-  return (
-    <div className="SwitchNotification">
-      ⚠️ [{chop[0]}]의 "{chop[1]}" 옵션이 { value? `"${value}"로 되어 있습니다.` : "켜진 상태입니다."}
-      <button onClick={() => dispatch(DeleteSwitch([what, switchKey]))}>끄기</button>
-    </div>
-  )
-}
-
-function SwitchGroup() {
-  const { branches, gives, exclusives } = useAppSelector(state => state.Switch)
-  return (
-  <div>
-    {Object.keys(branches).sort().map(k => (
-      branches[k]? <SwitchNotification key={k} what="branches" switchKey={k} /> : null
-    ))}
-    {Object.keys(gives).sort().map(k => (
-      gives[k]? <SwitchNotification key={k} what="gives" switchKey={k} /> : null
-    ))}
-    {Object.keys(exclusives).sort().map(k => (
-      exclusives[k]? <SwitchNotification key={k} what="exclusives" switchKey={k} value={exclusives[k]} /> : null
-    ))}
-  </div>
-  )
-}
-
-
+const MyselfContext = createContext<BaseAttrs>({})
 
 type NumberCalibrate = Omit<CalibrateInitType, "eltype" | "sk_inc">
 
-type OneAttrTripletProps = {
+interface OneAttrTripletProps {
   className?: string
   name?: string | JSX.Element
   aKey: any
@@ -61,17 +27,18 @@ type OneAttrTripletProps = {
 
 function OneAttrTriplet({ className = "", name, aKey, percent = false, signed = false }: OneAttrTripletProps) {
   const cattr = useAppSelector(state => state.Calibrate)
-  const me = useAppSelector(selectMe)
-  const cValue = percent? <Percent value={me[aKey]} signed={signed} /> : beautyNumber(me[aKey] as number)
+  const me = useContext(MyselfContext)
   const dispatch = useAppDispatch()
   return (
     <div className={"AttrOne " + (percent? "Percented " : "") +  className}>
       {name? <div className="AttrName">{name}</div>: null}
-      <div className="AttrValue">{cValue}</div>
+      <Num className="AttrValue" value={me[aKey]} signed={signed} percented={percent} />
       <NumberInput value={cattr[aKey]} onChange={v => dispatch(SetBasicAttr([aKey, v]))} />
     </div>
   )
 }
+
+
 
 const GridyTwo = styled.div`
   display: grid;
@@ -79,8 +46,13 @@ const GridyTwo = styled.div`
   gap: 2px;
 `
 
-function StatAtkCrit({ atype, className = "" }: { atype: "Physc" | "Magic", className? : string }) {
-  const me = useAppSelector(selectMe)
+interface StatAtkCritProps {
+  atype: "Physc" | "Magic"
+  className?: string
+}
+
+function StatAtkCrit({ atype, className = "" }: StatAtkCritProps) {
+  const me = useContext(MyselfContext)
   const at_keys: (keyof NumberCalibrate)[] = atype === "Physc"?
   ["strn", "str_inc", "atk_ph", "atk_ph_inc", "crit_ph", "crit_ph_pct"]
   : ["intl", "int_inc", "atk_mg", "atk_mg_inc", "crit_mg", "crit_mg_pct"]
@@ -95,7 +67,7 @@ function StatAtkCrit({ atype, className = "" }: { atype: "Physc" | "Magic", clas
         <OneAttrTriplet aKey={key_stat_inc} name="증가" percent signed />
       </GridyTwo>
       <div className="Result">
-        <div className="AttrName">(마을) {name_stat}</div>
+        <div className="AttrName">{name_stat}</div>
         <div className="AttrValue">{beautyNumber(calcStat(me[key_stat], me[key_stat_inc]))}</div>
       </div>
       <GridyTwo>
@@ -103,7 +75,7 @@ function StatAtkCrit({ atype, className = "" }: { atype: "Physc" | "Magic", clas
         <OneAttrTriplet aKey={key_atk_inc} name="증가" percent signed />
       </GridyTwo>
       <div className="Result">
-        <div className="AttrName">(마을) {name_atk}</div>
+        <div className="AttrName">{name_atk}</div>
         <div className="AttrValue">{beautyNumber(calcAtk(me[key_atk], me[key_atk_inc], me[key_stat], me[key_stat_inc]))}</div>
       </div>
       <GridyTwo>
@@ -112,7 +84,7 @@ function StatAtkCrit({ atype, className = "" }: { atype: "Physc" | "Magic", clas
       </GridyTwo>
       <div className="Result">
         <div className="AttrName">크리티컬 확률</div>
-        <div className="AttrValue"><Percent value={chance * 100} /></div>
+        <Num className="AttrValue" value={chance * 100} percented />
       </div>
     </div>
   )
@@ -144,14 +116,9 @@ function SkillInc() {
   )
 }
 
-const FieldArray = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-`
-
 export function MyStat() {
-  const me = useAppSelector(selectMe)
+  const [excludeCond, setExcludeCond] = useState(false)
+  const me = excludeCond? useAppSelector(selectMeWithoutOptional) : useAppSelector(selectMe)
   const atype = useAppSelector(state => state.Profile.atype)
   const calibrateEltypes = useAppSelector(state => state.Calibrate.eltype)
   const [eltype, el, eldmg] = useAppSelector(selectMyFinalEltype)
@@ -162,13 +129,13 @@ export function MyStat() {
     AchieveLevel = useAppSelector(state => state.Profile.achieveLevel),
     atk_fixed = useAppSelector(state => state.Profile.atk_fixed)
   return (
+    <MyselfContext.Provider value={me} >
     <div className="MyStat">
       <header>
         <h3>스탯</h3>
-        <div>스탯이 실제와 다르면 조정할 수 있습니다.</div>
       </header>
-      <SwitchGroup />
       <div className="InputArea">
+        <Checkie label="마을스탯 보기" checked={excludeCond} onChange={setExcludeCond} />
         <GridyTwo>
           <LabeledInput label="캐릭터 레벨" value={my_level} onChange={v => dispatch(SetLevel(v))} />
           <LabeledInput label="업적 레벨" value={AchieveLevel} onChange={v => dispatch(SetAchieveLevel(v))} />
@@ -189,19 +156,20 @@ export function MyStat() {
           <OneAttrTriplet aKey="sk_inc_sum" name={<>스증<br/>(패시브)</>} percent signed />
           </Gridy>
           <SkillInc />
-        <VerboseResult name="스킬공격력" value={<Percent value={me["sk_inc"] + me["sk_inc_sum"]} signed />} />
+        <VerboseResult name="스킬공격력" value={<Num value={me["sk_inc"] + me["sk_inc_sum"]} signed percented />} />
         <GridyTwo>
-          <OneAttrTriplet className="el_fire" aKey="el_fire" name="화속강" />
+          <OneAttrTriplet className="el_fire" aKey="el_fire" name="화속강" signed />
           <OneAttrTriplet className="el_fire" aKey="eldmg_fire" name="화속추" percent signed />
-          <OneAttrTriplet className="el_ice"  aKey="el_ice"  name="수속강" />
+          <OneAttrTriplet className="el_ice"  aKey="el_ice"  name="수속강" signed />
           <OneAttrTriplet className="el_ice"  aKey="eldmg_ice"  name="수속추" percent signed />
-          <OneAttrTriplet className="el_lght" aKey="el_lght" name="명속강" />
+          <OneAttrTriplet className="el_lght" aKey="el_lght" name="명속강" signed />
           <OneAttrTriplet className="el_lght" aKey="eldmg_lght" name="명속추" percent signed />
-          <OneAttrTriplet className="el_dark" aKey="el_dark" name="암속강" />
+          <OneAttrTriplet className="el_dark" aKey="el_dark" name="암속강" signed />
           <OneAttrTriplet className="el_dark" aKey="eldmg_dark" name="암속추" percent signed />
         </GridyTwo>
         <VerboseResult name="공격속성" value={eltype? `${eltype}` : "(속성없음)"} />
       </div>
     </div>
+    </MyselfContext.Provider>
   )
 }

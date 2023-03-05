@@ -22,7 +22,7 @@ function noot2<T>(func: (part: EquipPart) => ((s: RootState) => T)): { [k in Equ
 }
 
 export const selectPart: { [k in EquipPart]: (state: RootState) => k extends ArmorPart? ArmorPartType : EquipPartType }
-= noot2(part => state => state.Equips[part]) as any
+= noot((part, state) => state.Equips[part]) as any
 
 export const selectItem = noot((part, state) => getItem(state.Equips[part].name))
 
@@ -77,6 +77,23 @@ export const selectArmorBase = noot2(
   )
 )
 
+/**
+ * 어떤 한 장비 부의의 아이템 옵션, 업그레이드 보너스, 마법봉인, 엠블렘, 카드 옵션을 얻는다.  
+ * (조건부 옵션은 완전히 배제한다.)
+ */
+export const selectWholePartWithoutOptional = noot2(
+  part => createSelector(
+    selectPart[part],
+    selectMagicProps[part],
+    selectArmorBase[part],
+    (equipPart, magicProps, armorbase) => {
+      const item = getItem(equipPart.name)
+      const upgradeAttr = explode(equipPart.upgrade, part === "무기"? "atk" : "stat")
+      return combine(item, armorbase, upgradeAttr, magicProps, ...equipPart.emblems.map(getEmblem), getItem(equipPart.card))
+    }
+  )
+)
+
 /** 어떤 한 장비 부의의 아이템 옵션, 활성화시킨 조건부 옵션, 업그레이드 보너스, 마법봉인, 엠블렘, 카드 옵션을 얻는다. */
 export const selectWholeFromPart = noot2(
   part => createSelector(
@@ -126,7 +143,24 @@ export function selectEquips(state: RootState) {
   )
 }
 
+/**
+ * 지금 착용한 장비로부터 오는 모든 장비 효과, 장비에 바른 카드 효과, 엠블렘 효과, 강화 효과, 마법봉인 효과, 세트 효과를 긁어모은다.  
+ * (조건부 효과는 체크 여부에 상관없이 완전히 배제한다.)
+ */
+export function selectEquipsWithoutOptional(state: RootState) {
 
+  /** 지금 활성화된 세트옵션들 */
+  const isetattrs = selectISetAttrs(state)
+  const J: Attrs[] = []
+  for (const k in isetattrs) {
+    J.push(isetattrs[k])
+  }
+
+  return combine(
+    ...equipParts.map(part => selectWholePartWithoutOptional[part](state)),
+    ...J
+  )
+}
 
 
 
@@ -157,10 +191,6 @@ export function selectCreatures(state: RootState): BaseAttrs {
 
 
 
-
-
-
-
 /** 마력결정 스탯보너스를 모두 얻는다. */
 export function selectTonics(state: RootState): BaseAttrs {
   const { Accu, crit, def, el_all, hp_mp_max, strn_intl, vit_psi } = state.Tonic
@@ -181,13 +211,6 @@ export function selectTonics(state: RootState): BaseAttrs {
   }
 
 }
-
-
-
-
-
-
-
 
 
 
@@ -237,7 +260,7 @@ export const selectCracksAll = createSelector(
 
 
 
-
+/** 길드 스탯 보너스를 얻는다. */
 export function selectGuilds(state: RootState): BaseAttrs {
   const { stat, atk, crit, el_all, speed_atk, Accu, guildPublicStatLv } = state.Guild
   return {
@@ -253,18 +276,31 @@ export function selectGuilds(state: RootState): BaseAttrs {
   }
 }
 
-
+/** 스탯을 보정한 값만을 가져온다. */
 export function selectCalibrated(state: RootState) {
   const sk_inc = state.Calibrate.sk_inc.reduce(percent_inc_mul, 0)
   return { ...state.Calibrate, sk_inc }
 }
 
+/**
+ * 장비 + 아바타 + 크리쳐 + 마력결정 + 성안의봉인 + 길드 + 업적보너스 (조건부옵션 제외, 보정값 포함)
+ * @todo 칭호/크리쳐 조건부옵션 On/Off 추가되면 그것도 고려할것
+ * */
+export const selectMeWithoutOptional = createSelector(
+  selectEquipsWithoutOptional, selectWholeAvatarAttrs, selectCreatures, selectTonics, selectCracksAll, selectGuilds,
+  (state: RootState) => explode(state.Profile.achieveLevel * 7 - 2, "stat"),
+  selectCalibrated,
+  (e, av, c, t, cr, g, ach, cal) => combine(e, av, c, t, cr, g, ach, cal)
+)
+
+/** 장비 + 아바타 + 크리쳐 + 마력결정 + 성안의봉인 + 길드 + 업적보너스 (조건부옵션 포함, 보정값 제외) */
 export const selectMeWithoutCalibrate = createSelector(
   selectEquips, selectWholeAvatarAttrs, selectCreatures, selectTonics, selectCracksAll, selectGuilds,
   (state: RootState) => explode(state.Profile.achieveLevel * 7 - 2, "stat"),
   (e, av, c, t, cr, g, ach) => combine(e, av, c, t, cr, g, ach)
 )
 
+/** 장비 + 아바타 + 크리쳐 + 마력결정 + 성안의봉인 + 길드 (조건부옵션 포함, 보정값 포함) */
 export const selectMe = createSelector(
   selectMeWithoutCalibrate, selectCalibrated,
   (me, cal) => combine(me, cal)

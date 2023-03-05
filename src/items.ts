@@ -64,9 +64,7 @@ for (const item of items) {
 
   const part = _part(item.itype)
   if (part) _items_index_Part[part].push(item)
-
   if (item.itype === "카드") cards.push(item as Card)
-
   if (item.setOf) assignIset(item, item.setOf)
 }
 

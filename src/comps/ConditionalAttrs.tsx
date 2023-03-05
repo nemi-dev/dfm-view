@@ -3,7 +3,7 @@ import { SimpleBaseAttrView } from "./AttrsView"
 import { SetBranch, SetExclusive, SetGives } from "../feats/slices/equipSlice"
 import { useEffect } from "react"
 import { selectISetConditionalsAll, selectItem } from "../selectors"
-import { RadioGroup } from "./CommonUI"
+import { Checkie, RadioGroup } from "./widgets/Forms"
 import { equipParts } from "../items"
 import styled from "styled-components"
 
@@ -15,12 +15,7 @@ function BranchLeafView({ branchItemKey, attrs }: { branchItemKey: string, attrs
   const checked = useAppSelector(state => state.Switch.branches[branchItemKey] ?? false)
   const dispatch = useAppDispatch()
   return (
-    <span>
-      <input type="checkbox" checked={checked} id={branchItemKey}
-        onChange={ev => dispatch(SetBranch([branchItemKey, ev.target.checked]))} />
-      <label htmlFor={branchItemKey}>{attrs.when}</label>
-      <SimpleBaseAttrView attrs={attrs} />
-    </span>
+    <Checkie checked={checked} label={<>{attrs.when}<SimpleBaseAttrView attrs={attrs} /></>} onChange={b => dispatch(SetBranch([branchItemKey, b]))} />
   )
 }
 
@@ -55,12 +50,8 @@ export function GivesView({ name, attrs }: GivesViewProps) {
   return (
     <div className="CondOne">
       <div className="CondContainerName">{name}</div>
-      <div>
-        <input type="checkbox" checked={checked} id={id}
-        onChange={ev => dispatch(SetGives([id, ev.target.checked]))} />
-        <label htmlFor={id}>모든 파티원에게: {attrs.when ?? "항상 적용"}</label>
-        <SimpleBaseAttrView attrs={attrs} />
-      </div>
+      <Checkie checked={checked} onChange={b => dispatch(SetGives([id, b]))}
+      label={<>{attrs.when ?? ""}<SimpleBaseAttrView attrs={attrs} /></>} />
     </div>
   )
 }

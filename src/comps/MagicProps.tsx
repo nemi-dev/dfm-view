@@ -4,7 +4,7 @@ import { attrDefs } from "../attrs"
 import { useAppSelector } from "../feats/hooks"
 import { RootState } from "../feats/store"
 import { getMagicPropsAttrs } from "../magicProps"
-import { AttrIcon } from "./CommonUI"
+import { AttrIcon } from "./widgets/Icons"
 
 
 

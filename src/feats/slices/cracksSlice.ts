@@ -28,6 +28,9 @@ export const crackSlice = createSlice({
     SetSpell: (s, { payload: [index, value] }: PayloadAction<[number, string]>) => {
       s.Spells[index] = value;
     },
+    SetSpellAll: (s, { payload }: PayloadAction<string>) => {
+      s.Spells.fill(payload)
+    },
     SetMagicProps: (s, { payload: [index, value] }: PayloadAction<[number, MagicPropsCareAbout]>) => {
       s.MagicProps[index] = value;
     },

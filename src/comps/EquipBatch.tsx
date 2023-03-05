@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "../feats/hooks"
 import { SetArmorUpgradeValueAll, SetAccessUpgradeValueAll, SetMaterialAll, SetPerfectMagicPropsEl, SetPerfectMagicPropsStat, SetColorEmblemLevelAll } from "../feats/slices/equipSlice"
 import { RootState } from "../feats/store"
 import { armorParts } from "../items"
-import { LabeledInput, RadioGroup, OneClickButtonGroup } from "./CommonUI"
+import { LabeledInput, RadioGroup, OneClickButtonGroup } from "./widgets/Forms"
 
 
 
@@ -70,7 +70,7 @@ export function EquipBatch() {
         <RadioGroup name="방어구 재질" values={["천", "가죽", "경갑", "중갑", "판금"]} value={mat}
           dispatcher={v => dispatch(SetMaterialAll(v))}
         />
-        <OneClickButtonGroup name="완벽한 마봉작" groupName="완벽한 마봉작" dispatcher={onButtonClick}
+        <OneClickButtonGroup name="완벽한 마봉작" dispatcher={onButtonClick}
           values={["magicPropLeft", "magicPropFire", "magicPropIce", "magicPropLight", "magicPropDark"]}
           labels={["내 스탯", "화속강", "수속강", "명속강", "암속강"]}
         />
