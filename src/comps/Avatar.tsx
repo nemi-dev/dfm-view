@@ -1,5 +1,6 @@
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
-import { EmblemIcon, SquareIcon, ItemIcon, ItemName } from './CommonUI'
+import { ItemName } from './CommonUI'
+import { EmblemIcon, SquareIcon, ItemIcon } from "./widgets/Icons"
 import { useCallback, useContext } from 'react'
 import { getAvatarAttr } from '../avatar'
 import { SetAvatarType, SetAvatarTypeAll } from '../feats/slices/avatarSlice'

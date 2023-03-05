@@ -1,5 +1,5 @@
 import { useAppSelector } from '../feats/hooks';
-import { CrackIcon } from './CommonUI';
+import { CrackIcon } from "./widgets/Icons";
 import { NextMagicProps } from '../feats/slices/cracksSlice';
 import { MagicPropsArray } from './MagicProps';
 import React, { useContext } from 'react';

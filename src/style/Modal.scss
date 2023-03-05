@@ -121,6 +121,11 @@
   
 
 }
+
+.CrackIcon {
+  --icon-size: 64px;
+}
+
 @media (min-width: 1000px) {
   .ReactModal__Content {
     .ModalItemSelect {

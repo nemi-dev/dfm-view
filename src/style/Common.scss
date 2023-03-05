@@ -6,42 +6,12 @@
 .Rarity_Unique { color: #{$Unique-color}; }
 .Rarity_Epic { color: #{$Epic-color}; }
 
-%FormGroup {
-
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
+.ItemName { align-self: center; }
 
 
-  padding-block: 2px;
-  padding-inline: 2px;
-  background-color: rgba($color: #000000, $alpha: 0.3);
-  border-radius: 20px;
+.Hovergraph, :is(input[type=text], input[type=number]).Hovergraph {
 
-  > .FormGroupName {
-    font-weight: 400;
-    text-align: center;
-    flex-grow: 1;
-    font-size: 0.8rem;
-    cursor: default;
-    line-height: 24px;
-  }
-
-  .FormGroupValue {
-    flex-grow: 2;
-  }
-
-  input {
-    padding: 0!important;
-  }
-
-}
-
-%hovergraph {
-
-  border-width: 1px;
-  border-style: solid;
-  border-color: transparent;
+  border: 1px solid transparent;
   border-radius: 19px;
   transition-property: color, border-color, background-color;
   transition-duration: 0.1s;
@@ -52,25 +22,62 @@
   }
 }
 
+.FormDF {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+
+  padding-block: 2px;
+  padding-inline: 2px;
+  background-color: rgba($color: #000000, $alpha: 0.3);
+  border-radius: 20px;
+
+  > .FormDFName {
+    font-weight: 400;
+    text-align: center;
+    flex-grow: 1;
+    font-size: 0.8rem;
+    cursor: default;
+    line-height: 24px;
+  }
+
+  .FormDFValue {
+    flex-grow: 2;
+  }
+
+  .FormDFDeepArea {
+    border-radius: 20px;
+    background-color: rgba($color: #000000, $alpha: 0.3);
+  }
+
+  input {
+    padding: 0!important;
+  }
+
+  input[type=checkbox], input[type=radio] {
+    display: none;
+  }
+
+}
+
 .InputGroup {
-  @extend %FormGroup;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 
   > input[type=number], > input[type=text] {
     text-align: center;
     font-size: 1em;
     min-height: 26px;
     box-sizing: border-box;
-    background-color: rgba($color: #000000, $alpha: 0.3);
 
-    @extend %hovergraph;
   }
 }
 
 .RadioGroup {
-  @extend %FormGroup;
   > .RadioOne {
     > input {
-      display: none;
 
       + label {
         flex-grow: 1;
@@ -84,7 +91,6 @@
 
         min-height: 26px;
         box-sizing: border-box;
-        @extend %hovergraph;
       }
 
       &:checked + label {
@@ -96,8 +102,6 @@
 }
 
 .OneClickGroup {
-  @extend %FormGroup;
-
   button {
     font-size: 0.8rem;
     min-height: 26px;
@@ -135,14 +139,6 @@
   &:only-child button {
     display: none;
   }
-}
-
-.InputGroup {
-
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-
 }
 
 .InputArea {
@@ -188,12 +184,6 @@
 
 .SquareIcon {
   @extend %FramedIcon;
-}
-
-.ItemName {
-
-  align-self: center;
-
 }
 
 

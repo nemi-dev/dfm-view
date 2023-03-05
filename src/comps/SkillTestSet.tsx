@@ -3,14 +3,17 @@ import { selectMe, selectMyFinalEltype } from '../selectors'
 import { beautyNumber } from '../utils'
 import { criticalChance, criticize } from '../damage'
 import { SetSkillFixValue, SetSkillInputName, SetSkillUsesSkillInc, SetSkillValue } from '../feats/slices/skillInputSlice'
-import { LabeledInput } from './CommonUI'
+import { Checkie, LabeledInput } from "./widgets/Forms"
 import { getDamage } from './VerboseAttrsView'
 import { VerboseResult } from './AttrsView'
+
+
 
 
 interface SkillInputOneProps extends SkillSpec {
   index: number
 }
+
 function SkillInputOne({ index, value, fixed, useSkillInc, name }: SkillInputOneProps) {
   const dispatch = useAppDispatch()
   return (
@@ -18,10 +21,7 @@ function SkillInputOne({ index, value, fixed, useSkillInc, name }: SkillInputOne
       <input className="SkillName" type="text" value={name} onChange={ev => dispatch(SetSkillInputName([index, ev.target.value]))} />
       <LabeledInput label="계수(%)" value={value} onChange={v => dispatch(SetSkillValue([index, v]))} />
       <LabeledInput label="고정값" value={fixed} onChange={v => dispatch(SetSkillFixValue([index, v]))} />
-      <span className="SkillUsesInc">
-        <input type="checkbox" id={`skill${index}-${name}`} checked={useSkillInc} onChange={ev => dispatch(SetSkillUsesSkillInc([index, ev.target.checked]))} />
-        <label htmlFor={`skill${index}-${name}`}>스증 적용</label>
-      </span>
+      <Checkie className="SkillUsesInc" label="스증 적용" checked={useSkillInc} onChange={b => dispatch(SetSkillUsesSkillInc([index, b]))} />
     </div>
   )
 }

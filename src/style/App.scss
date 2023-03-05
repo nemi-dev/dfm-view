@@ -7,6 +7,10 @@
   --icon-size: 64px;
 }
 
+label {
+  @extend %no_selection;
+}
+
 nav.Navigator {
   display: flex;
   align-items: center;

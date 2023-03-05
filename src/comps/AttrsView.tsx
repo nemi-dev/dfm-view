@@ -1,6 +1,6 @@
 import '../style/Attrs.scss'
 import React from "react"
-import { Percent } from "./CommonUI"
+import { Num } from "./CommonUI"
 import { attrDefs, AttrExpressionType } from '../attrs'
 import { signed } from '../utils'
 
@@ -14,7 +14,7 @@ function FlatValue({ name, value }: FlatValueIncrementProps) {
   return(
     <div className="AttrOne">
       <span className="AttrName">{name}</span>
-      <span className="AttrValue FlatValue">{signed(value)}</span>
+      <Num className="AttrValue" value={value} signed />
     </div>
   )
 }
@@ -23,7 +23,7 @@ function PercentValue({ name, value }: FlatValueIncrementProps) {
   return(
     <div className="AttrOne">
       <span className="AttrName">{name}</span>
-      <Percent className="AttrValue PercentValue" value={value} signed />
+      <Num className="AttrValue" value={value} signed percented />
     </div>
   )
 }
