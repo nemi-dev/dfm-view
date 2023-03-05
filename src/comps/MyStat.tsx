@@ -5,7 +5,7 @@ import { AddSkillInc, CalibrateInitType, RemoveSkillInc, SetBasicAttr, SetEltype
 import { DeleteSwitch } from "../feats/slices/equipSlice"
 import { selectMe, selectMeWithoutCalibrate, selectMyFinalEltype } from "../selectors"
 import { beautyNumber } from "../utils"
-import { CheckboxGroup, DisposableInput, LabeledInput, NumberInput, Percent, RadioGroup } from "./CommonUI"
+import { CheckboxGroup, DisposableInput, Gridy, LabeledInput, NumberInput, Percent, RadioGroup } from "./CommonUI"
 
 import styled from 'styled-components'
 import { VerboseResult } from "./AttrsView"
@@ -131,7 +131,7 @@ function SkillInc() {
   const dispatch = useAppDispatch()
   return (
     <div className="SkillInc AttrOne">
-      <span className="AttrName">스증 (장비)<button onClick={() => dispatch(AddSkillInc())}>+</button></span>
+      <span className="AttrName">스증(장비)<button onClick={() => dispatch(AddSkillInc())}>+</button></span>
       <SkillIncValues>
         {cattr.sk_inc.map((v, i) => {
           return <DisposableInput key={i} index={i} value={v}
@@ -169,7 +169,6 @@ export function MyStat() {
       </header>
       <SwitchGroup />
       <div className="InputArea">
-
         <GridyTwo>
           <LabeledInput label="캐릭터 레벨" value={my_level} onChange={v => dispatch(SetLevel(v))} />
           <LabeledInput label="업적 레벨" value={AchieveLevel} onChange={v => dispatch(SetAchieveLevel(v))} />
@@ -182,14 +181,14 @@ export function MyStat() {
             dispatcher={v => dispatch(SetAtype(v))}
           />
           <CheckboxGroup name="공격속성" values={["화", "수", "명", "암"]} value={calibrateEltypes} dispatcher={(el, on) => dispatch(SetEltype([el, on]))} />
-        <FieldArray>
           <StatAtkCrit atype={atype} />
+          <Gridy columns={2} colSize="1fr">
           <OneAttrTriplet aKey="cdmg_inc" name="크뎀증" percent signed />
-          <OneAttrTriplet aKey="dmg_inc" name="데미지증가" percent signed />
-          <OneAttrTriplet aKey="dmg_add" name="추가데미지" percent signed />
-          <OneAttrTriplet aKey="sk_inc_sum" name="스증 (패시브)" percent signed />
+          <OneAttrTriplet aKey="dmg_inc" name="뎀증" percent signed />
+          <OneAttrTriplet aKey="dmg_add" name="추뎀" percent signed />
+          <OneAttrTriplet aKey="sk_inc_sum" name={<>스증<br/>(패시브)</>} percent signed />
+          </Gridy>
           <SkillInc />
-        </FieldArray>
         <VerboseResult name="스킬공격력" value={<Percent value={me["sk_inc"] + me["sk_inc_sum"]} signed />} />
         <GridyTwo>
           <OneAttrTriplet className="el_fire" aKey="el_fire" name="화속강" />

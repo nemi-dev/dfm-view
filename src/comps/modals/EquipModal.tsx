@@ -2,8 +2,8 @@ import { useCallback, useContext } from "react"
 import { useAppDispatch } from "../../feats/hooks"
 import { _action_card_, _action_equip_ } from "../../feats/modalIntergrating"
 import { getCardsForPart, getItem, getItemsByPart, isAccessPart, isArmorPart } from "../../items"
-import { ItemIcon2, ItemName } from "../CommonUI"
-import { ModalContext } from "../modalContext"
+import { ItemIcon, ItemName } from "../CommonUI"
+import { ModalContext } from "../../modalContext"
 
 import _left from "../../../data/sets/left.json"
 import _right from "../../../data/sets/right.json"
@@ -18,7 +18,7 @@ function EquipSelect({ item }: { item: Attrs }) {
   }, [part, item.name])
   return (
     <div className="ModalItemSelect" onClick={onClick}>
-      <ItemIcon2 attrs={item}/>
+      <ItemIcon attrs={item}/>
       <ItemName item={item} className="ItemNameResponsive" />
     </div>
   )
@@ -38,7 +38,7 @@ function EquipShotgun({ name, itemChildren, useThisForPayload }: IsetCatalog) {
       <div className="IsetName">{name}</div>
       <div className="IsetIconArray">
       {itemChildren.map((item) => (
-        <ItemIcon2 key={item.name} attrs={item} />
+        <ItemIcon key={item.name} attrs={item} />
         ))}
       </div>
     </div>
@@ -110,7 +110,7 @@ function CardSelect({ card }: { card: Card }) {
   }, [part, card.name])
   return (
     <div className="ModalItemSelect" onClick={onClick}>
-      <ItemIcon2 attrs={card}/>
+      <ItemIcon attrs={card}/>
       <ItemName item={card} className="ItemNameResponsive" />
     </div>
   )

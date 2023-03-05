@@ -45,7 +45,7 @@ export const avatarSlice = createSlice({
     SetDFTitleCard: (s, { payload }: PayloadAction<string>) => {
       s.card = payload
     },
-    SetDFTitleEmblem: (s, { payload }: PayloadAction<PlatinumStatEmblem | PlatinumElementalEmblem>) => {
+    SetDFTitleEmblem: (s, { payload }: PayloadAction<EmblemSpec>) => {
       s.emblem = [payload]
     },
   }

@@ -3,7 +3,7 @@ import { useAppDispatch } from "../../feats/hooks"
 import { SetRune, SetSpell } from "../../feats/slices/cracksSlice"
 import { getItemsByPart } from "../../items"
 import { CrackIcon } from "../CommonUI"
-import { ModalContext } from "../modalContext"
+import { ModalContext } from "../../modalContext"
 
 function RuneSelect({ item }: { item: Attrs }) {
   const { itarget: [part,,], setOpen } = useContext(ModalContext)

@@ -19,6 +19,10 @@
   
   background-color: rgb(51, 44, 37);
   --modal-back: rgba(0, 0, 0, 0.5);
+  --item-size: 64px;
+  --emblem-size: 30px;
+  --card-size: 36px;
+
 }
 
 a {

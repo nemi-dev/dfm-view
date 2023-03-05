@@ -45,6 +45,9 @@ export const equipSlice = createSlice({
     SetEmblem: (s, { payload: [part, index, emblemType, emblemLevel] }: PayloadAction<[EquipPart, number, EmblemType, number]>) => {
       s[part].emblems[index] = [emblemType, emblemLevel as EmblemLevel]
     },
+    SetColorEmblemLevelAll: (s, { payload }: PayloadAction<EmblemLevel>) => {
+      (["상의", "하의", "머리어깨", "벨트", "신발", "팔찌", "목걸이", "반지"] as EquipPart[]).forEach(part => s[part].emblems.forEach(sp => sp[1] = payload))
+    },
     SetEquipUpgradeValue: (s, { payload: [part, value] }: PayloadAction<[EquipPart, number]>) => {
       s[part].upgrade = value
     },
@@ -92,6 +95,7 @@ export const {
   SetEquip,
   SetCard,
   SetEmblem,
+  SetColorEmblemLevelAll,
   SetEquipUpgradeValue,
   SetArmorUpgradeValueAll,
   SetAccessUpgradeValueAll,

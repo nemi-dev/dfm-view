@@ -1,20 +1,51 @@
-import { useCallback, useContext, useState } from "react"
+import { useContext, useState } from "react"
 
 import "../style/Equips.scss"
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
 import { SimpleBaseAttrView } from "./AttrsView"
-import { armorParts, getItem, isArmorPart } from "../items"
-import { acceptEmblem } from "../emblem"
-import { selectAccessUpgradeValues, selectArmorUpgradeValues, selectWholeFromPart } from "../selectors"
-import { EmblemIcon, ItemIcon2, ItemName, LabeledInput, NumberInput, OneClickButtonGroup, RadioGroup } from "./CommonUI"
-import { NextMagicProps, SetAccessUpgradeValueAll, SetArmorUpgradeValueAll, SetEquipUpgradeValue, SetMaterial, SetMaterialAll, SetPerfectMagicPropsEl, SetPerfectMagicPropsStat } from "../feats/slices/equipSlice"
-import { BranchView, ExclusiveView, GivesView, ISetOptionalAttrsView } from "./ConditionalAttrs"
-import { ModalContext } from "./modalContext"
+import { getItem, isArmorPart } from "../items"
+import { selectItem, selectWholeFromPart } from "../selectors"
+import { EmblemArray, ItemIcon, ItemName, NumberInput } from "./CommonUI"
+import { NextMagicProps, SetEquipUpgradeValue, SetMaterial } from "../feats/slices/equipSlice"
+import { OptionalAttrsView } from "./ConditionalAttrs"
+import { ModalContext } from "../modalContext"
 import { MagicPropsArray } from "./MagicProps"
-import { RootState } from "../feats/store"
+import { PortraitMode } from "../responsiveContext"
+import { EquipBatch } from "./EquipBatch"
+import { acceptEmblem } from "../emblem"
+import styled from "styled-components"
 
 interface EquipProps {
   part: EquipPart
+}
+
+
+interface PartProps {
+  part: EquipPart
+  interactive?: boolean
+  showUpgarde?: boolean
+}
+
+
+function NormalAddonsArray({ part, interactive = false, showUpgarde = false }: PartProps) {
+  const { openModal } = useContext(ModalContext)
+  const dispatch = useAppDispatch()
+  const card = useAppSelector(state => getItem(state.Equips[part].card))
+  const upgradeBonus = useAppSelector(state => state.Equips[part].upgrade)
+  const emblems = useAppSelector(state => state.Equips[part].emblems)
+  const emblemAccept = acceptEmblem(part)
+  return(
+    <div className="EquipAddons">
+      <ItemIcon className="Card" attrs={card} onClick={() => interactive && openModal(part, "Card", 0)} />
+      <EmblemArray emblems={emblems} accept={emblemAccept}
+        onItemClick={index => interactive && openModal(part, "Emblem", index)}
+      />
+      {showUpgarde?
+      <div className="EquipUpgradeValue">
+        +<NumberInput value={upgradeBonus} onChange={v => dispatch(SetEquipUpgradeValue([part, v]))} />
+      </div>: null}
+    </div>
+  )
 }
 
 
@@ -35,145 +66,104 @@ function ArmorMaterialSelectElement({ part }: EquipProps) {
 }
 
 
-function EmblemArray({ part }: EquipProps) {
-  const { openModal } = useContext(ModalContext)
-  const array = useAppSelector(state => state.Equips[part].emblems)
-  const accept = acceptEmblem(part)
-  return(
-    <div className="EmblemArray">
-      {array.map((spec, index) => (
-        <EmblemIcon key={index} spec={spec} accept={accept}
-          onClick={() => openModal(part, "Emblem", index)}
-        />
-      ) )}
+
+function SlotHeading({ part, onItemNameClicked }: EquipProps & { onItemNameClicked: React.MouseEventHandler<HTMLDivElement> }) {
+  const portrait = useContext(PortraitMode)
+  if (portrait) return null
+  const item = useAppSelector(selectItem[part])
+  return (
+    <div className="SlotHeading">
+      <ItemName item={item} alt={`${part} 없음`} className="EquipName" onClick={onItemNameClicked} />
+      <ArmorMaterialSelectElement part={part} />
     </div>
   )
 }
 
-function EquipCardEmblemUpgrade({ part }: EquipProps) {
+function PartCompact({ part }: EquipProps) {
   const { openModal } = useContext(ModalContext)
-  const dispatch = useAppDispatch()
-  const cardName = useAppSelector(state => state.Equips[part].card)
-  const card = getItem(cardName) as Card
-  const upgradeBonus = useAppSelector(state => state.Equips[part].upgrade)
-  return(
-    <div className="EquipCardEmblemUpgrade">
-      <ItemIcon2 className="CardSocket" attrs={card} onClick={() => openModal(part, "Card", 0)} />
-      <EmblemArray part={part} />
-      <div className="EquipUpgradeValue">
-        +<NumberInput value={upgradeBonus} onChange={v => dispatch(SetEquipUpgradeValue([part, v]))} />
+  const item = useAppSelector(selectItem[part])
+  const [detail, setDetail] = useState(false)
+  return (
+    <div className="EquipSlot">
+      <div className="EquipPartLayout">
+        <ItemIcon attrs={item} onClick={() => openModal(part, "Equip", 0)} />
+        <SlotHeading part={part} onItemNameClicked={() => setDetail(!detail)} />
+        {item? <NormalAddonsArray part={part}/> : null}
       </div>
     </div>
   )
 }
 
-function EquipPartInnerGrid({ part }: EquipProps) {
+const MagicPropsLayout = styled.div`
+
+  grid-area: mgp;
+  align-self: stretch;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: stretch;
+
+  > * {
+    flex: 1;
+  }
+`
+
+function PartWide({ part }: EquipProps) {
   const { openModal } = useContext(ModalContext)
-  const item = useAppSelector(state => getItem(state.Equips[part].name))
-  const itemName = item.name
-  const { branch, exclusive, give_us } = item ?? {}
+  const item = useAppSelector(selectItem[part])
   const [detail, setDetail] = useState(false)
   const equipPartAttr = useAppSelector(selectWholeFromPart[part])
-  const clickHandler = useCallback(() => setDetail(!detail), [detail])
   return (
-    <div className="EquipSlot">
-      <div className="EquipPartInnerGrid">
-        <ItemIcon2 attrs={item} onClick={() => openModal(part, "Equip", 0)} />
-        <div className="SlotHeading">
-          <ItemName item={item} alt={`${part} 없음`} className="EquipName" onClick={clickHandler} />
-          <ArmorMaterialSelectElement part={part} />
-        </div>
-        {itemName? <>
-        <EquipCardEmblemUpgrade part={part}/>
+    <div className="EquipSlot Bordered Hovering">
+      <div className="EquipPartLayout">
+        <ItemIcon attrs={item} onClick={() => openModal(part, "Equip", 0)} />
+        <SlotHeading part={part} onItemNameClicked={() => setDetail(!detail)} />
+        {item? <NormalAddonsArray part={part} showUpgarde interactive /> : null}
+        {item? <MagicPropsLayout>
         <MagicPropsArray level={item.level} part={part} rarity={item.rarity}
           arraySelector={state => state.Equips[part].magicProps}
           actionCreator={(part: EquipPart, index) => NextMagicProps([part, index])}
         />
-        </> : null}
+        </MagicPropsLayout> : null}
       </div>
       {
-        itemName? 
-        <div className="ConditionalAttrs">
-          {branch? <BranchView name={itemName} branches={branch} /> : null}
-          {exclusive? <ExclusiveView name={itemName} exclusives={exclusive} /> : null}
-          {give_us? <GivesView name={itemName} attrs={give_us} /> : null }
-        </div>: null
-      }
-      {
-        (detail && itemName)?
+        (detail && item)?
         <SimpleBaseAttrView attrs={equipPartAttr} /> : null
       }
     </div>
-
   )
 }
 
-function selectSynchronizedMaterial(state: RootState) {
-  const mats = armorParts.map(p => state.Equips[p].material)
-  const mat = mats[0]
-  if (mats.find(m => mat != m)) return null
-  return mat
+
+function Part({ part }: EquipProps) {
+  const portrait = useContext(PortraitMode)
+  return portrait? <PartCompact part={part} /> : <PartWide part={part} />
 }
 
 
 export function Equips() {
-  const dispatch = useAppDispatch()
-  const [armorUpgradeSynced, armorUpgradeValue] = useAppSelector(selectArmorUpgradeValues)
-  const [accessUpgradeSynced, accessUpgradeValue] = useAppSelector(selectAccessUpgradeValues)
-  const mat = useAppSelector(selectSynchronizedMaterial)
-  const myAtype = useAppSelector(state => state.Profile.atype)
-  
-  const onButtonClick = useCallback((v: string) => {
-    switch (v) {
-      case "magicPropLeft":
-        switch (myAtype) {
-          case "Physc": return dispatch(SetPerfectMagicPropsStat("strn"))
-          case "Magic": return dispatch(SetPerfectMagicPropsStat("intl"))
-        }
-      case "magicPropFire": return dispatch(SetPerfectMagicPropsEl("el_fire"))
-      case "magicPropIce":  return dispatch(SetPerfectMagicPropsEl("el_ice"))
-      case "magicPropLight":return dispatch(SetPerfectMagicPropsEl("el_lght"))
-      case "magicPropDark": return dispatch(SetPerfectMagicPropsEl("el_dark"))
-
-    }
-  }, [myAtype])
+  const portrait = useContext(PortraitMode)
   return (
     <div className="Equips">
       <header>
         <h3>장비</h3>
         <div>※ 칼박 100%로 계산합니다.</div>
       </header>
-      <div className="EquipGridBox">
-        <EquipPartInnerGrid part="무기"/>
-        <EquipPartInnerGrid part="상의"/>
-        <EquipPartInnerGrid part="하의"/>
-        <EquipPartInnerGrid part="머리어깨"/>
-        <EquipPartInnerGrid part="벨트"/>
-        <EquipPartInnerGrid part="신발"/>
-        <EquipPartInnerGrid part="팔찌"/>
-        <EquipPartInnerGrid part="목걸이"/>
-        <EquipPartInnerGrid part="반지"/>
-        <EquipPartInnerGrid part="보조장비"/>
+      <div className="EquipsArrayLayout">
+        <Part part="상의"/>
+        <Part part="하의"/>
+        <Part part="머리어깨"/>
+        <Part part="벨트"/>
+        <Part part="신발"/>
+        <Part part="무기"/>
+        <Part part="팔찌"/>
+        <Part part="목걸이"/>
+        <Part part="반지"/>
+        <Part part="보조장비"/>
       </div>
-      <div className="EquipBatch">
-        <h4>장비 모두 설정</h4>
-        <div className="EquipBatchLayout">
-        <LabeledInput label="방어구 강화보너스" value={armorUpgradeValue} onChange={v => {
-          dispatch(SetArmorUpgradeValueAll(v))
-        }} />
-        <LabeledInput label="악세서리 강화보너스" value={accessUpgradeValue} onChange={v => {
-          dispatch(SetAccessUpgradeValueAll(v))
-        }} />
-        <RadioGroup name="방어구 재질" values={["천", "가죽", "경갑", "중갑", "판금"]} value={mat}
-          dispatcher={v => dispatch(SetMaterialAll(v))}
-        />
-        <OneClickButtonGroup name="완벽한 마봉작" groupName="완벽한 마봉작" dispatcher={onButtonClick}
-          values={["magicPropLeft", "magicPropFire", "magicPropIce", "magicPropLight", "magicPropDark"]}
-          labels={["내 스탯", "화속강", "수속강", "명속강", "암속강"]}
-         />
-        </div>
-      </div>
-      <ISetOptionalAttrsView />
+      <OptionalAttrsView />
+      {!portrait? <EquipBatch /> : null}
     </div>
   )
 }

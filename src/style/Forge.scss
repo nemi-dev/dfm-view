@@ -1,0 +1,17 @@
+.Forge {
+  .ItemIcon {
+    --item-size: 36px;
+  }
+  .Card {
+    --card-size: min(64px, 18vw);
+  }
+  .Emblem {
+    --emblem-size: min(35px, 8.5vw);
+  }
+  .EquipAddons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+}
