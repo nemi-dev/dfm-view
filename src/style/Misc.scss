@@ -6,7 +6,6 @@ $guild-icon-size: 60px;
 
 @mixin polygonal($n: 3, $distance: 150px) {
   $angle: math.div(360deg, $n);
-  min-height: 450px;
   position: relative;
 
   > * {
@@ -67,6 +66,7 @@ $guild-icon-size: 60px;
 
 .TonicGems {
   @include polygonal(6);
+  min-height: 400px;
 
   .TonicGem {
 
@@ -162,6 +162,7 @@ $guild-icon-size: 60px;
 
 .Crack {
   @include polygonal(5, 168px);
+  min-height: 360px;
 
   --icon-size: 60px;
 

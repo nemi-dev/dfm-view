@@ -36,7 +36,6 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background-color: #1e191580;
-
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -52,7 +51,7 @@ h4 { font-size: 1rem; }
 h5 { font-size: 0.75rem; }
 
 header {
-  margin-block: 1.5rem;
+  margin-block: 1rem;
   text-align: center;
 }
 

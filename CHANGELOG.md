@@ -1,9 +1,9 @@
 # 없데이트 목록
 
 - [없데이트 목록](#없데이트-목록)
-  - [v0.1.9 2023-03-05](#v019-2023-03-05)
+  - [v0.1.9 ⎯ 2023-03-05](#v019--2023-03-05)
 
-## v0.1.9 <span style="font-size:smaller;font-weight:lighter;opacity:0.5;">2023-03-05</span>
+## v0.1.9 ⎯ <small>2023-03-05</small>
 
 ### UI 변경 <!-- omit from toc -->
 
