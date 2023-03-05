@@ -1,17 +1,9 @@
-<style>
-.date {
-  font-size:smaller;
-  font-weight: lighter;
-  opacity:0.5;
-}
-</style>
-
 # 없데이트 목록
 
 - [없데이트 목록](#없데이트-목록)
   - [v0.1.9 2023-03-05](#v019-2023-03-05)
 
-## v0.1.9 <span class="date">2023-03-05</span>
+## v0.1.9 <span style="font-size:smaller;font-weight:lighter;opacity:0.5;">2023-03-05</span>
 
 ### UI 변경 <!-- omit from toc -->
 
