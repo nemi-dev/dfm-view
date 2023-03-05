@@ -1,9 +1,0 @@
-{
-  "$schema": "http://json-schema.org/schema",
-  "properties": {
-    "when" : {
-      "type": "string",
-      "description": "(branch, exclusive에서) 이 효과가 추가될 조건"
-    }
-  }
-}

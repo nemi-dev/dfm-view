@@ -1,9 +1,0 @@
-{
-  "$schema": "http://json-schema.org/schema",
-  "type": "array",
-  "description": "Whole item list",
-  "items": {
-    "description": "장비/버프/카드 등에 붙는 모든 가능한 옵션",
-    "$ref": "./attrs.json"
-  }
-}
