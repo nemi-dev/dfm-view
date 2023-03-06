@@ -1,12 +1,11 @@
-import memoizee from "memoizee"
 import magicProps from "./magicProps.json"
-import { getPartCat } from "./items"
+import { getSupertype } from "./items"
+import { at1, MyAttrKey } from "./attrs"
 
-const at1 = memoizee((key: keyof BaseAttrs, value: number): BaseAttrs => ({ [key]: value }), { primitive: true })
 interface MagicPropsMint {
   order: MagicPropsCareAbout[]
   cycle: Partial<Record<MagicPropsCareAbout, MagicPropsCareAbout>>
-  attrSet: Partial<Record<MagicPropsCareAbout, BaseAttrs>>
+  attrSet: Partial<Record<MagicPropsCareAbout, number>>
 }
 
 const magicPropsPicker = (() => {
@@ -15,11 +14,11 @@ const magicPropsPicker = (() => {
     const array: [MagicPropsCareAbout, number][] = magicProps[magicPropsKey]
     const order: MagicPropsCareAbout[] = []
     const cycle: Partial<Record<MagicPropsCareAbout, MagicPropsCareAbout>> = {}
-    const attrSet: Partial<Record<MagicPropsCareAbout, BaseAttrs>> = {}
+    const attrSet: Partial<Record<MagicPropsCareAbout, number>> = {}
     array.forEach(([attrKey, value], index) => {
       order.push(attrKey)
       cycle[attrKey] = array[(index + 1) % array.length][0]
-      attrSet[attrKey] = at1(attrKey, value)
+      attrSet[attrKey] = value
     })
     z[magicPropsKey] = { order, cycle, attrSet }
   }
@@ -29,8 +28,8 @@ const magicPropsPicker = (() => {
 
 
 /** 주어진 스펙의 장비에 대해 뜰 수 있는 모든 마법봉인 옵션을 얻는다. */
-export function getAvailableMagicPropsForEquip(part: EquipPart | "봉인석", level: number, rarity: Rarity, prime: boolean = false) {
-  const partCat = getPartCat(part)
+export function avMagicProps(part: EquipPart | "봉인석", level: number, rarity: Rarity, prime: boolean = false) {
+  const partCat = getSupertype(part)
   const findPrime = rarity === "Epic" && prime ? "-고유" : ""
   let key = `${level}/${rarity}/${partCat}${findPrime}`
   if (!(key in magicPropsPicker))
@@ -39,11 +38,21 @@ export function getAvailableMagicPropsForEquip(part: EquipPart | "봉인석", le
   return magicPropsPicker[key]
 }
 
-/** `getAvailableMagicPropsForEquip`으로 찾은 컬렉션에서 마법봉인 옵션 하나를 선택한다. */
-export function findMagicPropsAttrs(name: MagicPropsCareAbout, mint: MagicPropsMint) {
-  return mint.attrSet[name]
+/** `avMagicProps`으로 찾은 컬렉션에서 마법봉인 옵션 하나를 선택한다. */
+export function findMagicPropsAttrs(name: MagicPropsCareAbout, mint: MagicPropsMint, atype: Atype) {
+  const value =  mint.attrSet[name]
+  if (name === "Stat" || name === "Atk" || name === "Crit") {
+    const key = MyAttrKey[atype][name]
+    return at1(key, value)
+  }
+  return at1(name, mint.attrSet[name])
 }
 
-export function getMagicPropsAttrs(name: MagicPropsCareAbout, part: EquipPart | "봉인석", level: number, rarity: Rarity, prime: boolean = false) {
-  return findMagicPropsAttrs(name, getAvailableMagicPropsForEquip(part, level, rarity, prime))
+export function nextMagicProps(part: EquipPart | "봉인석", current: MagicPropsCareAbout, level: number, rarity: Rarity, prime: boolean) {
+  const mint = avMagicProps(part, level, rarity, prime)
+  return mint.cycle[current]
+}
+
+export function getMagicPropsAttrs(name: MagicPropsCareAbout, part: EquipPart | "봉인석", atype: Atype, level: number, rarity: Rarity, prime: boolean = false) {
+  return findMagicPropsAttrs(name, avMagicProps(part, level, rarity, prime), atype)
 }

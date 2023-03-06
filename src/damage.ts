@@ -70,7 +70,7 @@ function getMagicalDamage(attrs: Attrs, atkFix: number, el: number, eldmg:number
   return calcDamageNoDef(attrs["intl"], attrs["int_inc"], skillValue, skillFixed, attrs["atk_mg"], attrs["atk_mg_inc"], atkFix, attrs["dmg_inc"], attrs["dmg_add"], el, eldmg)
 }
 
-export function getDamage(atype: "Physc" | "Magic", attrs: Attrs, atkFix: number, el: number, eldmg: number, { value, fixed, isSkill }: SkillSpec) {
+export function getDamage(atype: "Physc" | "Magic", attrs: Attrs, atkFix: number, el: number, eldmg: number, { value, fixed, isSkill }: SkillOneAttackSpec) {
   let a = (atype === "Physc")?
     getPhysicalDamage(attrs, atkFix, el, eldmg, value, fixed)
   : getMagicalDamage(attrs, atkFix, el, eldmg, value, fixed)

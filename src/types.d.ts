@@ -7,10 +7,11 @@
 
 declare type NumberZ = number | ""
 
+declare type Atype = "Physc" | "Magic"
+
 declare type Itype = "소검"|"도"|"둔기"|"대검"|"광검"|"너클"|"건틀릿"|"클로"|"권투글러브"|"통파"|"리볼버"|"자동권총"|"머스켓"|"핸드캐넌"|"보우건"|"창"|"봉"|"로드"|"스탭"|"빗자루"|"십자가"|"염주"|"토템"|"낫"|"배틀액스"|"락소드"|"윙블레이드"|"상의"|"하의"|"머리어깨"|"벨트"|"신발"|"목걸이"|"팔찌"|"반지"|"보조장비"|"카드"|"엠블렘"|"칭호"|"봉인석"|"정수"|"오라"|"무기아바타"
 
 declare type EquipPart = "무기" | "상의" | "하의" | "머리어깨" | "벨트" | "신발" | "팔찌" | "목걸이" | "반지" | "보조장비"
-declare type ArmorPart = "상의" | "하의" | "머리어깨" | "벨트" | "신발"
 declare type ArmorMaterial = "천" | "가죽" | "경갑" | "중갑" | "판금"
 declare type Rarity = "Common" | "Uncommon" | "Rare" | "Unique" | "Epic"
 declare type MaterialType = "천" | "가죽" | "경갑" | "중갑" | "판금"
@@ -22,8 +23,8 @@ declare type AvatarPart = "모자" | "얼굴" | "상의" | "목가슴" | "신발
 declare type WholePart = EquipPart | "칭호" | "오라" | "무기아바타" | "봉인석" | "정수"
 declare type ModalTargetSelector = "Equip" | "Card" | "Emblem"
 
-declare type MagicPropsCareAbout = "dmg_inc" | "strn" | "intl" | "atk_ph" | "atk_mg" | "el_fire" | "el_ice" | "el_lght" | "el_dark"
-| "crit_ph" | "crit_mg" | "speed_atk" | "Accu" | null
+declare type MagicPropsCareAbout = "dmg_inc" | "Stat" | "Atk" | "el_fire" | "el_ice" | "el_lght" | "el_dark"
+| "Crit" | "speed_atk" | "Accu" | null
 
 
 declare type EmblemLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
@@ -173,11 +174,16 @@ declare interface BaseAttrs {
   /** 특정 스킬 공격력 증가 */
   sk_val?: { [k: string]: number }
 
+  /** 특정 스킬의 1회당 "타격 횟수" 증가/감소 */
+  sk_hit?: { [k: string]: number }
+
   /** 특정 스킬 레벨 증가 */
   sk_lv?: { [k: string]: number }
 
-  /** 특정 스킬 쿨타임 감소 (%
- 증가일 경우 음수로 표현) */
+  /** 특정 스킬의 "지속시간" 증가/감소 (%) */
+  sk_dur?: { [k: string]: number }
+
+  /** 특정 스킬 쿨타임 감소/증가 (%) */
   sk_cool?: { [k: string]: number }
 
   /** 적 방어력 변화 (내가 공격한 적 + 방어 감소 오라 모두 포함) */
@@ -261,24 +267,10 @@ declare interface Card extends BaseAttrs {
 }
 
 
-declare interface SkillSpec {
+declare interface SkillOneAttackSpec {
   name: string
   value: number
   fixed: number  
   isSkill: boolean 
 }
 
-
-declare interface EquipPartType {
-  name: string
-
-  /** 힘/지능 또는 물리/마법 공격력 증가 수치 */
-  upgrade: number
-  magicProps: MagicPropsCareAbout[]
-  emblems: EmblemSpec[]
-  card: string
-}
-
-declare interface ArmorPartType extends EquipPartType {
-  material: ArmorMaterial
-}

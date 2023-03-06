@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { armorParts, getItem } from "../../items"
-import { getAvailableMagicPropsForEquip } from "../../magicProps"
+import { accessParts, armorParts, getItem, oneEmblemParts } from "../../items"
+import { avMagicProps, nextMagicProps } from "../../magicProps"
 
 
 import _initState from "./initState.json"
@@ -23,7 +23,7 @@ export const equipSlice = createSlice({
       s[part].emblems[index] = [emblemType, emblemLevel as EmblemLevel]
     },
     SetColorEmblemLevelAll: (s, { payload }: PayloadAction<EmblemLevel>) => {
-      (["상의", "하의", "머리어깨", "벨트", "신발", "팔찌", "목걸이", "반지"] as EquipPart[]).forEach(part => s[part].emblems.forEach(sp => sp[1] = payload))
+      oneEmblemParts.forEach(part => s[part].emblems.forEach(sp => sp[1] = payload))
     },
     SetEquipUpgradeValue: (s, { payload: [part, value] }: PayloadAction<[EquipPart, number]>) => {
       s[part].upgrade = value
@@ -32,9 +32,9 @@ export const equipSlice = createSlice({
       armorParts.forEach(part => s[part].upgrade = payload)
     },
     SetAccessUpgradeValueAll: (s, { payload }: PayloadAction<number>) => {
-      ["팔찌", "목걸이", "반지"].forEach(part => s[part].upgrade = payload)
+      accessParts.forEach(part => s[part].upgrade = payload)
     },
-    SetMaterial: (s, { payload: [part, value] }: PayloadAction<[ArmorPart, ArmorMaterial]>) => {
+    SetMaterial: (s, { payload: [part, value] }: PayloadAction<[EquipPart, ArmorMaterial]>) => {
       s[part].material = value
     },
     SetMaterialAll: (s, { payload }: PayloadAction<ArmorMaterial>) => {
@@ -47,17 +47,16 @@ export const equipSlice = createSlice({
     },
     NextMagicProps: (s, { payload: [part, index] }: PayloadAction<[EquipPart, number]>)=> {
       const { level, rarity } = getItem(s[part].name)
-      const mint = getAvailableMagicPropsForEquip(part, level, rarity, index === 0)
       const current = s[part].magicProps[index]
-      const next = mint.cycle[current]
-      s[part].magicProps[index] = next
+      s[part].magicProps[index] = nextMagicProps(
+        part, current, level, rarity, index === 0)
     },
-    SetPerfectMagicPropsStat: (s, { payload: p }: PayloadAction<"strn" | "intl">)=> {
+    SetPerfectMagicPropsStat: (s)=> {
       armorParts.forEach(part => {
-        s[part].magicProps = [p, p, p]
+        s[part].magicProps = ["Stat", "Stat", "Stat"]
       })
-      s.무기.magicProps[0] = "dmg_inc"
-      s.무기.magicProps.fill(p, 1, 3)
+      s["무기"].magicProps[0] = "dmg_inc"
+      s["무기"].magicProps.fill("Stat", 1, 3)
     },
     SetPerfectMagicPropsEl: (s, { payload: p }: PayloadAction<"el_fire" | "el_ice" | "el_lght" | "el_dark"> ) => {
       s.팔찌.magicProps = [p, p, p]

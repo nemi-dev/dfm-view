@@ -1,11 +1,12 @@
 import { createSelector } from "@reduxjs/toolkit"
-import { collectSpecial, combine, elMap2, percent_inc_mul, whatElType } from "./attrs"
-import { RootState } from "./feats/store"
-import { getActiveISetAttrs, getArmorBase, countISetsFrom, getItem, equipParts, getActiveBranch, isActiveGives, getActiveExclusive, getBlessing, isArmorPart } from "./items"
-import { getEmblem } from "./emblem"
-import { getMagicPropsAttrs } from "./magicProps"
-import { explode } from "./utils"
-import { selectWholeAvatarAttrs } from "./feats/avatarSelectors"
+import { collectSpecial, explode, combine, elMap2, whatElType } from "../attrs"
+import { RootState } from "./store"
+import { getActiveISetAttrs, getArmorBase, countISetsFrom, getItem, equipParts, getActiveBranch, isActiveGives, getActiveExclusive, getBlessing, isArmorPart } from "../items"
+import { getEmblem } from "../emblem"
+import { getMagicPropsAttrs } from "../magicProps"
+import { selectWholeAvatarAttrs } from "./avatarSelectors"
+import { percent_inc_mul } from "../utils"
+import { selectGuilds } from "./guildSelectors"
 
 
 
@@ -21,20 +22,24 @@ function noot2<T>(func: (part: EquipPart) => ((s: RootState) => T)): { [k in Equ
   return _o as any
 }
 
-export const selectPart: { [k in EquipPart]: (state: RootState) => k extends ArmorPart? ArmorPartType : EquipPartType }
-= noot((part, state) => state.Equips[part]) as any
+/** 특정 부위에 대한 정보를 얻는다. */
+const selectPart: { [k in EquipPart]: (state: RootState) => PartType }
+= noot((part, state) => state.Equips[part])
 
+/** 특정 부위에 장착중인 아이템을 뽑아내는 Selector */
 export const selectItem = noot((part, state) => getItem(state.Equips[part].name))
 
+/** 특정 부위의 마법봉인 효과를 뽑아내는 Selector */
 export const selectMagicProps = noot2(
   part => createSelector(
+    (state: RootState) => state.Profile.atype,
     selectPart[part],
-    (equipPart) => {
+    (atype, equipPart) => {
       const { name, magicProps } = equipPart
       if (!name || !magicProps || !magicProps.length) return {} 
       const { level, rarity } = getItem(name)
       const _magicProps = magicProps.slice(rarity === "Epic" ? 0 : 1)
-      const array = _magicProps.map((name, index) => getMagicPropsAttrs(name, part, level, rarity, index == 0))
+      const array = _magicProps.map((name, index) => getMagicPropsAttrs(name, part, atype, level, rarity, index == 0))
       return combine(...array)
     }
   )
@@ -68,11 +73,8 @@ export const selectArmorBase = noot2(
     selectPart[part],
     equipPart => {
       if (!isArmorPart(part)) return {}
-      const armorPart = equipPart as ArmorPartType
-      const item = getItem(armorPart.name)
-      
-      const { level, rarity } = item
-      return getArmorBase(level, rarity, armorPart.material, part)
+      const { level, rarity } = getItem(equipPart.name)
+      return getArmorBase(level, rarity, equipPart.material, part)
     }
   )
 )
@@ -260,24 +262,8 @@ export const selectCracksAll = createSelector(
 
 
 
-/** 길드 스탯 보너스를 얻는다. */
-export function selectGuilds(state: RootState): BaseAttrs {
-  const { stat, atk, crit, el_all, speed_atk, Accu, guildPublicStatLv } = state.Guild
-  return {
-    strn: stat + guildPublicStatLv * 10,
-    intl: stat + guildPublicStatLv * 10,
-    atk_ph: atk,
-    atk_mg: atk,
-    crit_ph: crit,
-    crit_mg: crit,
-    ...explode(el_all, "el_all"),
-    speed_atk,
-    Accu
-  }
-}
-
 /** 스탯을 보정한 값만을 가져온다. */
-export function selectCalibrated(state: RootState) {
+export function selectCalibrated(state: RootState): BaseAttrs {
   const sk_inc = state.Calibrate.sk_inc.reduce(percent_inc_mul, 0)
   return { ...state.Calibrate, sk_inc }
 }

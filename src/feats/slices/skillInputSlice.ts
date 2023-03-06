@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
 interface SkillInputInit {
-  cases: SkillSpec[]
+  cases: SkillOneAttackSpec[]
 }
 
 const initialState: SkillInputInit = {

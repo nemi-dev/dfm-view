@@ -1,8 +1,57 @@
-const add = (p: number, n: number) => p + n
-export const percent_inc_mul = (p: number, n: number) => (n + p + n * p / 100)
+import memoizee from "memoizee"
+import { percent_inc_mul, add, combineArray } from "./utils"
 
 
-const combineArray = (p: string[], n: string[]) => [...p, ...n]
+/** 단 하나의 옵션을 가진 효과를 만든다. */
+export const at1 = memoizee((key: keyof BaseAttrs, value: number): BaseAttrs => ({ [key]: value }), { primitive: true })
+
+/** "힘/지능" "물/마공" "물/마크" "모든속성" 등 같이 올라가는 스탯을 만든다. */
+export function explode(val: number, is: "stat" | "atk" | "el_all"): BaseAttrs {
+  switch(is) {
+    case "stat": return { strn: val, intl: val, vit: val, psi: val }
+    case "atk": return { atk_ph: val, atk_mg: val }
+    case "el_all": return { el_fire: val, el_ice: val, el_lght: val, el_dark: val }
+  }
+}
+
+type MyAttrKey = {
+  "Physc": {
+    "Stat": "strn",
+    "Atk" : "atk_ph",
+    "Crit": "crit_ph",
+    "CritCh": "crit_ph_pct",
+    "스탯": "힘",
+    "타입": "물리"
+  },
+  "Magic": {
+    "Stat": "intl",
+    "Atk" : "atk_mg",
+    "Crit": "crit_mg",
+    "CritCh": "crit_mg_pct",
+    "스탯": "지능",
+    "타입": "마법"
+  }
+}
+
+export const MyAttrKey: MyAttrKey = {
+  "Physc": {
+    "Stat": "strn",
+    "Atk" : "atk_ph",
+    "Crit": "crit_ph",
+    "CritCh": "crit_ph_pct",
+    "스탯": "힘",
+    "타입": "물리"
+  },
+  "Magic": {
+    "Stat": "intl",
+    "Atk" : "atk_mg",
+    "Crit": "crit_mg",
+    "CritCh": "crit_mg_pct",
+    "스탯": "지능",
+    "타입": "마법"
+  }
+}
+
 
 const reduce_eltype = (p: BaseAttrs["eltype"], n: BaseAttrs["eltype"]) => {
   if (p == null) return n

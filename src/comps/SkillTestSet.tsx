@@ -1,15 +1,16 @@
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
-import { selectMe, selectMyFinalEltype } from '../selectors'
+import { selectMe, selectMyFinalEltype } from '../feats/selectors'
 import { beautyNumber } from '../utils'
 import { criticalChance, criticize, getDamage } from '../damage'
 import { SetSkillFixValue, SetSkillInputName, SetSkillUsesSkillInc, SetSkillValue } from '../feats/slices/skillInputSlice'
 import { Checkie, LabeledInput } from "./widgets/Forms"
 import { VerboseResult } from './AttrsView'
+import { MyAttrKey } from '../attrs'
 
 
 
 
-interface SkillInputOneProps extends SkillSpec {
+interface SkillInputOneProps extends SkillOneAttackSpec {
   index: number
 }
 
@@ -28,9 +29,9 @@ function SkillInputOne({ index, value, fixed, isSkill: useSkillInc, name }: Skil
 
 interface SkillOutputOneProps {
   index: number
-  skillSpec: SkillSpec
+  SkillOneAttackSpec: SkillOneAttackSpec
 }
-function SkillTestOne({ index, skillSpec }: SkillOutputOneProps) {
+function SkillTestOne({ index, SkillOneAttackSpec }: SkillOutputOneProps) {
 
   const atype = useAppSelector(state => state.Profile.atype)
 
@@ -38,18 +39,16 @@ function SkillTestOne({ index, skillSpec }: SkillOutputOneProps) {
   const atkFix = useAppSelector(state => state.Profile.atk_fixed)
   const [eltype, el, eldmg] = useAppSelector(selectMyFinalEltype)
 
-  const withoutCrit = getDamage(atype, attrs, atkFix, el, eldmg, skillSpec)
+  const withoutCrit = getDamage(atype, attrs, atkFix, el, eldmg, SkillOneAttackSpec)
   const withCrit = criticize(withoutCrit, attrs["cdmg_inc"])
 
-  const critChancePhysc = criticalChance(attrs["crit_ph"], attrs["crit_ph_pct"])
-  const critChanceMagic = criticalChance(attrs["crit_mg"], attrs["crit_mg_pct"])
-
-  const chance = atype === "Physc"? critChancePhysc : critChanceMagic
+  const { Crit, CritCh } = MyAttrKey[atype]
+  const chance = criticalChance(attrs[Crit], attrs[CritCh])
   
   const mean = chance * withCrit + (1 - chance) * withoutCrit
   return (
     <div className="SkillTestOne">
-      <SkillInputOne index={index} {...skillSpec} />
+      <SkillInputOne index={index} {...SkillOneAttackSpec} />
       <VerboseResult className={"Vertical " + atype} name={"데미지"} value={beautyNumber(withoutCrit)} />
       <VerboseResult className={"Vertical " + atype} name={"평균 데미지"} value={beautyNumber(mean)} />
       <VerboseResult className={"Vertical " + atype} name={"크리티컬 데미지"} value={beautyNumber(withCrit)} />
@@ -64,7 +63,7 @@ export function SkillTestSet() {
       <h3>스킬</h3>
       <div className="SkillTestSet">
       {cases.map((a, index) => (
-        <SkillTestOne key={index} index={index} skillSpec={a} />
+        <SkillTestOne key={index} index={index} SkillOneAttackSpec={a} />
       ))}
       </div>
     </div>

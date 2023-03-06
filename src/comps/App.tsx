@@ -39,10 +39,10 @@ function Navigator() {
   return (
     <nav className="Navigator">
       <NavLink name="장비">장비</NavLink>
-      <NavLink name="아바타">아바타</NavLink>
+      <NavLink name="아바타">칭호/아바타</NavLink>
+      <NavLink name="봉인석">성안의 봉인</NavLink>
       <NavLink name="크리쳐">크리쳐</NavLink>
       <NavLink name="마력결정">마력 결정</NavLink>
-      <NavLink name="봉인석">성안의 봉인</NavLink>
       <NavLink name="길드">길드 버프</NavLink>
     </nav>
   )
@@ -51,6 +51,7 @@ function Navigator() {
       <NavLink name="장비">장비</NavLink>
       <NavLink name="대장간">대장간</NavLink>
       <NavLink name="아바타">칭호/아바타</NavLink>
+      <NavLink name="봉인석">성안의 봉인</NavLink>
       <NavLink name="기타">기타</NavLink>
     </nav>
   )
@@ -75,11 +76,11 @@ function Content() {
       <Tab name="장비"><Equips /></Tab>
       <Tab name="대장간"><Forge /></Tab>
       <Tab name="아바타"><Avatars /></Tab>
+      <Tab name="봉인석"><Cracks /></Tab>
       <Tab name="기타">
-        <Cracks />
+        <Guilds />
         <Tonic />
         <Creatures />
-        <Guilds />
       </Tab>
     </>
   )

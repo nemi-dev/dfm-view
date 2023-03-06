@@ -2,7 +2,6 @@ import '../style/Attrs.scss'
 import React from "react"
 import { Num } from "./CommonUI"
 import { attrDefs, AttrExpressionType } from '../attrs'
-import { signed } from '../utils'
 
 
 interface FlatValueIncrementProps {
@@ -35,31 +34,33 @@ function DearEltype({ name, value }: { name: string, value: string | string[] })
 
 
 
-function SkillValue({ midfix, skills, percent, negate }: { midfix: string, skills: Record<string, number>, percent: boolean, negate: boolean }) {
+function SkillValue({ midfix, skills, percent }: { midfix: string, skills: Record<string, number>, percent: boolean }) {
   
   const skillNames = Object.keys(skills).sort()
-  const els: JSX.Element[] = []
-  for (const skillName of skillNames) {
-    let v = negate? -skills[skillName] : skills[skillName]
-    els.push(
-      <div key={skillName} className="AttrOne">
-        <span className="AttrName">{skillName} {midfix}</span>
-        <span className="AttrValue">{signed(v)}{percent? '%':''}</span>
-      </div>
-    )
-  }
-  return (
-    <span className="AttrVex">{els}</span>
+  return(
+    <>
+    {skillNames.map(skillName => {
+      let value = skills[skillName]
+      return (
+        <div key={skillName} className="AttrOne">
+          <span className="AttrName">{skillName} {midfix}</span>
+          <Num className="AttrValue" value={value} signed percented={percent} />
+        </div>
+      )
+    })}
+    </>
   )
 }
 
 function Misc({ value }: { value: string[] } ) {
   return (
-    <div className="AttrVex">
+    <>
       {value.map((v, i) => 
-      <div key={`${i}=${v}`} className="AttrOne">{v}</div>
+      <div key={`${i}=${v}`} className="AttrOne">
+        <span className="AttrName">{v}</span>
+      </div>
       )}
-    </div>
+    </>
   )
 }
 
@@ -77,20 +78,21 @@ const expressionToComponent: Record<AttrExpressionType, React.FC<any>> = {
 
 
 export function SimpleBaseAttrView({ attrs }: { attrs: BaseAttrs }) {
+  if (!attrs) return null
   const views: JSX.Element[] = []
   for (const { key, expression, name } of attrDefs.array) {
     if (key in attrs) {
       const compo = expressionToComponent[expression]
       if (key === "sk_lv") {
-        views.push(<SkillValue key={key} midfix={name} skills={attrs[key]} percent={false} negate={false} />)
+        views.push(<SkillValue key={key} midfix={name} skills={attrs[key]} percent={false} />)
         continue
       }
       if (key === "sk_val") {
-        views.push(<SkillValue key={key} midfix={name} skills={attrs[key]} percent={true} negate={false} />)
+        views.push(<SkillValue key={key} midfix={name} skills={attrs[key]} percent={true} />)
         continue
       }
       if (key === "sk_cool") {
-        views.push(<SkillValue key={key} midfix={name} skills={attrs[key]} percent={true} negate={true} />)
+        views.push(<SkillValue key={key} midfix={name} skills={attrs[key]} percent={true} />)
         continue
       }
       views.push(React.createElement(compo, { key, name: name, value: attrs[key] }))

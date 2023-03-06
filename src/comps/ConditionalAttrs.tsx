@@ -2,7 +2,7 @@ import { useAppDispatch, useAppSelector } from "../feats/hooks"
 import { SimpleBaseAttrView } from "./AttrsView"
 import { SetBranch, SetExclusive, SetGives } from "../feats/slices/equipSlice"
 import { useEffect } from "react"
-import { selectISetConditionalsAll, selectItem } from "../selectors"
+import { selectISetConditionalsAll, selectItem } from "../feats/selectors"
 import { Checkie, RadioGroup } from "./widgets/Forms"
 import { equipParts } from "../items"
 import styled from "styled-components"
@@ -124,10 +124,6 @@ export function OptionalAttrsView() {
   const { branches, exclusives, gives } = useAppSelector(selectISetConditionalsAll)
   return(
     <div className="OptionalAttrsView">
-      <header>
-        <h3>조건부 효과</h3>
-        <div>아래 효과는 마을에서 적용되지 않습니다</div>
-      </header>
       <CondArray className="CondArray">
         {equipParts.map(part => <Partie key={part} part={part} />)}
         {Object.keys(branches).sort().map((key) => 

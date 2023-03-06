@@ -3,29 +3,40 @@ import _isets from "../data/itemsets.json"
 import _armorbases from "./armorbase.json"
 
 import memoizee from "memoizee"
-import { explode } from "./utils"
+import { explode, MyAttrKey } from "./attrs"
 
 export const weaponType = [
   "소검","도","둔기","대검","광검","너클","건틀릿","클로","권투글러브","통파","리볼버","자동권총","머스켓","핸드캐넌","보우건","창","봉","로드","스탭","빗자루","십자가","염주","토템","낫","배틀액스","락소드","윙블레이드"
 ]
-export const equipParts: EquipPart[] = ["무기", "상의", "하의", "머리어깨", "벨트", "신발", "팔찌", "목걸이", "반지", "보조장비"]
-export const armorParts: ArmorPart[] = ["상의", "하의", "머리어깨", "벨트", "신발"]
-export const wholeParts: WholePart[] = [...equipParts, "칭호", "오라", "무기아바타", "봉인석", "정수"]
+export const armorParts: readonly EquipPart[] = Object.freeze(["상의", "하의", "머리어깨", "벨트", "신발"])
+export const accessParts: readonly EquipPart[] = Object.freeze(["팔찌", "목걸이", "반지"])
+export const equipParts: readonly EquipPart[] = Object.freeze(["무기", ...armorParts, ...accessParts, "보조장비"])
+export const wholeParts: readonly WholePart[] = Object.freeze([...equipParts, "칭호", "오라", "무기아바타", "봉인석", "정수"])
+
+/** 단 한 종류의 엠블렘만 넣을 수 있는 부위 모음 */
+export const oneEmblemParts: readonly EquipPart[] = Object.freeze([...armorParts, ...accessParts])
 
 export function isWeapon(itype: string): boolean {
   return (itype === "무기" || weaponType.includes(itype as Itype))
 }
 
 /** `key`가 방어구 부위인가? */
-export const isArmorPart = (key: EquipPart): key is ArmorPart => armorParts.includes(key as ArmorPart)
+export const isArmorPart = (key: EquipPart) => armorParts.includes(key)
 
 /** `key`가 악세서리 부위인가? */
-export const isAccessPart = (key: EquipPart): key is "팔찌" | "목걸이" | "반지" => key === "팔찌" || key === "목걸이" || key === "반지"
+export const isAccessPart = (key: EquipPart) => accessParts.includes(key)
 
-const _itype_is_equipPart: (Itype | EquipPart)[] = ["상의", "하의", "머리어깨", "벨트", "신발", "팔찌", "목걸이", "반지", "보조장비", "무기아바타", "오라", "칭호", "봉인석", "정수"]
 
-function _part(s: Itype): WholePart {
-  if (_itype_is_equipPart.includes(s)) return s as WholePart
+/** 주어진 부위의 "상위 종류"를 얻는다. (ex. "방어구", "악세서리", "무기", "봉인석") */
+export function getSupertype(part: EquipPart | "봉인석") {
+  if (isArmorPart(part as EquipPart)) return "방어구"
+  if (isAccessPart(part as EquipPart)) return "악세서리"
+  return part as "무기" | "봉인석"
+}
+
+/** 이 아이템을 어디에 장착할 수 있는지 판단한다. */
+function getPart(s: Itype): WholePart {
+  if (wholeParts.includes(s as WholePart)) return s as WholePart
   if (isWeapon(s)) return "무기"
   return null
 }
@@ -33,12 +44,9 @@ function _part(s: Itype): WholePart {
 const items = _items as Attrs[]
 const isets = _isets as ISet[]
 const armorbases = _armorbases as BaseAttrs[]
-
 const cards: Card[] = []
 
-type PartIndex = {
-  [k in WholePart]: Attrs[]
-}
+type PartIndex = { [k in WholePart]: Attrs[] }
 
 const _items_index_Name: Record<string, Attrs> = {}
 const _items_index_Part = (()=>{
@@ -58,19 +66,16 @@ function assignIset(item: Attrs, setOf: string | string[]) {
 
 }
 
-
 for (const item of items) {
   _items_index_Name[item.name] = item
 
-  const part = _part(item.itype)
+  const part = getPart(item.itype)
   if (part) _items_index_Part[part].push(item)
   if (item.itype === "카드") cards.push(item as Card)
   if (item.setOf) assignIset(item, item.setOf)
 }
 
 const ISetsNameMap: Record<string, ISet> = {}
-
-
 
 for (const iset of isets) {
   ISetsNameMap[iset.name] = iset
@@ -88,7 +93,7 @@ for (const iset of isets) {
 
 /** "방어구 재질"을 얻는다. */
 export const getArmorBase = memoizee(
-  function _getArmorBase(level: number, rarity: Rarity, material: ArmorMaterial, part: ArmorPart): Attrs {
+  function getArmorBase(level: number, rarity: Rarity, material: ArmorMaterial, part: EquipPart): Attrs {
     const find = armorbases.find(attr => {
       return attr.level == level
       && attr.rarity == rarity
@@ -100,18 +105,6 @@ export const getArmorBase = memoizee(
   },
 { primitive: true })
 
-/**
- * "상의" | "하의" | "머리어깨" | "벨트" | "신발"은 "방어구"이다.  
- * "팔찌" | "목걸이" | "반지"는 "악세서리"이다.  
- * "무기"는 "무기"이다.  
- * "보조장비"는 "보조장비"이다.  
- * "봉인석"은 "봉인석"이다.  
- */
-export function getPartCat(part: EquipPart | "봉인석") {
-  if (isArmorPart(part as EquipPart)) return "방어구"
-  if (isAccessPart(part as EquipPart)) return "악세서리"
-  return part
-}
 
 
 /**
@@ -301,3 +294,12 @@ export function getBlessing(...items: Attrs[]) {
     ...explode(value, "stat")
   } as BaseAttrs
 }
+
+/** 내 공격타입에 맞는 봉인석/정수만 얻는다. */
+export const getCracksOnly = memoizee(
+function getCracksOnly(itype: "봉인석" | "정수", atype: Atype) {
+  const attrKey = MyAttrKey[atype]["Stat"]
+  return _items_index_Part[itype].filter(item => item[attrKey])
+}
+, { primitive: true })
+
