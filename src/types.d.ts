@@ -48,7 +48,7 @@ declare type Attrs = BaseAttrs & {
   branch?: WhenCombinedAttrs[]
 
   /** 모든 파티원에게 적용되는 효과 */
-  give_us?: BaseAttrs & When
+  gives?: BaseAttrs & When
 
   /** 이 중에서 동시에 하나의 효과만 적용된다. */
   exclusive?: ExclusiveGroup[]

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { accessParts, armorParts, getItem, oneEmblemParts } from "../../items"
-import { avMagicProps, nextMagicProps } from "../../magicProps"
+import { nextMagicProps } from "../../magicProps"
 
 
 import _initState from "./initState.json"
@@ -18,6 +18,11 @@ export const equipSlice = createSlice({
     },
     SetCard: (s, { payload: [part, cardName] }: PayloadAction<[EquipPart, string]>) => {
       s[part].card = cardName
+    },
+    SetCardsAllPossible: (s, { payload }: PayloadAction<string>) => {
+      const card = getItem(payload) as Card
+      const possible = card.part ?? []
+      possible.forEach(part => s[part as EquipPart].card = payload)
     },
     SetEmblem: (s, { payload: [part, index, emblemType, emblemLevel] }: PayloadAction<[EquipPart, number, EmblemType, number]>) => {
       s[part].emblems[index] = [emblemType, emblemLevel as EmblemLevel]
@@ -41,27 +46,20 @@ export const equipSlice = createSlice({
       armorParts.forEach(part => s[part].material = payload)
     },
     SetEquips: (s, { payload }: PayloadAction<Record<EquipPart, string>>) => {
-      for (const key in payload) {
-        s[key as EquipPart].name = payload[key]
-      }
+      for (const key in payload) s[key].name = payload[key]
     },
     NextMagicProps: (s, { payload: [part, index] }: PayloadAction<[EquipPart, number]>)=> {
       const { level, rarity } = getItem(s[part].name)
       const current = s[part].magicProps[index]
-      s[part].magicProps[index] = nextMagicProps(
-        part, current, level, rarity, index === 0)
+      s[part].magicProps[index] = nextMagicProps(part, current, level, rarity, index === 0)
     },
     SetPerfectMagicPropsStat: (s)=> {
-      armorParts.forEach(part => {
-        s[part].magicProps = ["Stat", "Stat", "Stat"]
-      })
+      armorParts.forEach(part => s[part].magicProps = ["Stat", "Stat", "Stat"])
       s["무기"].magicProps[0] = "dmg_inc"
       s["무기"].magicProps.fill("Stat", 1, 3)
     },
     SetPerfectMagicPropsEl: (s, { payload: p }: PayloadAction<"el_fire" | "el_ice" | "el_lght" | "el_dark"> ) => {
-      s.팔찌.magicProps = [p, p, p]
-      s.목걸이.magicProps = [p, p, p]
-      s.반지.magicProps = [p, p, p]
+      accessParts.forEach(part => s[part].magicProps = [p, p, p])
     }
   }
 })
@@ -70,6 +68,7 @@ export const equipSlice = createSlice({
 export const {
   SetEquip,
   SetCard,
+  SetCardsAllPossible,
   SetEmblem,
   SetColorEmblemLevelAll,
   SetEquipUpgradeValue,
