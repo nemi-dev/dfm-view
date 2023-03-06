@@ -1,43 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export interface CalibrateInitType {
-  strn: number,
-  intl: number,
-  str_inc: number,
-  int_inc: number,
-
-  atk_ph: number,
-  atk_mg: number,
-  atk_ph_inc: number,
-  atk_mg_inc: number,
-
-  crit_ph: number,
-  crit_mg: number,
-  crit_ph_pct: number,
-  crit_mg_pct: number,
-
-  dmg_inc: number,
-  cdmg_inc: number,
-  dmg_add: number,
-
-  eltype: Eltype[]
-  
-  el_fire: number,
-  el_ice: number,
-  el_lght: number,
-  el_dark: number,
-
-  eldmg_fire: number,
-  eldmg_ice: number,
-  eldmg_lght: number,
-  eldmg_dark: number,
-  
-  sk_inc: number[],
-  sk_inc_sum: number
-
-  target_def: number,
-  target_res: number
-}
 
 const attrs: CalibrateInitType = {
   strn: 0,
@@ -78,7 +40,7 @@ const attrs: CalibrateInitType = {
   target_res: 0
 }
 
-type SetAttrAction = PayloadAction<[keyof Omit<CalibrateInitType, "sk_inc" | "eltype">, number]>
+type SetAttrAction = PayloadAction<[keyof NumberCalibrate, number]>
 type SkillIncPayloadType = PayloadAction<[number, number]>
 
 export const calibrateSlice = createSlice({

@@ -1,10 +1,9 @@
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { selectMe, selectMyFinalEltype } from '../selectors'
 import { beautyNumber } from '../utils'
-import { criticalChance, criticize } from '../damage'
+import { criticalChance, criticize, getDamage } from '../damage'
 import { SetSkillFixValue, SetSkillInputName, SetSkillUsesSkillInc, SetSkillValue } from '../feats/slices/skillInputSlice'
 import { Checkie, LabeledInput } from "./widgets/Forms"
-import { getDamage } from './VerboseAttrsView'
 import { VerboseResult } from './AttrsView'
 
 
@@ -14,7 +13,7 @@ interface SkillInputOneProps extends SkillSpec {
   index: number
 }
 
-function SkillInputOne({ index, value, fixed, useSkillInc, name }: SkillInputOneProps) {
+function SkillInputOne({ index, value, fixed, isSkill: useSkillInc, name }: SkillInputOneProps) {
   const dispatch = useAppDispatch()
   return (
     <div className="SkillInputOne">

@@ -265,7 +265,7 @@ declare interface SkillSpec {
   name: string
   value: number
   fixed: number  
-  useSkillInc: boolean 
+  isSkill: boolean 
 }
 
 

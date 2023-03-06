@@ -2,35 +2,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { armorParts, getItem } from "../../items"
 import { getAvailableMagicPropsForEquip } from "../../magicProps"
 
-import _equipInit from "./equipInit.json"
-const equipInit: EquipsType = _equipInit as EquipsType
 
-interface DF_TitlePartType {
-  name: string
-  emblems: EmblemSpec[]
-  card: string
-}
+import _initState from "./initState.json"
+const equipInit: EquipsType = _initState.Equips as EquipsType
 
 
-interface EquipsType {
 
-  무기: EquipPartType
-
-  상의: ArmorPartType
-  하의: ArmorPartType
-  머리어깨: ArmorPartType
-  벨트: ArmorPartType
-  신발: ArmorPartType
-
-  팔찌: EquipPartType
-  목걸이: EquipPartType
-  반지: EquipPartType
-
-  보조장비: EquipPartType
-
-  칭호: DF_TitlePartType
-
-}
 
 export const equipSlice = createSlice({
   name: 'Equip',

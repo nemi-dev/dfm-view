@@ -1,33 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { avatarParts } from "../../avatar"
 
-type AvatarInitType = {
-  [k in AvatarPart]: "Uncommon" | "Rare"
-} & {
-  칭호: string
-  오라: string
-  무기아바타: string
+import _initState from "./initState.json"
 
-  card: string
-  emblem: EmblemSpec[]
-}
-
-const avatarInit: AvatarInitType = {
-  모자: "Uncommon",
-  얼굴: "Uncommon",
-  상의: "Uncommon",
-  목가슴: "Uncommon",
-  신발: "Uncommon",
-  머리: "Uncommon",
-  하의: "Uncommon",
-  허리: "Uncommon",
-  칭호: "월하/뜨거운 썸머 바캉스",
-  오라: "월하/바캉스/메이플 오라",
-  무기아바타: "이달의 아이템 무기아바타",
-
-  card: null,
-  emblem: [["Intel", 5]]
-}
+const avatarInit = _initState.Avatars as AvatarInitType
 
 export const avatarSlice = createSlice({
   name: "Avatar",
@@ -46,7 +22,7 @@ export const avatarSlice = createSlice({
       s.card = payload
     },
     SetDFTitleEmblem: (s, { payload }: PayloadAction<EmblemSpec>) => {
-      s.emblem = [payload]
+      s.emblems = [payload]
     },
   }
 })

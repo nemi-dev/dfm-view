@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
-import { SetArtifactValue, SetCreatureSkill, SetCreatureStat } from '../feats/slice'
+import { SetArtifactValue, SetCreatureSkill, SetCreatureStat } from '../feats/slices/slice'
 import { LabeledInput } from "./widgets/Forms"
 
 export function Creatures() {

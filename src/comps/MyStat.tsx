@@ -1,7 +1,7 @@
 import { attrDefs } from "../attrs"
 import { calcAtk, calcStat, criticalChance } from "../damage"
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
-import { AddSkillInc, CalibrateInitType, RemoveSkillInc, SetBasicAttr, SetEltype, SetSkillInc } from "../feats/slices/calibrateSlice"
+import { AddSkillInc, RemoveSkillInc, SetBasicAttr, SetEltype, SetSkillInc } from "../feats/slices/calibrateSlice"
 import { selectMe, selectMeWithoutOptional, selectMyFinalEltype } from "../selectors"
 import { beautyNumber } from "../utils"
 import { Gridy, Num } from "./CommonUI"
@@ -9,21 +9,12 @@ import { CheckboxGroup, DisposableInput, LabeledInput, NumberInput, RadioGroup, 
 
 import styled from 'styled-components'
 import { VerboseResult } from "./AttrsView"
-import { SetAchieveLevel, SetAtype, SetLevel, set_atk_fixed } from "../feats/slice"
+import { SetAchieveLevel, SetAtype, SetLevel, set_atk_fixed } from "../feats/slices/slice"
 import { createContext, useContext, useState } from "react"
 
 
 const MyselfContext = createContext<BaseAttrs>({})
 
-type NumberCalibrate = Omit<CalibrateInitType, "eltype" | "sk_inc">
-
-interface OneAttrTripletProps {
-  className?: string
-  name?: string | JSX.Element
-  aKey: any
-  percent?: boolean
-  signed?: boolean
-}
 
 function OneAttrTriplet({ className = "", name, aKey, percent = false, signed = false }: OneAttrTripletProps) {
   const cattr = useAppSelector(state => state.Calibrate)
