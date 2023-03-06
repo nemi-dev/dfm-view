@@ -215,7 +215,7 @@ export function collectSpecial(...attrsList: Attrs[]) {
   for (const attrs of attrsList) {
     if (attrs.branch) branches[attrs.name] = attrs.branch
     if (attrs.exclusive) exclusives[attrs.name] = attrs.exclusive
-    if (attrs.give_us) gives[attrs.name] = attrs.give_us
+    if (attrs.gives) gives[attrs.name] = attrs.gives
   }
   return { branches, exclusives, gives }
 }

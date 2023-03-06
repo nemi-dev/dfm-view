@@ -187,12 +187,12 @@ export function getActiveBranch(item: Attrs, activeKeys: Record<string, boolean>
   return branch.filter(child => activeKeys[`${name}::${child.when}`])
 }
 
-/** "내가 체크한" give_us 조건부 옵션이 이 아이템의 give_us를 발동시킨다면 그 give_us를 얻는다. */
+/** "내가 체크한" gives 조건부 옵션이 이 아이템의 give_us를 발동시킨다면 그 give_us를 얻는다. */
 export function isActiveGives(item: Attrs, activeKeys: Record<string, boolean>): BaseAttrs {
-  if (!(item?.give_us)) return null
-  const { name, give_us } = item
-  const key = `${name}::${give_us.when ?? "default"}`
-  if (activeKeys[key]) return give_us
+  if (!(item?.gives)) return null
+  const { name, gives } = item
+  const key = `${name}::${gives.when ?? "default"}`
+  if (activeKeys[key]) return gives
   return null
 }
 

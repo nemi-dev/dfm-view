@@ -87,13 +87,13 @@ function Partie({ part }: { part: EquipPart }) {
   const item = useAppSelector(selectItem[part])
   if (!item) return null
   const name = item.name
-  const { branch, exclusive, give_us } = item ?? {}
-  if (!(branch || exclusive || give_us)) return null
+  const { branch, exclusive, gives } = item ?? {}
+  if (!(branch || exclusive || gives)) return null
   return (
     <>
       {branch? <BranchView name={name} branches={branch} /> : null}
       {exclusive? <ExclusiveView name={name} exclusives={exclusive} /> : null}
-      {give_us? <GivesView name={name} attrs={give_us} /> : null }
+      {gives? <GivesView name={name} attrs={gives} /> : null }
     </>
   )
 }
@@ -108,6 +108,7 @@ grid-template-columns: 1fr 1fr;
   flex-direction: column;
 
   .CondContainerName {
+    text-align: center;
     font-weight: 800;
     color: white;
     margin-block: 0.5rem;
