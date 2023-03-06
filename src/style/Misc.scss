@@ -30,38 +30,6 @@ $guild-icon-size: 60px;
   }
 }
 
-.Guilds {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  gap: 2px;
-
-  .GuildsInput {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    flex-grow: 1;
-  }
-  .GuildsIconGroup {
-    border: 1px solid #524d42;
-    padding: 1px;
-    height: $guild-icon-size;
-  }
-  .InputGroup {
-    padding-block: 1px;
-    label {
-      font-size: 0.8rem;
-    }
-  }
-
-  img {
-    width: $guild-icon-size;
-  }
-  
-}
-
 
 .TonicGems {
   @include polygonal(6);

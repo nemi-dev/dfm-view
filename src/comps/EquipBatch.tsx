@@ -2,7 +2,7 @@ import { useCallback } from "react"
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
 import { SetArmorUpgradeValueAll, SetAccessUpgradeValueAll, SetMaterialAll, SetPerfectMagicPropsEl, SetPerfectMagicPropsStat, SetColorEmblemLevelAll } from "../feats/slices/equipSlice"
 import { RootState } from "../feats/store"
-import { armorParts } from "../items"
+import { accessParts, armorParts, oneEmblemParts } from "../items"
 import { LabeledInput, RadioGroup, OneClickButtonGroup } from "./widgets/Forms"
 
 
@@ -14,13 +14,13 @@ function selectArmorUpgradeValues(state: RootState): [boolean, number] {
 }
 
 function selectAccessUpgradeValues(state: RootState): [boolean, number] {
-  const value = Math.max(...["팔찌", "목걸이", "반지"].map(p => state.Equips[p].upgrade))
-  const synced = ["팔찌", "목걸이", "반지"].every(v => state.Equips[v].upgrade === value)
+  const value = Math.max(...accessParts.map(p => state.Equips[p].upgrade))
+  const synced = accessParts.every(v => state.Equips[v].upgrade === value)
   return [synced, value]
 }
 
 function selectColorEmblemLevels(state: RootState) {
-  return ([...armorParts, "팔찌", "목걸이", "반지"] as EquipPart[]).flatMap(p => state.Equips[p].emblems.map(spec => spec[1])).reduce((p, n) => p < n ? n : p, 1)
+  return oneEmblemParts.flatMap(p => state.Equips[p].emblems.map(spec => spec[1])).reduce((p, n) => p < n ? n : p, 1)
 }
 
 function selectSynchronizedMaterial(state: RootState) {
@@ -36,10 +36,7 @@ export function EquipBatch() {
   const onButtonClick = useCallback((v: string) => {
     switch (v) {
       case "magicPropLeft":
-        switch (myAtype) {
-          case "Physc": return dispatch(SetPerfectMagicPropsStat("strn"))
-          case "Magic": return dispatch(SetPerfectMagicPropsStat("intl"))
-        }
+        return dispatch(SetPerfectMagicPropsStat())
       case "magicPropFire": return dispatch(SetPerfectMagicPropsEl("el_fire"))
       case "magicPropIce":  return dispatch(SetPerfectMagicPropsEl("el_ice"))
       case "magicPropLight":return dispatch(SetPerfectMagicPropsEl("el_lght"))

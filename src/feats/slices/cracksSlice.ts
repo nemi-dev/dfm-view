@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { getItem } from "../../items"
-import { getAvailableMagicPropsForEquip } from "../../magicProps"
+import { avMagicProps } from "../../magicProps"
 
 import _initState from "./initState.json"
 const cracksInit = _initState.Cracks as CracksType
@@ -23,7 +23,7 @@ export const crackSlice = createSlice({
     },
     NextMagicProps: (s, { payload: index }: PayloadAction<number>)=> {
       const { level, rarity } = getItem(s.rune)
-      const mint = getAvailableMagicPropsForEquip("봉인석", level, rarity, index === 0)
+      const mint = avMagicProps("봉인석", level, rarity, index === 0)
       const current = s.MagicProps[index]
       const next = mint.cycle[current]
       s.MagicProps[index] = next
@@ -32,5 +32,5 @@ export const crackSlice = createSlice({
 })
 
 export const {
-  SetRune, SetSpell, SetMagicProps, NextMagicProps
+  SetRune, SetSpell, SetSpellAll, SetMagicProps, NextMagicProps
 } = crackSlice.actions

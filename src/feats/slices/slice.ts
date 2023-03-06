@@ -73,7 +73,7 @@ interface Profile {
   /** 업적 레벨 (최대 9) */
   achieveLevel: number
   atk_fixed: number
-  atype: "Physc" | "Magic"
+  atype: Atype
   targetDefense: number
   targetElementResist: number
 }
@@ -94,7 +94,7 @@ export const profileSlice = createSlice({
 
     SetLevel: (s, { payload }: PayloadAction<number>) => { s.level = payload },
     SetAchieveLevel: (s, { payload }: PayloadAction<number>) => { s.achieveLevel = payload },
-    SetAtype: (s, { payload }: PayloadAction<"Physc" | "Magic">) => {
+    SetAtype: (s, { payload }: PayloadAction<Atype>) => {
       s.atype = payload
     },
     set_atk_fixed: (s, pay : PayloadAction<number>) => {

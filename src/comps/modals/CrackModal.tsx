@@ -1,10 +1,12 @@
-import React, { useCallback, useContext } from "react"
-import { useAppDispatch } from "../../feats/hooks"
-import { SetRune, SetSpell } from "../../feats/slices/cracksSlice"
-import { getItemsByPart } from "../../items"
+import React, { useCallback, useContext, useState } from "react"
+import { useAppDispatch, useAppSelector } from "../../feats/hooks"
+import { SetRune, SetSpell, SetSpellAll } from "../../feats/slices/cracksSlice"
+import { getCracksOnly } from "../../items"
 import { ItemName } from "../CommonUI"
 import { CrackIcon } from "../widgets/Icons"
 import { ModalContext } from "../../modalContext"
+import { Checkie } from "../widgets/Forms"
+import styled from "styled-components"
 
 interface SelectProps {
   item: Attrs
@@ -22,7 +24,8 @@ function Select({ item, onClick }: SelectProps) {
 
 export function RuneModalFragment() {
   const { setOpen, } = useContext(ModalContext)
-  const items = getItemsByPart("봉인석")
+  const atype = useAppSelector(state => state.Profile.atype)
+  const items = getCracksOnly("봉인석", atype)
   const dispatch = useAppDispatch()
   const onClick = useCallback((name: string) => {
     dispatch(SetRune(name))
@@ -39,16 +42,27 @@ export function RuneModalFragment() {
   )
 }
 
+const Checkie2 = styled(Checkie)`
+  display: inline-flex;
+`
+
 export function SpellModalFragment() {
   const { setOpen, itarget: [, , spellIndex] } = useContext(ModalContext)
-  const items = getItemsByPart("정수")
+  const [all, setAll] = useState(false)
+  const atype = useAppSelector(state => state.Profile.atype)
+  const items = getCracksOnly("정수", atype)
   const dispatch = useAppDispatch()
   const onClick = useCallback((name: string) => {
-    dispatch(SetSpell([spellIndex, name]))
+    if (all) dispatch(SetSpellAll(name))
+    else dispatch(SetSpell([spellIndex, name]))
     setOpen(false)
-  }, [spellIndex])
+  }, [spellIndex, all])
   return (
     <>
+    <header>
+      <h3>성안의 봉인 - 정수</h3>
+      <Checkie2 label="선택한 정수 5개 끼기" checked={all} onChange={setAll} />
+    </header>
     <div className="ItemSelectArray">
       {items.map((item) => (
         <Select key={item.name} item={item} onClick={() => onClick(item.name)} />

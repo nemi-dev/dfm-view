@@ -44,7 +44,8 @@ interface MagicPropsArrayProps {
 
 export function MagicPropsArray({ level, part, rarity, arraySelector, actionCreator }: MagicPropsArrayProps) {
   const array = useAppSelector(arraySelector)
-  const attrArray = array.map((mp, index) => getMagicPropsAttrs(mp, part, level, rarity, index == 0))
+  const atype = useAppSelector(state => state.Profile.atype)
+  const attrArray = array.map((mp, index) => getMagicPropsAttrs(mp, part, atype, level, rarity, index == 0))
   const dispatch = useDispatch()
   return (
     <>

@@ -10,7 +10,7 @@ import { NumberInput } from "./widgets/Forms"
 import { ItemIcon } from "./widgets/Icons"
 import { ModalContext } from "../modalContext"
 import { EquipBatch } from "./EquipBatch"
-import { MagicPropSet, MagicPropsArray } from "./MagicProps"
+import { MagicPropSet } from "./MagicProps"
 
 
 interface PartProps {

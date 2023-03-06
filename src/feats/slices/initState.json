@@ -3,14 +3,14 @@
     "무기": {
       "name": "계약의 인장",
       "upgrade": 549,
-      "magicProps": ["dmg_inc", "intl", "intl"],
+      "magicProps": ["dmg_inc", "Stat", "Stat"],
       "emblems": [["Red", 7], ["Red", 7]],
       "card": "스페셜 데미지 보주"
     },
     "머리어깨": {
       "name": "암살자의 서슬 스트랩",
       "upgrade": 31,
-      "magicProps": ["intl", "intl", "intl"],
+      "magicProps": ["Stat", "Stat", "Stat"],
       "emblems": [["Yellow", 7], ["Yellow", 7]],
       "card": "기어의 디샤 카드",
       "material": "천"
@@ -18,7 +18,7 @@
     "상의": {
       "name": "암살자의 서슬 자켓",
       "upgrade": 31,
-      "magicProps": ["intl", "intl", "intl"],
+      "magicProps": ["Stat", "Stat", "Stat"],
       "emblems": [["Red", 7], ["Red", 7]],
       "card": "여제 스테로페 카드",
       "material": "천"
@@ -26,7 +26,7 @@
     "하의": {
       "name": "암살자의 서슬 팬츠",
       "upgrade": 31,
-      "magicProps": ["intl", "intl", "intl"],
+      "magicProps": ["Stat", "Stat", "Stat"],
       "emblems": [["Red", 7], ["Red", 7]],
       "card": "여제 스테로페 카드",
       "material": "천"
@@ -34,7 +34,7 @@
     "벨트": {
       "name": "암살자의 서슬 벨트",
       "upgrade": 31,
-      "magicProps": ["intl", "intl", "intl"],
+      "magicProps": ["Stat", "Stat", "Stat"],
       "emblems": [["Yellow", 7], ["Yellow", 7]],
       "card": "사룡 스피라찌의 머리 카드",
       "material": "천"
@@ -42,7 +42,7 @@
     "신발": {
       "name": "암살자의 서슬 부츠",
       "upgrade": 31,
-      "magicProps": ["intl", "intl", "intl"],
+      "magicProps": ["Stat", "Stat", "Stat"],
       "emblems": [["Blue", 7], ["Blue", 7]],
       "card": "허의 환혼 카드",
       "material": "천"
@@ -50,28 +50,28 @@
     "팔찌": {
       "name": "영념의 정화수",
       "upgrade": 41,
-      "magicProps": ["intl", "intl", "intl"],
+      "magicProps": ["Stat", "Stat", "Stat"],
       "emblems": [["Blue", 7], ["Blue", 7]],
       "card": "긴발의 로터스 카드"
     },
     "목걸이": {
       "name": "생명의 이슬",
       "upgrade": 41,
-      "magicProps": ["intl", "intl", "speed_atk"],
+      "magicProps": ["Stat", "Stat", "Stat"],
       "emblems": [["Green", 7], ["Green", 7]],
       "card": "긴발의 로터스 카드"
     },
     "반지": {
       "name": "유랑하는 바람",
       "upgrade": 41,
-      "magicProps": ["intl", "intl", "intl"],
+      "magicProps": ["Stat", "Stat", "Stat"],
       "emblems": [["Green", 7], ["Green", 7]],
       "card": "긴발의 로터스 카드"
     },
     "보조장비": {
       "name": "브왕가의 족장 완장",
       "upgrade": 46,
-      "magicProps": ["crit_mg", "crit_mg", "crit_mg"],
+      "magicProps": ["Crit", "Crit", "Crit"],
       "emblems": [["Intel", 5]],
       "card": "불의 사념체 카드"
     }
@@ -103,16 +103,18 @@
   },
   "Cracks": {
     "rune": "선지자의 봉인석 (지능+마법공격력)",
-    "MagicProps": ["atk_mg", "strn", "Accu"],
+    "MagicProps": ["Atk", "Stat", "Accu"],
     "Spells": ["선지자의 정수 (지능+적중)", "선지자의 정수 (지능+적중)", "선지자의 정수 (지능+적중)", "선지자의 정수 (지능+적중)", "선지자의 정수 (지능+적중)"]
   },
   "Guild": {
-    "stat": 120,
-    "atk": 90,
-    "crit": 90,
-    "el_all": 14,
-    "Accu": 150,
-    "speed_atk": 9.75,
-    "guildPublicStatLv": 5
+    "StatLv": 30,
+    "AtkLv": 30,
+    "CritLv": 30,
+    "ElLv": 14,
+    "SpeedAtkLv": 14,
+    "SpeedCastLv": 14,
+    "SpeedMoveLv": 14,
+    "AccuLv": 30,
+    "PublicStatLv": 6
   }
 }

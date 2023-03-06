@@ -1,8 +1,16 @@
 
-export const signed = (n: number)=> {
-  n = Math.round(n * 100) / 100
-  return (n > 0) ? `+${n}` : `${n}`
-}
+
+/** 두 수를 더한다. */
+export const add = (p: number, n: number) => p + n
+
+/**
+ * (A × B) ÷ 100 + A + B 의 값을 계산한다.  
+ * 서로 복리 적용되는 +A%, +B%를 합성하여 그 증가치를 다시 퍼센트 단위로 표현한다. */
+export const percent_inc_mul = (a: number, b: number) => (b + a + b * a / 100)
+
+/** 두 배열을 결합한 새로운 배열을 만든다. */
+export const combineArray = (p: string[], n: string[]) => p.concat(n)
+
 
 export const beautyNumber = (n: number) => Math.floor(n).toLocaleString()
 
@@ -21,11 +29,3 @@ export function im(strings: TemplateStringsArray, attrs: string | BaseAttrs) {
   else return strings[0] + attrs.name.replace(regex, "-") + strings[1]
 }
 
-
-export function explode(val: number, is: "stat" | "atk" | "el_all"): BaseAttrs {
-  switch(is) {
-    case "stat": return { strn: val, intl: val, vit: val, psi: val }
-    case "atk": return { atk_ph: val, atk_mg: val }
-    case "el_all": return { el_fire: val, el_ice: val, el_lght: val, el_dark: val }
-  }
-}

@@ -57,7 +57,7 @@ function inflate(m: Record<string, string>) {
 
 function loadShotgun(part: WholePart) {
   let v: Record<string, Record<string, string>>
-  if (isArmorPart(part as ArmorPart)) v = _left
+  if (isArmorPart(part as EquipPart)) v = _left
   else if (part === "무기" || part === "보조장비" || isAccessPart(part as EquipPart)) v = _right
   else return
 

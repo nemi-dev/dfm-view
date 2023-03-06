@@ -1,76 +1,76 @@
 {
   "60/Epic/무기-고유": [
-    ["dmg_inc", 6], ["strn", 37], ["intl", 37],
+    ["dmg_inc", 6], ["Stat", 37],
     ["el_fire", 8], ["el_ice", 8], ["el_lght", 8], ["el_dark", 8],
-    ["atk_ph", 15], ["atk_mg", 15]
+    ["Atk", 15]
   ],
   "60/Epic/무기": [
-    ["strn", 18], ["intl", 18],
-    ["atk_ph", 8], ["atk_mg", 8],
+    ["Stat", 18],
+    ["Atk", 8],
     ["speed_atk", 0.8], ["Accu", 50]
   ],
   "60/Epic/방어구-고유": [
-    ["strn", 37], ["intl", 37],
-    ["crit_ph", 23], ["crit_mg", 23]
+    ["Stat", 37],
+    ["Crit", 23]
   ],
   "60/Epic/방어구": [
-    ["strn", 18], ["intl", 18],
-    ["crit_ph", 12], ["crit_mg", 12],
+    ["Stat", 18],
+    ["Crit", 12],
     ["speed_atk", 0.8], ["Accu", 50]
   ],
   "60/Epic/악세서리-고유": [
     ["el_fire", 8], ["el_ice", 8], ["el_lght", 8], ["el_dark", 8],
-    ["strn", 37], ["intl", 37]
+    ["Stat", 37]
   ],
   "60/Epic/악세서리": [
     ["el_fire", 3], ["el_ice", 3], ["el_lght", 3], ["el_dark", 3],
-    ["strn", 18], ["intl", 18],
+    ["Stat", 18],
     ["speed_atk", 0.8], ["Accu", 50]
   ],
   "60/Epic/보조장비-고유": [
-    ["strn", 37], ["intl", 37],
-    ["atk_ph", 15], ["atk_mg", 15],
-    ["crit_ph", 48], ["crit_mg", 48],
+    ["Stat", 37],
+    ["Atk", 15],
+    ["Crit", 48],
     ["Accu", 60]
   ],
   "60/Epic/보조장비": [
-    ["strn", 18], ["intl", 18],
-    ["atk_ph", 8], ["atk_mg", 8],
-    ["crit_ph", 12], ["crit_mg", 12],
+    ["Stat", 18],
+    ["Atk", 8],
+    ["Crit", 12],
     ["speed_atk", 0.8], ["Accu", 50]
   ],
   "60/Epic/봉인석-고유": [
-    ["strn", 10], ["intl", 10],
-    ["atk_ph", 7], ["atk_mg", 7],
+    ["Stat", 10],
+    ["Atk", 7],
     ["speed_atk", 3], ["Accu", 35]
   ],
   "60/Epic/봉인석": [
-    ["strn", 7], ["intl", 7],
-    ["atk_ph", 5], ["atk_mg", 5],
+    ["Stat", 7],
+    ["Atk", 5],
     ["speed_atk", 2], ["Accu", 30]
   ],
   "55/Epic/악세서리-고유": [
     ["el_fire", 8], ["el_ice", 8], ["el_lght", 8], ["el_dark", 8],
-    ["strn", 37], ["intl", 37]
+    ["Stat", 37]
   ],
   "55/Epic/악세서리": [
     ["el_fire", 3], ["el_ice", 3], ["el_lght", 3], ["el_dark", 3],
-    ["strn", 18], ["intl", 18],
+    ["Stat", 18],
     ["speed_atk", 0.8], ["Accu", 50]
   ],
   "55/Unique/봉인석": [
-    ["strn", 7], ["intl", 7],
-    ["atk_ph", 5], ["atk_mg", 5],
+    ["Stat", 7],
+    ["Atk", 5],
     ["speed_atk", 2], ["Accu", 30]
   ],
   "55/Unique/악세서리": [
     ["el_fire", 3], ["el_ice", 3], ["el_lght", 3], ["el_dark", 3],
-    ["strn", 17], ["intl", 17],
+    ["Stat", 17],
     ["speed_atk", 0.8], ["Accu", 46]
   ],
   "40/Unique/악세서리": [
     ["el_fire", 3], ["el_ice", 3], ["el_lght", 3], ["el_dark", 3],
-    ["strn", 12], ["intl", 12],
+    ["Stat", 12],
     ["speed_atk", 0.8], ["Accu", 33]
   ]
 }

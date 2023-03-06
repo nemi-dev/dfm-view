@@ -4,7 +4,7 @@ import { NextMagicProps } from '../feats/slices/cracksSlice';
 import { MagicPropsArray } from './MagicProps';
 import React, { useContext } from 'react';
 import { ModalContext } from '../modalContext';
-import { selectCrackISetAttrs, selectSpells, selectRune, selectCracksAll, selectBlessing } from '../selectors';
+import { selectCrackISetAttrs, selectSpells, selectRune, selectCracksAll, selectBlessing } from '../feats/selectors';
 import { SimpleBaseAttrView } from './AttrsView';
 import styled from 'styled-components';
 
@@ -13,13 +13,12 @@ import styled from 'styled-components';
 const MagicPropsLayout = styled.div`
   flex-grow: 1;
   align-self: stretch;
-  height: max(calc(100vw / 9 - 20px), 36px);
+  height: 50px;
 
   display: flex;
   flex-direction: row;
   align-items: stretch;
   justify-content: center;
-  
 `
 
 export function Cracks() {
@@ -60,33 +59,26 @@ export function Cracks() {
         actionCreator={(_, index) => NextMagicProps(index)}
       />
       </MagicPropsLayout>: null}
-      {
-        blessing?
+      {blessing?
         <div>
           <h4>{blessing.name}</h4>
           <div>
             <SimpleBaseAttrView attrs={blessing}/>
           </div>
-        </div> : null
-      }
-      {
-        Object.keys(isetattr).sort().map((isetname) => (
+        </div>: null}
+      {Object.keys(isetattr).sort().map((isetname) => (
           <React.Fragment key={isetname}>
           <h4>{isetname}</h4>
           <div>
             <SimpleBaseAttrView attrs={isetattr[isetname]}/>
           </div>
           </React.Fragment>
-        ))
-      }
-      {
-        rune?
+        ))}
+      {rune?
         <div>
           <h3>성안의 봉인 효과</h3>
           <SimpleBaseAttrView attrs={useAppSelector(selectCracksAll)}/>
-        </div>
-        : null
-      }
+        </div>: null}
     </div>
   );
 }

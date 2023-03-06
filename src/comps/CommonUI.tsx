@@ -27,19 +27,21 @@ export const Gridy = styled.div<{ columns: number, colSize?: string }>`
 
 interface PercentProps {
   value: number
+  className?: string
   signed?: boolean
   percented?: boolean
-  className?: string
+  separated?: boolean
 }
 
-export function Num({ value, className = "", signed = false, percented = false }: PercentProps) {
+export function Num({ value, className = "", signed = false, percented = false, separated = false }: PercentProps) {
   value = value ?? 0
   const ve = Math.round(value * 100) / 100
   const sign = ve > 0? ( signed? "+" : null ) : ve < 0? "-" : null
+  const vs = separated? Math.abs(ve).toLocaleString() : Math.abs(ve).toString()
   return (
     <span className={className}>
       {sign? <SignSymbol>{sign}</SignSymbol> : null}
-      {Math.abs(ve)}
+      {vs}
       {percented? <PercentSymbol /> : null}
     </span>
   )

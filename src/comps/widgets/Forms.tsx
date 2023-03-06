@@ -1,58 +1,58 @@
-import React, { useCallback, useEffect, useId, useState } from 'react';
-import styled from 'styled-components';
-import { prevent } from '../CommonUI';
+import React, { useCallback, useEffect, useId, useState } from 'react'
+import styled from 'styled-components'
+import { prevent } from '../CommonUI'
 
 interface NumberInputProps extends Omit<React.HTMLProps<HTMLInputElement>, "onChange" | "value"> {
-  value: number;
-  onChange: (val: number) => void;
+  value: number
+  onChange: (val: number) => void
 }
 export function NumberInput({ onWheel, value, type, onChange, ...props }: NumberInputProps) {
-  const ref = React.useRef<HTMLInputElement>();
+  const ref = React.useRef<HTMLInputElement>()
   React.useEffect(() => {
-    ref.current.addEventListener("wheel", prevent, { passive: false });
-  }, []);
+    ref.current.addEventListener("wheel", prevent, { passive: false })
+  }, [])
 
-  const [innerValue, setInnerValue] = useState<NumberZ>(value);
+  const [innerValue, setInnerValue] = useState<NumberZ>(value)
   useEffect(() => {
     if (value != 0)
-      setInnerValue(value);
+      setInnerValue(value)
 
-  }, [value]);
+  }, [value])
 
   const _onChange = useCallback((ev: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = parseInt(ev.target.value);
-    setInnerValue(ev.target.value as NumberZ);
+    const newValue = parseInt(ev.target.value)
+    setInnerValue(ev.target.value as NumberZ)
     if (Number.isNaN(newValue))
-      onChange(0);
+      onChange(0)
     else
-      onChange(newValue);
+      onChange(newValue)
 
-  }, []);
+  }, [])
 
-  return <input type="number" value={innerValue} onChange={_onChange} ref={ref} {...props} />;
+  return <input type="number" value={innerValue} onChange={_onChange} ref={ref} {...props} />
 }
 interface LabeledInputProps extends Omit<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, "className" | "label" | "value" | "onChange"> {
-  className?: string;
-  label: string;
-  value: number;
-  onChange: (val: number) => void;
+  className?: string
+  label: string
+  value: number
+  onChange: (val: number) => void
 }
 export function LabeledInput({ className = "", label, value, onChange, placeholder, ...props }: LabeledInputProps) {
-  const id = useId();
+  const id = useId()
   if (Number.isNaN(value))
-    value = 0;
+    value = 0
   return (
     <div className={("InputGroup FormDF " + className).trim()}>
       <label className="FormDFName" htmlFor={id}>{label}</label>
       <NumberInput className="FormDFValue Hovergraph FormDFDeepArea" id={id} value={value} onChange={onChange} placeholder={label} {...props} />
     </div>
-  );
+  )
 }
 interface DisposableInputProps {
-  index: number;
-  value: number;
-  update: (a: number, b: number) => void;
-  del: (a: number) => void;
+  index: number
+  value: number
+  update: (a: number, b: number) => void
+  del: (a: number) => void
 }
 export function DisposableInput({ index, value, update, del }: DisposableInputProps) {
   return (
@@ -60,13 +60,13 @@ export function DisposableInput({ index, value, update, del }: DisposableInputPr
       <NumberInput className="FormDFValue" value={value} onChange={v => update(v, index)} />
       <button onClick={() => del(index)}>⨯</button>
     </div>
-  );
+  )
 }
 interface CheckieProps extends React.PropsWithChildren {
-  checked?: boolean;
-  className?: string;
-  onChange?: (b: boolean) => any;
-  label?: React.ReactNode;
+  checked?: boolean
+  className?: string
+  onChange?: (b: boolean) => any
+  label?: React.ReactNode
 }
 const CustomCheckboxView = styled.label`
   cursor: pointer;
@@ -101,9 +101,9 @@ const CustomCheckboxView = styled.label`
   }
 
   input[type=checkbox]:checked + &::before {
-    left: 13px;
+    left: 13px
   }
-`;
+`
 const CheckieLabel = styled.label`
   border-radius: 20px;
   cursor: pointer!important;
@@ -117,32 +117,32 @@ const CheckieLabel = styled.label`
   .AttrOne {
     padding-block: 0;
   }
-`;
+`
 export function Checkie({ className = "", checked = false, label = "", onChange }: CheckieProps) {
-  const id = useId();
+  const id = useId()
   return (
     <span className={"FormDF Hovergraph " + className}>
       <input type="checkbox" checked={checked} id={id} onChange={ev => onChange(ev.target.checked)} />
       <CustomCheckboxView htmlFor={id}></CustomCheckboxView>
       <CheckieLabel className="FormDFName FormDFValue" htmlFor={id}>{label}</CheckieLabel>
     </span>
-  );
+  )
 }
 interface RadioGroupProps<T extends number | string> {
-  name: string;
-  groupName?: string;
-  className?: string;
-  values: T[];
-  labels?: (string | number)[];
-  value: T;
-  dispatcher: (value: T) => any;
+  name: string
+  groupName?: string
+  className?: string
+  values: T[]
+  labels?: (string | number)[]
+  value: T
+  dispatcher: (value: T) => any
 }
 
 export function RadioGroup<T extends string | number>({ name, groupName = name, className = "", values, labels = values, value, dispatcher }: RadioGroupProps<T>) {
   const onChange = useCallback((ev: React.ChangeEvent<HTMLInputElement>) => {
-    dispatcher(ev.target.value as T);
-  }, []);
-  const id = useId();
+    dispatcher(ev.target.value as T)
+  }, [])
+  const id = useId()
   return (
     <span className={("RadioGroup FormDF " + className).trim()}>
       <span className="FormDFName">{groupName}</span>
@@ -153,20 +153,20 @@ export function RadioGroup<T extends string | number>({ name, groupName = name, 
         </span>
       ))}
     </span>
-  );
+  )
 }
 interface CheckboxGroupProps<T extends number | string> {
-  name: string;
-  className?: string;
-  values: T[];
-  value: T[];
-  labels?: (string | number)[];
-  dispatcher: (value: T, checked: boolean) => any;
+  name: string
+  className?: string
+  values: T[]
+  value: T[]
+  labels?: (string | number)[]
+  dispatcher: (value: T, checked: boolean) => any
 }
 export function CheckboxGroup<T extends string | number>({ name, className = "", values, labels = values, value, dispatcher }: CheckboxGroupProps<T>) {
   const onChange = useCallback((ev: React.ChangeEvent<HTMLInputElement>) => {
-    dispatcher(ev.target.value as T, ev.target.checked);
-  }, []);
+    dispatcher(ev.target.value as T, ev.target.checked)
+  }, [])
 
   return (
     <span className={("RadioGroup FormDF" + className).trim()}>
@@ -178,9 +178,9 @@ export function CheckboxGroup<T extends string | number>({ name, className = "",
         </span>
       ))}
     </span>
-  );
+  )
 }
-type ButtonGroupProps<T extends string | number> = Omit<RadioGroupProps<T>, "value">;
+type ButtonGroupProps<T extends string | number> = Omit<RadioGroupProps<T>, "value">
 
 export function OneClickButtonGroup<T extends string | number>({ name, className = "", values, labels = values, dispatcher }: ButtonGroupProps<T>) {
   return (
@@ -190,5 +190,5 @@ export function OneClickButtonGroup<T extends string | number>({ name, className
         <button key={v.toString()} onClick={() => dispatcher(v)}>{labels[i]}</button>
       ))}
     </span>
-  );
+  )
 }

@@ -1,15 +1,43 @@
+declare interface PartType {
+  /** 이 부위에 장착된 아이템 이름 */
+  name: string
+
+  /** 
+   * 강화로 얻는 수치 (무기, 방어구, 악세서리, 보조장비에만 있다)  
+   * "강화 단계"가 아니고 힘/지능 또는 물리/마법 공격력 증가 수치임!!!
+   * */
+  upgrade?: number
+
+  /** 품질 (무기, 방어구, 악세서리, 보조장비에만 있다) */
+  kaledo?: number
+
+  /** 엠블렘 (무기, 방어구, 악세서리, 보조장비, 칭호에만 있다) */
+  emblems?: EmblemSpec[]
+
+  /** 장착된 카드 이름 (무기, 방어구, 악세서리, 보조장비, 칭호에만 있다) */
+  card?: string
+
+  /** 마법봉인 (무기, 방어구, 악세서리, 보조장비, 봉인석에만 있다) */
+  magicProps?: MagicPropsCareAbout[]
+
+  /** 아이템 재질 (방어구에만 있다) */
+  material?: ArmorMaterial
+
+}
+
+
 declare interface EquipsType {
 
-  무기: EquipPartType
-  상의: ArmorPartType
-  하의: ArmorPartType
-  머리어깨: ArmorPartType
-  벨트: ArmorPartType
-  신발: ArmorPartType
-  팔찌: EquipPartType
-  목걸이: EquipPartType
-  반지: EquipPartType
-  보조장비: EquipPartType
+  무기: PartType
+  상의: PartType
+  하의: PartType
+  머리어깨: PartType
+  벨트: PartType
+  신발: PartType
+  팔찌: PartType
+  목걸이: PartType
+  반지: PartType
+  보조장비: PartType
 
 }
 
@@ -48,13 +76,15 @@ declare interface CracksType {
 
 
 declare interface GuildType {
-  stat: number
-  atk: number
-  crit: number
-  el_all: number
-  speed_atk: number
-  Accu: number
-  guildPublicStatLv: number
+  StatLv: number
+  AtkLv: number
+  CritLv: number
+  ElLv: number
+  SpeedAtkLv: number
+  SpeedCastLv: number
+  SpeedMoveLv: number
+  AccuLv: number
+  PublicStatLv: number
 }
 
 

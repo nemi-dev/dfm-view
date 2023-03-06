@@ -1,0 +1,138 @@
+[
+  {
+    "name": "버서커",
+    "atype": "Physc",
+    "weapons": ["대검", "둔기", "도", "소검"]
+  },
+  {
+    "name": "소울브링어",
+    "atype": "Magic",
+    "eltype": "Dark",
+    "weapons": ["소검", "도", "둔기", "대검"]
+  },
+  {
+    "name": "웨펀마스터",
+    "atype": "Physc",
+    "weapons": ["광검", "대검", "도", "둔기", "소검"]
+  },
+  {
+    "name": "아수라",
+    "atype": "Magic",
+    "weapons": ["소검", "도", "둔기", "대검"]
+  },
+
+  {
+    "name": "스트라이커",
+    "atype": "Physc",
+    "weapons": ["권투글러브", "건틀릿", "클로", "통파", "너클"]
+  },
+  {
+    "name": "넨마스터",
+    "atype": "Magic",
+    "eltype": "Light",
+    "weapons": ["너클", "통파", "클로", "건틀릿"]
+  },
+
+  {
+    "name": "레인저",
+    "atype": "Physc",
+    "weapons": ["리볼버", "보우건", "머스켓", "핸드캐넌", "자동권총"]
+  },
+  {
+    "name": "런처",
+    "atype": "Physc",
+    "DualTrigger": true,
+    "weapons": ["핸드캐넌", "리볼버", "보우건", "머스켓", "자동권총"]
+  },
+  {
+    "name": "메카닉",
+    "atype": "Magic",
+    "eltype": "Fire",
+    "weapons": ["자동권총", "보우건", "머스켓", "리볼버", "핸드캐넌"]
+  },
+  {
+    "name": "스핏파이어",
+    "atype": "Physc",
+    "weapons": ["보우건", "머스켓", "리볼버", "핸드캐넌", "자동권총"]
+  },
+
+  {
+    "name": "엘레멘탈마스터",
+    "atype": "Magic",
+    "weapons": ["스탭", "로드", "봉", "창"]
+  },
+  {
+    "name": "마도학자",
+    "atype": "Magic",
+    "weapons": ["빗자루", "스탭", "로드", "봉", "창"]
+  },
+
+  {
+    "name": "소드마스터",
+    "atype": "Physc",
+    "weapons": ["도", "대검", "둔기", "소검"]
+  },
+  {
+    "name": "다크템플러",
+    "atype": "Magic",
+    "eltype": "Dark",
+    "weapons": ["소검", "도", "둔기", "대검"]
+  },
+  {
+    "name": "데몬슬레이어",
+    "atype": "Physc",
+    "weapons": ["대검", "둔기", "도", "소검"]
+  },
+  {
+    "name": "베가본드",
+    "atype": "Physc",
+    "weapons": ["광검", "대검", "도", "둔기", "소검"]
+  },
+
+  {
+    "name": "크루세이더(여)",
+    "atype": "Magic",
+    "eltype": "Light",
+    "weapons": ["십자가", "염주", "낫", "토템", "배틀액스"]
+  },
+  {
+    "name": "미스트리스",
+    "atype": "Magic",
+    "weapons": ["낫", "염주", "십자가", "토템", "배틀액스"]
+  },
+  {
+    "name": "이단심판관",
+    "atype": "Physc",
+    "eltype": ["Fire", "Light"],
+    "DualTrigger": true,
+    "weapons": ["배틀액스", "토템", "십자가", "낫", "염주"]
+  },
+  {
+    "name": "무녀",
+    "atype": "Magic",
+    "weapons": ["염주", "낫", "십자가", "토템", "베틀액스"]
+  },
+
+  {
+    "name": "크루세이더(남)",
+    "atype": "Magic",
+    "eltype": "Light",
+    "weapons": ["십자가", "염주", "낫", "토템", "배틀액스"]
+  },
+  {
+    "name": "인파이터",
+    "atype": "Physc",
+    "weapons": ["토템", "배틀액스", "십자가", "낫", "염주"]
+  },
+  
+  {
+    "name": "와일드베인",
+    "atype": "Physc",
+    "weapons": ["락소드", "윙블레이드"]
+  },
+  {
+    "name": "윈드시어",
+    "atype": "Magic",
+    "weapons": ["윙블레이드", "락소드"]
+  }
+]
