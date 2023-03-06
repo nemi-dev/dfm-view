@@ -1,38 +1,25 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getItem } from "../../items";
-import { getAvailableMagicPropsForEquip } from "../../magicProps";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { getItem } from "../../items"
+import { getAvailableMagicPropsForEquip } from "../../magicProps"
 
-interface CracksType {
-  /** 봉인석 이름 */
-  rune: string;
-
-  /** 봉인석 마법봉인 */
-  MagicProps: MagicPropsCareAbout[];
-
-  /** 장착 중인 정수 이름 */
-  Spells: string[];
-}
-const cracksInit: CracksType = {
-  rune: "선지자의 봉인석 (지능+마법공격력)",
-  MagicProps: ["atk_mg", "strn", "Accu"],
-  Spells: ["선지자의 정수 (지능+적중)", "선지자의 정수 (지능+적중)", "선지자의 정수 (지능+적중)", "선지자의 정수 (지능+적중)", "선지자의 정수 (지능+적중)"]
-};
+import _initState from "./initState.json"
+const cracksInit = _initState.Cracks as CracksType
 
 export const crackSlice = createSlice({
   name: 'Crack',
   initialState: cracksInit,
   reducers: {
     SetRune: (s, { payload }: PayloadAction<string>) => {
-      s.rune = payload;
+      s.rune = payload
     },
     SetSpell: (s, { payload: [index, value] }: PayloadAction<[number, string]>) => {
-      s.Spells[index] = value;
+      s.Spells[index] = value
     },
     SetSpellAll: (s, { payload }: PayloadAction<string>) => {
       s.Spells.fill(payload)
     },
     SetMagicProps: (s, { payload: [index, value] }: PayloadAction<[number, MagicPropsCareAbout]>) => {
-      s.MagicProps[index] = value;
+      s.MagicProps[index] = value
     },
     NextMagicProps: (s, { payload: index }: PayloadAction<number>)=> {
       const { level, rarity } = getItem(s.rune)
@@ -42,8 +29,8 @@ export const crackSlice = createSlice({
       s.MagicProps[index] = next
     }
   }
-});
+})
 
 export const {
   SetRune, SetSpell, SetMagicProps, NextMagicProps
-} = crackSlice.actions;
+} = crackSlice.actions

@@ -1,7 +1,7 @@
-import { useCallback, useContext, useEffect, useState } from 'react'
 import '../style/App.scss'
 import '../style/Misc.scss'
 
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { Equips } from './Equips'
 import { Forge } from './Forge'
 import { Creatures } from './Creature'
@@ -12,7 +12,7 @@ import { Avatars } from "./Avatar"
 import { PortraitMode, TabContext } from '../responsiveContext'
 import { ItemSelectModal } from './Modal'
 import { ModalContext } from "../modalContext"
-import { MyStat as MyStat } from './MyStat'
+import { MyStat } from './MyStat'
 import { SkillTestSet } from './SkillTestSet'
 
 

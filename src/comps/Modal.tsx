@@ -29,7 +29,7 @@ function properCurrentSelectors(part: WholePart): [ItemSelector, ItemSelector, E
   if (part === "칭호") return [
     selectDFTitle as ItemSelector,
     selectDFTitleCard,
-    (state: RootState) => state.Avatar.emblem
+    (state: RootState) => state.Avatar.emblems
   ]
   return [
     (state: RootState) => getItem(state.Equips[part].name),

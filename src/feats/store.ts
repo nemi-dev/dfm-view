@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit"
-import { creatureSlice, profileSlice } from "./slice"
+import { creatureSlice, profileSlice } from "./slices/slice"
 import { crackSlice } from "./slices/cracksSlice"
 import { tonicSlice } from "./slices/tonicSlice"
 import { guildSlice } from "./slices/guildSlice"

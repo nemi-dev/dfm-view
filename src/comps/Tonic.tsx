@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
-import { SetTonic, TonicType } from "../feats/slices/tonicSlice"
+import { SetTonic } from "../feats/slices/tonicSlice"
 import { NumberInput } from "./widgets/Forms"
 
 interface TonicInputProps {

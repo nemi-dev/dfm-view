@@ -36,7 +36,7 @@ export function selectDFTitleCard(state: RootState) {
 }
 
 export function selectDFTitleEmblemSpec(state: RootState) {
-  return state.Avatar.emblem
+  return state.Avatar.emblems
 }
 
 export const selectDFTitleAttrsAll = createSelector(
