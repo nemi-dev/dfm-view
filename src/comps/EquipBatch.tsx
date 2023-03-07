@@ -62,7 +62,7 @@ export function EquipBatch() {
         <LabeledInput label="고정엠블렘 레벨" value={colorEmblemLevel}
           min={5} max={10} step={1}
           onChange={v => {
-          dispatch(SetColorEmblemLevelAll(v as EmblemLevel))
+          dispatch(SetColorEmblemLevelAll(v))
         }} />
         <RadioGroup name="방어구 재질" values={["천", "가죽", "경갑", "중갑", "판금"]} value={mat}
           dispatcher={v => dispatch(SetMaterialAll(v))}

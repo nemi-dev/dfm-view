@@ -1,76 +1,54 @@
 import { PayloadAction } from "@reduxjs/toolkit"
+import styled from "styled-components"
 import { useDispatch } from "react-redux"
-import { attrDefs } from "../attrs"
 import { useAppSelector } from "../feats/hooks"
 import { RootState } from "../feats/store"
-import { getMagicPropsAttrs } from "../magicProps"
+import { getOneMagicPropValue, getRealAttrKey } from "../magicProps"
 import { AttrIcon } from "./widgets/Icons"
-
-
-
-
-type IconAttrOneProps = { attrKey: keyof BaseAttrs, value: number, alt?: string }
-function IconAttrOne({ attrKey, value, alt = "" }: IconAttrOneProps) {
-  return (
-    <div className="IconAttrOne">
-      <AttrIcon attrKey={attrKey} />
-    </div>
-  )
-}
-
-/** 이거 Attrs 대신에 MagicPropsCareAbout 받게 해라 */
-function MagicPropOne({ attrs, onClick }: { attrs: BaseAttrs, onClick?: React.MouseEventHandler<HTMLDivElement> }) {
-  const views: JSX.Element[] = []
-  for (const { key, name } of attrDefs.array) {
-    const value = attrs[key]
-    if ((key in attrs) && (typeof value === "number")) {
-      views.push(<IconAttrOne key={key} attrKey={key} value={value} />)
-    }
-  }
-  return (
-    <div className="MagicPropOne Hovering" onClick={onClick}>
-      {views}
-    </div>
-  )
-}
+import { Num } from "./CommonUI"
+import { NextMagicProps } from "../feats/slices/equipSlice"
 
 interface MagicPropsArrayProps {
-  level: number
-  part: EquipPart | "봉인석"
-  rarity: Rarity
-  arraySelector: (state: RootState) => MagicPropsCareAbout[]
-  actionCreator: (part: EquipPart | "봉인석", index: number) => PayloadAction<any>
-}
-
-export function MagicPropsArray({ level, part, rarity, arraySelector, actionCreator }: MagicPropsArrayProps) {
-  const array = useAppSelector(arraySelector)
-  const atype = useAppSelector(state => state.Profile.atype)
-  const attrArray = array.map((mp, index) => getMagicPropsAttrs(mp, part, atype, level, rarity, index == 0))
-  const dispatch = useDispatch()
-  return (
-    <>
-      {attrArray.map((attr, index) => {
-        if (rarity != "Epic" && index == 0) return null
-        return <MagicPropOne key={index} attrs={attr}
-        onClick={() => {
-          dispatch(actionCreator(part, index))
-        }} />
-      })}
-    </>
-  )
-}
-
-interface MagicPropsArrayProps2 {
   item: Attrs
-  part: EquipPart | "봉인석"
-  arraySelector: (state: RootState) => MagicPropsCareAbout[]
-  actionCreator: (part: EquipPart | "봉인석", index: number) => PayloadAction<any>
+  part: MagicPropsPart
 }
-export function MagicPropSet({ item, part, arraySelector, actionCreator }: MagicPropsArrayProps2) {
+
+const MagicPropOne = styled.div`
+  flex-grow: 1;
+  display: flex;
+
+  cursor: pointer;
+
+  align-items: center;
+  justify-content: center;
+
+
+  &:nth-last-child(3) {
+    background-color: rgba(13, 9, 5, 0.5);
+  }
+
+  .MagicPropValue {
+    color: var(--attr-value-color);
+    font-size: 0.7rem;
+    font-weight: 800;
+  }
+
+`
+
+export function MagicProps({ item, part }: MagicPropsArrayProps) {
   if (!item) return null
   const { level, rarity } = item
-  return <MagicPropsArray level={level} rarity={rarity} part={part}
-    actionCreator={actionCreator}
-    arraySelector={arraySelector}
-  />
+  const dispatch = useDispatch()
+  const array = useAppSelector(state => state.Equips[part].magicProps)
+  const atype = useAppSelector(state => state.Profile.atype)
+  return (
+    <>
+      {array.map((name, index) => index > 0 || rarity === "Epic" ?
+      <MagicPropOne key={index} className="MagicPropOne Hovering" onClick={() => dispatch(NextMagicProps([part, index]))} >
+        <AttrIcon attrKey={getRealAttrKey(name, atype)} />
+        <Num className="MagicPropValue" signed value={getOneMagicPropValue(name, { level, rarity, part, prime: index === 0 })} />
+      </MagicPropOne> : null
+      )}
+    </>
+  )
 }

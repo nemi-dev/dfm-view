@@ -42,33 +42,6 @@
   }
 }
 
-.MagicPropOne {
-  flex-grow: 1;
-  display: flex;
-
-  cursor: pointer;
-
-  align-items: center;
-  justify-content: center;
-
-  img.AttrIcon {
-    height: 1rem;
-  }
-  .IconAttrOne {
-    display: inline-flex;
-    flex-direction: row;
-    align-items: center;
-    span {
-      font-size: 0.8rem;
-      font-weight: 700;
-    }
-  }
-
-  &:nth-last-child(3) {
-    background-color: rgba(13, 9, 5, 0.5);
-  }
-}
-
 img.AttrIcon {
   height: 1.2rem;
   mix-blend-mode: screen;

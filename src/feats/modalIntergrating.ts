@@ -1,5 +1,5 @@
 import { getCardsForPart } from "../items"
-import { SetDFTitleCard, SetOtherAvatar } from "./slices/avatarSlice"
+import { SetOtherAvatar } from "./slices/avatarSlice"
 import { SetCard, SetEquip } from "./slices/equipSlice"
 
 
@@ -16,11 +16,9 @@ export function _action_equip_(part: WholePart, name: string) {
 
 export function _action_card_(part: WholePart, name: string) {
   switch (part) {
-    case "무기아바타": case "오라":
+    case "무기아바타": case "오라": case "봉인석": case "정수":
       throw new Error("어케했노 이놈아")
-    case "칭호":
-      return SetDFTitleCard(name)
     default:
-      return SetCard([part as EquipPart, name])
+      return SetCard([part, name])
   }
 }

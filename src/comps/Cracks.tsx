@@ -1,12 +1,12 @@
 import { useAppSelector } from '../feats/hooks';
 import { CrackIcon } from "./widgets/Icons";
-import { NextMagicProps } from '../feats/slices/cracksSlice';
-import { MagicPropsArray } from './MagicProps';
+import { MagicProps } from './MagicProps';
 import React, { useContext } from 'react';
 import { ModalContext } from '../modalContext';
 import { selectCrackISetAttrs, selectSpells, selectRune, selectCracksAll, selectBlessing } from '../feats/selectors';
 import { SimpleBaseAttrView } from './AttrsView';
 import styled from 'styled-components';
+import { NextMagicProps } from '../feats/slices/equipSlice';
 
 
 
@@ -54,10 +54,7 @@ export function Cracks() {
       </div>
       {rune?
       <MagicPropsLayout>
-      <MagicPropsArray level={rune.level} rarity={rune.rarity} part={"봉인석"}
-        arraySelector={state => state.Crack.MagicProps}
-        actionCreator={(_, index) => NextMagicProps(index)}
-      />
+      <MagicProps item={rune} part={"봉인석"} />
       </MagicPropsLayout>: null}
       {blessing?
         <div>

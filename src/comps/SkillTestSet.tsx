@@ -5,7 +5,7 @@ import { criticalChance, criticize, getDamage } from '../damage'
 import { SetSkillFixValue, SetSkillInputName, SetSkillUsesSkillInc, SetSkillValue } from '../feats/slices/skillInputSlice'
 import { Checkie, LabeledInput } from "./widgets/Forms"
 import { VerboseResult } from './AttrsView'
-import { MyAttrKey } from '../attrs'
+import { Elemental, MyAttrKey } from '../attrs'
 
 
 
@@ -37,7 +37,10 @@ function SkillTestOne({ index, SkillOneAttackSpec }: SkillOutputOneProps) {
 
   const attrs = useAppSelector(selectMe)
   const atkFix = useAppSelector(state => state.Profile.atk_fixed)
-  const [eltype, el, eldmg] = useAppSelector(selectMyFinalEltype)
+  const me = useAppSelector(selectMe)
+  const eltype = useAppSelector(selectMyFinalEltype)
+  const el = me[Elemental[eltype[0]]?.el] ?? 0
+  const eldmg = me[Elemental[eltype[0]]?.eldmg] ?? 0
 
   const withoutCrit = getDamage(atype, attrs, atkFix, el, eldmg, SkillOneAttackSpec)
   const withCrit = criticize(withoutCrit, attrs["cdmg_inc"])

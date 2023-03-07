@@ -1,4 +1,4 @@
-import { at1, explode, MyAttrKey } from "./attrs";
+import { at1, atx, MyAttrKey } from "./attrs";
 
 /** 힘/지능 길드버프 레벨을 해당 효과로 바꾼다. */
 export const GuildStat = (level: number, atype: Atype) =>  at1(MyAttrKey[atype]["Stat"], level * 4)
@@ -10,7 +10,7 @@ export const GuildAtk = (level: number, atype: Atype) => at1(MyAttrKey[atype]["A
 export const GuildCrit = (level: number, atype: Atype) =>  at1(MyAttrKey[atype]["Crit"], level * 3)
 
 /** 속강 길드버프 레벨을 해당 효과로 바꾼다. */
-export const GuildEl = (level: number) => explode(level, "el_all")
+export const GuildEl = (level: number) => atx("El", level)
 
 /** 공격속도 길드버프 레벨을 해당 효과로 바꾼다. */
 export const GuildSpeedAtk = (level: number) => at1("speed_atk", level * 0.75)

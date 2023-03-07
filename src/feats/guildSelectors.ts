@@ -33,19 +33,6 @@ export function selectGuildAccu({ Guild: { AccuLv }}: RootState) {
 
 
 /** 길드 스탯 보너스를 얻는다. */
-// export function selectGuilds(state: RootState): BaseAttrs {
-//   const atype = state.Profile.atype
-//   const { StatLv: stat, AtkLv: atk, CritLv: crit, ElLv: el_all, SpeedAtkLv: speed_atk, AccuLv: Accu, PublicStatLv: guildPublicStatLv } = state.Guild
-//   return combine(
-//     GuildStat(stat, atype),
-//     GuildAtk(atk, atype),
-//     GuildCrit(crit, atype),
-//     GuildEl(el_all),
-//     GuildSpeedAtk(speed_atk),
-//     GuildAccu(Accu),
-//     GuildStatPublic(guildPublicStatLv, atype)
-//   )
-// }
 export const selectGuilds = createSelector(
   selectGuildStat,
   selectGuildStatPublic,

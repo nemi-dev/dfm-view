@@ -7,7 +7,7 @@ import { NumberInput } from "../widgets/Forms"
 import { EmblemIcon } from "../widgets/Icons"
 import { ModalContext } from "../../modalContext"
 import { selectDFTitleEmblemSpec } from "../../feats/avatarSelectors"
-import { SetDFTitleEmblem } from "../../feats/slices/avatarSlice"
+
 
 export function __emblem_part_ (part: WholePart): EmblemType[] {
   switch (part) {
@@ -36,7 +36,7 @@ function EmblemSelect({ type, level }: { type: EmblemType, level: number }) {
   const accept = acceptEmblem(part as EquipPart)
   const dispatch = useAppDispatch()
   const onClick = useCallback(() => {
-    if (part === "칭호") dispatch(SetDFTitleEmblem([type as any, level as EmblemLevel]))
+    if (part === "칭호") dispatch(SetEmblem(["칭호", 0, type , level as EmblemLevel]))
     else dispatch(SetEmblem([part as EquipPart, index, type, level]))
     setOpen(false)
   }, [part, index, type, level])

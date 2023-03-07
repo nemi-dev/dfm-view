@@ -1,12 +1,13 @@
 import React, { useCallback, useContext, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../feats/hooks"
-import { SetRune, SetSpell, SetSpellAll } from "../../feats/slices/cracksSlice"
+import { SetSpell, SetSpellAll } from "../../feats/slices/cracksSlice"
 import { getCracksOnly } from "../../items"
 import { ItemName } from "../CommonUI"
 import { CrackIcon } from "../widgets/Icons"
 import { ModalContext } from "../../modalContext"
 import { Checkie } from "../widgets/Forms"
 import styled from "styled-components"
+import { SetEquip } from "../../feats/slices/equipSlice"
 
 interface SelectProps {
   item: Attrs
@@ -28,7 +29,8 @@ export function RuneModalFragment() {
   const items = getCracksOnly("봉인석", atype)
   const dispatch = useAppDispatch()
   const onClick = useCallback((name: string) => {
-    dispatch(SetRune(name))
+    // dispatch(SetRune(name))
+    dispatch(SetEquip(["봉인석", name]))
     setOpen(false)
   }, [])
   return (

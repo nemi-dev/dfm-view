@@ -10,7 +10,7 @@ import { NumberInput } from "./widgets/Forms"
 import { ItemIcon } from "./widgets/Icons"
 import { ModalContext } from "../modalContext"
 import { EquipBatch } from "./EquipBatch"
-import { MagicPropSet } from "./MagicProps"
+import { MagicProps } from "./MagicProps"
 
 
 interface PartProps {
@@ -88,10 +88,7 @@ function Part({ part }: PartProps) {
         />
       </RowLayout>
       <MagicPropsLayout>
-      <MagicPropSet part={part} item={item}
-      arraySelector={state => state.Equips[part].magicProps}
-      actionCreator={(part: EquipPart, index) => NextMagicProps([part, index])}
-      />
+      <MagicProps part={part} item={item} />
       </MagicPropsLayout>
     </PartLayout>
   )

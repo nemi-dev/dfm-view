@@ -57,7 +57,7 @@ const GuildLayout = styled.div`
 interface GuildsInputProps {
   label: string
   value: number
-  target: keyof GuildType
+  target: keyof GuildState
   src: string
   selector?: (s:RootState) => BaseAttrs
   max?: number

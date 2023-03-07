@@ -1,4 +1,4 @@
-import { attrDefs } from "../attrs"
+import { attrDefs, Elemental } from "../attrs"
 import { calcAtk, calcStat, criticalChance } from "../damage"
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
 import { AddSkillInc, RemoveSkillInc, SetBasicAttr, SetEltype, SetSkillInc } from "../feats/slices/calibrateSlice"
@@ -112,7 +112,8 @@ export function MyStat() {
   const me = excludeCond? useAppSelector(selectMeWithoutOptional) : useAppSelector(selectMe)
   const atype = useAppSelector(state => state.Profile.atype)
   const calibrateEltypes = useAppSelector(state => state.Calibrate.eltype)
-  const [eltype, el, eldmg] = useAppSelector(selectMyFinalEltype)
+
+  const eltype = useAppSelector(selectMyFinalEltype)
   const dispatch = useAppDispatch()
 
   const
@@ -138,7 +139,9 @@ export function MyStat() {
             value={atype}
             dispatcher={v => dispatch(SetAtype(v))}
           />
-          <CheckboxGroup name="공격속성" values={["화", "수", "명", "암"]} value={calibrateEltypes} dispatcher={(el, on) => dispatch(SetEltype([el, on]))} />
+          <CheckboxGroup name="공격속성" 
+          labels={["화", "수", "명", "암"]}
+          values={["Fire", "Ice", "Light", "Dark"]} value={calibrateEltypes} dispatcher={(el, on) => dispatch(SetEltype([el, on]))} />
           <StatAtkCrit atype={atype} />
           <Gridy columns={2} colSize="1fr">
           <OneAttrTriplet aKey="cdmg_inc" name="크뎀증" percent signed />
@@ -158,7 +161,7 @@ export function MyStat() {
           <OneAttrTriplet className="el_dark" aKey="el_dark" name="암속강" signed />
           <OneAttrTriplet className="el_dark" aKey="eldmg_dark" name="암속추" percent signed />
         </GridyTwo>
-        <VerboseResult name="공격속성" value={eltype? `${eltype}` : "(속성없음)"} />
+        <VerboseResult name="공격속성" value={eltype.length? `${eltype.map(e => Elemental[e].속성).join("+")}` : "(속성없음)"} />
       </div>
     </div>
     </MyselfContext.Provider>

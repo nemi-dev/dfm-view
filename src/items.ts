@@ -3,11 +3,16 @@ import _isets from "../data/itemsets.json"
 import _armorbases from "./armorbase.json"
 
 import memoizee from "memoizee"
-import { explode, MyAttrKey } from "./attrs"
+import { atx, MyAttrKey } from "./attrs"
 
-export const weaponType = [
-  "소검","도","둔기","대검","광검","너클","건틀릿","클로","권투글러브","통파","리볼버","자동권총","머스켓","핸드캐넌","보우건","창","봉","로드","스탭","빗자루","십자가","염주","토템","낫","배틀액스","락소드","윙블레이드"
-]
+export const weaponType: readonly Itype[] = Object.freeze([
+  "소검","도","둔기","대검","광검",
+  "너클","건틀릿","클로","권투글러브","통파",
+  "리볼버","자동권총","머스켓","핸드캐넌","보우건",
+  "창","봉","로드","스탭","빗자루",
+  "십자가","염주","토템","낫","배틀액스",
+  "락소드","윙블레이드"
+]) 
 export const armorParts: readonly EquipPart[] = Object.freeze(["상의", "하의", "머리어깨", "벨트", "신발"])
 export const accessParts: readonly EquipPart[] = Object.freeze(["팔찌", "목걸이", "반지"])
 export const equipParts: readonly EquipPart[] = Object.freeze(["무기", ...armorParts, ...accessParts, "보조장비"])
@@ -16,16 +21,20 @@ export const wholeParts: readonly WholePart[] = Object.freeze([...equipParts, "�
 /** 단 한 종류의 엠블렘만 넣을 수 있는 부위 모음 */
 export const oneEmblemParts: readonly EquipPart[] = Object.freeze([...armorParts, ...accessParts])
 
-export function isWeapon(itype: string): boolean {
-  return (itype === "무기" || weaponType.includes(itype as Itype))
-}
+/** 카드/엠블렘을 넣을 수 있는 부위 */
+export const cardableParts: readonly CardablePart[] = Object.freeze([...equipParts, "칭호"])
+
+/** 마법봉인이 있는 부위 */
+export const magicPropsParts: readonly MagicPropsPart[] = Object.freeze([...equipParts, "봉인석"])
+
+/** 이 아이템 타입은 무기인가? */
+export const isWeapon = (itype: Itype | "무기") => (itype === "무기" || weaponType.includes(itype))
 
 /** `key`가 방어구 부위인가? */
 export const isArmorPart = (key: EquipPart) => armorParts.includes(key)
 
 /** `key`가 악세서리 부위인가? */
 export const isAccessPart = (key: EquipPart) => accessParts.includes(key)
-
 
 /** 주어진 부위의 "상위 종류"를 얻는다. (ex. "방어구", "악세서리", "무기", "봉인석") */
 export function getSupertype(part: EquipPart | "봉인석") {
@@ -40,6 +49,8 @@ function getPart(s: Itype): WholePart {
   if (isWeapon(s)) return "무기"
   return null
 }
+
+
 
 const items = _items as Attrs[]
 const isets = _isets as ISet[]
@@ -63,7 +74,6 @@ function assignIset(item: Attrs, setOf: string | string[]) {
   if (setOf instanceof Array) return setOf.forEach(s => assignIset(item, s))
   if (!(setOf in isetChildren)) isetChildren[setOf] = []
   isetChildren[setOf].push(name)
-
 }
 
 for (const item of items) {
@@ -105,11 +115,8 @@ export const getArmorBase = memoizee(
   },
 { primitive: true })
 
-
-
 /**
- * 이름으로 아이템을 얻는다.  
- * 무기, 방어구, 악세서리, 보조장비, 카드, 칭호, 오라, 무기아바타, 봉인석, 정수를 얻을 수 있다.  
+ * 무기, 방어구, 악세서리, 보조장비, 카드, 칭호, 오라, 무기아바타, 봉인석, 정수 아이템을 얻는다.  
  * 엠블렘은 얻을 수 없다.
  */
 export const getItem = (name: string) => _items_index_Name[name]
@@ -152,8 +159,7 @@ export function countISetsFrom(...names: string[]) {
 }
 
 /**
- * 아이템 갯수로부터 활성화되는 세트들을 얻는다.
- * 
+ * 아이템 갯수로부터 활성화되는 세트들을 얻는다.  
  * { "<세트 이름>[<옵션 활성화에 필요했던 세트 수>]" : 세트 옵션 } 형식으로 얻는다.
  */
 export function getActiveISetAttrs(counts: Record<string, number>) {
@@ -169,7 +175,6 @@ export function getActiveISetAttrs(counts: Record<string, number>) {
   }
   return iset_info
 }
-
 
 /** 주어진 부위의 장비에 바를 수 있는 카드(+보주) 목록을 얻는다. */
 export const getCardsForPart = memoizee(
@@ -202,65 +207,7 @@ function activeKey(item: Attrs, e: ExclusiveGroup) {
 
 export function getActiveExclusive(item: Attrs, activeKeys: Record<string, string>) {
   if (!(item?.exclusive)) return []
-  /*
-  Exclusive 목록은 ExclusiveGroup(또는 ExclusiveGroup)들로 되어 있다.
-  ExclusiveGroup은 자신만의 키를 가지는데, 그 키가 사용자가 활성화한 키 목록 중에 있는 것만을 고른다.
-
-  활성화된 키는 그 ExclusiveGroup의 자식 중 하나의 이름을 값으로 가진다.
-  그 단 하나의 자식만의 옵션이 활성화된다.
-
-  ex)
-  {
-    name = 새벽에 기도하는 칠흑의 예언자 세트
-    exclusive = [
-      {
-        <type ExclusivevGroup>
-        name = 예언자 카드
-        <id = "새벽에 기도하는 칠흑의 예언자 세트::예언자 카드">
-
-        children = [
-          {
-            name = 광대
-            ...attrs
-          }
-          {
-            name = 여제
-            ...attrs
-          }
-          {
-            name = 황제
-            ...attrs
-          }
-        ]
-      }
-      {
-        <type ExclusivevGroup>
-        name = 자연의 변덕
-        <id = "새벽에 기도하는 칠흑의 예언자 세트::자연의 변덕">
-
-        children = [
-          {
-            name = 화속성
-            ...attrs
-          }
-          {
-            name = 수속성
-            ...attrs
-          }
-          {
-            name = 명속성
-            ...attrs
-          }
-          {
-            name = 암속성
-            ...attrs
-          }
-        ]
-      }
-    ]
-  }
-  */
-
+ 
   return item.exclusive
   .filter(e => activeKeys[activeKey(item, e)])
   .map(e => e.children.find(a => a.name === activeKeys[activeKey(item, e)]))
@@ -269,7 +216,7 @@ export function getActiveExclusive(item: Attrs, activeKeys: Record<string, strin
 
 
 
-const blessings: [string, number, Rarity, number][] = [
+const blessings = [
   ["미카엘의 가호", 45, "Epic", 5],
   ["우리엘의 가호", 40, "Epic", 4],
   ["라파엘의 가호", 35, "Epic", 3],
@@ -280,18 +227,17 @@ const blessings: [string, number, Rarity, number][] = [
   ["레미엘의 가호", 12, "Rare", 3],
   ["지천사의 가호", 9, "Rare", 2],
   ["치천사의 가호", 6, "Uncommon", 2],
-]
+] as const
 
 /** 성안의 봉인에서 활성화된 가호를 얻는다. */
 export function getBlessing(...items: Attrs[]) {
-  const countMap: Record<Rarity, number> = {
-    Common: 0, Uncommon: 0, Rare: 0, Unique: 0, Epic: 0
-  }
-  items.forEach(a => countMap[a.rarity]++)
-  const [name, value, rarity, count] = blessings.find(([, , rarity, minCount]) => countMap[rarity] >= minCount)
+  const counts = items.reduce((p, { rarity }) => (p[rarity] += 1, p),
+  { Common: 0, Uncommon: 0, Rare: 0, Unique: 0, Epic: 0 })
+
+  const [name, value, rarity, count] = blessings.find(([, , rarity, minCount]) => counts[rarity] >= minCount)
   return {
     name: `${name} (${rarity} ${count}개 이상 장착)`,
-    ...explode(value, "stat")
+    ...atx("Stat", value)
   } as BaseAttrs
 }
 

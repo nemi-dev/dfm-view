@@ -1,5 +1,12 @@
 import type { HTMLProps } from 'react'
-import { im } from '../../utils'
+
+/** 아이템에서 명시적으로 지정한 이미지 이름 또는 파일 이름으로 가능하게 변환된 아이템 이름을 만든다. */
+function im(strings: TemplateStringsArray, item: Attrs) {
+  if (item == null) return ""
+  const regex = /[\<\>\:\"\'\?\*\\\/\|]/g
+  if (item.image) return strings[0] + item.image + strings[1]
+  else return strings[0] + item.name.replace(regex, "-") + strings[1]
+}
 
 interface SquareIconProps extends HTMLProps<HTMLDivElement> {
   src: string
@@ -73,9 +80,9 @@ export function CrackIcon({ item, className, ...props }: { item: Attrs; } & HTML
   return <RoundIcon className={"CrackIcon " + className} src={im`/img/item/${item}.png`} frame={`/img/crack/${item.rarity}.png`} {...props} />
 }
 
-type AttrIconProps = { attrKey: keyof BaseAttrs } & Omit<React.DetailedHTMLProps<React.ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>, "src" | "alt" >
+type AttrIconProps = { attrKey: keyof BaseAttrs } & Omit<React.HTMLProps<HTMLImageElement>, "src" | "alt" >
 export function AttrIcon({attrKey, className = "", ...props}: AttrIconProps) {
   return (
-    <img src={`/img/attr/${attrKey}.png`} alt={attrKey} className={className? "AttrIcon "+className : "AttrIcon"} {...props} />
+    <img src={`/img/attr/${attrKey}.png`} alt={attrKey} className={"AttrIcon "+className} {...props} />
   )
 }
