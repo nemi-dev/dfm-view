@@ -1,34 +1,34 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { accessParts, armorParts, getItem, oneEmblemParts } from "../../items"
+import { accessParts, armorParts, getItem, isArmorPart, oneEmblemParts } from "../../items"
 import { nextMagicProps } from "../../magicProps"
 
 
 import _initState from "./initState.json"
-const equipInit: EquipsType = _initState.Equips as EquipsType
+const equipInit = (_initState.Equips as unknown) as EquipsState
 
-
+type EquipPartNow = EquipPart | "칭호" | "봉인석"
 
 
 export const equipSlice = createSlice({
   name: 'Equip',
   initialState: equipInit,
   reducers: {
-    SetEquip: (s, { payload: [part, name] }: PayloadAction<[EquipPart, string]>) => {
+    SetEquip: (s, { payload: [part, name] }: PayloadAction<[EquipPartNow, string]>) => {
       s[part].name = name
     },
-    SetCard: (s, { payload: [part, cardName] }: PayloadAction<[EquipPart, string]>) => {
+    SetCard: (s, { payload: [part, cardName] }: PayloadAction<[CardablePart, string]>) => {
       s[part].card = cardName
     },
     SetCardsAllPossible: (s, { payload }: PayloadAction<string>) => {
       const card = getItem(payload) as Card
       const possible = card.part ?? []
-      possible.forEach(part => s[part as EquipPart].card = payload)
+      possible.forEach(part => s[part].card = payload)
     },
-    SetEmblem: (s, { payload: [part, index, emblemType, emblemLevel] }: PayloadAction<[EquipPart, number, EmblemType, number]>) => {
+    SetEmblem: (s, { payload: [part, index, emblemType, emblemLevel] }: PayloadAction<[CardablePart, number, EmblemType, number]>) => {
       s[part].emblems[index] = [emblemType, emblemLevel as EmblemLevel]
     },
-    SetColorEmblemLevelAll: (s, { payload }: PayloadAction<EmblemLevel>) => {
-      oneEmblemParts.forEach(part => s[part].emblems.forEach(sp => sp[1] = payload))
+    SetColorEmblemLevelAll: (s, { payload }: PayloadAction<number>) => {
+      oneEmblemParts.forEach(part => s[part].emblems.forEach(sp => sp[1] = payload as EmblemLevel))
     },
     SetEquipUpgradeValue: (s, { payload: [part, value] }: PayloadAction<[EquipPart, number]>) => {
       s[part].upgrade = value
@@ -40,7 +40,7 @@ export const equipSlice = createSlice({
       accessParts.forEach(part => s[part].upgrade = payload)
     },
     SetMaterial: (s, { payload: [part, value] }: PayloadAction<[EquipPart, ArmorMaterial]>) => {
-      s[part].material = value
+      if (isArmorPart(part)) s[part].material = value
     },
     SetMaterialAll: (s, { payload }: PayloadAction<ArmorMaterial>) => {
       armorParts.forEach(part => s[part].material = payload)
@@ -48,7 +48,7 @@ export const equipSlice = createSlice({
     SetEquips: (s, { payload }: PayloadAction<Record<EquipPart, string>>) => {
       for (const key in payload) s[key].name = payload[key]
     },
-    NextMagicProps: (s, { payload: [part, index] }: PayloadAction<[EquipPart, number]>)=> {
+    NextMagicProps: (s, { payload: [part, index] }: PayloadAction<[MagicPropsPart, number]>)=> {
       const { level, rarity } = getItem(s[part].name)
       const current = s[part].magicProps[index]
       s[part].magicProps[index] = nextMagicProps(part, current, level, rarity, index === 0)

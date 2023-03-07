@@ -1,56 +1,61 @@
 import memoizee from "memoizee"
-import { percent_inc_mul, add, combineArray } from "./utils"
+import { percent_inc_mul, add, combineArray, add_object, mul_object } from "./utils"
+
+export const MyAttrKey = {
+  "Physc": {
+    "Stat": "strn",
+    "Atk" : "atk_ph",
+    "Crit": "crit_ph",
+    "CritCh": "crit_ph_pct",
+    "스탯": "힘",
+    "타입": "물리"
+  },
+  "Magic": {
+    "Stat": "intl",
+    "Atk" : "atk_mg",
+    "Crit": "crit_mg",
+    "CritCh": "crit_mg_pct",
+    "스탯": "지능",
+    "타입": "마법"
+  }
+} as const
+
+export const Elemental = {
+  "Fire" : {
+    "el": "el_fire",
+    "eldmg": "eldmg_fire",
+    "속성": "화"
+  },
+  "Ice": {
+    "el": "el_ice",
+    "eldmg": "eldmg_ice",
+    "속성": "수"
+  },
+  "Light": {
+    "el": "el_lght",
+    "eldmg": "eldmg_lght",
+    "속성": "명"
+  },
+  "Dark": {
+    "el": "el_dark",
+    "eldmg": "eldmg_dark",
+    "속성": "암"
+  }
+} as const
 
 
 /** 단 하나의 옵션을 가진 효과를 만든다. */
 export const at1 = memoizee((key: keyof BaseAttrs, value: number): BaseAttrs => ({ [key]: value }), { primitive: true })
 
 /** "힘/지능" "물/마공" "물/마크" "모든속성" 등 같이 올라가는 스탯을 만든다. */
-export function explode(val: number, is: "stat" | "atk" | "el_all"): BaseAttrs {
+export const atx = memoizee(
+function atx(is: "Stat" | "Atk" | "El", val: number): BaseAttrs {
   switch(is) {
-    case "stat": return { strn: val, intl: val, vit: val, psi: val }
-    case "atk": return { atk_ph: val, atk_mg: val }
-    case "el_all": return { el_fire: val, el_ice: val, el_lght: val, el_dark: val }
+    case "Stat": return { strn: val, intl: val, vit: val, psi: val }
+    case "Atk": return { atk_ph: val, atk_mg: val }
+    case "El": return { el_fire: val, el_ice: val, el_lght: val, el_dark: val }
   }
-}
-
-type MyAttrKey = {
-  "Physc": {
-    "Stat": "strn",
-    "Atk" : "atk_ph",
-    "Crit": "crit_ph",
-    "CritCh": "crit_ph_pct",
-    "스탯": "힘",
-    "타입": "물리"
-  },
-  "Magic": {
-    "Stat": "intl",
-    "Atk" : "atk_mg",
-    "Crit": "crit_mg",
-    "CritCh": "crit_mg_pct",
-    "스탯": "지능",
-    "타입": "마법"
-  }
-}
-
-export const MyAttrKey: MyAttrKey = {
-  "Physc": {
-    "Stat": "strn",
-    "Atk" : "atk_ph",
-    "Crit": "crit_ph",
-    "CritCh": "crit_ph_pct",
-    "스탯": "힘",
-    "타입": "물리"
-  },
-  "Magic": {
-    "Stat": "intl",
-    "Atk" : "atk_mg",
-    "Crit": "crit_mg",
-    "CritCh": "crit_mg_pct",
-    "스탯": "지능",
-    "타입": "마법"
-  }
-}
+}, { primitive: true} )
 
 
 const reduce_eltype = (p: BaseAttrs["eltype"], n: BaseAttrs["eltype"]) => {
@@ -77,24 +82,6 @@ const reduce_eltype = (p: BaseAttrs["eltype"], n: BaseAttrs["eltype"]) => {
   }
 }
 
-
-function add_object(p: Record<string, number>, b: Record<string, number>) {
-  const prev: Record<string, number> = {...p}
-  for (const key in b) {
-    if (!(key in prev)) prev[key] = b[key]
-    else prev[key] = prev[key] + b[key]
-  }
-  return prev
-}
-
-function mul_object(p: Record<string, number>, b: Record<string, number>) {
-  const prev: Record<string, number> = {...p}
-  for (const key in b) {
-    if (!(key in prev)) prev[key] = b[key]
-    else prev[key] = percent_inc_mul(prev[key], b[key])
-  }
-  return prev
-}
 
 const reducers: Partial<Record<keyof BaseAttrs, (p, n)=>any>> = {}
 
@@ -219,37 +206,23 @@ export function collectSpecial(...attrsList: Attrs[]) {
   }
   return { branches, exclusives, gives }
 }
-
-
 type El_val = "el_fire" | "el_ice" | "el_lght" | "el_dark"
 
-export const elMap: Record<string, Eltype> = {
+
+export const elMapRev = {
   "el_fire": "화",
   "el_ice" : "수",
   "el_lght": "명",
   "el_dark": "암"
-}
+} as const
 
-export const elMap2 : Record<string, El_val> = {
-  "화": "el_fire",
-  "수": "el_ice" ,
-  "명": "el_lght",
-  "암": "el_dark"
-}
 
 type El = Pick<BaseAttrs, El_val>;
 
-export function whatElType(el: El, activeTypes: BaseAttrs["eltype"]): Eltype {
-  if (activeTypes == null) return null
-  if (typeof activeTypes === "string") return activeTypes
-  
-  let maxValue = 0, maxEl: El_val = null
-  for (const t of activeTypes) {
-    const key = elMap2[t]
-    const val = el[key];
-    if (val > maxValue) [maxValue, maxEl] = [val, key]
-  }
-  
-  return elMap[maxEl]
+export function whatElType(el: El, activeTypes: BaseAttrs["eltype"]): Eltype[] {
+  if (activeTypes == null) return []
+  if (typeof activeTypes === "string") return [activeTypes]
+  const maxValue = Math.max(...activeTypes.map(eltype => el[Elemental[eltype].el]))
+  return activeTypes.filter(eltype => el[Elemental[eltype].el] == maxValue)
   
 }

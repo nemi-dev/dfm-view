@@ -1,14 +1,12 @@
 import { createSelector } from "@reduxjs/toolkit"
-import { collectSpecial, explode, combine, elMap2, whatElType } from "../attrs"
+import { collectSpecial, atx, combine, whatElType } from "../attrs"
 import { RootState } from "./store"
-import { getActiveISetAttrs, getArmorBase, countISetsFrom, getItem, equipParts, getActiveBranch, isActiveGives, getActiveExclusive, getBlessing, isArmorPart } from "../items"
+import { getActiveISetAttrs, getArmorBase, countISetsFrom, getItem, equipParts, getActiveBranch, isActiveGives, getActiveExclusive, getBlessing, isArmorPart, wholeParts, magicPropsParts } from "../items"
 import { getEmblem } from "../emblem"
 import { getMagicPropsAttrs } from "../magicProps"
 import { selectWholeAvatarAttrs } from "./avatarSelectors"
 import { percent_inc_mul } from "../utils"
 import { selectGuilds } from "./guildSelectors"
-
-
 
 function noot<T>(func: (part: EquipPart, s: RootState) => T): { [k in EquipPart]: (state: RootState) => T } {
   const _o = {}
@@ -22,27 +20,42 @@ function noot2<T>(func: (part: EquipPart) => ((s: RootState) => T)): { [k in Equ
   return _o as any
 }
 
+function Noot<T, P extends WholePart>(func: ($p: P, s: RootState) => T, parts: (P[] | readonly P[]) = wholeParts as P[]): { [k in P]: (state: RootState) => T } {
+  const _o: any = {}
+  parts.forEach(part => _o[part] = func.bind(null, part))
+  return _o
+}
+
+function Noot2<T, P extends WholePart>(func: ($p: P) => (s: RootState)=> T, parts: (P[] | readonly P[]) = wholeParts as P[]): { [k in P]: (state: RootState) => T } {
+  const _o: any = {}
+  parts.forEach(part => _o[part] = func(part))
+  return _o
+}
+
+export function selectAtype(state: RootState) {
+  return state.Profile.atype
+}
+
 /** 특정 부위에 대한 정보를 얻는다. */
-const selectPart: { [k in EquipPart]: (state: RootState) => PartType }
-= noot((part, state) => state.Equips[part])
+const selectPart: { [k in WholePart]: (state: RootState) => PartType }
+= Noot((part, state) => state.Equips[part])
 
 /** 특정 부위에 장착중인 아이템을 뽑아내는 Selector */
-export const selectItem = noot((part, state) => getItem(state.Equips[part].name))
+export const selectItem = Noot((part, state) => getItem(state.Equips[part].name))
 
 /** 특정 부위의 마법봉인 효과를 뽑아내는 Selector */
-export const selectMagicProps = noot2(
+export const selectMagicProps = Noot2(
   part => createSelector(
-    (state: RootState) => state.Profile.atype,
+    selectAtype,
     selectPart[part],
     (atype, equipPart) => {
       const { name, magicProps } = equipPart
       if (!name || !magicProps || !magicProps.length) return {} 
       const { level, rarity } = getItem(name)
-      const _magicProps = magicProps.slice(rarity === "Epic" ? 0 : 1)
-      const array = _magicProps.map((name, index) => getMagicPropsAttrs(name, part, atype, level, rarity, index == 0))
+      const array = getMagicPropsAttrs(magicProps, atype, level, rarity, part)
       return combine(...array)
     }
-  )
+  ), magicPropsParts
 )
 
 /**
@@ -68,6 +81,7 @@ export const selectActiveOption = noot(
   }
 )
 
+
 export const selectArmorBase = noot2(
   (part) => createSelector(
     selectPart[part],
@@ -90,7 +104,7 @@ export const selectWholePartWithoutOptional = noot2(
     selectArmorBase[part],
     (equipPart, magicProps, armorbase) => {
       const item = getItem(equipPart.name)
-      const upgradeAttr = explode(equipPart.upgrade, part === "무기"? "atk" : "stat")
+      const upgradeAttr = atx(part === "무기"? "Atk" : "Stat", equipPart.upgrade)
       return combine(item, armorbase, upgradeAttr, magicProps, ...equipPart.emblems.map(getEmblem), getItem(equipPart.card))
     }
   )
@@ -105,7 +119,7 @@ export const selectWholeFromPart = noot2(
     selectActiveOption[part],
     (equipPart, magicProps, armorbase, activeOption) => {
       const item = getItem(equipPart.name)
-      const upgradeAttr = explode(equipPart.upgrade, part === "무기"? "atk" : "stat")
+      const upgradeAttr = atx(part === "무기"? "Atk" : "Stat", equipPart.upgrade)
       return combine(item, armorbase, ...activeOption, upgradeAttr, magicProps, ...equipPart.emblems.map(getEmblem), getItem(equipPart.card))
     }
   )
@@ -183,8 +197,8 @@ export function selectCreatures(state: RootState): BaseAttrs {
     intl: stat + skill_stat + stat_arti,
     vit: stat,
     psi: stat,
-    ...explode(atk, "atk"),
-    ...explode(el_all + skill_el_all, "el_all"),
+    ...atx("Atk", atk),
+    ...atx("El", el_all + skill_el_all),
     dmg_add : skill_dmg_add,
     speed_atk,
     speed_cast
@@ -205,7 +219,7 @@ export function selectTonics(state: RootState): BaseAttrs {
     Accu,
     crit_ph: crit,
     crit_mg: crit,
-    ...explode(el_all, "el_all"),
+    ...atx("El", el_all),
     def_ph: def,
     def_mg: def,
     hpmax: hp_mp_max,
@@ -219,7 +233,7 @@ export function selectTonics(state: RootState): BaseAttrs {
 
 /** 현재 장착중인 봉인석을 선택한다. */
 export function selectRune(state: RootState) {
-  return getItem(state.Crack.rune)
+  return getItem(state.Equips["봉인석"].name)
 }
 
 /** 현재 장착 중인 모든 정수를 선택한다. */
@@ -233,7 +247,7 @@ export function selectSpells(state: RootState) {
  * { "<세트 이름>[<옵션 활성화에 필요했던 세트 수>]" : 세트 옵션 } 형식으로 얻는다.
  */
 export function selectCrackISetAttrs(state: RootState) {
-  const isets = countISetsFrom(state.Crack.rune, ...state.Crack.Spells)
+  const isets = countISetsFrom(state.Equips["봉인석"].name, ...state.Crack.Spells)
   return getActiveISetAttrs(isets)
 }
 
@@ -251,16 +265,14 @@ export const selectBlessing = createSelector(
 /** 성안의 봉인에서 오는 모든 효과를 얻는다. */
 export const selectCracksAll = createSelector(
   selectRune,
+  selectMagicProps["봉인석"],
   selectSpells,
   selectBlessing,
   selectCrackISetAttrs,
-  (rune, spells, blessing, isetattr) => {
-    return combine(rune, ...spells, blessing, ...Object.values(isetattr))
+  (rune, mp, spells, blessing, isetattr) => {
+    return combine(rune, mp, ...spells, blessing, ...Object.values(isetattr))
   }
 )
-
-
-
 
 /** 스탯을 보정한 값만을 가져온다. */
 export function selectCalibrated(state: RootState): BaseAttrs {
@@ -268,23 +280,30 @@ export function selectCalibrated(state: RootState): BaseAttrs {
   return { ...state.Calibrate, sk_inc }
 }
 
+/** 업적달성레벨로 얻는 보너스 효과를 얻는다.. */
+export function selectAchievementAttrs(state: RootState): BaseAttrs {
+  return atx("Stat", state.Profile.achieveLevel * 7 - 2)
+}
+
+
+/** 장비 + 아바타 + 크리쳐 + 마력결정 + 성안의봉인 + 길드 + 업적보너스 (조건부옵션 포함, 보정값 제외) */
+export const selectMeWithoutCalibrate = createSelector(
+  selectEquips, selectWholeAvatarAttrs, selectCreatures, selectTonics, selectCracksAll, selectGuilds,
+  selectAchievementAttrs,
+  (e, av, c, t, cr, g, ach) => combine(e, av, c, t, cr, g, ach)
+)
+
 /**
  * 장비 + 아바타 + 크리쳐 + 마력결정 + 성안의봉인 + 길드 + 업적보너스 (조건부옵션 제외, 보정값 포함)
  * @todo 칭호/크리쳐 조건부옵션 On/Off 추가되면 그것도 고려할것
  * */
 export const selectMeWithoutOptional = createSelector(
   selectEquipsWithoutOptional, selectWholeAvatarAttrs, selectCreatures, selectTonics, selectCracksAll, selectGuilds,
-  (state: RootState) => explode(state.Profile.achieveLevel * 7 - 2, "stat"),
+  selectAchievementAttrs,
   selectCalibrated,
   (e, av, c, t, cr, g, ach, cal) => combine(e, av, c, t, cr, g, ach, cal)
 )
 
-/** 장비 + 아바타 + 크리쳐 + 마력결정 + 성안의봉인 + 길드 + 업적보너스 (조건부옵션 포함, 보정값 제외) */
-export const selectMeWithoutCalibrate = createSelector(
-  selectEquips, selectWholeAvatarAttrs, selectCreatures, selectTonics, selectCracksAll, selectGuilds,
-  (state: RootState) => explode(state.Profile.achieveLevel * 7 - 2, "stat"),
-  (e, av, c, t, cr, g, ach) => combine(e, av, c, t, cr, g, ach)
-)
 
 /** 장비 + 아바타 + 크리쳐 + 마력결정 + 성안의봉인 + 길드 (조건부옵션 포함, 보정값 포함) */
 export const selectMe = createSelector(
@@ -294,13 +313,5 @@ export const selectMe = createSelector(
 
 export const selectMyFinalEltype = createSelector(
   selectMe,
-  attrs => {
-    const eltype = whatElType(attrs, attrs.eltype)
-    if (!eltype) return [null, 0, 0]
-    const el_attrKey = elMap2[eltype]
-    const eldmg_attrKey = el_attrKey.replace("el_", "eldmg_")
-    const el = attrs[el_attrKey]
-    const eldmg = attrs[eldmg_attrKey] ?? 0
-    return [eltype, el, eldmg]
-  }
+  attrs =>  whatElType(attrs, attrs.eltype)
 )

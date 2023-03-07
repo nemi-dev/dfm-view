@@ -28,15 +28,15 @@ export function selectAura(state: RootState) {
 }
 
 export function selectDFTitle(state: RootState) {
-  return getItem(state.Avatar["칭호"])
+  return getItem(state.Equips["칭호"].name)
 }
 
 export function selectDFTitleCard(state: RootState) {
-  return getItem(state.Avatar.card)
+  return getItem(state.Equips["칭호"].card)
 }
 
 export function selectDFTitleEmblemSpec(state: RootState) {
-  return state.Avatar.emblems
+  return state.Equips["칭호"].emblems
 }
 
 export const selectDFTitleAttrsAll = createSelector(

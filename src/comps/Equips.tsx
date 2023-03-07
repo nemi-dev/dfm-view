@@ -11,7 +11,7 @@ import { ItemIcon } from "./widgets/Icons"
 import { NextMagicProps, SetEquipUpgradeValue, SetMaterial } from "../feats/slices/equipSlice"
 import { OptionalAttrsView } from "./ConditionalAttrs"
 import { ModalContext } from "../modalContext"
-import { MagicPropsArray } from "./MagicProps"
+import { MagicProps } from "./MagicProps"
 import { PortraitMode } from "../responsiveContext"
 import { EquipBatch } from "./EquipBatch"
 import { acceptEmblem } from "../emblem"
@@ -123,10 +123,7 @@ function PartWide({ part }: EquipProps) {
         <SlotHeading part={part} onItemNameClicked={() => setDetail(!detail)} />
         {item? <NormalAddonsArray part={part} showUpgarde interactive /> : null}
         {item? <MagicPropsLayout>
-        <MagicPropsArray level={item.level} part={part} rarity={item.rarity}
-          arraySelector={state => state.Equips[part].magicProps}
-          actionCreator={(part: EquipPart, index) => NextMagicProps([part, index])}
-        />
+        <MagicProps item={item} part={part} />
         </MagicPropsLayout> : null}
       </div>
       {

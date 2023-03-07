@@ -197,34 +197,6 @@
   }
 }
 
-.MagicPropsArray {
-  grid-area: mgp;
-  align-self: stretch;
-  
-  display: flex;
-  align-items: stretch;
-  justify-content: stretch;
-  flex-direction: column;
-
-  &, * {
-    @extend %no_selection;
-  }
-  &.ForEpic {
-
-    display: grid;
-    grid-template-rows: 1fr 1fr;
-    grid-template-columns: 1fr 1fr;
-
-    > .MagicPropOne:first-child {
-      background-color: rgba($color: #0d0905, $alpha: 0.5);
-      grid-column: 1 / -1;
-    }
-  }
-
-  
-  
-}
-
 
 .DF_Title {
   .DF_Titles {

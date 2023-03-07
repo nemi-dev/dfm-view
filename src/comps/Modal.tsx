@@ -29,7 +29,8 @@ function properCurrentSelectors(part: WholePart): [ItemSelector, ItemSelector, E
   if (part === "칭호") return [
     selectDFTitle as ItemSelector,
     selectDFTitleCard,
-    (state: RootState) => state.Avatar.emblems
+    // (state: RootState) => state.Avatar.emblems
+    (state: RootState) => state.Equips["칭호"].emblems
   ]
   return [
     (state: RootState) => getItem(state.Equips[part].name),

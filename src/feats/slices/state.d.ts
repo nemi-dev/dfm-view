@@ -26,7 +26,7 @@ declare interface PartType {
 }
 
 
-declare interface EquipsType {
+declare interface EquipsState {
 
   무기: PartType
   상의: PartType
@@ -38,22 +38,20 @@ declare interface EquipsType {
   목걸이: PartType
   반지: PartType
   보조장비: PartType
+  칭호: PartType
+  봉인석: PartType
 
 }
 
-declare type AvatarInitType = {
+declare type AvatarState = {
   [k in AvatarPart]: "Uncommon" | "Rare"
 } & {
-  칭호: string
   오라: string
   무기아바타: string
-
-  card: string
-  emblems: EmblemSpec[]
 }
 
 
-declare interface TonicType {
+declare interface TonicState {
   Accu: number;
   crit: number;
   def: number;
@@ -63,19 +61,14 @@ declare interface TonicType {
   vit_psi: number;
 }
 
-declare interface CracksType {
-  /** 봉인석 이름 */
-  rune: string
-
-  /** 봉인석 마법봉인 */
-  MagicProps: MagicPropsCareAbout[]
+declare interface CracksState {
 
   /** 장착 중인 정수 이름 */
   Spells: string[]
 }
 
 
-declare interface GuildType {
+declare interface GuildState {
   StatLv: number
   AtkLv: number
   CritLv: number

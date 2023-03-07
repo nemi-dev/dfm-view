@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import Fuse from "fuse.js"
-import { useCallback, useContext, useEffect, useMemo, useState } from "react"
+import { useCallback, useContext, useMemo, useState } from "react"
 import { useAppDispatch } from "../../feats/hooks"
 import { _action_card_, _action_equip_ } from "../../feats/modalIntergrating"
 import { getCardsForPart, getItem, getItemsByPart, isAccessPart, isArmorPart } from "../../items"

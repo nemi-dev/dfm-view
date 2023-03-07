@@ -5,7 +5,7 @@ import { NumberInput } from "./widgets/Forms"
 interface TonicInputProps {
   label: string
   value: number
-  target: keyof TonicType
+  target: keyof TonicState
   image: string
 }
 

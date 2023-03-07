@@ -3,7 +3,7 @@ import { ItemName } from './CommonUI'
 import { EmblemIcon, SquareIcon, ItemIcon } from "./widgets/Icons"
 import { useCallback, useContext } from 'react'
 import { getAvatarAttr } from '../avatar'
-import { SetAvatarType, SetAvatarTypeAll } from '../feats/slices/avatarSlice'
+import { SetAvatarRarity, SetAvatarTypeAll } from '../feats/slices/avatarSlice'
 import { SimpleBaseAttrView } from './AttrsView'
 import { ModalContext } from "../modalContext"
 import { selectDFTitle, selectDFTitleCard, selectDFTitleEmblemSpec, selectRareAvatarCount, selectWeaponAvatar, selectAura, selectAvatarSetAttr } from '../feats/avatarSelectors'
@@ -17,7 +17,7 @@ export function DFTitle() {
   const dftitle = useAppSelector(selectDFTitle)
   const card = useAppSelector(selectDFTitleCard)
   const emblem = useAppSelector(selectDFTitleEmblemSpec)[0]
-  const attrs = useAppSelector(state => getItem(state.Avatar.칭호))
+  const item = useAppSelector(state => getItem(state.Equips.칭호.name))
   return (
     <div className="EquipSlot Hovering Bordered">
       <div className="AlwaysEquipPartLayout">
@@ -33,7 +33,7 @@ export function DFTitle() {
         </div>
       </div>
       <div>
-        <SimpleBaseAttrView attrs={attrs} />
+        <SimpleBaseAttrView attrs={item} />
       </div>
     </div>
   )
@@ -71,7 +71,7 @@ function AvatarPart({ part }: AvatarProps) {
   const dispatch = useAppDispatch()
   const onClick = useCallback(() => {
     const newValue = rarity === "Rare" ? "Uncommon" : "Rare"
-    dispatch(SetAvatarType([part, newValue]))
+    dispatch(SetAvatarRarity([part, newValue]))
   }, [rarity])
   return (
     <AvatarPartLayout className="AvatarPart Hovering Bordered" onClick={onClick}>
@@ -90,7 +90,7 @@ function AvatarPartCompact({ part }: AvatarProps) {
   const dispatch = useAppDispatch()
   const onClick = useCallback(() => {
     const newValue = rarity === "Rare" ? "Uncommon" : "Rare"
-    dispatch(SetAvatarType([part, newValue]))
+    dispatch(SetAvatarRarity([part, newValue]))
   }, [rarity])
   return (
     <div onClick={onClick}>

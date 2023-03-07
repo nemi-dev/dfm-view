@@ -1,5 +1,3 @@
-
-
 /** 두 수를 더한다. */
 export const add = (p: number, n: number) => p + n
 
@@ -17,15 +15,22 @@ export const beautyNumber = (n: number) => Math.floor(n).toLocaleString()
 /** n을 100배한 후, 소숫점 둘째 자리에서 반올림하고 "%"를 붙인다. */
 export const percentee = (n : number) => `${Math.round(n * 10000) / 100}%`
 
-/** 
- * 문자열이면 파일 이름으로 불가능한 문자를 뺀다.
- * 아이템이면 아이템에서 명시적으로 지정한 이미지 이름 또는 파일 이름으로 가능하게 변환된 아이템 이름을 만든다.
- */
-export function im(strings: TemplateStringsArray, attrs: string | BaseAttrs) {
-  if (attrs == null) return ""
-  const regex = /[\<\>\:\"\'\?\*\\\/\|]/g
-  if (typeof attrs === "string") return strings[0] + attrs.replace(regex, "-") + strings[1]
-  if (attrs.image) return strings[0] + attrs.image + strings[1]
-  else return strings[0] + attrs.name.replace(regex, "-") + strings[1]
+/** { 키: 숫자 } 형식으로 된 두 객체를 키가 같은 것들끼리 모두 더한다. */
+export function add_object(p: Record<string, number>, b: Record<string, number>) {
+  const prev: Record<string, number> = {...p}
+  for (const key in b) {
+    if (!(key in prev)) prev[key] = b[key]
+    else prev[key] = prev[key] + b[key]
+  }
+  return prev
 }
 
+/** { 키: 숫자 } 형식으로 된 두 객체를 키가 같은 것들끼리 퍼센트 곱을 한다. */
+export function mul_object(p: Record<string, number>, b: Record<string, number>) {
+  const prev: Record<string, number> = {...p}
+  for (const key in b) {
+    if (!(key in prev)) prev[key] = b[key]
+    else prev[key] = percent_inc_mul(prev[key], b[key])
+  }
+  return prev
+}
