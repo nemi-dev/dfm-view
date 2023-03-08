@@ -1,25 +1,33 @@
 import { combineReducers, configureStore, createReducer, createAction } from "@reduxjs/toolkit"
 import { creatureSlice, profileSlice } from "./slices/slice"
-import { crackSlice } from "./slices/cracksSlice"
+// import { crackSlice } from "./slices/cracksSlice"
 import { tonicSlice } from "./slices/tonicSlice"
 import { guildSlice } from "./slices/guildSlice"
-import { equipSlice, switchSlice } from "./slices/equipSlice"
+// import { equipSlice } from "./slices/equipSlice"
+import { switchSlice } from "./slices/switchSlice"
 import { avatarSlice } from "./slices/avatarSlice"
 import { calibrateSlice } from "./slices/calibrateSlice"
 import { skillInputSlice } from "./slices/skillInputSlice"
 import { persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist"
 import storage from "redux-persist/lib/storage"
+import { cardSlice, emblemSlice, itemSlice, magicPropsSlice, materialSlice, upgradeSlice } from "./slices/itemSlice"
 
 
 const reducer = 
 
 combineReducers({
-  Equips : equipSlice.reducer,
+  // Equips : equipSlice.reducer,
+  Item: itemSlice.reducer,
+  Card: cardSlice.reducer,
+  Emblem: emblemSlice.reducer,
+  MagicProps: magicPropsSlice.reducer,
+  Upgrade: upgradeSlice.reducer,
+  Material: materialSlice.reducer,
   Avatar: avatarSlice.reducer,
   Tonic: tonicSlice.reducer,
-  Crack: crackSlice.reducer,
-  Creature: creatureSlice.reducer,
+  // Crack: crackSlice.reducer,
   Guild: guildSlice.reducer,
+  Creature: creatureSlice.reducer,
   Profile: profileSlice.reducer,
   Switch: switchSlice.reducer,
   Calibrate: calibrateSlice.reducer,

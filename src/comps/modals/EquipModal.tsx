@@ -9,11 +9,16 @@ import { ModalContext } from "../../modalContext"
 
 import _left from "../../../data/sets/left.json"
 import _right from "../../../data/sets/right.json"
-import { SetCard, SetCardsAllPossible, SetEquip, SetEquips } from "../../feats/slices/equipSlice"
+// import { SetCard, SetCardsAllPossible, SetEquip, SetEquips } from "../../feats/slices/equipSlice"
 import { Checkie } from "../widgets/Forms"
 import { whois } from "../../dfclass"
-import { SetOtherAvatar } from "../../feats/slices/avatarSlice"
+import { FetchItems, SetCard, SetCardsAllPossible, SetItem } from "../../feats/slices/itemSlice"
+// import { SetOtherAvatar } from "../../feats/slices/avatarSlice"
 
+type EquipShotgun = Partial<Omit<ItemsState, "정수">>
+
+const left = _left as Record<string, EquipShotgun>
+const right = _right as Record<string, EquipShotgun>
 
 const CheckieInline = styled(Checkie)`
   display: inline-flex;
@@ -24,8 +29,7 @@ function EquipSelect({ item }: { item: Attrs }) {
   const { part } = message as ModalRequestForItem
   const dispatch = useAppDispatch()
   const onClick = useCallback(() => {
-    if ( part === "무기아바타" || part === "오라") dispatch(SetOtherAvatar([part, item.name]))
-    else dispatch(SetEquip([part as EquipPart | "칭호", item.name]))
+    dispatch(SetItem([part as EquipPart | "칭호" | "오라" | "무기아바타", item.name]))
     setOpen(false)
   }, [part, item.name])
   return (
@@ -39,14 +43,14 @@ function EquipSelect({ item }: { item: Attrs }) {
 interface IsetCatalog {
   name: string
   itemChildren: Attrs[]
-  useThisForPayload: Record<string, string>
+  useThisForPayload: EquipShotgun
 }
 
 function EquipShotgun({ name, itemChildren, useThisForPayload }: IsetCatalog) {
   const dispatch = useAppDispatch()
   const { setOpen } = useContext(ModalContext)
   return (
-    <div className="EquipShotgun" onClick={() => {dispatch(SetEquips(useThisForPayload)); setOpen(false) }}>
+    <div className="EquipShotgun" onClick={() => {dispatch(FetchItems(useThisForPayload)); setOpen(false) }}>
       <div className="IsetName">{name}</div>
       <div className="IsetIconArray">
       {itemChildren.map((item) => (
@@ -63,9 +67,9 @@ function inflate(m: Record<string, string>) {
 }
 
 function loadShotgun(part: WholePart) {
-  let v: Record<string, Record<string, string>>
-  if (isArmorPart(part as EquipPart)) v = _left
-  else if (isAccessPart(part as EquipPart)) v = _right
+  let v: Record<string, EquipShotgun>
+  if (isArmorPart(part)) v = left
+  else if (isAccessPart(part)) v = right
   else return
 
   const w: IsetCatalog[] = []

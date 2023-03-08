@@ -8,7 +8,7 @@ import { SimpleBaseAttrView } from './AttrsView'
 import { ModalContext } from "../modalContext"
 import styled from 'styled-components'
 import { PortraitMode } from '../responsiveContext'
-import { selectAura, selectAvatarSetAttr, selectCard, selectEmblemSpecs, selectItem, selectRareAvatarCount, selectWeaponAvatar } from '../feats/selectors'
+import { selectAvatarSetAttr, selectCard, selectEmblemSpecs, selectItem, selectRareAvatarCount } from '../feats/selectors'
 
 
 export function DFTitle() {
@@ -37,7 +37,7 @@ export function DFTitle() {
   )
 }
 interface AvatarProps {
-  part: AvatarPart
+  part: WearAvatarPart
 }
 
 const AvatarPartLayout = styled.div`
@@ -130,8 +130,8 @@ const AvatarsSecondLayout = styled.div`
 export function Avatars() {
   const { openModal } = useContext(ModalContext)
   const rareCount = useAppSelector(selectRareAvatarCount)
-  const weaponAvatar = useAppSelector(selectWeaponAvatar)
-  const aura = useAppSelector(selectAura)
+  const weaponAvatar = useAppSelector(selectItem["무기아바타"])
+  const aura = useAppSelector(selectItem["오라"])
   const dispatch = useAppDispatch()
   const portrait = useContext(PortraitMode)
   const AvatarPartComp = portrait? AvatarPartCompact : AvatarPart

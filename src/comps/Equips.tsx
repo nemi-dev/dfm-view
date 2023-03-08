@@ -8,7 +8,7 @@ import { selectCard, selectEmblemSpecs, selectItem, selectWholeFromPart } from "
 import { ItemName } from "./CommonUI"
 import { NumberInput } from "./widgets/Forms"
 import { ItemIcon } from "./widgets/Icons"
-import { SetEquipUpgradeValue } from "../feats/slices/equipSlice"
+// import { SetEquipUpgradeValue } from "../feats/slices/equipSlice"
 import { OptionalAttrsView } from "./ConditionalAttrs"
 import { ModalContext } from "../modalContext"
 import { MagicProps } from "./MagicProps"
@@ -16,6 +16,7 @@ import { PortraitMode } from "../responsiveContext"
 import { EquipBatch } from "./EquipBatch"
 import { acceptEmblem } from "../emblem"
 import { ArmorMaterialSelect, EmblemArray } from "./Itemy"
+import { SetUpgradeValue } from "../feats/slices/itemSlice"
 
 interface EquipProps {
   part: EquipPart
@@ -33,7 +34,7 @@ function NormalAddonsArray({ part, interactive = false, showUpgarde = false }: P
   const { openModal } = useContext(ModalContext)
   const dispatch = useAppDispatch()
   const card = useAppSelector(selectCard[part])
-  const upgradeBonus = useAppSelector(state => state.Equips[part].upgrade)
+  const upgradeBonus = useAppSelector(state => state.Upgrade[part])
   const emblems = useAppSelector(selectEmblemSpecs[part])
   const emblemAccept = acceptEmblem(part)
   return(
@@ -45,7 +46,7 @@ function NormalAddonsArray({ part, interactive = false, showUpgarde = false }: P
       />
       {showUpgarde?
       <div className="EquipUpgradeValue">
-        +<NumberInput value={upgradeBonus} onChange={v => dispatch(SetEquipUpgradeValue([part, v]))} />
+        +<NumberInput value={upgradeBonus} onChange={v => dispatch(SetUpgradeValue([part, v]))} />
       </div>: null}
     </div>
   )

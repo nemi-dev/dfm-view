@@ -27,6 +27,11 @@ declare type MagicPropsPart = EquipPart | "봉인석"
 /** 카드/엠블렘을 박을 수 있는 장비 부위 */
 declare type CardablePart = EquipPart | "칭호"
 
+/** 방어구 부위 */
+declare type ArmorPart = "상의" | "하의" | "머리어깨" | "벨트" | "신발"
+
+/** 악세서리 부위 */
+declare type AccessPart = "팔찌" | "목걸이" | "반지"
 
 declare type ArmorMaterial = "천" | "가죽" | "경갑" | "중갑" | "판금"
 
@@ -35,7 +40,7 @@ declare type ArmorMaterial = "천" | "가죽" | "경갑" | "중갑" | "판금"
 
 
 declare type WholePart = EquipPart | "칭호" | "오라" | "무기아바타" | "봉인석" | "정수"
-declare type AvatarPart = "모자" | "얼굴" | "상의" | "목가슴" | "신발" | "머리" | "하의" | "허리"
+declare type WearAvatarPart = "모자" | "얼굴" | "상의" | "목가슴" | "신발" | "머리" | "하의" | "허리"
 
 declare type MagicPropsCareAbout = "dmg_inc" | "Stat" | "Atk" | "el_fire" | "el_ice" | "el_lght" | "el_dark"
 | "Crit" | "speed_atk" | "Accu" | null

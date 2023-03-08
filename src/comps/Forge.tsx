@@ -2,7 +2,7 @@ import { useContext } from "react"
 import styled from "styled-components"
 import { acceptEmblem } from "../emblem"
 import { useAppSelector, useAppDispatch } from "../feats/hooks"
-import { SetEquipUpgradeValue } from "../feats/slices/equipSlice"
+// import { SetEquipUpgradeValue } from "../feats/slices/equipSlice"
 import { NumberInput } from "./widgets/Forms"
 import { ItemIcon } from "./widgets/Icons"
 import { ModalContext } from "../modalContext"
@@ -10,6 +10,7 @@ import { EquipBatch } from "./EquipBatch"
 import { MagicProps } from "./MagicProps"
 import { selectCard, selectEmblemSpecs, selectItem } from "../feats/selectors"
 import { EquipProps, ArmorMaterialSelect, EmblemArray } from "./Itemy"
+import { SetUpgradeValue } from "../feats/slices/itemSlice"
 
 
 const PartLayout = styled.div`
@@ -44,7 +45,7 @@ function Part({ part }: EquipProps) {
   const { openModal } = useContext(ModalContext)
   const dispatch = useAppDispatch()
   const card = useAppSelector(selectCard[part])
-  const upgradeBonus = useAppSelector(state => state.Equips[part].upgrade)
+  const upgradeBonus = useAppSelector(state => state.Upgrade[part])
   const emblems = useAppSelector(selectEmblemSpecs[part])
   const emblemAccept = acceptEmblem(part)
   return (
@@ -54,7 +55,7 @@ function Part({ part }: EquipProps) {
       <ArmorMaterialSelect part={part} />
       <div className="EquipUpgradeValue">
         +<NumberInput value={upgradeBonus}
-        onChange={v => dispatch(SetEquipUpgradeValue([part, v]))} />
+        onChange={v => dispatch(SetUpgradeValue([part, v]))} />
       </div>
       <ItemIcon className="Card" item={card}
       onClick={() => openModal({name:"item", part, target: "Card", index: 0})} />

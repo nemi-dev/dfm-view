@@ -8,7 +8,7 @@ import { RuneModalFragment, SpellModalFragment } from "./CrackModal"
 import { DFClassModal } from "./DFClassModal"
 import { acceptEmblem } from "../../emblem"
 import { useAppSelector } from "../../feats/hooks"
-import { selectWeaponAvatar, selectAura, selectSpell, selectItem, selectCard, selectEmblemSpecs } from "../../feats/selectors"
+import { selectSpell, selectItem, selectCard, selectEmblemSpecs } from "../../feats/selectors"
 import { isCardable } from "../../items"
 import { ItemName } from "../CommonUI"
 import { ItemIcon, EmblemIcon } from "../widgets/Icons"
@@ -39,8 +39,6 @@ function ItemSelectModal() {
 
 
 function mainItemSelector(part: WholePart, index?: number) {
-  if (part === "무기아바타") return selectWeaponAvatar
-  if (part === "오라") return selectAura
   if (part === "정수") return selectSpell(index)
   return selectItem[part]
 }

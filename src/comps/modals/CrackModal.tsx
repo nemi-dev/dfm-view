@@ -1,14 +1,13 @@
 import styled from "styled-components"
 import { useCallback, useContext, useState, MouseEventHandler } from "react"
 import { useAppDispatch, useAppSelector } from "../../feats/hooks"
-import { SetSpell, SetSpellAll } from "../../feats/slices/cracksSlice"
 import { getCracksOnly } from "../../items"
 import { ItemName } from "../CommonUI"
 import { CrackIcon } from "../widgets/Icons"
 import { ModalContext } from "../../modalContext"
 import { Checkie } from "../widgets/Forms"
-import { SetEquip } from "../../feats/slices/equipSlice"
 import { selectAtype } from "../../feats/selectors"
+import { SetItem, SetSpell, SetSpellAll } from "../../feats/slices/itemSlice"
 
 interface SelectProps {
   item: Attrs
@@ -30,7 +29,7 @@ export function RuneModalFragment() {
   const items = getCracksOnly("봉인석", atype)
   const dispatch = useAppDispatch()
   const onClick = useCallback((name: string) => {
-    dispatch(SetEquip(["봉인석", name]))
+    dispatch(SetItem(["봉인석", name]))
     setOpen(false)
   }, [])
   return (

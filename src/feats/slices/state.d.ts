@@ -44,7 +44,7 @@ declare interface EquipsState {
 }
 
 declare type AvatarState = {
-  [k in AvatarPart]: "Uncommon" | "Rare"
+  [k in WearAvatarPart]: "Uncommon" | "Rare"
 } & {
   오라: string
   무기아바타: string
@@ -83,7 +83,7 @@ declare interface GuildState {
 }
 
 
-interface CreatureState {
+declare interface CreatureState {
 
   /** 크리쳐가 주는 모든스탯 보너스 */
   stat: number
@@ -114,15 +114,15 @@ interface CreatureState {
 
 }
 
-interface ConditionalSelectors {
+declare interface ConditionalSelectors {
   branches: Record<string, boolean>
   gives: Record<string, boolean>
   exclusives: Record<string, string>
 }
 
-declare type NumberCalibrate = Omit<CalibrateInitType, "eltype" | "sk_inc">
+declare type NumberCalibrate = Omit<CalibrateState, "eltype" | "sk_inc">
 
-declare interface CalibrateInitType {
+declare interface CalibrateState {
   strn: number,
   intl: number,
   str_inc: number,
