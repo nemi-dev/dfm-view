@@ -10,10 +10,11 @@ import { Cracks } from "./Cracks"
 import { Tonic } from "./Tonic"
 import { Avatars } from "./Avatar"
 import { PortraitMode, TabContext } from '../responsiveContext'
-import { ItemSelectModal } from './Modal'
+import ItemSelectModal from './modals/index'
 import { ModalContext } from "../modalContext"
 import { MyStat } from './MyStat'
 import { SkillTestSet } from './SkillTestSet'
+import { StickyNav } from './StickyNav'
 
 
 function NavLink({ name, children }: React.PropsWithChildren<{ name: string }> ) {
@@ -92,15 +93,15 @@ function App() {
   const [activeTab, setActiveTab] = useState("장비")
 
   const [isOpen, setOpen] = useState(false)
-  const [itarget, setItarget] = useState<[WholePart, ModalTargetSelector, number]>(["무기", "Equip", 0])
+  const [message, setMessage] = useState<ModalRequest>()
 
-  const openModal = useCallback((part: WholePart, target: ModalTargetSelector, position: number) => {
-    setItarget([part, target, position])
+  const openModal = useCallback((m: ModalRequest) => {
+    setMessage(m)
     setOpen(true)
     navigator.vibrate(10)
   }, [])
 
-  const modalContextValue = { isOpen, setOpen, itarget, openModal }
+  const modalContextValue = { isOpen, setOpen, message, openModal }
   
 
   useEffect(() => {
@@ -120,6 +121,7 @@ function App() {
     <PortraitMode.Provider value={portrait}>
       <div className="App">
         <ItemSelectModal isOpen={isOpen}/>
+        <StickyNav />
         <div className="MainWrapper">
           <div className="LeftSide">
             <Navigator />

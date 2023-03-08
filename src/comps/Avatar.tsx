@@ -6,34 +6,32 @@ import { getAvatarAttr } from '../avatar'
 import { SetAvatarRarity, SetAvatarTypeAll } from '../feats/slices/avatarSlice'
 import { SimpleBaseAttrView } from './AttrsView'
 import { ModalContext } from "../modalContext"
-import { selectDFTitle, selectDFTitleCard, selectDFTitleEmblemSpec, selectRareAvatarCount, selectWeaponAvatar, selectAura, selectAvatarSetAttr } from '../feats/avatarSelectors'
-import { getItem } from '../items'
 import styled from 'styled-components'
 import { PortraitMode } from '../responsiveContext'
+import { selectAura, selectAvatarSetAttr, selectCard, selectEmblemSpecs, selectItem, selectRareAvatarCount, selectWeaponAvatar } from '../feats/selectors'
 
 
 export function DFTitle() {
   const { openModal } = useContext(ModalContext)
-  const dftitle = useAppSelector(selectDFTitle)
-  const card = useAppSelector(selectDFTitleCard)
-  const emblem = useAppSelector(selectDFTitleEmblemSpec)[0]
-  const item = useAppSelector(state => getItem(state.Equips.칭호.name))
+  const dftitle = useAppSelector(selectItem["칭호"])
+  const card = useAppSelector(selectCard["칭호"])
+  const emblem = useAppSelector(selectEmblemSpecs["칭호"])[0]
   return (
     <div className="EquipSlot Hovering Bordered">
       <div className="AlwaysEquipPartLayout">
-        <ItemIcon attrs={dftitle} onClick={() => openModal("칭호", "Equip")}/>
+        <ItemIcon item={dftitle} onClick={() => openModal({name:"item", part: "칭호", target: "MainItem"})}/>
         <div className="SlotHeading">
           <ItemName item={dftitle} alt="칭호 없음" />
         </div>
         <div className="EquipAddons">
-          <ItemIcon className="Card" attrs={card} onClick={() => openModal("칭호", "Card")} />
+          <ItemIcon className="Card" item={card} onClick={() => openModal({name:"item", part: "칭호", target: "Card"})} />
           <EmblemIcon spec={emblem} accept={"Platinum"}
-            onClick={() => openModal("칭호", "Emblem", 0)}
+            onClick={() => openModal({name:"item", part: "칭호", target: "Emblem", index:0})}
           />
         </div>
       </div>
       <div>
-        <SimpleBaseAttrView attrs={item} />
+        <SimpleBaseAttrView attrs={dftitle} />
       </div>
     </div>
   )
@@ -149,14 +147,16 @@ export function Avatars() {
       <AvatarsFirstLayout className="AvatarsGridBox">
         <DFTitle />
         <div className="EquipSlot AlwaysEquipPartLayout Hovering Bordered">
-          <ItemIcon className="AvatarIcon" attrs={weaponAvatar} onClick={() => openModal("무기아바타", "Equip")} />
+          <ItemIcon className="AvatarIcon" item={weaponAvatar}
+          onClick={() => openModal({name:"item", part:"무기아바타", target:"MainItem"})} />
           <div className="SlotHeading">{weaponAvatar.name}</div>
           <div className="AvatarAttrs">
             <SimpleBaseAttrView attrs={weaponAvatar} />
           </div>
         </div>
         <div className="EquipSlot AlwaysEquipPartLayout Hovering Bordered">
-          <ItemIcon className="AvatarIcon" attrs={aura} onClick={() => openModal("오라", "Equip")} />
+          <ItemIcon className="AvatarIcon" item={aura}
+          onClick={() => openModal({name:"item", part:"오라", target:"MainItem"})} />
           <div className="SlotHeading">{aura.name}</div>
           <div className="AvatarAttrs">
             <SimpleBaseAttrView attrs={aura} />

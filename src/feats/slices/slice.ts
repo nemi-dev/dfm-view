@@ -1,37 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-interface CreatureType {
 
-  /** 크리쳐가 주는 모든스탯 보너스 */
-  stat: number
-  
-  /** 크리쳐 스킬 보너스 */
-  skill: {
-    stat: number
-    el_all: number
-    dmg_add: number
-  }
-
-  /** 아티팩트 */
-  Artifacts: {
-
-    /** 빨간색 아티팩트에서 얻는 스탯증가 수치 */
-    stat: number
-
-    /** 파란색 아티팩트에서 얻는 물리/마법공격력 증가 수치 */
-    atk: number
-
-    /** 초록색 아티팩트에서 얻는 모든속성 강화 수치 */
-    el_all: number
-
-    speed_atk: number
-    speed_cast: number
-
-  }
-
-}
-
-const creatureInit: CreatureType = 
+const creatureInit: CreatureState = 
 {
   stat: 156,
   skill: { dmg_add: 18, el_all: 5, stat: 0 },
@@ -65,8 +35,12 @@ export const {
 
 
 
-interface Profile {
+interface ProfileState {
 
+  /** 얘 이름 */
+  myName: string
+  /** 얘 직업 */
+  dfclass: string
   /** 캐릭터 레벨 (최대 65) */
   level: number
 
@@ -78,7 +52,9 @@ interface Profile {
   targetElementResist: number
 }
 
-const profileInit : Profile = {
+const profileInit : ProfileState = {
+  myName: "내캐릭터",
+  dfclass: "미스트리스",
   level: 65,
   achieveLevel: 9,
   atype: "Magic",
@@ -91,7 +67,10 @@ export const profileSlice = createSlice({
   name: 'Profile',
   initialState: profileInit,
   reducers: {
-
+    SetMyName: (s, { payload }: PayloadAction<string>) => {
+      s.myName = payload
+    },
+    SetDFClass: (s, { payload }: PayloadAction<string>) => { s.dfclass = payload },
     SetLevel: (s, { payload }: PayloadAction<number>) => { s.level = payload },
     SetAchieveLevel: (s, { payload }: PayloadAction<number>) => { s.achieveLevel = payload },
     SetAtype: (s, { payload }: PayloadAction<Atype>) => {
@@ -110,6 +89,8 @@ export const profileSlice = createSlice({
 })
 
 export const {
+  SetMyName,
+  SetDFClass,
   SetLevel,
   SetAchieveLevel,
   SetAtype,

@@ -36,6 +36,11 @@ export const isArmorPart = (key: EquipPart) => armorParts.includes(key)
 /** `key`가 악세서리 부위인가? */
 export const isAccessPart = (key: EquipPart) => accessParts.includes(key)
 
+/** p가 카드/엠블렘 장착 가능 부위인가? */
+export function isCardable(p: WholePart): p is CardablePart {
+  return cardableParts.includes(p as any)
+}
+
 /** 주어진 부위의 "상위 종류"를 얻는다. (ex. "방어구", "악세서리", "무기", "봉인석") */
 export function getSupertype(part: EquipPart | "봉인석") {
   if (isArmorPart(part as EquipPart)) return "방어구"

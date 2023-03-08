@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
-import { selectMe, selectMyFinalEltype } from '../feats/selectors'
+import { selectAtype, selectMe, selectMyFinalEltype } from '../feats/selectors'
 import { beautyNumber } from '../utils'
 import { criticalChance, criticize, getDamage } from '../damage'
 import { SetSkillFixValue, SetSkillInputName, SetSkillUsesSkillInc, SetSkillValue } from '../feats/slices/skillInputSlice'
@@ -33,7 +33,7 @@ interface SkillOutputOneProps {
 }
 function SkillTestOne({ index, SkillOneAttackSpec }: SkillOutputOneProps) {
 
-  const atype = useAppSelector(state => state.Profile.atype)
+  const atype = useAppSelector(selectAtype)
 
   const attrs = useAppSelector(selectMe)
   const atkFix = useAppSelector(state => state.Profile.atk_fixed)

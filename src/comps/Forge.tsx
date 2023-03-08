@@ -1,40 +1,16 @@
-import "../style/Forge.scss"
 import { useContext } from "react"
 import styled from "styled-components"
 import { acceptEmblem } from "../emblem"
 import { useAppSelector, useAppDispatch } from "../feats/hooks"
-import { NextMagicProps, SetEquipUpgradeValue, SetMaterial } from "../feats/slices/equipSlice"
-import { getItem, isArmorPart } from "../items"
-import { EmblemArray } from "./CommonUI"
+import { SetEquipUpgradeValue } from "../feats/slices/equipSlice"
 import { NumberInput } from "./widgets/Forms"
 import { ItemIcon } from "./widgets/Icons"
 import { ModalContext } from "../modalContext"
 import { EquipBatch } from "./EquipBatch"
 import { MagicProps } from "./MagicProps"
+import { selectCard, selectEmblemSpecs, selectItem } from "../feats/selectors"
+import { EquipProps, ArmorMaterialSelect, EmblemArray } from "./Itemy"
 
-
-interface PartProps {
-  part: EquipPart
-  interactive?: boolean
-  showUpgarde?: boolean
-}
-
-
-function ArmorMaterialSelectElement({ part }: PartProps) {
-  const name = useAppSelector(state => state.Equips[part].name)
-  if (!isArmorPart(part) || !name) return null
-  const material = useAppSelector(state => state.Equips[part].material)
-  const dispatch = useAppDispatch()
-  return(
-    <select className="ArmorMaterialSelector" value={material} onChange={ev => dispatch(SetMaterial([part, ev.target.value as ArmorMaterial]))}>
-      <option value="천">천</option>
-      <option value="가죽">가죽</option>
-      <option value="경갑">경갑</option>
-      <option value="중갑">중갑</option>
-      <option value="판금">판금</option>
-    </select>
-  )
-}
 
 const PartLayout = styled.div`
   display: flex;
@@ -63,28 +39,28 @@ const MagicPropsLayout = styled.div`
   
 `
 
-function Part({ part }: PartProps) {
-  const item = useAppSelector(state => getItem(state.Equips[part].name))
+function Part({ part }: EquipProps) {
+  const item = useAppSelector(selectItem[part])
   const { openModal } = useContext(ModalContext)
   const dispatch = useAppDispatch()
-  const cardName = useAppSelector(state => state.Equips[part].card)
-  const card = getItem(cardName) as Card
+  const card = useAppSelector(selectCard[part])
   const upgradeBonus = useAppSelector(state => state.Equips[part].upgrade)
-  const emblems = useAppSelector(state => state.Equips[part].emblems)
+  const emblems = useAppSelector(selectEmblemSpecs[part])
   const emblemAccept = acceptEmblem(part)
   return (
     <PartLayout className="Part Bordered">
       <div className={item? `Rarity_${item.rarity}`:""}>{part}</div>
-      <ItemIcon attrs={item} />
-      <ArmorMaterialSelectElement part={part} />
+      <ItemIcon item={item} />
+      <ArmorMaterialSelect part={part} />
       <div className="EquipUpgradeValue">
         +<NumberInput value={upgradeBonus}
         onChange={v => dispatch(SetEquipUpgradeValue([part, v]))} />
       </div>
-      <ItemIcon className="Card" attrs={card} onClick={() => openModal(part, "Card", 0)} />
+      <ItemIcon className="Card" item={card}
+      onClick={() => openModal({name:"item", part, target: "Card", index: 0})} />
       <RowLayout>
         <EmblemArray emblems={emblems} accept={emblemAccept}
-          onItemClick={index => openModal(part, "Emblem", index)}
+          onItemClick={index => openModal({name:"item", part, target: "Emblem", index })}
         />
       </RowLayout>
       <MagicPropsLayout>
@@ -94,20 +70,38 @@ function Part({ part }: PartProps) {
   )
 }
 
-const AddonsArrayLayout = styled.div`
+const ForgeLayout = styled.div`
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 2px;
 `
 
+const ForgeDiv = styled.div`
+  .ItemIcon {
+    --item-size: 36px;
+  }
+  .Card {
+    --card-size: min(64px, 18vw);
+  }
+  .Emblem {
+    --emblem-size: min(35px, 8.5vw);
+  }
+  .EquipAddons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+`
+
 export function Forge() {
   return (
-    <div className="Forge">
+    <ForgeDiv id="Forge">
       <header>
         <h3>대장간</h3>
         <div>강화,카드,마봉,엠블렘</div>
       </header>
-      <AddonsArrayLayout className="AddonsArrayLayout">
+      <ForgeLayout className="ForgeLayout">
         <Part part="상의"/>
         <Part part="하의"/>
         <Part part="머리어깨"/>
@@ -118,9 +112,9 @@ export function Forge() {
         <Part part="목걸이"/>
         <Part part="반지"/>
         <Part part="보조장비"/>
-      </AddonsArrayLayout>
+      </ForgeLayout>
       <EquipBatch />
-    </div>
+    </ForgeDiv>
   )
 }
 

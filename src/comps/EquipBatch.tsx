@@ -1,5 +1,6 @@
 import { useCallback } from "react"
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
+import { selectAtype } from "../feats/selectors"
 import { SetArmorUpgradeValueAll, SetAccessUpgradeValueAll, SetMaterialAll, SetPerfectMagicPropsEl, SetPerfectMagicPropsStat, SetColorEmblemLevelAll } from "../feats/slices/equipSlice"
 import { RootState } from "../feats/store"
 import { accessParts, armorParts, oneEmblemParts } from "../items"
@@ -31,7 +32,7 @@ function selectSynchronizedMaterial(state: RootState) {
 }
 
 export function EquipBatch() {
-  const myAtype = useAppSelector(state => state.Profile.atype)
+  const myAtype = useAppSelector(selectAtype)
   
   const onButtonClick = useCallback((v: string) => {
     switch (v) {

@@ -1,12 +1,13 @@
-import { PayloadAction } from "@reduxjs/toolkit"
 import styled from "styled-components"
 import { useDispatch } from "react-redux"
 import { useAppSelector } from "../feats/hooks"
-import { RootState } from "../feats/store"
 import { getOneMagicPropValue, getRealAttrKey } from "../magicProps"
 import { AttrIcon } from "./widgets/Icons"
 import { Num } from "./CommonUI"
 import { NextMagicProps } from "../feats/slices/equipSlice"
+import { useContext } from "react"
+import { PortraitMode } from "../responsiveContext"
+import { selectAtype, selectMagicPropNames } from "../feats/selectors"
 
 interface MagicPropsArrayProps {
   item: Attrs
@@ -37,16 +38,17 @@ const MagicPropOne = styled.div`
 
 export function MagicProps({ item, part }: MagicPropsArrayProps) {
   if (!item) return null
+  const isPortrait = useContext(PortraitMode)
   const { level, rarity } = item
   const dispatch = useDispatch()
-  const array = useAppSelector(state => state.Equips[part].magicProps)
-  const atype = useAppSelector(state => state.Profile.atype)
+  const array = useAppSelector(selectMagicPropNames[part])
+  const atype = useAppSelector(selectAtype)
   return (
     <>
       {array.map((name, index) => index > 0 || rarity === "Epic" ?
       <MagicPropOne key={index} className="MagicPropOne Hovering" onClick={() => dispatch(NextMagicProps([part, index]))} >
         <AttrIcon attrKey={getRealAttrKey(name, atype)} />
-        <Num className="MagicPropValue" signed value={getOneMagicPropValue(name, { level, rarity, part, prime: index === 0 })} />
+        {!isPortrait? <Num className="MagicPropValue" signed value={getOneMagicPropValue(name, { level, rarity, part, prime: index === 0 })} />: null}
       </MagicPropOne> : null
       )}
     </>

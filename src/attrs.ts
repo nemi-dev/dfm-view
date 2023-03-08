@@ -49,10 +49,11 @@ export const at1 = memoizee((key: keyof BaseAttrs, value: number): BaseAttrs => 
 
 /** "힘/지능" "물/마공" "물/마크" "모든속성" 등 같이 올라가는 스탯을 만든다. */
 export const atx = memoizee(
-function atx(is: "Stat" | "Atk" | "El", val: number): BaseAttrs {
+function atx(is: "Stat" | "Atk" | "Crit" | "El", val: number): BaseAttrs {
   switch(is) {
     case "Stat": return { strn: val, intl: val, vit: val, psi: val }
     case "Atk": return { atk_ph: val, atk_mg: val }
+    case "Crit": return { crit_ph: val, crit_mg: val }
     case "El": return { el_fire: val, el_ice: val, el_lght: val, el_dark: val }
   }
 }, { primitive: true} )

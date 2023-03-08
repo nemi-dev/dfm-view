@@ -7,8 +7,10 @@
   {
     "name": "소울브링어",
     "atype": "Magic",
-    "eltype": "Dark",
-    "weapons": ["소검", "도", "둔기", "대검"]
+    "weapons": ["소검", "도", "둔기", "대검"],
+    "attrs": {
+      "eltype": "Dark"
+    }
   },
   {
     "name": "웨펀마스터",
@@ -29,26 +31,32 @@
   {
     "name": "넨마스터",
     "atype": "Magic",
-    "eltype": "Light",
-    "weapons": ["너클", "통파", "클로", "건틀릿"]
+    "weapons": ["너클", "통파", "클로", "건틀릿"],
+    "attrs": {
+      "eltype": "Light"
+    }
   },
 
   {
-    "name": "레인저",
+    "name": "레인저(남)",
     "atype": "Physc",
     "weapons": ["리볼버", "보우건", "머스켓", "핸드캐넌", "자동권총"]
   },
   {
-    "name": "런처",
+    "name": "런처(남)",
     "atype": "Physc",
-    "DualTrigger": true,
-    "weapons": ["핸드캐넌", "리볼버", "보우건", "머스켓", "자동권총"]
+    "weapons": ["핸드캐넌", "리볼버", "보우건", "머스켓", "자동권총"],
+    "attrs": {
+      "DualTrigger": true
+    }
   },
   {
     "name": "메카닉",
     "atype": "Magic",
-    "eltype": "Fire",
-    "weapons": ["자동권총", "보우건", "머스켓", "리볼버", "핸드캐넌"]
+    "weapons": ["자동권총", "보우건", "머스켓", "리볼버", "핸드캐넌"],
+    "attrs": {
+      "eltype": "Fire"
+    }
   },
   {
     "name": "스핏파이어",
@@ -75,8 +83,10 @@
   {
     "name": "다크템플러",
     "atype": "Magic",
-    "eltype": "Dark",
-    "weapons": ["소검", "도", "둔기", "대검"]
+    "weapons": ["소검", "도", "둔기", "대검"],
+    "attrs": {
+      "eltype": "Dark"
+    }
   },
   {
     "name": "데몬슬레이어",
@@ -92,8 +102,10 @@
   {
     "name": "크루세이더(여)",
     "atype": "Magic",
-    "eltype": "Light",
-    "weapons": ["십자가", "염주", "낫", "토템", "배틀액스"]
+    "weapons": ["십자가", "염주", "낫", "토템", "배틀액스"],
+    "attrs": {
+      "eltype": "Light"
+    }
   },
   {
     "name": "미스트리스",
@@ -103,9 +115,11 @@
   {
     "name": "이단심판관",
     "atype": "Physc",
-    "eltype": ["Fire", "Light"],
-    "DualTrigger": true,
-    "weapons": ["배틀액스", "토템", "십자가", "낫", "염주"]
+    "weapons": ["배틀액스", "토템", "십자가", "낫", "염주"],
+    "attrs": {
+      "eltype": ["Fire", "Light"],
+      "DualTrigger": true
+    }
   },
   {
     "name": "무녀",
@@ -116,8 +130,10 @@
   {
     "name": "크루세이더(남)",
     "atype": "Magic",
-    "eltype": "Light",
-    "weapons": ["십자가", "염주", "낫", "토템", "배틀액스"]
+    "weapons": ["십자가", "염주", "낫", "토템", "배틀액스"],
+    "attrs": {
+      "eltype": "Light"
+    }
   },
   {
     "name": "인파이터",

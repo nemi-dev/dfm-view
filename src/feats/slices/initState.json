@@ -1,19 +1,11 @@
 {
   "Equips": {
     "무기": {
-      "name": "계약의 인장",
+      "name": "워터 토쳐 사이드",
       "upgrade": 549,
       "magicProps": ["dmg_inc", "Stat", "Stat"],
       "emblems": [["Red", 7], ["Red", 7]],
       "card": "스페셜 데미지 보주"
-    },
-    "머리어깨": {
-      "name": "암살자의 서슬 스트랩",
-      "upgrade": 31,
-      "magicProps": ["Stat", "Stat", "Stat"],
-      "emblems": [["Yellow", 7], ["Yellow", 7]],
-      "card": "기어의 디샤 카드",
-      "material": "천"
     },
     "상의": {
       "name": "암살자의 서슬 자켓",
@@ -29,6 +21,14 @@
       "magicProps": ["Stat", "Stat", "Stat"],
       "emblems": [["Red", 7], ["Red", 7]],
       "card": "여제 스테로페 카드",
+      "material": "천"
+    },
+    "머리어깨": {
+      "name": "암살자의 서슬 스트랩",
+      "upgrade": 31,
+      "magicProps": ["Stat", "Stat", "Stat"],
+      "emblems": [["Yellow", 7], ["Yellow", 7]],
+      "card": "기어의 디샤 카드",
       "material": "천"
     },
     "벨트": {
@@ -96,15 +96,6 @@
     "머리": "Uncommon",
     "하의": "Uncommon",
     "허리": "Uncommon"
-  },
-  "Tonic": {
-    "Accu": 239,
-    "crit": 237,
-    "def": 2100,
-    "el_all": 25,
-    "hp_mp_max": 1240,
-    "strn_intl": 237,
-    "vit_psi": 237
   },
   "Cracks": {
     "Spells": ["선지자의 정수 (지능+적중)", "선지자의 정수 (지능+적중)", "선지자의 정수 (지능+적중)", "선지자의 정수 (지능+적중)", "선지자의 정수 (지능+적중)"]

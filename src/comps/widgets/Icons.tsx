@@ -39,13 +39,13 @@ function imageSource(attrs: BaseAttrs) {
   }
 }
 interface ItemIcon2Props extends HTMLProps<HTMLDivElement> {
-  attrs: Attrs
+  item: Attrs
 }
 
-export function ItemIcon({ attrs, children, className, ...props }: ItemIcon2Props) {
-  if (!attrs)
+export function ItemIcon({ item, children, className, ...props }: ItemIcon2Props) {
+  if (!item)
     return <SquareIcon className={"ItemIcon " + (className ?? "")} children={children} src="" frame="/img/frame/Common.png" {...props} />
-  const [src, frame] = imageSource(attrs)
+  const [src, frame] = imageSource(item)
   return <SquareIcon className={"ItemIcon " + (className ?? "")} children={children}
     src={src} frame={frame} {...props} />
 }

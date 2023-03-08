@@ -1,12 +1,11 @@
 import { useContext, useCallback, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../feats/hooks"
 import { SetEmblem } from "../../feats/slices/equipSlice"
-import { RootState } from "../../feats/store"
 import { acceptEmblem } from "../../emblem"
 import { NumberInput } from "../widgets/Forms"
 import { EmblemIcon } from "../widgets/Icons"
 import { ModalContext } from "../../modalContext"
-import { selectDFTitleEmblemSpec } from "../../feats/avatarSelectors"
+import { selectEmblemSpecs } from "../../feats/selectors"
 
 
 export function __emblem_part_ (part: WholePart): EmblemType[] {
@@ -20,19 +19,9 @@ export function __emblem_part_ (part: WholePart): EmblemType[] {
   }
 }
 
-export function __current_emblem_spec(part: WholePart, index: number): (state: RootState) => EmblemSpec {
-  return state => {
-    switch (part) {
-      case "칭호": return selectDFTitleEmblemSpec(state)[index] as EmblemSpec
-      case "무기아바타": case "오라": throw new Error("엠블렘 어케 끼웠노")
-      default:
-        return state.Equips[part].emblems[index]
-    }
-  }
-}
-
 function EmblemSelect({ type, level }: { type: EmblemType, level: number }) {
-  const { itarget: [part, target, index], setOpen } = useContext(ModalContext)
+  const { setOpen, message } = useContext(ModalContext)
+  const { part, index } = message as ModalRequestForItem
   const accept = acceptEmblem(part as EquipPart)
   const dispatch = useAppDispatch()
   const onClick = useCallback(() => {
@@ -48,8 +37,10 @@ function EmblemSelect({ type, level }: { type: EmblemType, level: number }) {
 }
 
 export function EmblemModalFragment() {
-  const { itarget: [part, target, index] } = useContext(ModalContext)
-  const currentSpec = useAppSelector(__current_emblem_spec(part, index))
+  const { message } = useContext(ModalContext)
+  const { part, index } = message as ModalRequestForItem
+  const emblems = useAppSelector(selectEmblemSpecs[part as CardablePart])
+  const currentSpec = emblems[index]
   const [newLevel, setNewLevel] = useState(currentSpec[1])
   const availableEmblemTypes = __emblem_part_(part as EquipPart)
   return(<>

@@ -35,7 +35,6 @@ declare type ArmorMaterial = "천" | "가죽" | "경갑" | "중갑" | "판금"
 
 
 declare type WholePart = EquipPart | "칭호" | "오라" | "무기아바타" | "봉인석" | "정수"
-declare type ModalTargetSelector = "Equip" | "Card" | "Emblem"
 declare type AvatarPart = "모자" | "얼굴" | "상의" | "목가슴" | "신발" | "머리" | "하의" | "허리"
 
 declare type MagicPropsCareAbout = "dmg_inc" | "Stat" | "Atk" | "el_fire" | "el_ice" | "el_lght" | "el_dark"
@@ -282,3 +281,19 @@ declare interface SkillOneAttackSpec {
   isSkill: boolean 
 }
 
+
+declare interface DFClass {
+  name: string
+  atype: Atype
+  weapons: WeaponType[]
+  attrs?: BaseAttrs
+}
+
+
+declare interface OneAttrTripletProps {
+  className?: string
+  name?: string | JSX.Element
+  aKey: any
+  percent?: boolean
+  signed?: boolean
+}

@@ -1,4 +1,5 @@
-import React, { useCallback, useContext, useState } from "react"
+import styled from "styled-components"
+import { useCallback, useContext, useState, MouseEventHandler } from "react"
 import { useAppDispatch, useAppSelector } from "../../feats/hooks"
 import { SetSpell, SetSpellAll } from "../../feats/slices/cracksSlice"
 import { getCracksOnly } from "../../items"
@@ -6,12 +7,12 @@ import { ItemName } from "../CommonUI"
 import { CrackIcon } from "../widgets/Icons"
 import { ModalContext } from "../../modalContext"
 import { Checkie } from "../widgets/Forms"
-import styled from "styled-components"
 import { SetEquip } from "../../feats/slices/equipSlice"
+import { selectAtype } from "../../feats/selectors"
 
 interface SelectProps {
   item: Attrs
-  onClick: React.MouseEventHandler<HTMLDivElement>
+  onClick: MouseEventHandler<HTMLDivElement>
 }
 
 function Select({ item, onClick }: SelectProps) {  
@@ -25,22 +26,19 @@ function Select({ item, onClick }: SelectProps) {
 
 export function RuneModalFragment() {
   const { setOpen, } = useContext(ModalContext)
-  const atype = useAppSelector(state => state.Profile.atype)
+  const atype = useAppSelector(selectAtype)
   const items = getCracksOnly("봉인석", atype)
   const dispatch = useAppDispatch()
   const onClick = useCallback((name: string) => {
-    // dispatch(SetRune(name))
     dispatch(SetEquip(["봉인석", name]))
     setOpen(false)
   }, [])
   return (
-    <>
     <div className="ItemSelectArray">
       {items.map((item) => (
         <Select key={item.name} item={item} onClick={() => onClick(item.name)} />
       ))}
     </div>
-    </>
   )
 }
 
@@ -49,9 +47,10 @@ const Checkie2 = styled(Checkie)`
 `
 
 export function SpellModalFragment() {
-  const { setOpen, itarget: [, , spellIndex] } = useContext(ModalContext)
+  const { setOpen, message } = useContext(ModalContext)
+  const { index: spellIndex } = message as ModalRequestForItem
   const [all, setAll] = useState(false)
-  const atype = useAppSelector(state => state.Profile.atype)
+  const atype = useAppSelector(selectAtype)
   const items = getCracksOnly("정수", atype)
   const dispatch = useAppDispatch()
   const onClick = useCallback((name: string) => {
