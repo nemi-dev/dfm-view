@@ -13,8 +13,8 @@ export const weaponType: readonly Itype[] = Object.freeze([
   "십자가","염주","토템","낫","배틀액스",
   "락소드","윙블레이드"
 ]) 
-export const armorParts: readonly EquipPart[] = Object.freeze(["상의", "하의", "머리어깨", "벨트", "신발"])
-export const accessParts: readonly EquipPart[] = Object.freeze(["팔찌", "목걸이", "반지"])
+export const armorParts: readonly ArmorPart[] = Object.freeze(["상의", "하의", "머리어깨", "벨트", "신발"])
+export const accessParts: readonly AccessPart[] = Object.freeze(["팔찌", "목걸이", "반지"])
 export const equipParts: readonly EquipPart[] = Object.freeze(["무기", ...armorParts, ...accessParts, "보조장비"])
 export const wholeParts: readonly WholePart[] = Object.freeze([...equipParts, "칭호", "오라", "무기아바타", "봉인석", "정수"])
 
@@ -31,10 +31,10 @@ export const magicPropsParts: readonly MagicPropsPart[] = Object.freeze([...equi
 export const isWeapon = (itype: Itype | "무기") => (itype === "무기" || weaponType.includes(itype))
 
 /** `key`가 방어구 부위인가? */
-export const isArmorPart = (key: EquipPart) => armorParts.includes(key)
+export const isArmorPart = (key: WholePart): key is ArmorPart => armorParts.includes(key as ArmorPart)
 
 /** `key`가 악세서리 부위인가? */
-export const isAccessPart = (key: EquipPart) => accessParts.includes(key)
+export const isAccessPart = (key: WholePart): key is AccessPart => accessParts.includes(key as AccessPart)
 
 /** p가 카드/엠블렘 장착 가능 부위인가? */
 export function isCardable(p: WholePart): p is CardablePart {

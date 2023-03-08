@@ -1,8 +1,8 @@
 import memoizee from "memoizee"
 
-export const avatarParts = ["모자", "얼굴", "상의", "목가슴", "신발", "머리", "하의", "허리"] as AvatarPart[]
+export const avatarParts = ["모자", "얼굴", "상의", "목가슴", "신발", "머리", "하의", "허리"] as WearAvatarPart[]
 
-const attrMap: Partial<Record<AvatarPart, [keyof BaseAttrs, number, number]>> = {
+const attrMap: Partial<Record<WearAvatarPart, [keyof BaseAttrs, number, number]>> = {
   모자: ["speed_cast", 12, 14],
   얼굴: ["speed_atk", 5, 6],
   목가슴: ["speed_atk", 5, 6],
@@ -19,7 +19,7 @@ const UncommonCoat = { sk_lv: { "@Lv15": 1 }}
 
 
 export const getAvatarAttr = memoizee(
-  function _getAvatarAttr(part: AvatarPart, rarity: "Uncommon" | "Rare"): BaseAttrs {
+  function _getAvatarAttr(part: WearAvatarPart, rarity: "Uncommon" | "Rare"): BaseAttrs {
     if (part === "허리") return { misc: ["회피 확률 증가"] }
     if (part === "상의") {
       return rarity === "Rare" ? rareCoat : UncommonCoat

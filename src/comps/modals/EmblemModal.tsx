@@ -1,11 +1,11 @@
 import { useContext, useCallback, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../feats/hooks"
-import { SetEmblem } from "../../feats/slices/equipSlice"
 import { acceptEmblem } from "../../emblem"
 import { NumberInput } from "../widgets/Forms"
 import { EmblemIcon } from "../widgets/Icons"
 import { ModalContext } from "../../modalContext"
 import { selectEmblemSpecs } from "../../feats/selectors"
+import { SetEmblem } from "../../feats/slices/itemSlice"
 
 
 export function __emblem_part_ (part: WholePart): EmblemType[] {

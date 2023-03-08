@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
-const attrs: CalibrateInitType = {
+const attrs: CalibrateState = {
   strn: 0,
   intl: 0,
   str_inc: 0,

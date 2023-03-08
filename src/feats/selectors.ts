@@ -1,7 +1,7 @@
 import { createSelector } from "@reduxjs/toolkit"
 import { collectSpecial, atx, combine, whatElType } from "../attrs"
 import { RootState } from "./store"
-import { getActiveISetAttrs, getArmorBase, countISetsFrom, getItem, equipParts, getActiveBranch, isActiveGives, getActiveExclusive, getBlessing, isArmorPart, magicPropsParts, cardableParts } from "../items"
+import { getActiveISetAttrs, getArmorBase, countISetsFrom, getItem, equipParts, getActiveBranch, isActiveGives, getActiveExclusive, getBlessing, isArmorPart, magicPropsParts, cardableParts, armorParts } from "../items"
 import { getEmblem } from "../emblem"
 import { getMagicPropsAttrs } from "../magicProps"
 import { percent_inc_mul } from "../utils"
@@ -20,25 +20,44 @@ export function selectAtype(state: RootState) {
   return state.Profile.atype
 }
 
-/** 특정 부위에 대한 정보를 얻는다. */
-const selectPart = Noot2(part => state => state.Equips[part], [...equipParts, "칭호", "봉인석"])
+/** 특정 부위에 장착중인 아이템을 선택한다 */
+export const selectItem = Noot2(part => state => getItem(state.Item[part]), [...equipParts, "칭호", "오라", "무기아바타", "봉인석"])
 
-/** 특정 부위에 장착중인 아이템을 뽑아내는 Selector */
-export const selectItem = Noot2(part => state => getItem(state.Equips[part].name), [...equipParts, "칭호", "봉인석"])
+/** 특정 부위의 아이템에 바른 카드를 선택한다 */
+export const selectCard = Noot2(part => state => getItem(state.Card[part]), cardableParts)
 
-/** 특정 부위의 카드 아이템을 얻는 Selector */
-export const selectCard = Noot2(part => state => getItem(state.Equips[part]?.card), cardableParts)
+/** 특정 부위의 아이템에 박은 엠블렘 스펙을 모두 선택한다 */
+export const selectEmblemSpecs = Noot2(part => state => state.Emblem[part], cardableParts)
 
-/** 특정 부위의 엠블렘 스펙을 모두 얻는 Selector */
-export const selectEmblemSpecs = Noot2(part => state => state.Equips[part].emblems, cardableParts)
-
-/** 특정 부위의 마법봉인 이름 배열만을 얻는 Selector */
+/** 특정 부위 아이템의 마법봉인 이름을 선택한다 */
 export const selectMagicPropNames = Noot2(
-  part => state => state.Equips[part].magicProps,
+  part => state => state.MagicProps[part],
   magicPropsParts
 )
 
-/** 특정 부위의 마법봉인 효과를 뽑아내는 Selector */
+/** 특정 부위의 "내가 선택한" 방어구 재질을 선택한다 */
+export const selectMaterial = Noot2(
+  part => state => isArmorPart(part)? state.Material[part] : null, [...equipParts, "칭호", "오라", "무기아바타", "봉인석"]
+)
+
+/** 특정 부위의 강화보너스를 선택한다 */
+export const selectUpgrade = Noot2( part => state => state.Upgrade[part], equipParts)
+
+
+/** 특정 부위의 방어구 재질 효과를 선택한다 */
+export const selectArmorBase = Noot2(
+  part => createSelector(
+    selectItem[part],
+    selectMaterial[part],
+    (item, myMaterial) => {
+      if (!isArmorPart(part)) return {}
+      const { level, rarity, material = myMaterial } = item
+      return getArmorBase(level, rarity, material, part)
+    }
+  ), equipParts
+)
+
+/** 특정 부위의 마법봉인 효과를 선택한다. */
 export const selectMagicProps = Noot2(
   part => createSelector(
     selectAtype,
@@ -71,22 +90,12 @@ function activeOptionalSelector(item: Attrs, state: RootState) {
 
 export const selectActiveOption = Noot2(
   part => state => {
-    const item = getItem(state.Equips[part].name)
+    const item = getItem(state.Item[part])
     return activeOptionalSelector(item, state)
   }, equipParts
 )
 
 
-export const selectArmorBase = Noot2(
-  part => createSelector(
-    selectPart[part],
-    equipPart => {
-      if (!isArmorPart(part)) return {}
-      const { level, rarity } = getItem(equipPart.name)
-      return getArmorBase(level, rarity, equipPart.material, part)
-    }
-  ), equipParts
-)
 
 /**
  * 어떤 한 장비 부의의 아이템 옵션, 업그레이드 보너스, 마법봉인, 엠블렘, 카드 옵션을 얻는다.  
@@ -94,32 +103,27 @@ export const selectArmorBase = Noot2(
  */
 export const selectWholePartWithoutOptional = Noot2(
   part => createSelector(
-    selectPart[part],
+    selectItem[part],
     selectMagicProps[part],
+    selectCard[part],
     selectEmblemSpecs[part],
     selectArmorBase[part],
-    (equipPart, magicProps, emblems, armorbase) => {
-      const item = getItem(equipPart.name)
-      const upgradeAttr = atx(part === "무기"? "Atk" : "Stat", equipPart.upgrade)
-      return combine(item, armorbase, upgradeAttr, magicProps, ...emblems.map(getEmblem), getItem(equipPart.card))
+    selectUpgrade[part],
+    (item, magicProps, card, emblems, armorbase, upgrade) => {
+      const upgradeAttr = atx(part === "무기"? "Atk" : "Stat", upgrade)
+      return combine(item, armorbase, upgradeAttr, magicProps, ...emblems.map(getEmblem), card)
     }
   ), equipParts
 )
 
-/** 어떤 한 장비 부의의 아이템 옵션, 활성화시킨 조건부 옵션, 업그레이드 보너스, 마법봉인, 엠블렘, 카드 옵션을 얻는다. */
+/** 어떤 한 장비 부의의 아이템 옵션, 업그레이드 보너스, 마법봉인, 엠블렘, 카드 옵션, 활성화시킨 조건부 옵션을 얻는다. */
 export const selectWholeFromPart = Noot2(
   part => createSelector(
-    selectPart[part],
-    selectMagicProps[part],
-    selectEmblemSpecs[part],
-    selectArmorBase[part],
-    selectActiveOption[part],
-    (equipPart, magicProps, emblems, armorbase, activeOption) => {
-      const item = getItem(equipPart.name)
-      const upgradeAttr = atx(part === "무기"? "Atk" : "Stat", equipPart.upgrade)
-      return combine(item, armorbase, ...activeOption, upgradeAttr, magicProps, ...emblems.map(getEmblem), getItem(equipPart.card))
-    }
-  ), equipParts
+  selectWholePartWithoutOptional[part],
+  selectActiveOption[part],
+  (attrs, activeOption) => {
+    return combine(attrs, ...activeOption)
+  }), equipParts
 )
 
 /**
@@ -128,7 +132,7 @@ export const selectWholeFromPart = Noot2(
  * { "<세트 이름>[<옵션 활성화에 필요했던 세트 수>]" : 세트 옵션 } 형식으로 얻는다.
  */
 export function selectISetAttrs(state: RootState) {
-  const isets = countISetsFrom(...equipParts.map(part => state.Equips[part].name))
+  const isets = countISetsFrom(...equipParts.map(part => state.Item[part]))
   return getActiveISetAttrs(isets)
 }
 
@@ -225,13 +229,13 @@ export function selectTonics(state: RootState): BaseAttrs {
 }
 
 /** 특정 정수를 선택한다. */
-export const selectSpell = memoizee((index: number) => (state: RootState) => getItem(state.Crack.Spells[index]),
+export const selectSpell = memoizee((index: number) => (state: RootState) => getItem(state.Item["정수"][index]),
 { primitive: true })
 
 
 /** 현재 장착 중인 모든 정수를 선택한다. */
 export function selectSpells(state: RootState) {
-  return state.Crack.Spells.map(getItem)
+  return state.Item["정수"].map(getItem)
 }
 
 /**
@@ -240,7 +244,7 @@ export function selectSpells(state: RootState) {
  * { "<세트 이름>[<옵션 활성화에 필요했던 세트 수>]" : 세트 옵션 } 형식으로 얻는다.
  */
 export function selectCrackISetAttrs(state: RootState) {
-  const isets = countISetsFrom(state.Equips["봉인석"].name, ...state.Crack.Spells)
+  const isets = countISetsFrom(state.Item["봉인석"], ...state.Item["정수"])
   return getActiveISetAttrs(isets)
 }
 
@@ -271,7 +275,6 @@ export const selectCracksAll = createSelector(
 
 
 
-// from avatarSelectors.ts
 
 export function selectRareAvatarCount(state: RootState) {
   const literals = avatarParts.map(part => state.Avatar[part])
@@ -289,10 +292,6 @@ export function selectAvatarSetAttr(state: RootState) {
   return combine(...attrsArray)
 }
 
-export function selectAura(state: RootState) {
-  return getItem(state.Avatar["오라"])
-}
-
 export const selectDFTitleAttrsAll = createSelector(
   selectItem["칭호"],
   selectCard["칭호"],
@@ -303,14 +302,11 @@ export const selectDFTitleAttrsAll = createSelector(
 export const selectWholeAvatarAttrs = createSelector(
   selectDFTitleAttrsAll,
   selectAvatarAttrs,
-  selectWeaponAvatar,
-  selectAura,
+  selectItem["무기아바타"],
+  selectItem["오라"],
   (dftitle, avatar, weaponAvatar, aura) => combine(dftitle, avatar, weaponAvatar, aura)
 )
 
-export function selectWeaponAvatar(state: RootState) {
-  return getItem(state.Avatar["무기아바타"])
-}
 
 export function selectAvatarAttrs(state: RootState) {
   return combine(

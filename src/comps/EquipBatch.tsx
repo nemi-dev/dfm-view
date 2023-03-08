@@ -1,31 +1,29 @@
 import { useCallback } from "react"
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
 import { selectAtype } from "../feats/selectors"
-import { SetArmorUpgradeValueAll, SetAccessUpgradeValueAll, SetMaterialAll, SetPerfectMagicPropsEl, SetPerfectMagicPropsStat, SetColorEmblemLevelAll } from "../feats/slices/equipSlice"
+import { SetPerfectMagicPropsStat, SetPerfectMagicPropsEl, SetColorEmblemLevelAll, SetMaterialAll, SetArmorUpgradeAll, SetAccessUpgradeAll } from "../feats/slices/itemSlice"
 import { RootState } from "../feats/store"
 import { accessParts, armorParts, oneEmblemParts } from "../items"
 import { LabeledInput, RadioGroup, OneClickButtonGroup } from "./widgets/Forms"
 
 
 
-function selectArmorUpgradeValues(state: RootState): [boolean, number] {
-  const value = Math.max(...armorParts.map(p => state.Equips[p].upgrade))
-  const synced = armorParts.every(v => state.Equips[v].upgrade === value)
-  return [synced, value]
+function selectArmorUpgradeValues(state: RootState) {
+  const value = Math.max(...armorParts.map(p => state.Upgrade[p]))
+  return value
 }
 
-function selectAccessUpgradeValues(state: RootState): [boolean, number] {
-  const value = Math.max(...accessParts.map(p => state.Equips[p].upgrade))
-  const synced = accessParts.every(v => state.Equips[v].upgrade === value)
-  return [synced, value]
+function selectAccessUpgradeValues(state: RootState) {
+  const value = Math.max(...accessParts.map(p => state.Upgrade[p]))
+  return value
 }
 
 function selectColorEmblemLevels(state: RootState) {
-  return oneEmblemParts.flatMap(p => state.Equips[p].emblems.map(spec => spec[1])).reduce((p, n) => p < n ? n : p, 1)
+  return oneEmblemParts.flatMap(p => state.Emblem[p].map(spec => spec[1])).reduce((p, n) => p < n ? n : p, 1)
 }
 
 function selectSynchronizedMaterial(state: RootState) {
-  const mats = armorParts.map(p => state.Equips[p].material)
+  const mats = armorParts.map(p => state.Material[p])
   const mat = mats[0]
   if (mats.find(m => mat != m)) return null
   return mat
@@ -46,8 +44,8 @@ export function EquipBatch() {
     }
   }, [myAtype])
   const dispatch = useAppDispatch()
-  const [armorUpgradeSynced, armorUpgradeValue] = useAppSelector(selectArmorUpgradeValues)
-  const [accessUpgradeSynced, accessUpgradeValue] = useAppSelector(selectAccessUpgradeValues)
+  const armorUpgradeValue = useAppSelector(selectArmorUpgradeValues)
+  const accessUpgradeValue = useAppSelector(selectAccessUpgradeValues)
   const colorEmblemLevel = useAppSelector(selectColorEmblemLevels)
   const mat = useAppSelector(selectSynchronizedMaterial)
   return (
@@ -55,10 +53,10 @@ export function EquipBatch() {
       <h4>장비 모두 설정</h4>
       <div className="EquipBatchLayout">
         <LabeledInput label="방어구 강화보너스" value={armorUpgradeValue} onChange={v => {
-          dispatch(SetArmorUpgradeValueAll(v))
+          dispatch(SetArmorUpgradeAll(v))
         }} />
         <LabeledInput label="악세서리 강화보너스" value={accessUpgradeValue} onChange={v => {
-          dispatch(SetAccessUpgradeValueAll(v))
+          dispatch(SetAccessUpgradeAll(v))
         }} />
         <LabeledInput label="고정엠블렘 레벨" value={colorEmblemLevel}
           min={5} max={10} step={1}

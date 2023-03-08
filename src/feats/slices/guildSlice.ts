@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-import _initState from "./initState.json"
+import _initState from "./initStateN.json"
 const guildInit: GuildState = _initState.Guild
 
 export const guildSlice = createSlice({

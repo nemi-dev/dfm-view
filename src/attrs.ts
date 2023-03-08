@@ -58,6 +58,15 @@ function atx(is: "Stat" | "Atk" | "Crit" | "El", val: number): BaseAttrs {
   }
 }, { primitive: true} )
 
+/** 중첩될 때 합연산되는 어떤 효과를 k배한다. "스킬 공격력 증가"는 사라지지만, 아직 스증이 "최대 x회 중첩"되는 아이템은 없다.  */
+export function scalarProduct(attr: BaseAttrs, k: number) {
+  const copy: BaseAttrs = { }
+  for (const key in attr) {
+    if (attrDefs?.[key as keyof BaseAttrs].reducer === add)
+    copy[key] = attr[key] * k
+  }
+  return copy
+}
 
 const reduce_eltype = (p: BaseAttrs["eltype"], n: BaseAttrs["eltype"]) => {
   if (p == null) return n

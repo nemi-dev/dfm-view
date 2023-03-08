@@ -1,8 +1,9 @@
 import { useAppSelector, useAppDispatch } from "../feats/hooks"
-import { SetMaterial } from "../feats/slices/equipSlice"
+// import { SetMaterial } from "../feats/slices/equipSlice"
 import { isArmorPart } from "../items"
 import { selectItem } from "../feats/selectors"
 import { EmblemIcon } from "./widgets/Icons"
+import { SetMaterial } from "../feats/slices/itemSlice"
 
 export interface EquipProps {
   part: EquipPart
@@ -14,7 +15,7 @@ export function ArmorMaterialSelect({ part }: EquipProps) {
   if (!isArmorPart(part)) return null
   const item = useAppSelector(selectItem[part])
   if (!item) return null
-  const material = useAppSelector(state => state.Equips[part].material)
+  const material = useAppSelector(state => state.Material[part])
   const dispatch = useAppDispatch()
   return (
     <select className="ArmorMaterialSelector" value={material} onChange={ev => dispatch(SetMaterial([part, ev.target.value as ArmorMaterial]))}>

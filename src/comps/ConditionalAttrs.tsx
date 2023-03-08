@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
 import { SimpleBaseAttrView } from "./AttrsView"
-import { SetBranch, SetExclusive, SetGives } from "../feats/slices/equipSlice"
+import { SetBranch, SetExclusive, SetGives } from "../feats/slices/switchSlice"
 import { useEffect } from "react"
 import { selectISetConditionalsAll, selectItem } from "../feats/selectors"
 import { Checkie, RadioGroup } from "./widgets/Forms"
