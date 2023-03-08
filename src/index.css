@@ -92,8 +92,11 @@ input[type=text], input[type=number] {
 button {
   border-radius: 20px;
   border: none;
-  font-size: 1rem;
-  font-weight: 500;
+  min-height: 22px;
+  line-height: 22px;
+  padding-inline: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
   font-family: inherit;
   background-color: #af6b04;
   cursor: pointer;

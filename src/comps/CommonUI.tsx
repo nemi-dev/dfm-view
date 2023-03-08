@@ -1,11 +1,6 @@
-import React from 'react'
 import '../style/Common.scss'
 import styled from 'styled-components'
-import { EmblemIcon } from './widgets/Icons'
-
-export function prevent(ev : WheelEvent) {
-  (ev.target as HTMLElement).blur()
-}
+import type { MouseEventHandler} from 'react'
 
 
 const SignSymbol = styled.span`
@@ -51,7 +46,7 @@ interface ItemNameProps {
   item: BaseAttrs
   alt?: string
   className?: string
-  onClick?: React.MouseEventHandler<HTMLSpanElement>
+  onClick?: MouseEventHandler<HTMLSpanElement>
 }
 export function ItemName({ item, alt = "아이템 없음", className, onClick }: ItemNameProps) {
   const { name, rarity } = item ?? {}
@@ -64,21 +59,3 @@ export function ItemName({ item, alt = "아이템 없음", className, onClick }:
   )
 }
 
-
-
-
-interface EmblemArrayProps {
-  emblems: EmblemSpec[]
-  accept: "Weapon" | "Red" | "Yellow" | "Blue" | "Green" | "Platinum"
-  onItemClick?: (n: number) => any
-}
-
-export function EmblemArray({ emblems, accept, onItemClick }: EmblemArrayProps) {
-  return (
-    <>
-    {emblems.map((spec, index) => (
-      <EmblemIcon key={index} spec={spec} accept={accept} onClick={() => onItemClick(index)} />
-    ))}
-    </>
-  )
-}

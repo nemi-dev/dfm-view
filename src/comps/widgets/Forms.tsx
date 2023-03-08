@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect, useId, useState } from 'react'
 import styled from 'styled-components'
-import { prevent } from '../CommonUI'
 
+function prevent(ev : WheelEvent) {
+  (ev.target as HTMLElement).blur()
+}
 interface NumberInputProps extends Omit<React.HTMLProps<HTMLInputElement>, "onChange" | "value"> {
   value: number
   onChange: (val: number) => void

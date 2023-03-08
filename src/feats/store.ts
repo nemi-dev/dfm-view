@@ -1,4 +1,4 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit"
+import { combineReducers, configureStore, createReducer, createAction } from "@reduxjs/toolkit"
 import { creatureSlice, profileSlice } from "./slices/slice"
 import { crackSlice } from "./slices/cracksSlice"
 import { tonicSlice } from "./slices/tonicSlice"
@@ -10,8 +10,8 @@ import { skillInputSlice } from "./slices/skillInputSlice"
 import { persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist"
 import storage from "redux-persist/lib/storage"
 
-/*
-const reducers = 
+
+const reducer = 
 
 combineReducers({
   Equips : equipSlice.reducer,
@@ -25,15 +25,12 @@ combineReducers({
   Calibrate: calibrateSlice.reducer,
   SkillInput: skillInputSlice.reducer
 })
-
+/*
 const persistedReducer = persistReducer({
   key: "root",
   version: 1, 
   storage
-}, reducers)
-
-
-
+}, reducer)
 
 
 export const store = configureStore({
@@ -48,20 +45,8 @@ export const store = configureStore({
 })
 
 */
-
 export const store = configureStore({
-  reducer: {
-    Equips : equipSlice.reducer,
-    Avatar: avatarSlice.reducer,
-    Tonic: tonicSlice.reducer,
-    Crack: crackSlice.reducer,
-    Creature: creatureSlice.reducer,
-    Guild: guildSlice.reducer,
-    Profile: profileSlice.reducer,
-    Switch: switchSlice.reducer,
-    Calibrate: calibrateSlice.reducer,
-    SkillInput: skillInputSlice.reducer
-  }
+  reducer
 })
 
 

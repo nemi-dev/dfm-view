@@ -84,11 +84,6 @@ export const {
 
 
 
-interface ConditionalSelectors {
-  branches: Record<string, boolean>
-  gives: Record<string, boolean>
-  exclusives: Record<string, string>
-}
 
 const switchInit: ConditionalSelectors = {
   branches: {},

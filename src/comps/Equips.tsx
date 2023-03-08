@@ -1,21 +1,21 @@
-import { useContext, useState } from "react"
-
 import "../style/Equips.scss"
+import { useContext, useState } from "react"
+import styled from "styled-components"
+
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
 import { SimpleBaseAttrView } from "./AttrsView"
-import { getItem, isArmorPart } from "../items"
-import { selectItem, selectWholeFromPart } from "../feats/selectors"
-import { EmblemArray, ItemName } from "./CommonUI"
+import { selectCard, selectEmblemSpecs, selectItem, selectWholeFromPart } from "../feats/selectors"
+import { ItemName } from "./CommonUI"
 import { NumberInput } from "./widgets/Forms"
 import { ItemIcon } from "./widgets/Icons"
-import { NextMagicProps, SetEquipUpgradeValue, SetMaterial } from "../feats/slices/equipSlice"
+import { SetEquipUpgradeValue } from "../feats/slices/equipSlice"
 import { OptionalAttrsView } from "./ConditionalAttrs"
 import { ModalContext } from "../modalContext"
 import { MagicProps } from "./MagicProps"
 import { PortraitMode } from "../responsiveContext"
 import { EquipBatch } from "./EquipBatch"
 import { acceptEmblem } from "../emblem"
-import styled from "styled-components"
+import { ArmorMaterialSelect, EmblemArray } from "./Itemy"
 
 interface EquipProps {
   part: EquipPart
@@ -32,15 +32,16 @@ interface PartProps {
 function NormalAddonsArray({ part, interactive = false, showUpgarde = false }: PartProps) {
   const { openModal } = useContext(ModalContext)
   const dispatch = useAppDispatch()
-  const card = useAppSelector(state => getItem(state.Equips[part].card))
+  const card = useAppSelector(selectCard[part])
   const upgradeBonus = useAppSelector(state => state.Equips[part].upgrade)
-  const emblems = useAppSelector(state => state.Equips[part].emblems)
+  const emblems = useAppSelector(selectEmblemSpecs[part])
   const emblemAccept = acceptEmblem(part)
   return(
     <div className="EquipAddons">
-      <ItemIcon className="Card" attrs={card} onClick={() => interactive && openModal(part, "Card", 0)} />
+      <ItemIcon className="Card" item={card}
+      onClick={() => interactive && openModal({name:"item", part, target:"Card", index:0})} />
       <EmblemArray emblems={emblems} accept={emblemAccept}
-        onItemClick={index => interactive && openModal(part, "Emblem", index)}
+        onItemClick={index => interactive && openModal({name:"item", part, target:"Emblem", index})}
       />
       {showUpgarde?
       <div className="EquipUpgradeValue">
@@ -51,35 +52,8 @@ function NormalAddonsArray({ part, interactive = false, showUpgarde = false }: P
 }
 
 
-function ArmorMaterialSelectElement({ part }: EquipProps) {
-  const name = useAppSelector(state => state.Equips[part].name)
-  if (!isArmorPart(part) || !name) return null
-  const material = useAppSelector(state => state.Equips[part].material)
-  const dispatch = useAppDispatch()
-  return(
-    <select className="ArmorMaterialSelector" value={material} onChange={ev => dispatch(SetMaterial([part, ev.target.value as ArmorMaterial]))}>
-      <option value="천">천</option>
-      <option value="가죽">가죽</option>
-      <option value="경갑">경갑</option>
-      <option value="중갑">중갑</option>
-      <option value="판금">판금</option>
-    </select>
-  )
-}
 
 
-
-function SlotHeading({ part, onItemNameClicked }: EquipProps & { onItemNameClicked: React.MouseEventHandler<HTMLDivElement> }) {
-  const portrait = useContext(PortraitMode)
-  if (portrait) return null
-  const item = useAppSelector(selectItem[part])
-  return (
-    <div className="SlotHeading">
-      <ItemName item={item} alt={`${part} 없음`} className="EquipName" onClick={onItemNameClicked} />
-      <ArmorMaterialSelectElement part={part} />
-    </div>
-  )
-}
 
 function PartCompact({ part }: EquipProps) {
   const { openModal } = useContext(ModalContext)
@@ -88,7 +62,8 @@ function PartCompact({ part }: EquipProps) {
   return (
     <div className="EquipSlot">
       <div className="EquipPartLayout">
-        <ItemIcon attrs={item} onClick={() => openModal(part, "Equip", 0)} />
+        <ItemIcon item={item}
+        onClick={() => openModal({ name: "item", part, target:"MainItem", index:0 })} />
         <SlotHeading part={part} onItemNameClicked={() => setDetail(!detail)} />
         {item? <NormalAddonsArray part={part}/> : null}
       </div>
@@ -111,6 +86,19 @@ const MagicPropsLayout = styled.div`
   }
 `
 
+
+function SlotHeading({ part, onItemNameClicked }: EquipProps & { onItemNameClicked: React.MouseEventHandler<HTMLDivElement> }) {
+  const portrait = useContext(PortraitMode)
+  if (portrait) return null
+  const item = useAppSelector(selectItem[part])
+  return (
+    <div className="SlotHeading">
+      <ItemName item={item} alt={`${part} 없음`} className="EquipName" onClick={onItemNameClicked} />
+      <ArmorMaterialSelect part={part} />
+    </div>
+  )
+}
+
 function PartWide({ part }: EquipProps) {
   const { openModal } = useContext(ModalContext)
   const item = useAppSelector(selectItem[part])
@@ -119,7 +107,8 @@ function PartWide({ part }: EquipProps) {
   return (
     <div className="EquipSlot Bordered Hovering">
       <div className="EquipPartLayout">
-        <ItemIcon attrs={item} onClick={() => openModal(part, "Equip", 0)} />
+        <ItemIcon item={item}
+        onClick={() => openModal({name: "item", part, target: "MainItem", index: 0})} />
         <SlotHeading part={part} onItemNameClicked={() => setDetail(!detail)} />
         {item? <NormalAddonsArray part={part} showUpgarde interactive /> : null}
         {item? <MagicPropsLayout>

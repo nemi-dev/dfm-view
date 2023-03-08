@@ -13,7 +13,6 @@ const root = document.getElementById('root') as HTMLElement
 const version = document.querySelector('footer .about .version') as HTMLElement
 version.append(APP_VERSION)
 
-
 // const persistor = persistStore(store)
 Modal.setAppElement(root)
 

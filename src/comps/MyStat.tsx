@@ -2,7 +2,7 @@ import { attrDefs, Elemental } from "../attrs"
 import { calcAtk, calcStat, criticalChance } from "../damage"
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
 import { AddSkillInc, RemoveSkillInc, SetBasicAttr, SetEltype, SetSkillInc } from "../feats/slices/calibrateSlice"
-import { selectMe, selectMeWithoutOptional, selectMyFinalEltype } from "../feats/selectors"
+import { selectAtype, selectMe, selectMeWithoutOptional, selectMyFinalEltype } from "../feats/selectors"
 import { beautyNumber } from "../utils"
 import { Gridy, Num } from "./CommonUI"
 import { CheckboxGroup, DisposableInput, LabeledInput, NumberInput, RadioGroup, Checkie } from "./widgets/Forms"
@@ -109,8 +109,8 @@ function SkillInc() {
 
 export function MyStat() {
   const [excludeCond, setExcludeCond] = useState(false)
+  const atype = useAppSelector(selectAtype)
   const me = excludeCond? useAppSelector(selectMeWithoutOptional) : useAppSelector(selectMe)
-  const atype = useAppSelector(state => state.Profile.atype)
   const calibrateEltypes = useAppSelector(state => state.Calibrate.eltype)
 
   const eltype = useAppSelector(selectMyFinalEltype)

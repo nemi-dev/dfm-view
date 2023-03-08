@@ -52,13 +52,15 @@ declare type AvatarState = {
 
 
 declare interface TonicState {
-  Accu: number;
-  crit: number;
-  def: number;
-  el_all: number;
-  strn_intl: number;
-  hp_mp_max: number;
-  vit_psi: number;
+  el_all: number
+  hpmax: number
+  mpmax: number
+  strn_intl: number
+  vit_psi: number
+  def_ph: number
+  def_mg: number
+  Crit: number
+  Accu: number
 }
 
 declare interface CracksState {
@@ -81,15 +83,44 @@ declare interface GuildState {
 }
 
 
-declare type NumberCalibrate = Omit<CalibrateInitType, "eltype" | "sk_inc">
+interface CreatureState {
 
-declare interface OneAttrTripletProps {
-  className?: string
-  name?: string | JSX.Element
-  aKey: any
-  percent?: boolean
-  signed?: boolean
+  /** 크리쳐가 주는 모든스탯 보너스 */
+  stat: number
+  
+  /** 크리쳐 스킬 보너스 */
+  skill: {
+    stat: number
+    el_all: number
+    dmg_add: number
+  }
+
+  /** 아티팩트 */
+  Artifacts: {
+
+    /** 빨간색 아티팩트에서 얻는 스탯증가 수치 */
+    stat: number
+
+    /** 파란색 아티팩트에서 얻는 물리/마법공격력 증가 수치 */
+    atk: number
+
+    /** 초록색 아티팩트에서 얻는 모든속성 강화 수치 */
+    el_all: number
+
+    speed_atk: number
+    speed_cast: number
+
+  }
+
 }
+
+interface ConditionalSelectors {
+  branches: Record<string, boolean>
+  gives: Record<string, boolean>
+  exclusives: Record<string, string>
+}
+
+declare type NumberCalibrate = Omit<CalibrateInitType, "eltype" | "sk_inc">
 
 declare interface CalibrateInitType {
   strn: number,
