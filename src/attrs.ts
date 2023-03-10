@@ -212,7 +212,7 @@ export function combine(...attrsList: BaseAttrs[]) {
 
 
 /** TODO: 아니 뭔 함수가 이따구냐 */
-export function collectSpecial(...attrsList: ItemOrISet[]) {
+export function collectSpecial(...attrsList: ComplexAttrSource[]) {
   const branches: Record<string, ConditionalNode[]> = {}
   const gives: Record<string, ConditionalNode[]> = {}
   const exclusives: Record<string, ExclusiveSet[]> = {}
@@ -222,7 +222,7 @@ export function collectSpecial(...attrsList: ItemOrISet[]) {
     if (attrs.gives) gives[attrs.name] = attrs.gives
     if (attrs.exclusive) exclusives[attrs.name] = attrs.exclusive
   }
-  return { branches, exclusives, gives }
+  return { branches, gives, exclusives }
 }
 type El_val = "el_fire" | "el_ice" | "el_lght" | "el_dark"
 

@@ -64,6 +64,12 @@ export const emblemSlice = createSlice({
     SetEmblem: (s, { payload: [part, index, emblemType, emblemLevel] }: PayloadAction<[CardablePart, number, EmblemType, number]>) => {
       s[part][index] = [emblemType, emblemLevel as EmblemLevel]
     },
+    DecreaseEmblemLevel: (s, { payload: [part, index] }: PayloadAction<[Exclude<CardablePart, "무기"|"보조장비"|"칭호">, number]>) => {
+      const level = s[part][index][1]
+      let nextLevel = level - 1
+      if (nextLevel < 5) nextLevel = 10
+      s[part][index][1] = nextLevel as EmblemLevel
+    },
     SetColorEmblemLevelAll: (s, { payload: level }: PayloadAction<number>) => {
       oneEmblemParts.forEach(part => s[part].forEach(sp => sp[1] = level as EmblemLevel))
     },
@@ -73,7 +79,7 @@ export const emblemSlice = createSlice({
   }
 })
 export const {
-  SetEmblem, SetColorEmblemLevelAll, FetchEmblems
+  SetEmblem, DecreaseEmblemLevel, SetColorEmblemLevelAll, FetchEmblems
 } = emblemSlice.actions
 
 
