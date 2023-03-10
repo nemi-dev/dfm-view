@@ -16,7 +16,6 @@ import { cardSlice, emblemSlice, itemSlice, magicPropsSlice, materialSlice, upgr
 const reducer = 
 
 combineReducers({
-  // Equips : equipSlice.reducer,
   Item: itemSlice.reducer,
   Card: cardSlice.reducer,
   Emblem: emblemSlice.reducer,
@@ -25,11 +24,10 @@ combineReducers({
   Material: materialSlice.reducer,
   Avatar: avatarSlice.reducer,
   Tonic: tonicSlice.reducer,
-  // Crack: crackSlice.reducer,
   Guild: guildSlice.reducer,
   Creature: creatureSlice.reducer,
   Profile: profileSlice.reducer,
-  Switch: switchSlice.reducer,
+  Choice: switchSlice.reducer,
   Calibrate: calibrateSlice.reducer,
   SkillInput: skillInputSlice.reducer
 })

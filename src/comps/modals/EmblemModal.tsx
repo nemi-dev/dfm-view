@@ -48,7 +48,7 @@ export function EmblemModalFragment() {
     <div style={{ marginBlockEnd: "0.5rem", fontSize: "smaller" }}>{index + 1}번째 엠블렘 소켓에 장착됩니다</div>
     <div>
       엠블렘 레벨
-      <NumberInput className="EmblemLevelInput" min={1} max={10} step={1} value={newLevel} onChange={v => setNewLevel(v as EmblemLevel)} />
+      <NumberInput className="EmblemLevelInput" min={5} max={10} step={1} value={newLevel} onChange={v => setNewLevel(v as EmblemLevel)} />
     </div>
     <div className="EmblemSelectArray">
       {availableEmblemTypes.map((type) => (

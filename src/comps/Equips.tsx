@@ -1,22 +1,22 @@
 import "../style/Equips.scss"
-import { useContext, useState } from "react"
+import { useCallback, useContext, useState } from "react"
 import styled from "styled-components"
 
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
 import { SimpleBaseAttrView } from "./AttrsView"
-import { selectCard, selectEmblemSpecs, selectItem, selectWholeFromPart } from "../feats/selectors"
+import { selectCard, selectEmblemSpecs, selectItem, selectPartAttrs } from "../feats/selectors"
 import { ItemName } from "./CommonUI"
 import { NumberInput } from "./widgets/Forms"
 import { ItemIcon } from "./widgets/Icons"
 // import { SetEquipUpgradeValue } from "../feats/slices/equipSlice"
-import { OptionalAttrsView } from "./ConditionalAttrs"
+import { CondsAttrsView } from "./ConditionalAttrs"
 import { ModalContext } from "../modalContext"
 import { MagicProps } from "./MagicProps"
 import { PortraitMode } from "../responsiveContext"
 import { EquipBatch } from "./EquipBatch"
 import { acceptEmblem } from "../emblem"
 import { ArmorMaterialSelect, EmblemArray } from "./Itemy"
-import { SetUpgradeValue } from "../feats/slices/itemSlice"
+import { DecreaseEmblemLevel, SetUpgradeValue } from "../feats/slices/itemSlice"
 
 interface EquipProps {
   part: EquipPart
@@ -37,12 +37,19 @@ function NormalAddonsArray({ part, interactive = false, showUpgarde = false }: P
   const upgradeBonus = useAppSelector(state => state.Upgrade[part])
   const emblems = useAppSelector(selectEmblemSpecs[part])
   const emblemAccept = acceptEmblem(part)
+  const onItemClick = useCallback((index: number) => {
+    if (!interactive) return
+    if (part === "무기" || part === "보조장비")
+      openModal({ name: "item", part, target: "Emblem", index })
+    else
+      dispatch(DecreaseEmblemLevel([part, index]))
+  }, [part, interactive])
   return(
     <div className="EquipAddons">
       <ItemIcon className="Card" item={card}
       onClick={() => interactive && openModal({name:"item", part, target:"Card", index:0})} />
       <EmblemArray emblems={emblems} accept={emblemAccept}
-        onItemClick={index => interactive && openModal({name:"item", part, target:"Emblem", index})}
+        onItemClick={onItemClick}
       />
       {showUpgarde?
       <div className="EquipUpgradeValue">
@@ -104,7 +111,7 @@ function PartWide({ part }: EquipProps) {
   const { openModal } = useContext(ModalContext)
   const item = useAppSelector(selectItem[part])
   const [detail, setDetail] = useState(false)
-  const equipPartAttr = useAppSelector(selectWholeFromPart[part])
+  const equipPartAttr = useAppSelector(selectPartAttrs[part])
   return (
     <div className="EquipSlot Bordered Hovering">
       <div className="EquipPartLayout">
@@ -151,7 +158,7 @@ export function Equips() {
         <Part part="반지"/>
         <Part part="보조장비"/>
       </div>
-      <OptionalAttrsView />
+      <CondsAttrsView />
       {!portrait? <EquipBatch /> : null}
     </div>
   )

@@ -9,6 +9,7 @@ import { ModalContext } from "../modalContext"
 import styled from 'styled-components'
 import { PortraitMode } from '../responsiveContext'
 import { selectAvatarSetAttr, selectCard, selectEmblemSpecs, selectItem, selectRareAvatarCount } from '../feats/selectors'
+import { CondsAttrsView, Partie } from './ConditionalAttrs'
 
 
 export function DFTitle() {
@@ -175,6 +176,9 @@ export function Avatars() {
       </AvatarsSecondLayout>
       <div style={{ textAlign: "center" }}>
         {rareCount < 8 ? <button onClick={setAll}>레압풀셋 착용하기</button> : null}
+      </div>
+      <div>
+        <Partie part="칭호" />
       </div>
       <div>
         <h4>아바타 세트 효과</h4>

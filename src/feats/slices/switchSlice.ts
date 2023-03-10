@@ -7,7 +7,7 @@ const switchInit: ConditionalSelectors = {
 };
 
 export const switchSlice = createSlice({
-  name: 'Switch',
+  name: 'Choice',
   initialState: switchInit,
   reducers: {
     SetBranch: (s, { payload: [key, value] }: PayloadAction<[string, boolean]>) => {
@@ -20,10 +20,8 @@ export const switchSlice = createSlice({
       s.exclusives[key] = value;
     },
     DeleteSwitch: (s, { payload: [type, key] }: PayloadAction<["branches" | "gives" | "exclusives", string]>) => {
-      if (type === "exclusives")
-        delete s[type][key];
-      else
-        s[type][key] = false;
+      if (type === "exclusives") delete s[type][key]
+      else s[type][key] = false
     }
   }
 });

@@ -83,16 +83,5 @@
     "머리": "Rare",
     "하의": "Rare",
     "허리": "Rare"
-  },
-  "Guild": {
-    "StatLv": 30,
-    "AtkLv": 30,
-    "CritLv": 30,
-    "ElLv": 14,
-    "SpeedAtkLv": 14,
-    "SpeedCastLv": 14,
-    "SpeedMoveLv": 14,
-    "AccuLv": 30,
-    "PublicStatLv": 6
   }
 }

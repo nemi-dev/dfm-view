@@ -1,33 +1,34 @@
+import { createSelector } from "@reduxjs/toolkit"
 import { useCallback } from "react"
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
-import { selectAtype } from "../feats/selectors"
+import { selectAtype, selectCustomMaterial, selectEmblemSpecs, selectUpgrade } from "../feats/selectors"
 import { SetPerfectMagicPropsStat, SetPerfectMagicPropsEl, SetColorEmblemLevelAll, SetMaterialAll, SetArmorUpgradeAll, SetAccessUpgradeAll } from "../feats/slices/itemSlice"
-import { RootState } from "../feats/store"
 import { accessParts, armorParts, oneEmblemParts } from "../items"
 import { LabeledInput, RadioGroup, OneClickButtonGroup } from "./widgets/Forms"
 
 
 
-function selectArmorUpgradeValues(state: RootState) {
-  const value = Math.max(...armorParts.map(p => state.Upgrade[p]))
-  return value
-}
+const selectMaxArmorUpgradeValue = createSelector(
+  armorParts.map(part => selectUpgrade[part]),
+  Math.max
+)
 
-function selectAccessUpgradeValues(state: RootState) {
-  const value = Math.max(...accessParts.map(p => state.Upgrade[p]))
-  return value
-}
+const selectMaxAccessUpgradeValue = createSelector(
+  accessParts.map(part => selectUpgrade[part]),
+  Math.max
+)
 
-function selectColorEmblemLevels(state: RootState) {
-  return oneEmblemParts.flatMap(p => state.Emblem[p].map(spec => spec[1])).reduce((p, n) => p < n ? n : p, 1)
-}
+const selectColorEmblemLevels = createSelector(
+  oneEmblemParts.map(part => selectEmblemSpecs[part]),
+  (...specMatrix) => {
+    return specMatrix.flatMap(specs => specs.map(spec => spec[1])).reduce((p, n) => p < n? n : p, 1)
+  }
+)
 
-function selectSynchronizedMaterial(state: RootState) {
-  const mats = armorParts.map(p => state.Material[p])
-  const mat = mats[0]
-  if (mats.find(m => mat != m)) return null
-  return mat
-}
+const selectSynchronizedMaterial = createSelector(
+  armorParts.map(part => selectCustomMaterial[part]),
+  (...mats) => mats.find(m => mats[0] != m) ? null : mats[0]
+)
 
 export function EquipBatch() {
   const myAtype = useAppSelector(selectAtype)
@@ -44,8 +45,8 @@ export function EquipBatch() {
     }
   }, [myAtype])
   const dispatch = useAppDispatch()
-  const armorUpgradeValue = useAppSelector(selectArmorUpgradeValues)
-  const accessUpgradeValue = useAppSelector(selectAccessUpgradeValues)
+  const armorUpgradeValue = useAppSelector(selectMaxArmorUpgradeValue)
+  const accessUpgradeValue = useAppSelector(selectMaxAccessUpgradeValue)
   const colorEmblemLevel = useAppSelector(selectColorEmblemLevels)
   const mat = useAppSelector(selectSynchronizedMaterial)
   return (

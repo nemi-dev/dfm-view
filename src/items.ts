@@ -92,10 +92,8 @@ for (const item of items) {
 
 const ISetsNameMap: Record<string, DFISet> = {}
 
-for (const iset of isets) {
-  ISetsNameMap[iset.name] = iset
-  // iset.children = isetChildren[iset.name]
-}
+for (const iset of isets) ISetsNameMap[iset.name] = iset
+
 
 
 
@@ -138,13 +136,11 @@ export const getEquipsOfISet = memoizee(
   }
 , { primitive: true })
 
-/** 아이템 이름에서 세트 개수를 얻는다. */
-export function countISetsFrom(...names: string[]) {
+/** 아이템에서 세트 개수를 얻는다. */
+export function countISetsFromSupport(...items: DFItem[]) {
   const counts: Record<string, number> = {}
-  for (const name of names) {
-    if (!name) continue
-    
-    const s = getItem(name)?.setOf
+  for (const item of items) {
+    const s = item.setOf
     if (!s) continue
     if (s === "all") {
       for (const key in counts) counts[key]++
@@ -165,17 +161,16 @@ export function countISetsFrom(...names: string[]) {
 
 /**
  * 아이템 갯수로부터 활성화되는 세트들을 얻는다.  
- * { "<세트 이름>[<옵션 활성화에 필요했던 세트 수>]" : 세트 옵션 } 형식으로 얻는다.
+ * @param counts \{ \[세트 이름]: [세트 갯수] } 형태의 오브젝트
  */
 export function getActiveISetAttrs(counts: Record<string, number>) {
-  const iset_info: Record<string, ItemOrISet> = {}
+  const iset_info: ComplexAttrSource[] = []
   for (const iset_name in counts) {
     const count = counts[iset_name];
     const iset = ISetsNameMap[iset_name]
     for (let c = count; c > 0; c--) {
-      if (iset[c]) {
-        iset_info[`${iset.name}[${c}]`] = iset[c]
-      }
+      if (iset[c]) iset_info.push(iset[c])
+      
     }
   }
   return iset_info
@@ -191,24 +186,24 @@ export const getCardsForPart = memoizee(
 
 
 /** 주어진 아이템 또는 아이템 세트에서 "내가 체크한" branch 조건부 옵션들을 배열로 얻는다. */
-export function getActiveBranch(iii: ItemOrISet, activeKeys: Record<string, boolean>) {
+export function getActiveBranch(iii: ComplexAttrSource, activeKeys: Record<string, boolean>) {
   if (!(iii?.branch)) return []
   const { name, branch } = iii
   return branch.filter(child => activeKeys[`${name}::${child.when}`])
 }
 
 /** "내가 체크한" gives 조건부 옵션이 이 아이템의 gives를 발동시킨다면 그 gives를 얻는다. */
-export function getActiveGives(iii: ItemOrISet, activeKeys: Record<string, boolean>) {
+export function getActiveGives(iii: ComplexAttrSource, activeKeys: Record<string, boolean>) {
   if (!(iii?.gives)) return []
   const { name, gives } = iii
   return gives.filter(child => activeKeys[`${name}::${child.when}`])
 }
 
-function activeKey(item: ItemOrISet, exclusiveSet: ExclusiveSet) {
+function activeKey(item: ComplexAttrSource, exclusiveSet: ExclusiveSet) {
   return `${item.name}::${exclusiveSet.name}`
 }
 
-export function getActiveExclusive(item: ItemOrISet, activeKeys: Record<string, string>) {
+export function getActiveExclusive(item: ComplexAttrSource, activeKeys: Record<string, string>) {
   if (!(item?.exclusive)) return []
   return item.exclusive
   .filter(exclusiveSet => activeKeys[activeKey(item, exclusiveSet)])

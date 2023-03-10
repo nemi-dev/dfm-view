@@ -3,7 +3,7 @@ import { MyAttrKey } from '../attrs'
 import { selectGuildAccu, selectGuildAtk, selectGuildCrit, selectGuildSpeedAtk, selectGuildStat, selectGuildStatPublic } from '../feats/guildSelectors'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { selectAtype } from '../feats/selectors'
-import { SetGuild } from "../feats/slices/guildSlice"
+import { PerfectGuild, SetGuild } from "../feats/slices/guildSlice"
 import { RootState } from '../feats/store'
 import { SimpleBaseAttrView } from './AttrsView'
 import { LabeledInput } from "./widgets/Forms"
@@ -82,6 +82,7 @@ export function Guilds() {
   const { StatLv, AtkLv, CritLv, ElLv, SpeedAtkLv: SpeedAtkLv, AccuLv, PublicStatLv } =  useAppSelector(state => state.Guild)
   const atype = useAppSelector(selectAtype)
   const { Stat: keyStat, Atk: keyAtk, Crit: keyCrit, 스탯, 타입 } = MyAttrKey[atype]
+  const dispatch = useAppDispatch()
   return (
     <div id="Guilds">
       <h3>길드 버프</h3>
@@ -101,6 +102,9 @@ export function Guilds() {
         <GuildPropOne value={PublicStatLv} target="PublicStatLv" selector={selectGuildStatPublic}
           label={`공용 ${스탯}`} src={`/img/guild/${keyStat}_public.png`} />
       </GuildLayout>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center"}}>
+        <button onClick={() => dispatch(PerfectGuild())}>개인 길드버프 최대로</button>
+      </div>
     </div>
   )
 }
