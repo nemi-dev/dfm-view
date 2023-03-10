@@ -40,7 +40,7 @@ export const cardSlice = createSlice({
       s[part] = cardName
     },
     SetCardsAllPossible: (s, { payload: cardName }: PayloadAction<string>) => {
-      const card = getItem(cardName) as Card
+      const card = getItem(cardName)
       const possible = card?.part ?? []
       possible.forEach(part => s[part] = cardName)
     },

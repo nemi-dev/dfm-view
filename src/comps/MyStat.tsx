@@ -13,6 +13,16 @@ import { SetAchieveLevel, SetAtype, SetLevel, set_atk_fixed } from "../feats/sli
 import { createContext, useContext, useState } from "react"
 
 
+
+
+interface OneAttrTripletProps {
+  className?: string
+  name?: string | JSX.Element
+  aKey: any
+  percent?: boolean
+  signed?: boolean
+}
+
 const MyselfContext = createContext<BaseAttrs>({})
 
 

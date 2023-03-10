@@ -9,11 +9,10 @@ import { ModalContext } from "../../modalContext"
 
 import _left from "../../../data/sets/left.json"
 import _right from "../../../data/sets/right.json"
-// import { SetCard, SetCardsAllPossible, SetEquip, SetEquips } from "../../feats/slices/equipSlice"
 import { Checkie } from "../widgets/Forms"
 import { whois } from "../../dfclass"
 import { FetchItems, SetCard, SetCardsAllPossible, SetItem } from "../../feats/slices/itemSlice"
-// import { SetOtherAvatar } from "../../feats/slices/avatarSlice"
+import { selectMyDFClass } from "../../feats/selectors"
 
 type EquipShotgun = Partial<Omit<ItemsState, "정수">>
 
@@ -24,7 +23,7 @@ const CheckieInline = styled(Checkie)`
   display: inline-flex;
 `
 
-function EquipSelect({ item }: { item: Attrs }) {
+function EquipSelect({ item }: { item: DFItem }) {
   const { message, setOpen } = useContext(ModalContext)
   const { part } = message as ModalRequestForItem
   const dispatch = useAppDispatch()
@@ -42,7 +41,7 @@ function EquipSelect({ item }: { item: Attrs }) {
 
 interface IsetCatalog {
   name: string
-  itemChildren: Attrs[]
+  itemChildren: DFItem[]
   useThisForPayload: EquipShotgun
 }
 
@@ -93,11 +92,11 @@ input[type=text]& {
 `
 
 
-function myItemSroter(myWeapons: WeaponType[], a: Attrs, b: Attrs) {
+function myItemSroter(myWeapons: WeaponType[], a: DFItem, b: DFItem) {
   return myWeapons.indexOf(a.itype as WeaponType) - myWeapons.indexOf(b.itype as WeaponType)
 }
 
-function pickItems(items: Attrs[], part: WholePart, myWeapons: WeaponType[]) {
+function pickItems(items: DFItem[], part: WholePart, myWeapons: WeaponType[]) {
   if (part !== "무기") return items
   if (!myWeapons) return items
   return items
@@ -111,7 +110,7 @@ export function EquipModalFragment() {
   const isets = loadShotgun(part) ?? []
   const [query, setQuery] = useState("")
   const [showMyWeaponsOnly, setShowMyWeaponsOnly] = useState(true)
-  const myDFclass = useAppSelector(state => whois(state.Profile.dfclass))
+  const myDFclass = useAppSelector(selectMyDFClass)
   const myWeapons = myDFclass.weapons
   
   const dependencies = [part, showMyWeaponsOnly, myDFclass.name]
@@ -153,7 +152,7 @@ export function EquipModalFragment() {
 
 
 
-function CardSelect({ card, all }: { card: Card, all: boolean }) {
+function CardSelect({ card, all }: { card: DFItem, all: boolean }) {
   const { message, setOpen } = useContext(ModalContext)
   const { part } = message as ModalRequestForItem
   const dispatch = useAppDispatch()
@@ -182,7 +181,7 @@ export function CardModalFragment() {
         <CheckieInline label="선택한 카드를 가능한 모든 부위에 바르기" checked={all} onChange={setAll} />
       </header>
       <div className="ItemSelectArray">
-      {(items as Card[]).map((card) => (
+      {items.map((card) => (
         <CardSelect key={card.name} card={card} all={all} />
       ))}
       </div>

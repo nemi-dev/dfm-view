@@ -13,17 +13,13 @@ export const avatarSlice = createSlice({
     },
     SetAvatarTypeAll: (s, { payload }: PayloadAction<"Uncommon" | "Rare">) => {
       avatarParts.forEach(part => s[part] = payload)
-    },
-    // SetOtherAvatar: (s, { payload: [part, name] }: PayloadAction<["칭호" | "오라" | "무기아바타", string]>) => {
-    //   s[part] = name
-    // },
+    }
   }
 })
 
 export const {
   SetAvatarRarity,
   SetAvatarTypeAll,
-  // SetOtherAvatar
 } = avatarSlice.actions
 
 

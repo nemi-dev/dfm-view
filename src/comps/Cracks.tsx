@@ -65,16 +65,16 @@ export function Cracks() {
       </MagicPropsLayout>: null}
       {blessing?
         <div>
-          <h4>{blessing.name}</h4>
+          <h4>{blessing[0]}</h4>
           <AttrsLayout>
-            <SimpleBaseAttrView attrs={blessing}/>
+            <SimpleBaseAttrView attrs={blessing[1]}/>
           </AttrsLayout>
         </div>: null}
       {Object.keys(isetattr).sort().map((isetname) => (
           <React.Fragment key={isetname}>
           <h4>{isetname}</h4>
           <AttrsLayout>
-            <SimpleBaseAttrView attrs={isetattr[isetname]}/>
+            <SimpleBaseAttrView attrs={isetattr[isetname].attrs}/>
           </AttrsLayout>
           </React.Fragment>
         ))}

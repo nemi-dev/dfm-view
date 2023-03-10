@@ -11,52 +11,31 @@ interface Named {
   name: string
 }
 
-function BranchLeafView({ branchItemKey, attrs }: { branchItemKey: string, attrs: WhenCombinedAttrs }) {
+function BranchLeafView({ branchItemKey, node }: { branchItemKey: string, node: ConditionalNode }) {
   const checked = useAppSelector(state => state.Switch.branches[branchItemKey] ?? false)
   const dispatch = useAppDispatch()
   return (
-    <Checkie checked={checked} label={<>{attrs.when}<SimpleBaseAttrView attrs={attrs} /></>} onChange={b => dispatch(SetBranch([branchItemKey, b]))} />
+    <Checkie checked={checked} label={<>{node.when}<SimpleBaseAttrView attrs={node.attrs} /></>} onChange={b => dispatch(SetBranch([branchItemKey, b]))} />
   )
 }
 
 interface BrachViewProps extends Named {
-  branches: WhenCombinedAttrs[]
+  nodes: ConditionalNode[]
 }
 
-export function BranchView({ name, branches }: BrachViewProps) {
+export function BranchView({ name, nodes }: BrachViewProps) {
   return (
     <div className="CondOne">
       <div className="CondContainerName">{name}</div>
-      {branches.map((attrs) => {
-        const key = `${name}::${attrs.when}`
-        return <BranchLeafView key={key} branchItemKey={key} attrs={attrs} />
+      {nodes.map((node) => {
+        const key = `${name}::${node.when}`
+        return <BranchLeafView key={key} branchItemKey={key} node={node} />
       })}
     </div>
   )
 }
 
-interface GivesViewProps extends Named {
-  attrs: WhenCombinedAttrs
-}
-
-export function GivesView({ name, attrs }: GivesViewProps) {
-  const id = `${name}::${attrs.when ?? "default"}`
-  const pureChecked = useAppSelector(state => state.Switch.gives[id])
-  const checked = pureChecked ?? false
-  const dispatch = useAppDispatch()
-  useEffect(() => {
-    if (!attrs.when && (pureChecked == undefined)) dispatch(SetGives([id, true]))
-  }, [])
-  return (
-    <div className="CondOne">
-      <div className="CondContainerName">{name}</div>
-      <Checkie checked={checked} onChange={b => dispatch(SetGives([id, b]))}
-      label={<>{attrs.when ?? ""}<SimpleBaseAttrView attrs={attrs} /></>} />
-    </div>
-  )
-}
-
-function ExclusiveOneBranchView({ prefix, node }: { prefix: string, node: ExclusiveGroup }) {
+function ExclusiveOneBranchView({ prefix, node }: { prefix: string, node: ExclusiveSet }) {
   const values = node.children.map(n => n.name)
   const value = useAppSelector(state => state.Switch.exclusives[prefix])
   const dispatch = useAppDispatch()
@@ -66,7 +45,7 @@ function ExclusiveOneBranchView({ prefix, node }: { prefix: string, node: Exclus
 }
 
 interface ExclusiveViewProps extends Named {
-  exclusives: ExclusiveGroup[]
+  exclusives: ExclusiveSet[]
 }
 
 
@@ -91,9 +70,9 @@ function Partie({ part }: { part: EquipPart }) {
   if (!(branch || exclusive || gives)) return null
   return (
     <>
-      {branch? <BranchView name={name} branches={branch} /> : null}
+      {branch? <BranchView name={name} nodes={branch} /> : null}
+      {gives?  <BranchView name={name} nodes={gives} /> : null }
       {exclusive? <ExclusiveView name={name} exclusives={exclusive} /> : null}
-      {gives? <GivesView name={name} attrs={gives} /> : null }
     </>
   )
 }
@@ -122,19 +101,23 @@ grid-template-columns: 1fr 1fr;
 `
 
 export function OptionalAttrsView() {
-  const { branches, exclusives, gives } = useAppSelector(selectISetConditionalsAll)
+  const {
+    branches: isetBranches,
+    gives: isetGives,
+    exclusives: isetExclusives,
+  } = useAppSelector(selectISetConditionalsAll)
   return(
     <div className="OptionalAttrsView">
       <CondArray className="CondArray">
         {equipParts.map(part => <Partie key={part} part={part} />)}
-        {Object.keys(branches).sort().map((key) => 
-          <BranchView key={key} name={key} branches={branches[key]} />
+        {Object.keys(isetBranches).sort().map((key) => 
+          <BranchView key={key} name={key} nodes={isetBranches[key]} />
         )}
-        {Object.keys(exclusives).sort().map((isetname) => 
-          <ExclusiveView key={isetname} name={isetname} exclusives={exclusives[isetname]} />
+        {Object.keys(isetGives).sort().map((key) => 
+          <BranchView key={key} name={key} nodes={isetGives[key]} />
         )}
-        {Object.keys(gives).sort().map((key) => 
-          <GivesView key={key} name={key} attrs={gives[key]} />
+        {Object.keys(isetExclusives).sort().map((isetname) => 
+          <ExclusiveView key={isetname} name={isetname} exclusives={isetExclusives[isetname]} />
         )}
       </CondArray>
     </div>

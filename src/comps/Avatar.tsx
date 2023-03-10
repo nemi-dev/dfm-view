@@ -31,7 +31,7 @@ export function DFTitle() {
         </div>
       </div>
       <div>
-        <SimpleBaseAttrView attrs={dftitle} />
+        <SimpleBaseAttrView attrs={dftitle.attrs} />
       </div>
     </div>
   )
@@ -151,7 +151,7 @@ export function Avatars() {
           onClick={() => openModal({name:"item", part:"무기아바타", target:"MainItem"})} />
           <div className="SlotHeading">{weaponAvatar.name}</div>
           <div className="AvatarAttrs">
-            <SimpleBaseAttrView attrs={weaponAvatar} />
+            <SimpleBaseAttrView attrs={weaponAvatar.attrs} />
           </div>
         </div>
         <div className="EquipSlot AlwaysEquipPartLayout Hovering Bordered">
@@ -159,7 +159,7 @@ export function Avatars() {
           onClick={() => openModal({name:"item", part:"오라", target:"MainItem"})} />
           <div className="SlotHeading">{aura.name}</div>
           <div className="AvatarAttrs">
-            <SimpleBaseAttrView attrs={aura} />
+            <SimpleBaseAttrView attrs={aura.attrs} />
           </div>
         </div>
       </AvatarsFirstLayout>
