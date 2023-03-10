@@ -39,8 +39,10 @@ interface ProfileState {
 
   /** 얘 이름 */
   myName: string
+
   /** 얘 직업 */
-  dfclass: string
+  dfclass: DFClassName
+
   /** 캐릭터 레벨 (최대 65) */
   level: number
 
@@ -70,7 +72,7 @@ export const profileSlice = createSlice({
     SetMyName: (s, { payload }: PayloadAction<string>) => {
       s.myName = payload
     },
-    SetDFClass: (s, { payload }: PayloadAction<string>) => { s.dfclass = payload },
+    SetDFClass: (s, { payload }: PayloadAction<DFClassName>) => { s.dfclass = payload },
     SetLevel: (s, { payload }: PayloadAction<number>) => { s.level = payload },
     SetAchieveLevel: (s, { payload }: PayloadAction<number>) => { s.achieveLevel = payload },
     SetAtype: (s, { payload }: PayloadAction<Atype>) => {

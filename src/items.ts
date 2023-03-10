@@ -57,14 +57,14 @@ function getPart(s: Itype): WholePart {
 
 
 
-const items = _items as Attrs[]
-const isets = _isets as ISet[]
-const armorbases = _armorbases as BaseAttrs[]
-const cards: Card[] = []
+const items = _items as DFItem[]
+const isets = _isets as DFISet[]
+const armorbases = _armorbases as DFItem[]
+const cards: DFItem[] = []
 
-type PartIndex = { [k in WholePart]: Attrs[] }
+type PartIndex = { [k in WholePart]: DFItem[] }
 
-const _items_index_Name: Record<string, Attrs> = {}
+const _items_index_Name: Record<string, DFItem> = {}
 const _items_index_Part = (()=>{
   const x = {} as PartIndex
   wholeParts.forEach(p => x[p] = [])
@@ -74,7 +74,7 @@ const _items_index_Part = (()=>{
 const isetChildren: Record<string, string[]> = {}
 
 /** `isetChildren`에 `item`을 `setOf`의 세트 구성 아이템으로 등록한다. */
-function assignIset(item: Attrs, setOf: string | string[]) {
+function assignIset(item: DFItem, setOf: string | string[]) {
   const { name } = item;
   if (setOf instanceof Array) return setOf.forEach(s => assignIset(item, s))
   if (!(setOf in isetChildren)) isetChildren[setOf] = []
@@ -86,15 +86,15 @@ for (const item of items) {
 
   const part = getPart(item.itype)
   if (part) _items_index_Part[part].push(item)
-  if (item.itype === "카드") cards.push(item as Card)
+  if (item.itype === "카드") cards.push(item)
   if (item.setOf) assignIset(item, item.setOf)
 }
 
-const ISetsNameMap: Record<string, ISet> = {}
+const ISetsNameMap: Record<string, DFISet> = {}
 
 for (const iset of isets) {
   ISetsNameMap[iset.name] = iset
-  iset.children = isetChildren[iset.name]
+  // iset.children = isetChildren[iset.name]
 }
 
 
@@ -108,7 +108,7 @@ for (const iset of isets) {
 
 /** "방어구 재질"을 얻는다. */
 export const getArmorBase = memoizee(
-  function getArmorBase(level: number, rarity: Rarity, material: ArmorMaterial, part: EquipPart): Attrs {
+  function getArmorBase(level: number, rarity: Rarity, material: ArmorMaterial, part: EquipPart): DFItem {
     const find = armorbases.find(attr => {
       return attr.level == level
       && attr.rarity == rarity
@@ -168,7 +168,7 @@ export function countISetsFrom(...names: string[]) {
  * { "<세트 이름>[<옵션 활성화에 필요했던 세트 수>]" : 세트 옵션 } 형식으로 얻는다.
  */
 export function getActiveISetAttrs(counts: Record<string, number>) {
-  const iset_info: Record<string, Attrs> = {}
+  const iset_info: Record<string, ItemOrISet> = {}
   for (const iset_name in counts) {
     const count = counts[iset_name];
     const iset = ISetsNameMap[iset_name]
@@ -190,32 +190,29 @@ export const getCardsForPart = memoizee(
 
 
 
-/** 주어진 아이템에서 "내가 체크한" branch 조건부 옵션들을 배열로 얻는다. */
-export function getActiveBranch(item: Attrs, activeKeys: Record<string, boolean>): BaseAttrs[] {
-  if (!(item?.branch)) return []
-  const { name, branch } = item
+/** 주어진 아이템 또는 아이템 세트에서 "내가 체크한" branch 조건부 옵션들을 배열로 얻는다. */
+export function getActiveBranch(iii: ItemOrISet, activeKeys: Record<string, boolean>) {
+  if (!(iii?.branch)) return []
+  const { name, branch } = iii
   return branch.filter(child => activeKeys[`${name}::${child.when}`])
 }
 
-/** "내가 체크한" gives 조건부 옵션이 이 아이템의 give_us를 발동시킨다면 그 give_us를 얻는다. */
-export function isActiveGives(item: Attrs, activeKeys: Record<string, boolean>): BaseAttrs {
-  if (!(item?.gives)) return null
-  const { name, gives } = item
-  const key = `${name}::${gives.when ?? "default"}`
-  if (activeKeys[key]) return gives
-  return null
+/** "내가 체크한" gives 조건부 옵션이 이 아이템의 gives를 발동시킨다면 그 gives를 얻는다. */
+export function getActiveGives(iii: ItemOrISet, activeKeys: Record<string, boolean>) {
+  if (!(iii?.gives)) return []
+  const { name, gives } = iii
+  return gives.filter(child => activeKeys[`${name}::${child.when}`])
 }
 
-function activeKey(item: Attrs, e: ExclusiveGroup) {
-  return `${item.name}::${e.name}`
+function activeKey(item: ItemOrISet, exclusiveSet: ExclusiveSet) {
+  return `${item.name}::${exclusiveSet.name}`
 }
 
-export function getActiveExclusive(item: Attrs, activeKeys: Record<string, string>) {
+export function getActiveExclusive(item: ItemOrISet, activeKeys: Record<string, string>) {
   if (!(item?.exclusive)) return []
- 
   return item.exclusive
-  .filter(e => activeKeys[activeKey(item, e)])
-  .map(e => e.children.find(a => a.name === activeKeys[activeKey(item, e)]))
+  .filter(exclusiveSet => activeKeys[activeKey(item, exclusiveSet)])
+  .map(exclusiveSet => exclusiveSet.children.find(exclusiveNode => exclusiveNode.name === activeKeys[activeKey(item, exclusiveSet)]))
 }
 
 
@@ -235,15 +232,15 @@ const blessings = [
 ] as const
 
 /** 성안의 봉인에서 활성화된 가호를 얻는다. */
-export function getBlessing(...items: Attrs[]) {
+export function getBlessing(...items: DFItem[]): [name: string, attrs: BaseAttrs] {
   const counts = items.reduce((p, { rarity }) => (p[rarity] += 1, p),
   { Common: 0, Uncommon: 0, Rare: 0, Unique: 0, Epic: 0 })
 
   const [name, value, rarity, count] = blessings.find(([, , rarity, minCount]) => counts[rarity] >= minCount)
-  return {
-    name: `${name} (${rarity} ${count}개 이상 장착)`,
-    ...atx("Stat", value)
-  } as BaseAttrs
+  return [
+    `${name} (${rarity} ${count}개 이상 장착)`,
+    atx("Stat", value)
+  ]
 }
 
 /** 내 공격타입에 맞는 봉인석/정수만 얻는다. */

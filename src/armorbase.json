@@ -1,227 +1,277 @@
 [
   {
-    "name": "<60에픽 천 상의>",
+    "name": "60에픽 천 상의",
     "level": 60, "rarity": "Epic", "material": "천", "itype": "상의", 
-    "def_ph": 2598,
-    "strn": 24,
-    "intl": 36,
-    "psi": 36,
-    "speed_atk": 2,
-    "speed_cast": 4
+    "attrs": {
+      "def_ph": 2598,
+      "strn": 24,
+      "intl": 36,
+      "psi": 36,
+      "speed_atk": 2,
+      "speed_cast": 4
+    }
   },
   {
-    "name": "<60에픽 천 하의>",
-    "level": 60, "rarity": "Epic", "material": "천", "itype": "하의", 
-    "def_ph": 2165,
-    "strn": 24,
-    "intl": 36,
-    "psi": 36,
-    "speed_atk": 2,
-    "speed_cast": 4
+    "name": "60에픽 천 하의",
+    "level": 60, "rarity": "Epic", "material": "천", "itype": "하의",
+    "attrs": {
+      "def_ph": 2165,
+      "strn": 24,
+      "intl": 36,
+      "psi": 36,
+      "speed_atk": 2,
+      "speed_cast": 4
+    }
   },
   {
-    "name": "<60에픽 천 머리어깨>",
+    "name": "60에픽 천 머리어깨",
     "level": 60, "rarity": "Epic", "material": "천", "itype": "머리어깨",
-    "def_ph": 1731,
-    "strn": 19,
-    "intl": 29,
-    "psi": 29,
-    "speed_atk": 2,
-    "speed_cast": 4
+    "attrs": {
+      "def_ph": 1731,
+      "strn": 19,
+      "intl": 29,
+      "psi": 29,
+      "speed_atk": 2,
+      "speed_cast": 4
+    }
   },
   {
-    "name": "<60에픽 천 벨트>",
+    "name": "60에픽 천 벨트",
     "level": 60, "rarity": "Epic", "material": "천", "itype": "벨트",
-    "def_ph": 866,
-    "strn": 14,
-    "intl": 22,
-    "psi": 22,
-    "speed_atk": 2,
-    "speed_cast": 4
+    "attrs": {
+      "def_ph": 866,
+      "strn": 14,
+      "intl": 22,
+      "psi": 22,
+      "speed_atk": 2,
+      "speed_cast": 4
+    }
   },
   {
-    "name": "<60에픽 천 신발>",
+    "name": "60에픽 천 신발",
     "level": 60, "rarity": "Epic", "material": "천", "itype": "신발",
-    "def_ph": 1299,
-    "strn": 14,
-    "intl": 22,
-    "psi": 22,
-    "speed_move": 4
+    "attrs": {
+      "def_ph": 1299,
+      "strn": 14,
+      "intl": 22,
+      "psi": 22,
+      "speed_move": 4
+    }
   },
   {
-    "name": "<60에픽 가죽 상의>",
+    "name": "60에픽 가죽 상의",
     "level": 60, "rarity": "Epic", "material": "가죽", "itype": "상의", 
-    "def_ph": 3117,
-    "strn": 30,
-    "intl": 30,
-    "psi": 33,
-    "speed_atk": 3
+    "attrs": {
+      "def_ph": 3117,
+      "strn": 30,
+      "intl": 30,
+      "psi": 33,
+      "speed_atk": 3
+    }
   },
   {
-    "name": "<60에픽 가죽 하의>",
+    "name": "60에픽 가죽 하의",
     "level": 60, "rarity": "Epic", "material": "가죽", "itype": "하의", 
-    "def_ph": 2598,
-    "strn": 30,
-    "intl": 30,
-    "psi": 33,
-    "speed_atk": 3
+    "attrs": {
+      "def_ph": 2598,
+      "strn": 30,
+      "intl": 30,
+      "psi": 33,
+      "speed_atk": 3
+    }
   },
   {
-    "name": "<60에픽 가죽 머리어깨>",
+    "name": "60에픽 가죽 머리어깨",
     "level": 60, "rarity": "Epic", "material": "가죽", "itype": "머리어깨",
-    "def_ph": 2078,
-    "strn": 24,
-    "intl": 24,
-    "psi": 26,
-    "speed_atk": 3
+    "attrs": {
+      "def_ph": 2078,
+      "strn": 24,
+      "intl": 24,
+      "psi": 26,
+      "speed_atk": 3
+    }
   },
   {
-    "name": "<60에픽 가죽 벨트>",
+    "name": "60에픽 가죽 벨트",
     "level": 60, "rarity": "Epic", "material": "가죽", "itype": "벨트",
-    "def_ph": 1038,
-    "strn": 18,
-    "intl": 18,
-    "psi": 19,
-    "speed_atk": 3
+    "attrs": {
+      "def_ph": 1038,
+      "strn": 18,
+      "intl": 18,
+      "psi": 19,
+      "speed_atk": 3
+    }
   },
   {
-    "name": "<60에픽 가죽 신발>",
+    "name": "60에픽 가죽 신발",
     "level": 60, "rarity": "Epic", "material": "가죽", "itype": "신발",
-    "def_ph": 1559,
-    "strn": 18,
-    "intl": 18,
-    "psi": 19,
-    "speed_move": 4
+    "attrs": {
+      "def_ph": 1559,
+      "strn": 18,
+      "intl": 18,
+      "psi": 19,
+      "speed_move": 4
+    }
   },
   {
-    "name": "<60에픽 경갑 상의>",
+    "name": "60에픽 경갑 상의",
     "level": 60, "rarity": "Epic", "material": "경갑", "itype": "상의", 
-    "def_ph": 4157,
-    "strn": 36,
-    "intl": 24,
-    "speed_atk": 2
+    "attrs": {
+      "def_ph": 4157,
+      "strn": 36,
+      "intl": 24,
+      "speed_atk": 2
+    }
   },
   {
-    "name": "<60에픽 경갑 하의>",
+    "name": "60에픽 경갑 하의",
     "level": 60, "rarity": "Epic", "material": "경갑", "itype": "하의", 
-    "def_ph": 3465,
-    "strn": 36,
-    "intl": 24,
-    "speed_atk": 2
+    "attrs": {
+      "def_ph": 3465,
+      "strn": 36,
+      "intl": 24,
+      "speed_atk": 2
+    }
   },
   {
-    "name": "<60에픽 경갑 머리어깨>",
+    "name": "60에픽 경갑 머리어깨",
     "level": 60, "rarity": "Epic", "material": "경갑", "itype": "머리어깨",
-    "def_ph": 2771,
-    "strn": 29,
-    "intl": 19,
-    "speed_atk": 2
+    "attrs": {
+      "def_ph": 2771,
+      "strn": 29,
+      "intl": 19,
+      "speed_atk": 2
+    }
   },
   {
-    "name": "<60에픽 경갑 벨트>",
+    "name": "60에픽 경갑 벨트",
     "level": 60, "rarity": "Epic", "material": "경갑", "itype": "벨트",
-    "def_ph": 1385,
-    "strn": 22,
-    "intl": 14,
-    "speed_atk": 2
+    "attrs": {
+      "def_ph": 1385,
+      "strn": 22,
+      "intl": 14,
+      "speed_atk": 2
+    }
   },
   {
-    "name": "<60에픽 경갑 신발>",
+    "name": "60에픽 경갑 신발",
     "level": 60, "rarity": "Epic", "material": "경갑", "itype": "신발",
-    "def_ph": 2078,
-    "strn": 22,
-    "intl": 14,
-    "speed_move": 4
+    "attrs": {
+      "def_ph": 2078,
+      "strn": 22,
+      "intl": 14,
+      "speed_move": 4
+    }
   },
   {
-    "name": "<60에픽 중갑 상의>",
+    "name": "60에픽 중갑 상의",
     "level": 60, "rarity": "Epic", "material": "중갑", "itype": "상의", 
-    "def_ph": 4677,
-    "strn": 33,
-    "intl": 24,
-    "vit": 30,
-    "speed_atk": 1
+    "attrs": {
+      "def_ph": 4677,
+      "strn": 33,
+      "intl": 24,
+      "vit": 30,
+      "speed_atk": 1
+    }
   },
   {
-    "name": "<60에픽 중갑 하의>",
+    "name": "60에픽 중갑 하의",
     "level": 60, "rarity": "Epic", "material": "중갑", "itype": "하의", 
-    "def_ph": 3897,
-    "strn": 33,
-    "intl": 24,
-    "vit": 30,
-    "speed_atk": 1
+    "attrs": {
+      "def_ph": 3897,
+      "strn": 33,
+      "intl": 24,
+      "vit": 30,
+      "speed_atk": 1
+    }
   },
   {
-    "name": "<60에픽 중갑 머리어깨>",
+    "name": "60에픽 중갑 머리어깨",
     "level": 60, "rarity": "Epic", "material": "중갑", "itype": "머리어깨",
-    "def_ph": 3117,
-    "strn": 26,
-    "intl": 19,
-    "vit": 24,
-    "speed_atk": 1
+    "attrs": {
+      "def_ph": 3117,
+      "strn": 26,
+      "intl": 19,
+      "vit": 24,
+      "speed_atk": 1
+    }
   },
   {
-    "name": "<60에픽 중갑 벨트>",
+    "name": "60에픽 중갑 벨트",
     "level": 60, "rarity": "Epic", "material": "중갑", "itype": "벨트",
-    "def_ph": 1559,
-    "strn": 19,
-    "intl": 14,
-    "vit": 18,
-    "speed_atk": 1
+    "attrs": {
+      "def_ph": 1559,
+      "strn": 19,
+      "intl": 14,
+      "vit": 18,
+      "speed_atk": 1
+    }
   },
   {
-    "name": "<60에픽 중갑 신발>",
+    "name": "60에픽 중갑 신발",
     "level": 60, "rarity": "Epic", "material": "중갑", "itype": "신발",
-    "def_ph": 2339,
-    "strn": 19,
-    "intl": 14,
-    "vit": 18,
-    "speed_move": 4
+    "attrs": {
+      "def_ph": 2339,
+      "strn": 19,
+      "intl": 14,
+      "vit": 18,
+      "speed_move": 4
+    }
   },
   {
-    "name": "<60에픽 판금 상의>",
+    "name": "60에픽 판금 상의",
     "level": 60, "rarity": "Epic", "material": "판금", "itype": "상의", 
-    "def_ph": 5198,
-    "strn": 30,
-    "intl": 30,
-    "vit": 33,
-    "speed_cast": 2
+    "attrs": {
+      "def_ph": 5198,
+      "strn": 30,
+      "intl": 30,
+      "vit": 33,
+      "speed_cast": 2
+    }
   },
   {
-    "name": "<60에픽 판금 하의>",
+    "name": "60에픽 판금 하의",
     "level": 60, "rarity": "Epic", "material": "판금", "itype": "하의", 
-    "def_ph": 4331,
-    "strn": 33,
-    "intl": 24,
-    "vit": 30,
-    "speed_cast": 2
+    "attrs": {
+      "def_ph": 4331,
+      "strn": 33,
+      "intl": 24,
+      "vit": 30,
+      "speed_cast": 2
+    }
   },
   {
-    "name": "<60에픽 판금 머리어깨>",
+    "name": "60에픽 판금 머리어깨",
     "level": 60, "rarity": "Epic", "material": "판금", "itype": "머리어깨",
-    "def_ph": 3465,
-    "strn": 24,
-    "intl": 24,
-    "vit": 26,
-    "speed_cast": 2
+    "attrs": {
+      "def_ph": 3465,
+      "strn": 24,
+      "intl": 24,
+      "vit": 26,
+      "speed_cast": 2
+    }
   },
   {
-    "name": "<60에픽 판금 벨트>",
+    "name": "60에픽 판금 벨트",
     "level": 60, "rarity": "Epic", "material": "판금", "itype": "벨트",
-    "def_ph": 1733,
-    "strn": 18,
-    "intl": 18,
-    "vit": 19,
-    "speed_cast": 2
+    "attrs": {
+      "def_ph": 1733,
+      "strn": 18,
+      "intl": 18,
+      "vit": 19,
+      "speed_cast": 2
+    }
   },
   {
-    "name": "<60에픽 판금 신발>",
+    "name": "60에픽 판금 신발",
     "level": 60, "rarity": "Epic", "material": "판금", "itype": "신발",
-    "def_ph": 2598,
-    "strn": 18,
-    "intl": 18,
-    "vit": 19,
-    "speed_cast": 2,
-    "speed_move": 4
+    "attrs": {
+      "def_ph": 2598,
+      "strn": 18,
+      "intl": 18,
+      "vit": 19,
+      "speed_cast": 2,
+      "speed_move": 4
+    }
   }
 ]

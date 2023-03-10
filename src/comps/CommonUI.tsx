@@ -43,7 +43,7 @@ export function Num({ value, className = "", signed = false, percented = false, 
 }
 
 interface ItemNameProps {
-  item: BaseAttrs
+  item: DFItem
   alt?: string
   className?: string
   onClick?: MouseEventHandler<HTMLSpanElement>

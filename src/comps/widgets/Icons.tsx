@@ -1,7 +1,7 @@
 import type { HTMLProps } from 'react'
 
 /** 아이템에서 명시적으로 지정한 이미지 이름 또는 파일 이름으로 가능하게 변환된 아이템 이름을 만든다. */
-function im(strings: TemplateStringsArray, item: Attrs) {
+function im(strings: TemplateStringsArray, item: DFItem) {
   if (item == null) return ""
   const regex = /[\<\>\:\"\'\?\*\\\/\|]/g
   if (item.image) return strings[0] + item.image + strings[1]
@@ -22,7 +22,7 @@ export function SquareIcon({ src, frame, className, children, ...props }: Square
     </div>
   )
 }
-function imageSource(attrs: BaseAttrs) {
+function imageSource(attrs: DFItem) {
   const { itype } = attrs
   switch (itype) {
     case "무기아바타":
@@ -39,7 +39,7 @@ function imageSource(attrs: BaseAttrs) {
   }
 }
 interface ItemIcon2Props extends HTMLProps<HTMLDivElement> {
-  item: Attrs
+  item: DFItem
 }
 
 export function ItemIcon({ item, children, className, ...props }: ItemIcon2Props) {
@@ -76,7 +76,7 @@ export function EmblemIcon({ spec: [type, level], className = "", accept, ...pro
 }
 
 
-export function CrackIcon({ item, className, ...props }: { item: Attrs; } & HTMLProps<HTMLDivElement>) {
+export function CrackIcon({ item, className, ...props }: { item: DFItem } & HTMLProps<HTMLDivElement>) {
   return <RoundIcon className={"CrackIcon " + className} src={im`/img/item/${item}.png`} frame={`/img/crack/${item.rarity}.png`} {...props} />
 }
 

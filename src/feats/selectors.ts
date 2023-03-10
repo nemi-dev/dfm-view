@@ -1,13 +1,14 @@
 import { createSelector } from "@reduxjs/toolkit"
 import { collectSpecial, atx, combine, whatElType } from "../attrs"
 import { RootState } from "./store"
-import { getActiveISetAttrs, getArmorBase, countISetsFrom, getItem, equipParts, getActiveBranch, isActiveGives, getActiveExclusive, getBlessing, isArmorPart, magicPropsParts, cardableParts, armorParts } from "../items"
+import { getActiveISetAttrs, getArmorBase, countISetsFrom, getItem, equipParts, getActiveBranch, getActiveGives, getActiveExclusive, getBlessing, isArmorPart, magicPropsParts, cardableParts } from "../items"
 import { getEmblem } from "../emblem"
 import { getMagicPropsAttrs } from "../magicProps"
 import { percent_inc_mul } from "../utils"
 import { selectGuilds } from "./guildSelectors"
 import memoizee from "memoizee"
 import { avatarParts, rareSet, UncommonSet, getAvatarAttr } from "../avatar"
+import { whois } from "../dfclass"
 
 
 function Noot2<T, P extends WholePart>(func: ($p: P) => (s: RootState)=> T, parts: (P[] | readonly P[])): { [k in P]: (state: RootState) => T } {
@@ -16,15 +17,20 @@ function Noot2<T, P extends WholePart>(func: ($p: P) => (s: RootState)=> T, part
   return _o
 }
 
-export function selectAtype(state: RootState) {
-  return state.Profile.atype
-}
+/** 내 이름을 선택한다. */
+export const selectMyName = (state: RootState) => state.Profile.myName
+
+/** 내 직업을 선택한다 */
+export const selectMyDFClass = (state: RootState) => whois(state.Profile.dfclass)
+
+/** 내 공격타입을 선택한다 */
+export const selectAtype = (state: RootState) => state.Profile.atype
 
 /** 특정 부위에 장착중인 아이템을 선택한다 */
 export const selectItem = Noot2(part => state => getItem(state.Item[part]), [...equipParts, "칭호", "오라", "무기아바타", "봉인석"])
 
 /** 특정 부위의 아이템에 바른 카드를 선택한다 */
-export const selectCard = Noot2(part => state => getItem(state.Card[part]), cardableParts)
+export const selectCard = Noot2(part => state =>(getItem(state.Card[part]) ?? {} as DFItem), cardableParts)
 
 /** 특정 부위의 아이템에 박은 엠블렘 스펙을 모두 선택한다 */
 export const selectEmblemSpecs = Noot2(part => state => state.Emblem[part], cardableParts)
@@ -50,7 +56,7 @@ export const selectArmorBase = Noot2(
     selectItem[part],
     selectMaterial[part],
     (item, myMaterial) => {
-      if (!isArmorPart(part)) return {}
+      if (!isArmorPart(part)) return {} as DFItem
       const { level, rarity, material = myMaterial } = item
       return getArmorBase(level, rarity, material, part)
     }
@@ -74,18 +80,14 @@ export const selectMagicProps = Noot2(
 
 /**
  * 주어진 아이템에서 "내가 체크한" 조건부 옵션들을 배열로 얻는다.
- * @param item 아이템일 수도 있고, 세트일 수도 있다. 하지만 `combine()`으로 만든거는 안된다
+ * @param iii 아이템일 수도 있고, 세트일 수도 있다. 하지만 `combine()`으로 만든거는 안된다
  */
-function activeOptionalSelector(item: Attrs, state: RootState) {
-  if (!item) return []
-  const array: BaseAttrs[] = []
-  array.push(...getActiveBranch(item, state.Switch.branches))
-
-  const gives = isActiveGives(item, state.Switch.gives)
-  if (gives) array.push(gives)
-  
-  array.push(...getActiveExclusive(item, state.Switch.exclusives))
-  return array
+function activeOptionalSelector(iii: ItemOrISet, state: RootState) {
+  return [
+    ...getActiveBranch(iii, state.Switch.branches),
+    ...getActiveGives(iii, state.Switch.gives),
+    ...getActiveExclusive(iii, state.Switch.exclusives)
+  ]
 }
 
 export const selectActiveOption = Noot2(
@@ -111,7 +113,7 @@ export const selectWholePartWithoutOptional = Noot2(
     selectUpgrade[part],
     (item, magicProps, card, emblems, armorbase, upgrade) => {
       const upgradeAttr = atx(part === "무기"? "Atk" : "Stat", upgrade)
-      return combine(item, armorbase, upgradeAttr, magicProps, ...emblems.map(getEmblem), card)
+      return combine(item.attrs, armorbase.attrs, upgradeAttr, magicProps, ...emblems.map(getEmblem), card?.attrs ?? {})
     }
   ), equipParts
 )
@@ -122,43 +124,26 @@ export const selectWholeFromPart = Noot2(
   selectWholePartWithoutOptional[part],
   selectActiveOption[part],
   (attrs, activeOption) => {
-    return combine(attrs, ...activeOption)
+    return combine(attrs, ...activeOption.map(n => n.attrs))
   }), equipParts
 )
 
 /**
- * 현재 착용한 장비들로부터 활성화되는 모든 세트 옵션을 얻는다.
+ * 현재 착용한 장비들로부터 활성화되는 모든 세트를 얻는다.
  * 
- * { "<세트 이름>[<옵션 활성화에 필요했던 세트 수>]" : 세트 옵션 } 형식으로 얻는다.
+ * "어떤 세트 x셋"이 완성되었다면 { "<세트 이름>[<x>]" : 세트 옵션 } 형식으로 얻는다.
  */
-export function selectISetAttrs(state: RootState) {
+export function selectISets(state: RootState) {
   const isets = countISetsFrom(...equipParts.map(part => state.Item[part]))
   return getActiveISetAttrs(isets)
 }
 
-
 /** 지금 활성화된 세트로부터, on/off 여부를 불문하고 모든 가능한 조건부 옵션들을 얻는다. */
 export function selectISetConditionalsAll(state: RootState) {
-  const isets = selectISetAttrs(state)
+  const isets = selectISets(state)
   return collectSpecial(...Object.values(isets))
-
 }
 
-/** 지금 착용한 장비로부터 오는 모든 장비 효과, 장비에 바른 카드 효과, 엠블렘 효과, 강화 효과, 마법봉인 효과, 세트 효과 및 이들 중에서 내가 체크한 조건부 효과를 싸그리 긁어모은다. */
-export function selectEquips(state: RootState) {
-
-  /** 지금 활성화된 세트옵션들 */
-  const isetattrs = selectISetAttrs(state)
-  const J: Attrs[] = []
-  for (const k in isetattrs) {
-    J.push(isetattrs[k], ...activeOptionalSelector(isetattrs[k], state))
-  }
-
-  return combine(
-    ...equipParts.map(part => selectWholeFromPart[part](state)),
-    ...J
-  )
-}
 
 /**
  * 지금 착용한 장비로부터 오는 모든 장비 효과, 장비에 바른 카드 효과, 엠블렘 효과, 강화 효과, 마법봉인 효과, 세트 효과를 긁어모은다.  
@@ -167,14 +152,31 @@ export function selectEquips(state: RootState) {
 export function selectEquipsWithoutOptional(state: RootState) {
 
   /** 지금 활성화된 세트옵션들 */
-  const isetattrs = selectISetAttrs(state)
-  const J: Attrs[] = []
-  for (const k in isetattrs) {
-    J.push(isetattrs[k])
+  const isets = selectISets(state)
+  const J: BaseAttrs[] = []
+  for (const k in isets) {
+    J.push(isets[k].attrs)
   }
 
   return combine(
     ...equipParts.map(part => selectWholePartWithoutOptional[part](state)),
+    ...J
+  )
+}
+
+
+/** 지금 착용한 장비로부터 오는 모든 장비 효과, 장비에 바른 카드 효과, 엠블렘 효과, 강화 효과, 마법봉인 효과, 세트 효과 및 이들 중에서 내가 체크한 조건부 효과를 싸그리 긁어모은다. */
+export function selectEquips(state: RootState) {
+
+  /** 지금 활성화된 세트옵션들 */
+  const isets = selectISets(state)
+  const J: BaseAttrs[] = []
+  for (const k in isets) {
+    J.push(isets[k].attrs, ...activeOptionalSelector(isets[k], state).map(n => n.attrs))
+  }
+
+  return combine(
+    ...equipParts.map(part => selectWholeFromPart[part](state)),
     ...J
   )
 }
@@ -267,7 +269,7 @@ export const selectCracksAll = createSelector(
   selectBlessing,
   selectCrackISetAttrs,
   (rune, mp, spells, blessing, isetattr) => {
-    return combine(rune, mp, ...spells, blessing, ...Object.values(isetattr))
+    return combine(rune.attrs, mp, ...spells.map(s => s.attrs), blessing[1], ...Object.values(isetattr).map(s => s.attrs))
   }
 )
 
@@ -296,7 +298,7 @@ export const selectDFTitleAttrsAll = createSelector(
   selectItem["칭호"],
   selectCard["칭호"],
   selectEmblemSpecs["칭호"],
-  (item, card, emblem) => combine(item, card, getEmblem(emblem[0]))
+  (item, card, emblem) => combine(item.attrs, card?.attrs ?? {}, getEmblem(emblem[0]))
 )
 
 export const selectWholeAvatarAttrs = createSelector(
@@ -304,7 +306,8 @@ export const selectWholeAvatarAttrs = createSelector(
   selectAvatarAttrs,
   selectItem["무기아바타"],
   selectItem["오라"],
-  (dftitle, avatar, weaponAvatar, aura) => combine(dftitle, avatar, weaponAvatar, aura)
+  (dftitleAttrs, avatarAttrs, weaponAvatar, aura) =>
+    combine(dftitleAttrs, avatarAttrs, weaponAvatar.attrs, aura.attrs)
 )
 
 

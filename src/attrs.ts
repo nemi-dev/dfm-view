@@ -44,6 +44,14 @@ export const Elemental = {
 } as const
 
 
+export const elMapRev = {
+  "el_fire": "화",
+  "el_ice" : "수",
+  "el_lght": "명",
+  "el_dark": "암"
+} as const
+
+
 /** 단 하나의 옵션을 가진 효과를 만든다. */
 export const at1 = memoizee((key: keyof BaseAttrs, value: number): BaseAttrs => ({ [key]: value }), { primitive: true })
 
@@ -68,7 +76,7 @@ export function scalarProduct(attr: BaseAttrs, k: number) {
   return copy
 }
 
-const reduce_eltype = (p: BaseAttrs["eltype"], n: BaseAttrs["eltype"]) => {
+const reduce_eltype = (p: Eltype | Eltype[], n: Eltype | Eltype[]) => {
   if (p == null) return n
   if (typeof p === "string") {
     if (typeof n === "string") {
@@ -204,32 +212,26 @@ export function combine(...attrsList: BaseAttrs[]) {
 
 
 /** TODO: 아니 뭔 함수가 이따구냐 */
-export function collectSpecial(...attrsList: Attrs[]) {
-  const branches: Record<string, WhenCombinedAttrs[]> = {}
-  const exclusives: Record<string, ExclusiveGroup[]> = {}
-  const gives: Record<string, WhenCombinedAttrs> = {}
+export function collectSpecial(...attrsList: ItemOrISet[]) {
+  const branches: Record<string, ConditionalNode[]> = {}
+  const gives: Record<string, ConditionalNode[]> = {}
+  const exclusives: Record<string, ExclusiveSet[]> = {}
 
   for (const attrs of attrsList) {
     if (attrs.branch) branches[attrs.name] = attrs.branch
-    if (attrs.exclusive) exclusives[attrs.name] = attrs.exclusive
     if (attrs.gives) gives[attrs.name] = attrs.gives
+    if (attrs.exclusive) exclusives[attrs.name] = attrs.exclusive
   }
   return { branches, exclusives, gives }
 }
 type El_val = "el_fire" | "el_ice" | "el_lght" | "el_dark"
 
 
-export const elMapRev = {
-  "el_fire": "화",
-  "el_ice" : "수",
-  "el_lght": "명",
-  "el_dark": "암"
-} as const
 
 
 type El = Pick<BaseAttrs, El_val>;
 
-export function whatElType(el: El, activeTypes: BaseAttrs["eltype"]): Eltype[] {
+export function whatElType(el: El, activeTypes: Eltype | Eltype[]): Eltype[] {
   if (activeTypes == null) return []
   if (typeof activeTypes === "string") return [activeTypes]
   const maxValue = Math.max(...activeTypes.map(eltype => el[Elemental[eltype].el]))

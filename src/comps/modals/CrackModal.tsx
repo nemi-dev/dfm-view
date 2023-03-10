@@ -10,7 +10,7 @@ import { selectAtype } from "../../feats/selectors"
 import { SetItem, SetSpell, SetSpellAll } from "../../feats/slices/itemSlice"
 
 interface SelectProps {
-  item: Attrs
+  item: DFItem
   onClick: MouseEventHandler<HTMLDivElement>
 }
 

@@ -10,7 +10,7 @@ import { selectAtype, selectMagicPropNames } from "../feats/selectors"
 import { SetMagicProps } from "../feats/slices/itemSlice"
 
 interface MagicPropsArrayProps {
-  item: Attrs
+  item: DFItem
   part: MagicPropsPart
 }
 
@@ -47,7 +47,7 @@ export function MagicProps({ item, part }: MagicPropsArrayProps) {
   const clickHandler = useCallback((index: number) => {
     const next = nextMagicProps(part, current[index], level, rarity, index === 0)
     dispatch(SetMagicProps([part, index, next]))
-  }, [item.name, part])
+  }, [item.name, part, current])
   return (
     <>
       {array.map((name, index) => index > 0 || rarity === "Epic" ?

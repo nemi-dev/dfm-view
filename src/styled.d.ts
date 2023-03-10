@@ -1,5 +1,5 @@
 declare module 'styled-components/native' {
-  export interface DefaultTheme {
+  declare interface DefaultTheme {
     borderRadius: string;
 
     colors: {

@@ -1,6 +1,7 @@
-import { useContext } from "react"
 import styled from "styled-components"
+import { useContext } from "react"
 import { useAppDispatch, useAppSelector } from "../../feats/hooks"
+import { selectMyName } from "../../feats/selectors"
 import { SetDFClass, SetMyName } from "../../feats/slices/slice"
 import { ModalContext } from "../../modalContext"
 
@@ -16,26 +17,26 @@ input[type=text]& {
 }
 `
 
-function DFClassSelect({ name }: { name: string }) {
+function DFClassSelect({ name }: { name: DFClassName }) {
   if (!name) return <div />
   const { setOpen } = useContext(ModalContext)
   const dispatch = useAppDispatch()
   return <img src={`/img/dfclass/${name}.png`} onClick={()=>(dispatch(SetDFClass(name)), setOpen(false))} />
 }
 
-const dfclassOrder = [
+const dfclassOrder: DFClassName[] = [
   "버서커", "소울브링어", "웨펀마스터", "아수라",
   "레인저(남)", "런처(남)", "메카닉", "스핏파이어",
-  "넨마스터", "스트라이커", "", "",
-  "엘레멘탈마스터", "마도학자", "", "",
+  "넨마스터", "스트라이커", null, null,
+  "엘레멘탈마스터", "마도학자", null, null,
   "크루세이더(여)", "미스트리스", "이단심판관", "무녀",
-  "크루세이더(남)", "인파이터", "", "",
+  "크루세이더(남)", "인파이터", null, null,
   "와일드베인", "윈드시어"
 ]
 
 export function DFClassModal() {
   const dispatch = useAppDispatch()
-  const myName = useAppSelector(state => state.Profile.myName)
+  const myName = useAppSelector(selectMyName)
   return (
     <div>
       <header>
