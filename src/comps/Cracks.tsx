@@ -3,7 +3,8 @@ import { CrackIcon } from "./widgets/Icons"
 import { MagicProps } from './MagicProps'
 import React, { useContext } from 'react'
 import { ModalContext } from '../modalContext'
-import { selectCrackISetAttrs, selectSpells, selectCracksAll, selectBlessing, selectItem } from '../feats/selectors'
+import { selectCrackISetAttrs, selectSpells, selectCracksAll, selectBlessing } from '../feats/selectors'
+import { selectItem } from "../feats/selector/equipSelectors"
 import { SimpleBaseAttrView } from './widgets/AttrsView'
 import styled from 'styled-components'
 

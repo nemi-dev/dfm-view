@@ -4,7 +4,7 @@ import { acceptEmblem } from "../../emblem"
 import { NumberInput } from "../widgets/Forms"
 import { EmblemIcon } from "../widgets/Icons"
 import { ModalContext } from "../../modalContext"
-import { selectEmblemSpecs } from "../../feats/selectors"
+import { selectEmblemSpecs } from "../../feats/selector/equipSelectors"
 import { SetEmblem } from "../../feats/slices/itemSlice"
 
 

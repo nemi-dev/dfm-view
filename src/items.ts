@@ -16,7 +16,7 @@ export const weaponType: readonly Itype[] = Object.freeze([
 export const armorParts: readonly ArmorPart[] = Object.freeze(["상의", "하의", "머리어깨", "벨트", "신발"])
 export const accessParts: readonly AccessPart[] = Object.freeze(["팔찌", "목걸이", "반지"])
 export const equipParts: readonly EquipPart[] = Object.freeze(["무기", ...armorParts, ...accessParts, "보조장비"])
-export const wholeParts: readonly WholePart[] = Object.freeze([...equipParts, "칭호", "오라", "무기아바타", "봉인석", "정수"])
+export const wholeParts: readonly WholePart[] = Object.freeze([...equipParts, "칭호", "오라", "무기아바타", "봉인석", "정수", "크리쳐", "아티팩트"])
 
 /** 단 한 종류의 엠블렘만 넣을 수 있는 부위 모음 */
 export const oneEmblemParts: readonly EquipPart[] = Object.freeze([...armorParts, ...accessParts])
@@ -137,7 +137,7 @@ export const getEquipsOfISet = memoizee(
 , { primitive: true })
 
 /** 아이템에서 세트 개수를 얻는다. */
-export function countISetsFromSupport(...items: DFItem[]) {
+function countISets(items: DFItem[]) {
   const counts: Record<string, number> = {}
   for (const item of items) {
     const s = item.setOf
@@ -159,15 +159,14 @@ export function countISetsFromSupport(...items: DFItem[]) {
   return counts
 }
 
-/**
- * 아이템 갯수로부터 활성화되는 세트들을 얻는다.  
- * @param counts \{ \[세트 이름]: [세트 갯수] } 형태의 오브젝트
- */
-export function getActiveISetAttrs(counts: Record<string, number>) {
+/** 주어진 아이템들로부터 활성화되는 세트들을 얻는다. */
+export function getActiveISets(...items: DFItem[]) {
+  const counts = countISets(items)
   const iset_info: ComplexAttrSource[] = []
   for (const iset_name in counts) {
     const count = counts[iset_name];
     const iset = ISetsNameMap[iset_name]
+    if (!iset) continue
     for (let c = count; c > 0; c--) {
       if (iset[c]) iset_info.push(iset[c])
       
@@ -203,12 +202,27 @@ function activeKey(item: ComplexAttrSource, exclusiveSet: ExclusiveSet) {
   return `${item.name}::${exclusiveSet.name}`
 }
 
+/** 주어진 아이템 또는 아이템 세트에서 "내가 체크한" Exclusive 조건부 노드들 중 선택된 값의 것들을 배열로 얻는다. */
 export function getActiveExclusive(item: ComplexAttrSource, activeKeys: Record<string, string>) {
   if (!(item?.exclusive)) return []
   return item.exclusive
   .filter(exclusiveSet => activeKeys[activeKey(item, exclusiveSet)])
   .map(exclusiveSet => exclusiveSet.children.find(exclusiveNode => exclusiveNode.name === activeKeys[activeKey(item, exclusiveSet)]))
 }
+
+
+/**
+ * 주어진 아이템에서 "내가 체크한" 조건부 노드들을 배열로 얻는다.
+ * @param iii 아이템일 수도 있고, 세트일 수도 있다.
+ */
+export function getActiveCondyces(iii: ComplexAttrSource, { branches, gives, exclusives }: Choices) {
+  return [
+    ...getActiveBranch(iii, branches),
+    ...getActiveGives(iii, gives),
+    ...getActiveExclusive(iii, exclusives)
+  ]
+}
+
 
 
 

@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../feats/hooks"
 import { getCracksOnly } from "../../items"
 import { ModalContext } from "../../modalContext"
 import { Checkie } from "../widgets/Forms"
-import { selectAtype } from "../../feats/selectors"
+import { selectAtype } from "../../feats/selector/selfSelectors"
 import { SetItem, SetSpell, SetSpellAll } from "../../feats/slices/itemSlice"
 import { Select } from "./Select"
 

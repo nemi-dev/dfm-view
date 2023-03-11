@@ -1,7 +1,11 @@
+import { useContext } from 'react'
 import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
-import { selectArtifacts, selectItem } from '../feats/selectors'
+import { selectArtifacts } from "../feats/selector/creatureSelectors"
+import { selectItem } from "../feats/selector/equipSelectors"
 import { SetArtifactValue, SetCreatureStat } from '../feats/slices/slice'
+import { ModalContext } from '../modalContext'
+import { ClosedCondyceSet } from './ConditionalAttrs'
 import { LabeledInput } from "./widgets/Forms"
 import { ItemIcon } from './widgets/Icons'
 import { ItemName } from './widgets/ItemNameView'
@@ -26,10 +30,12 @@ const CreatureOrArtiLayout = styled.div`
 `
 
 function CreatureOrArtifactView({ item }: { item: DFItem }) {
+  const { openModal } = useContext(ModalContext)
+  const part = item.itype as "크리쳐" | "아티팩트"
   return (
     <CreatureOrArtiLayout>
-      <ItemIcon item={item} />
-      <ItemName item={item} />
+      <ItemIcon item={item} onClick={() => openModal({ name: "item", part, index: item.ArtiColor })} />
+      {/* <ItemName item={item} /> */}
     </CreatureOrArtiLayout>
   )
 }
@@ -61,13 +67,14 @@ export function Creatures() {
       </div>
       <header>
       <h4>아티팩트 옵션</h4>
-      <h5>(미지의 이빨 돌려서 맞추는 그)거</h5>
+      <h5>(미지의 이빨 돌려서 맞추는 그거)</h5>
       </header>
       <div className="InputArea">
         <LabeledInput label="레드 아티팩트 옵션 (힘/지능)" value={redValue} onChange={value => dispatch(SetArtifactValue(["RedPropsValue", value]))} />
         <LabeledInput label="블루 아티팩트 옵션 (물리/마법공격력)" value={blueValue} onChange={value => dispatch(SetArtifactValue(["BluePropsValue", value]))} />
         <LabeledInput label="그린 아티팩트 옵션 (속성 강화)" value={greenValue} onChange={value => dispatch(SetArtifactValue(["GreenPropsValue", value]))} />
       </div>
+      <ClosedCondyceSet items={[creature, Red, Green, Blue]} />
     </div>
   )
 }

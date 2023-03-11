@@ -210,26 +210,9 @@ export function combine(...attrsList: BaseAttrs[]) {
   return prev
 }
 
-
-/** TODO: 아니 뭔 함수가 이따구냐 */
-export function collectSpecial(...attrsList: ComplexAttrSource[]) {
-  const branches: Record<string, ConditionalNode[]> = {}
-  const gives: Record<string, ConditionalNode[]> = {}
-  const exclusives: Record<string, ExclusiveSet[]> = {}
-
-  for (const attrs of attrsList) {
-    if (attrs.branch) branches[attrs.name] = attrs.branch
-    if (attrs.gives) gives[attrs.name] = attrs.gives
-    if (attrs.exclusive) exclusives[attrs.name] = attrs.exclusive
-  }
-  return { branches, gives, exclusives }
-}
 type El_val = "el_fire" | "el_ice" | "el_lght" | "el_dark"
 
-
-
-
-type El = Pick<BaseAttrs, El_val>;
+type El = Pick<BaseAttrs, El_val>
 
 export function whatElType(el: El, activeTypes: Eltype | Eltype[]): Eltype[] {
   if (activeTypes == null) return []

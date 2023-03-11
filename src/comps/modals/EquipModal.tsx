@@ -11,7 +11,8 @@ import _left from "../../../data/sets/left.json"
 import _right from "../../../data/sets/right.json"
 import { Checkie } from "../widgets/Forms"
 import { FetchItems, SetCard, SetCardsAllPossible, SetItem } from "../../feats/slices/itemSlice"
-import { selectMyDFClass } from "../../feats/selectors"
+import { selectMyDFClass } from "../../feats/selector/selfSelectors"
+import { Select } from "./Select"
 
 type EquipShotgun = Partial<Pick<ItemsState, EquipPart>>
 
@@ -21,22 +22,6 @@ const right = _right as Record<string, EquipShotgun>
 const CheckieInline = styled(Checkie)`
   display: inline-flex;
 `
-
-function EquipSelect({ item }: { item: DFItem }) {
-  const { message, setOpen } = useContext(ModalContext)
-  const { part } = message as ModalRequestForItem
-  const dispatch = useAppDispatch()
-  const onClick = useCallback(() => {
-    dispatch(SetItem([part as EquipPart | "칭호" | "오라" | "무기아바타", item.name]))
-    setOpen(false)
-  }, [part, item.name])
-  return (
-    <div className="ModalItemSelect" onClick={onClick}>
-      <ItemIcon item={item}/>
-      <ItemName item={item} className="ItemNameResponsive" />
-    </div>
-  )
-}
 
 interface IsetCatalog {
   name: string
@@ -104,13 +89,19 @@ function pickItems(items: DFItem[], part: WholePart, myWeapons: WeaponType[]) {
 }
 
 export function EquipModalFragment() {
-  const { message } = useContext(ModalContext)
+  const { message, setOpen } = useContext(ModalContext)
   const { part } = message as ModalRequestForItem
   const isets = loadShotgun(part) ?? []
   const [query, setQuery] = useState("")
   const [showMyWeaponsOnly, setShowMyWeaponsOnly] = useState(true)
   const myDFclass = useAppSelector(selectMyDFClass)
   const myWeapons = myDFclass.weapons
+
+  const dispatch = useAppDispatch()
+  const onClick = useCallback((item: DFItem) => {
+    dispatch(SetItem([part as EquipPart | "칭호" | "오라" | "무기아바타", item.name]))
+    setOpen(false)
+  }, [part])
   
   const dependencies = [part, showMyWeaponsOnly, myDFclass.name]
 
@@ -140,7 +131,7 @@ export function EquipModalFragment() {
       <h4>단일 장비</h4>
       <div className="ItemSelectArray">
       {result.map((item) => (
-        <EquipSelect key={item.name} item={item} />
+        <Select key={item.name} item={item} onClick={() => onClick(item)} />
       ))}
       </div></> : null
       }

@@ -8,9 +8,10 @@ import { Select } from "./Select"
 export function CreatureModalFragment() {
   const { setOpen, } = useContext(ModalContext)
   const items = getItemsByPart("크리쳐")
+  
   const dispatch = useAppDispatch()
   const onClick = useCallback((name: string) => {
-    dispatch(SetItem(["봉인석", name]))
+    dispatch(SetItem(["크리쳐", name]))
     setOpen(false)
   }, [])
   return (

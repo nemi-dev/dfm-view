@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
-import { selectMyDFClass, selectMyName } from "../feats/selectors"
+import { selectMyDFClass, selectMyName } from "../feats/selector/selfSelectors"
 import { SetMyName } from "../feats/slices/slice"
 import { ModalContext } from "../modalContext"
 

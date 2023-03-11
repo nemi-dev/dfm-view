@@ -6,7 +6,8 @@ import { AttrIcon } from "./widgets/Icons"
 import { Num } from "./widgets/NumberView"
 import { useCallback, useContext } from "react"
 import { PortraitMode } from "../responsiveContext"
-import { selectAtype, selectMagicPropNames } from "../feats/selectors"
+import { selectAtype } from "../feats/selector/selfSelectors"
+import { selectMagicPropNames } from "../feats/selector/equipSelectors"
 import { SetMagicProps } from "../feats/slices/itemSlice"
 
 interface MagicPropsArrayProps {
