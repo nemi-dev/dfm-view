@@ -4,7 +4,7 @@ import { MagicProps } from './MagicProps'
 import React, { useContext } from 'react'
 import { ModalContext } from '../modalContext'
 import { selectCrackISetAttrs, selectSpells, selectCracksAll, selectBlessing, selectItem } from '../feats/selectors'
-import { SimpleBaseAttrView } from './AttrsView'
+import { SimpleBaseAttrView } from './widgets/AttrsView'
 import styled from 'styled-components'
 
 

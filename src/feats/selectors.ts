@@ -28,7 +28,7 @@ export const selectMyDFClass = (state: RootState) => whois(state.Profile.dfclass
 export const selectAtype = (state: RootState) => state.Profile.atype
 
 /** 특정 부위에 장착중인 아이템을 선택한다 */
-export const selectItem = Noot2(part => state => getItem(state.Item[part]), [...equipParts, "칭호", "오라", "무기아바타", "봉인석"])
+export const selectItem = Noot2(part => state => getItem(state.Item[part]), [...equipParts, "칭호", "오라", "무기아바타", "봉인석", "크리쳐"])
 
 /** 특정 부위의 아이템에 바른 카드를 선택한다 */
 export const selectCard = Noot2(part => state =>(getItem(state.Card[part])), cardableParts)
@@ -178,33 +178,33 @@ export function selectEquips(state: RootState) {
   )
 }
 
+export const selectArtifact = memoizee(
+  (color: "Red" | "Green" | "Blue") => (state: RootState) => getItem(state.Item["아티팩트"][color])
+, { primitive: true })
 
-
-
+/** 지금 장착 중인 아티팩트를 얻는다. */
+export function selectArtifacts(state: RootState) {
+  const { Red: redName, Green: greenName, Blue: blueName } = state.Item["아티팩트"]
+  return {
+    Red: getItem(redName), Green: getItem(greenName), Blue: getItem(blueName)
+  }
+}
 
 
 /** 크리쳐 효과 + 크리쳐 스킬 효과 + 아티팩트 효과 를 얻는다. */
 export function selectCreatures(state: RootState): BaseAttrs {
   const
-    stat = state.Creature.stat,
-    skill_stat = state.Creature.skill.stat,
-    skill_el_all = state.Creature.skill.el_all,
-    skill_dmg_add = state.Creature.skill.dmg_add,
-    stat_arti = state.Creature.Artifacts.stat,
-    atk = state.Creature.Artifacts.atk,
-    el_all = state.Creature.Artifacts.el_all,
-    speed_atk = state.Creature.Artifacts.speed_atk,
-    speed_cast = state.Creature.Artifacts.speed_cast
+    stat = state.CreatureProp.CreatureStat,
+    stat_arti = state.CreatureProp.RedPropsValue,
+    atk = state.CreatureProp.BluePropsValue,
+    el_all = state.CreatureProp.GreenPropsEl
   return {
-    strn: stat + skill_stat + stat_arti,
-    intl: stat + skill_stat + stat_arti,
+    strn: stat + stat_arti,
+    intl: stat + stat_arti,
     vit: stat,
     psi: stat,
     ...atx("Atk", atk),
-    ...atx("El", el_all + skill_el_all),
-    dmg_add : skill_dmg_add,
-    speed_atk,
-    speed_cast
+    ...atx("El", el_all)
   }
 }
 

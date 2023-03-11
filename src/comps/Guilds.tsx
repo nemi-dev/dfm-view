@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { selectAtype } from '../feats/selectors'
 import { PerfectGuild, SetGuild } from "../feats/slices/guildSlice"
 import { RootState } from '../feats/store'
-import { SimpleBaseAttrView } from './AttrsView'
+import { SimpleBaseAttrView } from './widgets/AttrsView'
 import { LabeledInput } from "./widgets/Forms"
 
 

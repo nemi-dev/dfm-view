@@ -15,6 +15,12 @@ declare interface ItemsState {
   무기아바타: string
   봉인석: string
   정수: string[]
+  크리쳐: string
+  아티팩트: {
+    Red: string
+    Green: string
+    Blue: string
+  }
 }
 
 declare interface CardState {
@@ -124,34 +130,19 @@ declare interface GuildState {
 }
 
 
-declare interface CreatureState {
+declare interface CreaturePropState {
 
   /** 크리쳐가 주는 모든스탯 보너스 */
-  stat: number
-  
-  /** 크리쳐 스킬 보너스 */
-  skill: {
-    stat: number
-    el_all: number
-    dmg_add: number
-  }
+  CreatureStat: number
 
-  /** 아티팩트 */
-  Artifacts: {
+  /** 레드 아티팩트 옵션에서 "내 스탯" 증가량 총합 */
+  RedPropsValue: number
 
-    /** 빨간색 아티팩트에서 얻는 스탯증가 수치 */
-    stat: number
+  /** 블루 아티팩트 옵션에서 오는 "내 타입 공격력" 증가량 총합 */
+  BluePropsValue: number
 
-    /** 파란색 아티팩트에서 얻는 물리/마법공격력 증가 수치 */
-    atk: number
-
-    /** 초록색 아티팩트에서 얻는 모든속성 강화 수치 */
-    el_all: number
-
-    speed_atk: number
-    speed_cast: number
-
-  }
+  /** 그린 아티팩트 옵션에서 오는 "내 속성강화 + 모든 속성강화" 증가량 총합 */
+  GreenPropsEl: number
 
 }
 
@@ -214,6 +205,6 @@ declare interface DFCharState {
   Avatar?: WearAvatarState
   Tonic?: TonicState
   Guild?: GuildState
-  Creature?: CreatureState
+  CreatureProp?: CreaturePropState
 }
 

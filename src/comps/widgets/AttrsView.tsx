@@ -1,7 +1,7 @@
-import '../style/Attrs.scss'
+import '../../style/Attrs.scss'
 import React from "react"
-import { Num } from "./CommonUI"
-import { attrDefs, AttrExpressionType } from '../attrs'
+import { Num } from "./NumberView"
+import { attrDefs, AttrExpressionType } from '../../attrs'
 
 
 interface FlatValueIncrementProps {

@@ -1,3 +1,4 @@
+import '../style/Common.scss'
 import '../style/App.scss'
 import '../style/Misc.scss'
 

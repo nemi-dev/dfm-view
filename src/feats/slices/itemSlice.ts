@@ -1,7 +1,7 @@
-import { createAction, createReducer, createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { accessParts, armorParts, getItem, oneEmblemParts } from "../../items"
 import _initState from "./initStateMt.json"
-import { DFCharLoad } from "./motherfucker"
+import { DFCharLoad } from "../actions"
 
 
 const itemsInit = _initState.Item as ItemsState
@@ -9,11 +9,8 @@ export const itemSlice = createSlice({
   name: "Item",
   initialState: itemsInit,
   reducers: {
-    SetItem: (s, { payload: [part, itemName] }: PayloadAction<[Exclude<WholePart, "정수">, string]>) => {
+    SetItem: (s, { payload: [part, itemName] }: PayloadAction<[Exclude<WholePart, "정수"|"아티팩트">, string]>) => {
       s[part] = itemName
-    },
-    FetchItems: (s, { payload: items }: PayloadAction<Partial<Omit<ItemsState, "정수">>>) => {
-      Object.assign(s, items)
     },
     SetSpell: (s, { payload: [index, itemName] }: PayloadAction<[number, string]>) => {
       s["정수"][index] = itemName
@@ -21,9 +18,13 @@ export const itemSlice = createSlice({
     SetSpellAll: (s, { payload: itemName }: PayloadAction<string>) => {
       s["정수"].fill(itemName)
     },
-    FetchSpells: (s, { payload }: PayloadAction<string[]>) => {
-      s["정수"] = payload
-    }
+    SetArtifact: (s, { payload: [ color, name ] }: PayloadAction<["Red"|"Green"|"Blue", string]>) => {
+      s["아티팩트"][color] = name
+    },
+
+    FetchItems: (s, { payload: items }: PayloadAction<Partial<Omit<ItemsState, "정수">>>) => {
+      Object.assign(s, items)
+    },
   },
   extraReducers: builder => {
     builder.addCase(DFCharLoad, (state, { payload }) => {
@@ -32,7 +33,7 @@ export const itemSlice = createSlice({
   },
 })
 export const {
-  SetItem, FetchItems, SetSpell, SetSpellAll, FetchSpells
+  SetItem, SetSpell, SetSpellAll, SetArtifact, FetchItems
 } = itemSlice.actions
 
 

@@ -1,10 +1,10 @@
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
-import { ItemName } from './CommonUI'
+import { ItemName } from "./widgets/ItemNameView"
 import { EmblemIcon, SquareIcon, ItemIcon } from "./widgets/Icons"
 import { useCallback, useContext } from 'react'
 import { getAvatarAttr } from '../avatar'
 import { SetAvatarRarity, SetAvatarTypeAll } from '../feats/slices/avatarSlice'
-import { SimpleBaseAttrView } from './AttrsView'
+import { SimpleBaseAttrView } from './widgets/AttrsView'
 import { ModalContext } from "../modalContext"
 import styled from 'styled-components'
 import { PortraitMode } from '../responsiveContext'

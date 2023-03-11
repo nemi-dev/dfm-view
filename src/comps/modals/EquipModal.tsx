@@ -3,18 +3,17 @@ import Fuse from "fuse.js"
 import { useCallback, useContext, useMemo, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../feats/hooks"
 import { getCardsForPart, getItem, getItemsByPart, isAccessPart, isArmorPart } from "../../items"
-import { ItemName } from "../CommonUI"
+import { ItemName } from "../widgets/ItemNameView"
 import { ItemIcon } from "../widgets/Icons"
 import { ModalContext } from "../../modalContext"
 
 import _left from "../../../data/sets/left.json"
 import _right from "../../../data/sets/right.json"
 import { Checkie } from "../widgets/Forms"
-import { whois } from "../../dfclass"
 import { FetchItems, SetCard, SetCardsAllPossible, SetItem } from "../../feats/slices/itemSlice"
 import { selectMyDFClass } from "../../feats/selectors"
 
-type EquipShotgun = Partial<Omit<ItemsState, "정수">>
+type EquipShotgun = Partial<Pick<ItemsState, EquipPart>>
 
 const left = _left as Record<string, EquipShotgun>
 const right = _right as Record<string, EquipShotgun>
@@ -124,7 +123,7 @@ export function EquipModalFragment() {
   const iresult = useMemo(() => query? fusei.search(query).map(s => s.item) : isets, [...dependencies, query])
   return (
     <>
-    <SearchField type="text" placeholder="아이템 이름으로 검색해보세요오옷!!" value={query} onChange={ev => setQuery(ev.target.value)} />
+    <SearchField type="text" placeholder="아이템 이름으로 검색해보세요!!" value={query} onChange={ev => setQuery(ev.target.value)} />
     {part === "무기"? <CheckieInline label="착용가능 무기만 표시하기" checked={showMyWeaponsOnly} onChange={setShowMyWeaponsOnly} /> : null}
     <div className="ModalMenuScrollable">
       {iresult.length > 0?
