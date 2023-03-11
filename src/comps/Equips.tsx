@@ -1,14 +1,14 @@
 import "../style/Equips.scss"
-import { useCallback, useContext, useState } from "react"
 import styled from "styled-components"
 
+import { useCallback, useContext, useMemo, useState } from "react"
+
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
-import { SimpleBaseAttrView } from "./AttrsView"
-import { selectCard, selectEmblemSpecs, selectItem, selectPartAttrs } from "../feats/selectors"
-import { ItemName } from "./CommonUI"
+import { SimpleBaseAttrView } from "./widgets/AttrsView"
+import { selectArmorBase, selectCard, selectEmblemSpecs, selectItem, selectPartAttrs } from "../feats/selectors"
+import { ItemName } from "./widgets/ItemNameView"
 import { NumberInput } from "./widgets/Forms"
 import { ItemIcon } from "./widgets/Icons"
-// import { SetEquipUpgradeValue } from "../feats/slices/equipSlice"
 import { CondsAttrsView } from "./ConditionalAttrs"
 import { ModalContext } from "../modalContext"
 import { MagicProps } from "./MagicProps"
@@ -17,8 +17,10 @@ import { EquipBatch } from "./EquipBatch"
 import { acceptEmblem } from "../emblem"
 import { ArmorMaterialSelect, EmblemArray } from "./Itemy"
 import { DecreaseEmblemLevel, SetUpgradeValue } from "../feats/slices/itemSlice"
+import { combine } from "../attrs"
+import { createSelector } from "@reduxjs/toolkit"
 
-interface EquipProps {
+interface PartProps {
   part: EquipPart
 }
 
@@ -63,7 +65,7 @@ function NormalAddonsArray({ part, interactive = false, showUpgarde = false }: P
 
 
 
-function PartCompact({ part }: EquipProps) {
+function PartCompact({ part }: PartProps) {
   const { openModal } = useContext(ModalContext)
   const item = useAppSelector(selectItem[part])
   const [detail, setDetail] = useState(false)
@@ -95,7 +97,8 @@ const MagicPropsLayout = styled.div`
 `
 
 
-function SlotHeading({ part, onItemNameClicked }: EquipProps & { onItemNameClicked: React.MouseEventHandler<HTMLDivElement> }) {
+
+function SlotHeading({ part, onItemNameClicked }: PartProps & { onItemNameClicked: React.MouseEventHandler<HTMLDivElement> }) {
   const portrait = useContext(PortraitMode)
   if (portrait) return null
   const item = useAppSelector(selectItem[part])
@@ -107,11 +110,13 @@ function SlotHeading({ part, onItemNameClicked }: EquipProps & { onItemNameClick
   )
 }
 
-function PartWide({ part }: EquipProps) {
+function PartWide({ part }: PartProps) {
   const { openModal } = useContext(ModalContext)
   const item = useAppSelector(selectItem[part])
+  const armorbase = useAppSelector(selectArmorBase[part])
+  const attrs =combine(item.attrs, armorbase?.attrs)
   const [detail, setDetail] = useState(false)
-  const equipPartAttr = useAppSelector(selectPartAttrs[part])
+  // const equipPartAttr = useAppSelector(selectPartAttrs[part])
   return (
     <div className="EquipSlot Bordered Hovering">
       <div className="EquipPartLayout">
@@ -125,14 +130,14 @@ function PartWide({ part }: EquipProps) {
       </div>
       {
         (detail && item)?
-        <SimpleBaseAttrView attrs={equipPartAttr} /> : null
+        <SimpleBaseAttrView attrs={attrs} /> : null
       }
     </div>
   )
 }
 
 
-function Part({ part }: EquipProps) {
+function Part({ part }: PartProps) {
   const portrait = useContext(PortraitMode)
   return portrait? <PartCompact part={part} /> : <PartWide part={part} />
 }

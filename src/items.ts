@@ -124,7 +124,7 @@ export const getArmorBase = memoizee(
  */
 export const getItem = (name: string) => _items_index_Name[name]
 
-/** 부위별 장비 모음을 얻는다. */
+/** 부위별 아이템 모음을 얻는다. */
 export const getItemsByPart = (part: WholePart) => _items_index_Part[part]
 
 /** 세트를 구성하는 아이템을 얻는다. */
@@ -242,7 +242,7 @@ export function getBlessing(...items: DFItem[]): [name: string, attrs: BaseAttrs
 export const getCracksOnly = memoizee(
 function getCracksOnly(itype: "봉인석" | "정수", atype: Atype) {
   const attrKey = MyAttrKey[atype]["Stat"]
-  return _items_index_Part[itype].filter(item => item[attrKey])
+  return _items_index_Part[itype].filter(item => item.attrs[attrKey])
 }
 , { primitive: true })
 

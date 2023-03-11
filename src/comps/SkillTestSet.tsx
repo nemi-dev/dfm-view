@@ -4,7 +4,7 @@ import { beautyNumber } from '../utils'
 import { criticalChance, criticize, getDamage } from '../damage'
 import { SetSkillFixValue, SetSkillInputName, SetSkillUsesSkillInc, SetSkillValue } from '../feats/slices/skillInputSlice'
 import { Checkie, LabeledInput } from "./widgets/Forms"
-import { VerboseResult } from './AttrsView'
+import { VerboseResult } from './widgets/AttrsView'
 import { Elemental, MyAttrKey } from '../attrs'
 
 

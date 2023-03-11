@@ -26,7 +26,7 @@ function EmblemSelect({ type, level }: { type: EmblemType, level: number }) {
   const dispatch = useAppDispatch()
   const onClick = useCallback(() => {
     if (part === "칭호") dispatch(SetEmblem(["칭호", 0, type , level as EmblemLevel]))
-    else dispatch(SetEmblem([part as EquipPart, index, type, level]))
+    else dispatch(SetEmblem([part as EquipPart, index as number, type, level]))
     setOpen(false)
   }, [part, index, type, level])
   return (
@@ -45,7 +45,7 @@ export function EmblemModalFragment() {
   const availableEmblemTypes = __emblem_part_(part as EquipPart)
   return(<>
     <div style={{ marginBlockStart: "0.5rem", fontWeight: 700}}>새로 장착할 엠블렘 레벨을 입력한 후, 아래 아이콘을 누르세요</div>
-    <div style={{ marginBlockEnd: "0.5rem", fontSize: "smaller" }}>{index + 1}번째 엠블렘 소켓에 장착됩니다</div>
+    <div style={{ marginBlockEnd: "0.5rem", fontSize: "smaller" }}>{(index as number) + 1}번째 엠블렘 소켓에 장착됩니다</div>
     <div>
       엠블렘 레벨
       <NumberInput className="EmblemLevelInput" min={5} max={10} step={1} value={newLevel} onChange={v => setNewLevel(v as EmblemLevel)} />

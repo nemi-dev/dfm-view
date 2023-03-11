@@ -1,7 +1,7 @@
+import { createSelector } from "@reduxjs/toolkit"
 import { combine } from "../attrs"
 import { RootState } from "./store"
 import { GuildAccu, GuildAtk, GuildCrit, GuildEl, GuildSpeedAtk, GuildStat, GuildStatPublic } from "../guild"
-import { createSelector } from "@reduxjs/toolkit"
 
 export function selectGuildStat({ Guild: { StatLv }, Profile: { atype }}: RootState) {
   return GuildStat(StatLv, atype)

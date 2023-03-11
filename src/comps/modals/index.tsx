@@ -8,9 +8,9 @@ import { RuneModalFragment, SpellModalFragment } from "./CrackModal"
 import { DFClassModal } from "./DFClassModal"
 import { acceptEmblem } from "../../emblem"
 import { useAppSelector } from "../../feats/hooks"
-import { selectSpell, selectItem, selectCard, selectEmblemSpecs } from "../../feats/selectors"
+import { selectSpell, selectItem, selectCard, selectEmblemSpecs, selectArtifacts, selectArtifact } from "../../feats/selectors"
 import { isCardable } from "../../items"
-import { ItemName } from "../CommonUI"
+import { ItemName } from "../widgets/ItemNameView"
 import { ItemIcon, EmblemIcon } from "../widgets/Icons"
 
 
@@ -28,7 +28,10 @@ function CloseModalButton() {
 
 function ItemSelectModal() {
   const { message } = useContext(ModalContext)
+  const { name } = message as ModalRequest
+  if (name !== "item") return
   const { part, target } = message as ModalRequestForItem
+
   if (part === "봉인석") return <RuneModalFragment />
   if (part === "정수") return <SpellModalFragment />
   if (target === "MainItem") return <EquipModalFragment />
@@ -38,14 +41,15 @@ function ItemSelectModal() {
 
 
 
-function mainItemSelector(part: WholePart, index?: number) {
-  if (part === "정수") return selectSpell(index)
+function mainItemSelector(part: WholePart, index?: number | "Red" | "Green" | "Blue") {
+  if (part === "정수") return selectSpell(index as number)
+  if (part === "아티팩트") return selectArtifact(index as "Red"|"Green"|"Blue")
   return selectItem[part]
 }
 
 interface CurrentPartProps {
   part: WholePart
-  index?: number
+  index?: number | "Red" | "Green" | "Blue"
 }
 
 function CurrentPart({ part, index }: CurrentPartProps) {

@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
-import { SimpleBaseAttrView } from "./AttrsView"
+import { SimpleBaseAttrView } from "./widgets/AttrsView"
 import { SetBranch, SetExclusive, SetGives } from "../feats/slices/switchSlice"
 import { selectISets, selectItem } from "../feats/selectors"
 import { Checkie, RadioGroup } from "./widgets/Forms"

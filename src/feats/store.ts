@@ -26,7 +26,7 @@ combineReducers({
   Avatar: avatarSlice.reducer,
   Tonic: tonicSlice.reducer,
   Guild: guildSlice.reducer,
-  Creature: creatureSlice.reducer,
+  CreatureProp: creatureSlice.reducer,
   Choice: switchSlice.reducer,
   Calibrate: calibrateSlice.reducer,
   SkillInput: skillInputSlice.reducer
