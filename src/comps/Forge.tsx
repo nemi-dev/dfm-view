@@ -8,8 +8,8 @@ import { ItemIcon } from "./widgets/Icons"
 import { ModalContext } from "../modalContext"
 import { EquipBatch } from "./EquipBatch"
 import { MagicProps } from "./MagicProps"
-import { selectCard, selectEmblemSpecs, selectItem } from "../feats/selectors"
-import { EquipProps, ArmorMaterialSelect, EmblemArray } from "./Itemy"
+import { selectCard, selectEmblemSpecs, selectItem, selectUpgrade } from "../feats/selector/equipSelectors"
+import { ArmorMaterialSelect, EmblemArray } from "./Itemy"
 import { SetUpgradeValue } from "../feats/slices/itemSlice"
 
 
@@ -40,12 +40,12 @@ const MagicPropsLayout = styled.div`
   
 `
 
-function Part({ part }: EquipProps) {
+function Part({ part }: { part: EquipPart }) {
   const item = useAppSelector(selectItem[part])
   const { openModal } = useContext(ModalContext)
   const dispatch = useAppDispatch()
   const card = useAppSelector(selectCard[part])
-  const upgradeBonus = useAppSelector(state => state.Upgrade[part])
+  const upgradeBonus = useAppSelector(selectUpgrade[part])
   const emblems = useAppSelector(selectEmblemSpecs[part])
   const emblemAccept = acceptEmblem(part)
   return (

@@ -116,7 +116,7 @@ interface AttrDef {
 
 export const attrDefs : { [k in keyof BaseAttrs]: AttrDef } & { array?: AttrDef[] } = {}
 
-function a(key: keyof BaseAttrs, name: string, reducer: (a: any, b: any) => any, expression: AttrExpressionType) {
+function defineAttr(key: keyof BaseAttrs, name: string, reducer: (a: any, b: any) => any, expression: AttrExpressionType) {
   const _a = { key, name, reducer, expression }
   attrDefs[key] = _a
   reducers[key] = reducer
@@ -125,69 +125,69 @@ function a(key: keyof BaseAttrs, name: string, reducer: (a: any, b: any) => any,
 
 
 const attrDefsArray = [
-  a("strn", "힘", add, "Scalar"),
-  a("intl", "지능", add, "Scalar"),
-  a("str_inc", "힘 증가", add, "Percent"),
-  a("int_inc", "지능 증가", add, "Percent"),
+  defineAttr("strn", "힘", add, "Scalar"),
+  defineAttr("intl", "지능", add, "Scalar"),
+  defineAttr("str_inc", "힘 증가", add, "Percent"),
+  defineAttr("int_inc", "지능 증가", add, "Percent"),
 
-  a("atk_ph", "물리 공격력", add, "Scalar"),
-  a("atk_mg", "마법 공격력", add, "Scalar"),
-  a("atk_ph_inc", "물리 공격력 증가", add, "Percent"),
-  a("atk_mg_inc", "마법 공격력 증가", add, "Percent"),
+  defineAttr("atk_ph", "물리 공격력", add, "Scalar"),
+  defineAttr("atk_mg", "마법 공격력", add, "Scalar"),
+  defineAttr("atk_ph_inc", "물리 공격력 증가", add, "Percent"),
+  defineAttr("atk_mg_inc", "마법 공격력 증가", add, "Percent"),
 
-  a("crit_ph", "물리 크리티컬", add, "Scalar"),
-  a("crit_mg", "마법 크리티컬", add, "Scalar"),
-  a("crit_ph_pct", "물리 크리티컬 확률 증가", add, "Percent"),
-  a("crit_mg_pct", "마법 크리티컬 확률 증가", add, "Percent"),
+  defineAttr("crit_ph", "물리 크리티컬", add, "Scalar"),
+  defineAttr("crit_mg", "마법 크리티컬", add, "Scalar"),
+  defineAttr("crit_ph_pct", "물리 크리티컬 확률 증가", add, "Percent"),
+  defineAttr("crit_mg_pct", "마법 크리티컬 확률 증가", add, "Percent"),
 
-  a("dmg_inc", "데미지 증가", add, "Percent"),
-  a("cdmg_inc", "크리티컬 데미지 증가", add, "Percent"),
-  a("dmg_add", "추가 데미지", add, "Percent"),
+  defineAttr("dmg_inc", "데미지 증가", add, "Percent"),
+  defineAttr("cdmg_inc", "크리티컬 데미지 증가", add, "Percent"),
+  defineAttr("dmg_add", "추가 데미지", add, "Percent"),
 
-  a("eltype", "공격속성", reduce_eltype, "DearEltype"),
+  defineAttr("eltype", "공격속성", reduce_eltype, "DearEltype"),
 
-  a("el_fire", "화속성 강화", add, "Scalar"),
-  a("el_ice", "수속성 강화", add, "Scalar"),
-  a("el_lght", "명속성 강화", add, "Scalar"),
-  a("el_dark", "암속성 강화", add, "Scalar"),
+  defineAttr("el_fire", "화속성 강화", add, "Scalar"),
+  defineAttr("el_ice", "수속성 강화", add, "Scalar"),
+  defineAttr("el_lght", "명속성 강화", add, "Scalar"),
+  defineAttr("el_dark", "암속성 강화", add, "Scalar"),
 
-  a("eldmg_fire", "화속성 추가 데미지", add, "Percent"),
-  a("eldmg_ice", "수속성 추가 데미지", add, "Percent"),
-  a("eldmg_lght", "명속성 추가 데미지", add, "Percent"),
-  a("eldmg_dark", "암속성 추가 데미지", add, "Percent"),
+  defineAttr("eldmg_fire", "화속성 추가 데미지", add, "Percent"),
+  defineAttr("eldmg_ice", "수속성 추가 데미지", add, "Percent"),
+  defineAttr("eldmg_lght", "명속성 추가 데미지", add, "Percent"),
+  defineAttr("eldmg_dark", "암속성 추가 데미지", add, "Percent"),
 
-  a("sk_inc", "스킬 공격력 증가", percent_inc_mul, "Percent"),
-  a("sk_inc_sum", "스킬 공격력 증가(단리합)", add, "Percent"),
-  a("sk_val", "스킬 공격력 증가", mul_object, "ComplexPercent"),
-  a("sk_lv", "스킬 레벨 증가", add_object, "ComplexScalar"),
-  a("sk_cool", "스킬 쿨타임 감소", add_object, "ComplexPercent"),
+  defineAttr("sk_inc", "스킬 공격력 증가", percent_inc_mul, "Percent"),
+  defineAttr("sk_inc_sum", "스킬 공격력 증가(단리합)", add, "Percent"),
+  defineAttr("sk_val", "스킬 공격력 증가", mul_object, "ComplexPercent"),
+  defineAttr("sk_lv", "스킬 레벨 증가", add_object, "ComplexScalar"),
+  defineAttr("sk_cool", "스킬 쿨타임 감소", add_object, "ComplexPercent"),
 
-  a("target_def", "적 방어력", add, "Scalar"),
-  a("target_res", "적 모든속성 저항", add, "Scalar"),
+  defineAttr("target_def", "적 방어력", add, "Scalar"),
+  defineAttr("target_res", "적 모든속성 저항", add, "Scalar"),
 
-  a("speed_atk", "공격속도", add, "Percent"),
-  a("speed_cast", "캐스팅속도", add, "Percent"),
-  a("speed_move", "이동속도", add, "Percent"),
+  defineAttr("speed_atk", "공격속도", add, "Percent"),
+  defineAttr("speed_cast", "캐스팅속도", add, "Percent"),
+  defineAttr("speed_move", "이동속도", add, "Percent"),
 
-  a("Accu", "적중", add, "Scalar"),
-  a("AccuPct", "적중 확률 증가", add, "Percent"),
+  defineAttr("Accu", "적중", add, "Scalar"),
+  defineAttr("AccuPct", "적중 확률 증가", add, "Percent"),
 
-  a("hpmax", "HP MAX", add, "Scalar"),
-  a("mpmax", "MP MAX", add, "Scalar"),
-  a("vit", "체력", add, "Scalar"),
-  a("psi", "정신력", add, "Scalar"),
+  defineAttr("hpmax", "HP MAX", add, "Scalar"),
+  defineAttr("mpmax", "MP MAX", add, "Scalar"),
+  defineAttr("vit", "체력", add, "Scalar"),
+  defineAttr("psi", "정신력", add, "Scalar"),
 
-  a("def_ph", "물리 방어력", add, "Scalar"),
-  a("def_mg", "마법 방어력", add, "Scalar"),
-  a("def_ph_pct", "물리 방어력 증가", add, "Percent"),
-  a("def_mg_pct", "마법 방어력 증가", add, "Percent"),
+  defineAttr("def_ph", "물리 방어력", add, "Scalar"),
+  defineAttr("def_mg", "마법 방어력", add, "Scalar"),
+  defineAttr("def_ph_pct", "물리 방어력 증가", add, "Percent"),
+  defineAttr("def_mg_pct", "마법 방어력 증가", add, "Percent"),
   
-  a("res_fire", "화속성 저항", add, "Scalar"),
-  a("res_ice",  "수속성 저항", add, "Scalar"),
-  a("res_lght", "명속성 저항", add, "Scalar"),
-  a("res_dark", "암속성 저항", add, "Scalar"),
+  defineAttr("res_fire", "화속성 저항", add, "Scalar"),
+  defineAttr("res_ice",  "수속성 저항", add, "Scalar"),
+  defineAttr("res_lght", "명속성 저항", add, "Scalar"),
+  defineAttr("res_dark", "암속성 저항", add, "Scalar"),
 
-  a("misc", "기타 관심없는 효과", combineArray, "Misc")
+  defineAttr("misc", "기타 관심없는 효과", combineArray, "Misc")
 ]
 
 attrDefs.array = attrDefsArray
@@ -210,26 +210,9 @@ export function combine(...attrsList: BaseAttrs[]) {
   return prev
 }
 
-
-/** TODO: 아니 뭔 함수가 이따구냐 */
-export function collectSpecial(...attrsList: ComplexAttrSource[]) {
-  const branches: Record<string, ConditionalNode[]> = {}
-  const gives: Record<string, ConditionalNode[]> = {}
-  const exclusives: Record<string, ExclusiveSet[]> = {}
-
-  for (const attrs of attrsList) {
-    if (attrs.branch) branches[attrs.name] = attrs.branch
-    if (attrs.gives) gives[attrs.name] = attrs.gives
-    if (attrs.exclusive) exclusives[attrs.name] = attrs.exclusive
-  }
-  return { branches, gives, exclusives }
-}
 type El_val = "el_fire" | "el_ice" | "el_lght" | "el_dark"
 
-
-
-
-type El = Pick<BaseAttrs, El_val>;
+type El = Pick<BaseAttrs, El_val>
 
 export function whatElType(el: El, activeTypes: Eltype | Eltype[]): Eltype[] {
   if (activeTypes == null) return []

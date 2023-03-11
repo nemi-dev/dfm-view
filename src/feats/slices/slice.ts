@@ -1,27 +1,21 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 
-const creatureInit: CreatureState = 
+const creatureInit: CreaturePropState = 
 {
-  stat: 156,
-  skill: { dmg_add: 18, el_all: 5, stat: 0 },
-  Artifacts: {
-    stat: 63, atk: 50, el_all: 10, speed_atk: 4, speed_cast: 6
-  }
+  CreatureStat: 156,
+  RedPropsValue: 50, BluePropsValue: 50, GreenPropsEl: 10,
 }
 
 export const creatureSlice = createSlice({
-  name: 'Creature',
+  name: 'CreatureProp',
   initialState: creatureInit,
   reducers: {
     SetCreatureStat: (s, { payload }: PayloadAction<number>) => {
-      s.stat = payload
+      s.CreatureStat = payload
     },
-    SetCreatureSkill: (s, { payload: [attr_name, value] }: PayloadAction<["stat" | "dmg_add" | "el_all", number]>) => {
-      s.skill[attr_name] = value
-    },
-    SetArtifactValue: (s, { payload: [attr_name, value] }: PayloadAction<["stat" | "atk" | "el_all" | "speed_atk" | "speed_cast", number]>) => {
-      s.Artifacts[attr_name] = value
+    SetArtifactValue: (s, { payload: [attr_name, value] }: PayloadAction<["RedPropsValue"|"GreenPropsValue"|"BluePropsValue", number]>) => {
+      s[attr_name] = value
     }
   }
 })
@@ -29,7 +23,6 @@ export const creatureSlice = createSlice({
 
 export const {
   SetCreatureStat,
-  SetCreatureSkill,
   SetArtifactValue
 } = creatureSlice.actions
 

@@ -1,27 +1,12 @@
 import styled from "styled-components"
-import { useCallback, useContext, useState, MouseEventHandler } from "react"
+import { useCallback, useContext, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../feats/hooks"
 import { getCracksOnly } from "../../items"
-import { ItemName } from "../CommonUI"
-import { CrackIcon } from "../widgets/Icons"
 import { ModalContext } from "../../modalContext"
 import { Checkie } from "../widgets/Forms"
-import { selectAtype } from "../../feats/selectors"
+import { selectAtype } from "../../feats/selector/selfSelectors"
 import { SetItem, SetSpell, SetSpellAll } from "../../feats/slices/itemSlice"
-
-interface SelectProps {
-  item: DFItem
-  onClick: MouseEventHandler<HTMLDivElement>
-}
-
-function Select({ item, onClick }: SelectProps) {  
-  return (
-    <div className="ModalItemSelect" onClick={onClick}>
-      <CrackIcon  item={item} />
-      <ItemName item={item} className="ItemNameResponsive" />
-    </div>
-  )
-}
+import { Select } from "./Select"
 
 export function RuneModalFragment() {
   const { setOpen, } = useContext(ModalContext)
@@ -54,7 +39,7 @@ export function SpellModalFragment() {
   const dispatch = useAppDispatch()
   const onClick = useCallback((name: string) => {
     if (all) dispatch(SetSpellAll(name))
-    else dispatch(SetSpell([spellIndex, name]))
+    else dispatch(SetSpell([spellIndex as number, name]))
     setOpen(false)
   }, [spellIndex, all])
   return (

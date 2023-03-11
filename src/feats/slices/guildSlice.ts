@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-import _initState from "./initStateN.json"
+import _initState from "./initStateMt.json"
 
 const perfectGuildStat = {
   "StatLv": 30,

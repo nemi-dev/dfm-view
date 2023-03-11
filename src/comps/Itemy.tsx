@@ -1,6 +1,6 @@
 import { useAppSelector, useAppDispatch } from "../feats/hooks"
 import { isArmorPart } from "../items"
-import { selectItem, selectCustomMaterial } from "../feats/selectors"
+import { selectItem, selectCustomMaterial } from "../feats/selector/equipSelectors"
 import { EmblemIcon } from "./widgets/Icons"
 import { SetMaterial } from "../feats/slices/itemSlice"
 
@@ -17,7 +17,8 @@ export function ArmorMaterialSelect({ part }: EquipProps) {
   const material = useAppSelector(selectCustomMaterial[part])
   const dispatch = useAppDispatch()
   return (
-    <select className="ArmorMaterialSelector" value={material} onChange={ev => dispatch(SetMaterial([part, ev.target.value as ArmorMaterial]))}>
+    <select className="ArmorMaterialSelector" value={material}
+      onChange={ev => dispatch(SetMaterial([part, ev.target.value as ArmorMaterial]))}>
       <option value="천">천</option>
       <option value="가죽">가죽</option>
       <option value="경갑">경갑</option>
