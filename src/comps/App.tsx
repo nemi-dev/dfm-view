@@ -99,7 +99,6 @@ function App() {
   const openModal = useCallback((m: ModalRequest) => {
     setMessage(m)
     setOpen(true)
-    navigator.vibrate(10)
   }, [])
 
   const modalContextValue = { isOpen, setOpen, message, openModal }

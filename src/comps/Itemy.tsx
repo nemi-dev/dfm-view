@@ -1,6 +1,6 @@
 import { useAppSelector, useAppDispatch } from "../feats/hooks"
 import { isArmorPart } from "../items"
-import { selectItem, selectCustomMaterial } from "../feats/selectors"
+import { selectItem, selectCustomMaterial } from "../feats/selector/equipSelectors"
 import { EmblemIcon } from "./widgets/Icons"
 import { SetMaterial } from "../feats/slices/itemSlice"
 

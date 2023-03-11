@@ -1,19 +1,11 @@
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
 import { SimpleBaseAttrView } from "./widgets/AttrsView"
 import { SetBranch, SetExclusive, SetGives } from "../feats/slices/switchSlice"
-import { selectISets, selectItem } from "../feats/selectors"
+import { selectItem } from "../feats/selector/equipSelectors"
 import { Checkie, RadioGroup } from "./widgets/Forms"
-import { equipParts } from "../items"
+import { equipParts, getActiveISets } from "../items"
 import styled from "styled-components"
-import { collectSpecial } from "../attrs"
-import type { RootState } from "../feats/store"
 
-
-/** 지금 적용된 세트로부터, 활성화 여부를 불문하고 모든 가능한 조건부 옵션들을 얻는다. */
-function selectISetCondsAnyPossible(state: RootState) {
-  const isets = selectISets(state)
-  return collectSpecial(...isets)
-}
 
 interface Named {
   name: string
@@ -39,7 +31,6 @@ function LeafView({ itemKey, node, what, Action }: LeafViewProps) {
 interface BrachViewProps extends Named {
   nodes: ConditionalNode[]
   what: "branches" | "gives"
-  Action: (typeof SetBranch | typeof SetGives)
 }
 
 const CondOne = styled.div`
@@ -54,7 +45,9 @@ const CondOne = styled.div`
   }
 `
 
-export function BranchOrGivesView({ name, nodes, what, Action }: BrachViewProps) {
+export function BranchOrGivesView({ name, nodes, what }: BrachViewProps) {
+  if (!nodes) return null
+  const Action = what === "branches" ? SetBranch : SetGives
   return (
     <CondOne>
       <div className="CondContainerName">{name}</div>
@@ -66,7 +59,7 @@ export function BranchOrGivesView({ name, nodes, what, Action }: BrachViewProps)
   )
 }
 
-function ExclusiveOneBranchView({ prefix, node }: { prefix: string, node: ExclusiveSet }) {
+function ExclusiveNodeView({ prefix, node }: { prefix: string, node: ExclusiveSet }) {
   const values = node.children.map(n => n.name)
   const value = useAppSelector(state => state.Choice.exclusives[prefix])
   const dispatch = useAppDispatch()
@@ -80,39 +73,38 @@ interface ExclusiveViewProps extends Named {
 }
 
 
-export function ExclusiveView({ name, exclusives }: ExclusiveViewProps) {
+export function ExclusiveSetView({ name, exclusives }: ExclusiveViewProps) {
+  if (!exclusives) return null
   return (
     <CondOne>
       <div className="CondContainerName">{name}</div>
       {exclusives.map((node) => {
         const prefix = `${name}::${node.name}`
-        return <ExclusiveOneBranchView key={prefix} prefix={prefix} node={node} />
+        return <ExclusiveNodeView key={prefix} prefix={prefix} node={node} />
       })}
     </CondOne>
   )
 }
 
-
-export function Partie({ part }: { part: EquipPart | "칭호" }) {
-  const item = useAppSelector(selectItem[part])
-  if (!item) return null
-  const name = item.name
-  const { branch, exclusive, gives } = item ?? {}
-  if (!(branch || exclusive || gives)) return null
-  return (
-    <>
-      {branch? <BranchOrGivesView name={name} nodes={branch} what="branches" Action={SetBranch} /> : null}
-      {gives?  <BranchOrGivesView name={name} nodes={gives} what="gives" Action={SetGives} /> : null }
-      {exclusive? <ExclusiveView name={name} exclusives={exclusive} /> : null}
-    </>
-  )
+interface CondyceProps {
+  iii: ComplexAttrSource
 }
+
+export function Condyce({ iii }: CondyceProps) {
+  if (!iii) return null
+  const { name, branch, gives, exclusive } = iii
+  if (!(branch || exclusive || gives)) return null
+  return <>
+    <BranchOrGivesView what="branches" name={name} nodes={branch} />
+    <BranchOrGivesView what="gives" name={name} nodes={gives} />
+    <ExclusiveSetView name={name} exclusives={exclusive} />
+  </>
+}
+
 
 const CondArray = styled.div`
 display: grid;
 grid-template-columns: 1fr 1fr;
-
-
 
 @media (max-width: 999px) {
   display: flex;
@@ -120,26 +112,17 @@ grid-template-columns: 1fr 1fr;
 }
 `
 
-export function CondsAttrsView() {
-  const {
-    branches: isetBranches,
-    gives: isetGives,
-    exclusives: isetExclusives,
-  } = useAppSelector(selectISetCondsAnyPossible)
-  return(
-    <div>
-      <CondArray className="CondArray">
-        {equipParts.map(part => <Partie key={part} part={part} />)}
-        {Object.keys(isetBranches).sort().map((key) => 
-          <BranchOrGivesView key={key} what="branches" name={key} nodes={isetBranches[key]} Action={SetBranch} />
-        )}
-        {Object.keys(isetGives).sort().map((key) => 
-          <BranchOrGivesView key={key} what="gives" name={key} nodes={isetGives[key]} Action={SetGives} />
-        )}
-        {Object.keys(isetExclusives).sort().map((isetname) => 
-          <ExclusiveView key={isetname} name={isetname} exclusives={isetExclusives[isetname]} />
-        )}
-      </CondArray>
-    </div>
+export function ClosedCondyceSet({ items }: { items: DFItem[] }) {
+  const isets = getActiveISets(...items)
+  return (
+    <CondArray>
+      {items.map(item => <Condyce key={item.name} iii={item} />)}
+      {isets.map(iset => <Condyce key={iset.name} iii={iset} />)}
+    </CondArray>
   )
+}
+
+export function CondsAttrsView() {
+  const items = equipParts.map(part => useAppSelector(selectItem[part]))
+  return <ClosedCondyceSet items={items} />
 }

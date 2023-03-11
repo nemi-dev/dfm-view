@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import { useContext } from "react"
 import { useAppDispatch, useAppSelector } from "../../feats/hooks"
-import { selectMyName } from "../../feats/selectors"
+import { selectMyName } from "../../feats/selector/selfSelectors"
 import { SetDFClass, SetMyName } from "../../feats/slices/slice"
 import { ModalContext } from "../../modalContext"
 
@@ -30,6 +30,7 @@ const dfclassOrder: DFClassName[] = [
   "넨마스터", "스트라이커", null, null,
   "엘레멘탈마스터", "마도학자", null, null,
   "크루세이더(여)", "미스트리스", "이단심판관", "무녀",
+  "소드마스터", "베가본드", "데몬슬레이어", "다크템플러",
   "크루세이더(남)", "인파이터", null, null,
   "와일드베인", "윈드시어"
 ]

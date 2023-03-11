@@ -8,7 +8,7 @@ import { ItemIcon } from "./widgets/Icons"
 import { ModalContext } from "../modalContext"
 import { EquipBatch } from "./EquipBatch"
 import { MagicProps } from "./MagicProps"
-import { selectCard, selectEmblemSpecs, selectItem, selectUpgrade } from "../feats/selectors"
+import { selectCard, selectEmblemSpecs, selectItem, selectUpgrade } from "../feats/selector/equipSelectors"
 import { ArmorMaterialSelect, EmblemArray } from "./Itemy"
 import { SetUpgradeValue } from "../feats/slices/itemSlice"
 

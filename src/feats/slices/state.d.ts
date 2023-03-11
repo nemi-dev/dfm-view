@@ -146,7 +146,7 @@ declare interface CreaturePropState {
 
 }
 
-declare interface ConditionalSelectors {
+declare interface Choices {
   branches: Record<string, boolean>
   gives: Record<string, boolean>
   exclusives: Record<string, string>

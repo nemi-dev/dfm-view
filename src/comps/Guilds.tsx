@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import { MyAttrKey } from '../attrs'
 import { selectGuildAccu, selectGuildAtk, selectGuildCrit, selectGuildSpeedAtk, selectGuildStat, selectGuildStatPublic } from '../feats/guildSelectors'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
-import { selectAtype } from '../feats/selectors'
+import { selectAtype } from "../feats/selector/selfSelectors"
 import { PerfectGuild, SetGuild } from "../feats/slices/guildSlice"
 import { RootState } from '../feats/store'
 import { SimpleBaseAttrView } from './widgets/AttrsView'
