@@ -4,6 +4,7 @@ import { selectMyDFClass, selectMyName } from "../feats/selectors"
 import { SetMyName } from "../feats/slices/slice"
 import { ModalContext } from "../modalContext"
 
+
 export function StickyNav() {
   const myName = useAppSelector(selectMyName)
   const dfclass = useAppSelector(selectMyDFClass)

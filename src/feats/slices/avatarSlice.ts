@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { avatarParts } from "../../avatar"
 
-import _initState from "./initStateN.json"
+import _initState from "./initStateMt.json"
 const avatarInit = _initState.Avatar as AvatarState
 
 export const avatarSlice = createSlice({
