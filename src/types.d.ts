@@ -4,7 +4,7 @@ declare type Atype = "Physc" | "Magic"
 declare type Rarity = "Common" | "Uncommon" | "Rare" | "Unique" | "Epic"
 declare type Eltype = "Fire" | "Ice" | "Light" | "Dark"
 
-declare type DFClassName = "버서커" | "소울브링어" | "웨펀마스터" | "아수라" | "레인저(남)" | "런처(남)" | "메카닉" | "스핏파이어" | "스트라이커" | "넨마스터" | "엘레멘탈마스터" | "마도학자" | "크루세이더(여)" | "미스트리스" | "이단심판관" | "무녀" | "소드마스터" | "베가본드" | "다크템플러" | "데몬슬레이어" | "크루세이더(남)" | "인파이터" | "와일드베인" | "윈드시어"
+declare type DFClassName = "버서커" | "소울브링어" | "웨펀마스터" | "아수라" | "레인저(남)" | "런처(남)" | "메카닉" | "스핏파이어" | "스트라이커" | "넨마스터" | "엘레멘탈마스터" | "마도학자" | "크루세이더(여)" | "미스트리스" | "이단심판관" | "무녀" | "소드마스터" | "베가본드" | "다크템플러" | "데몬슬레이어" | "크루세이더(남)" | "인파이터" | "와일드베인" | "윈드시어" 
 
 declare type WeaponType = 
 "소검"|"도"|"둔기"|"대검"|"광검"
@@ -15,7 +15,7 @@ declare type WeaponType =
 |"락소드"|"윙블레이드"
 
 declare type Itype = WeaponType
-|"상의"|"하의"|"머리어깨"|"벨트"|"신발"|"목걸이"|"팔찌"|"반지"|"보조장비"|"카드"|"칭호"|"봉인석"|"정수"|"오라"|"무기아바타"
+|"상의"|"하의"|"머리어깨"|"벨트"|"신발"|"목걸이"|"팔찌"|"반지"|"보조장비"|"카드"|"칭호"|"봉인석"|"정수"|"오라"|"무기아바타"|"크리쳐"
 
 /** 
  * - 인벤토리의 [장비] 탭에 나오는 아이템을 끼는 부위  
@@ -38,7 +38,7 @@ declare type AccessPart = "팔찌" | "목걸이" | "반지"
 declare type ArmorMaterial = "천" | "가죽" | "경갑" | "중갑" | "판금"
 
 
-declare type WholePart = EquipPart | "칭호" | "오라" | "무기아바타" | "봉인석" | "정수"
+declare type WholePart = EquipPart | "칭호" | "오라" | "무기아바타" | "봉인석" | "정수" | "크리쳐" | "아티팩트"
 declare type WearAvatarPart = "모자" | "얼굴" | "상의" | "목가슴" | "신발" | "머리" | "하의" | "허리"
 
 declare type MagicPropsCareAbout = "dmg_inc" | "Stat" | "Atk" | "el_fire" | "el_ice" | "el_lght" | "el_dark"
@@ -54,163 +54,163 @@ declare type EmblemSpec = [EmblemType, EmblemLevel]
 
 /** 아이템/아이템 세트/버프 스킬/패시브 스킬 등의 (항상 적용되는) 효과 */
 declare interface BaseAttrs {
-  /**  힘 */
+  /** 힘 */
   strn?: number
 
-  /**  지능 */
+  /** 지능 */
   intl?: number
 
-  /**  힘 증가 (%) */
+  /** 힘 증가 (%) */
   str_inc?: number
 
-  /**  지능 증가 (%) */
+  /** 지능 증가 (%) */
   int_inc?: number
 
-  /**  물리 공격력 */
+  /** 물리 공격력 */
   atk_ph?: number
 
-  /**  마법 공격력 */
+  /** 마법 공격력 */
   atk_mg?: number
 
-  /**  물리 공격력 증가 (%) */
+  /** 물리 공격력 증가 (%) */
   atk_ph_inc?: number
 
-  /**  마법 공격력 증가 (%) */
+  /** 마법 공격력 증가 (%) */
   atk_mg_inc?: number
   
-  /**  물리 크리티컬 */
+  /** 물리 크리티컬 */
   crit_ph?: number
 
-  /**  마법 크리티컬 */
+  /** 마법 크리티컬 */
   crit_mg?: number
 
-  /**  물리 크리티컬 확률 증가 (%) */
+  /** 물리 크리티컬 확률 증가 (%) */
   crit_ph_pct?: number
 
-  /**  마법 크리티컬 확률 증가 (%) */
+  /** 마법 크리티컬 확률 증가 (%) */
   crit_mg_pct?: number
 
-  /**  데미지 증가 (%) */
+  /** 데미지 증가 (%) */
   dmg_inc?: number
 
-  /**  크리티컬 데미지 증가 (%) */
+  /** 크리티컬 데미지 증가 (%) */
   cdmg_inc?: number
 
-  /**  추가 데미지 (%) */
+  /** 추가 데미지 (%) */
   dmg_add?: number
 
-  /**  속성 부여 */
+  /** 속성 부여 */
   eltype?: Eltype | Eltype[]
 
-  /**  화속성 강화 */
+  /** 화속성 강화 */
   el_fire?: number
 
-  /**  수속성 강화 */
+  /** 수속성 강화 */
   el_ice?: number
 
-  /**  명속성 강화 */
+  /** 명속성 강화 */
   el_lght?: number
 
-  /**  암속성 강화 */
+  /** 암속성 강화 */
   el_dark?: number
 
-  /**  화속성 추가 데미지 (%) */
+  /** 화속성 추가 데미지 (%) */
   eldmg_fire?: number
 
-  /**  수속성 추가 데미지 (%) */
+  /** 수속성 추가 데미지 (%) */
   eldmg_ice?: number
 
-  /**  명속성 추가 데미지 (%) */
+  /** 명속성 추가 데미지 (%) */
   eldmg_lght?: number
 
-  /**  암속성 추가 데미지 (%) */
+  /** 암속성 추가 데미지 (%) */
   eldmg_dark?: number
 
-  /**  스킬 공격력 증가 (%) */
+  /** 스킬 공격력 증가 (%) */
   sk_inc?: number
 
-  /**  단리 적용되는 (ex. 패시브 스킬) 스킬 공격력 증가 (%) */
+  /** 단리 적용되는 (ex. 패시브 스킬) 스킬 공격력 증가 (%) */
   sk_inc_sum?: number
 
-  /**  특정 스킬 공격력 증가(%) */
+  /** 특정 스킬 공격력 증가(%) */
   sk_val?: { [k: string]: number }
 
-  /**  특정 스킬의 버프 수치 증가 */
+  /** 특정 스킬의 버프 수치 증가 */
   skb_add?: { [k: string]: number }
 
-  /**  스킬 1회 사용 시 타격횟수 증가 */
+  /** 스킬 1회 사용 시 타격횟수 증가 */
   sk_hit?: { [k: string]: number }
 
-  /**  특정 스킬 레벨 증가 */
+  /** 특정 스킬 레벨 증가 */
   sk_lv?: { [k: string]: number }
 
-  /**  특정 스킬 지속시간 증가 */
+  /** 특정 스킬 지속시간 증가 */
   sk_dur?: { [k: string]: number }
 
-  /**  특정 스킬 쿨타임 증가/감소 (%) */
+  /** 특정 스킬 쿨타임 증가/감소 (%) */
   sk_cool?: { [k: string]: number }
 
-  /**  적 방어력 변화 (내가 공격한 적 + 방어 감소 오라 모두 포함) */
+  /** 적 방어력 변화 (내가 공격한 적 + 방어 감소 오라 모두 포함) */
   target_def?: number
 
-  /**  적 속성저항 변화 (모든속성) */
+  /** 적 속성저항 변화 (모든속성) */
   target_res?: number
 
-  /**  공격 속도 +X% */
+  /** 공격 속도 +X% */
   speed_atk?: number
   
-  /**  캐스팅 속도 +X% */
+  /** 캐스팅 속도 +X% */
   speed_cast?: number
 
-  /**  이동 속도 +X% */
+  /** 이동 속도 +X% */
   speed_move?: number
 
-  /**  적중 */
+  /** 적중 */
   Accu?: number
 
-  /**  적중 확률 증가 (%) */
+  /** 적중 확률 증가 (%) */
   AccuPct?: number
 
-  /**  HP MAX (실적용 제외) */
+  /** HP MAX (실적용 제외) */
   hpmax?: number
 
-  /**  MP MAX (실적용 제외) */
+  /** MP MAX (실적용 제외) */
   mpmax?: number
 
-  /**  체력 */
+  /** 체력 */
   vit?: number
 
-  /**  정신력 */
+  /** 정신력 */
   psi?: number
 
-  /**  물리 방어력 */
+  /** 물리 방어력 */
   def_ph?: number
 
-  /**  마법 방어력 */
+  /** 마법 방어력 */
   def_mg?: number
 
-  /**  물리 방어력 (%) */
+  /** 물리 방어력 (%) */
   def_ph_pct?: number
 
-  /**  마법 방어력 (%) */
+  /** 마법 방어력 (%) */
   def_mg_pct?: number
 
-  /**  화속성 저항 */
+  /** 화속성 저항 */
   res_fire?: number
 
-  /**  수속성 저항 */
+  /** 수속성 저항 */
   res_ice?: number
 
-  /**  명속성 저항 */
+  /** 명속성 저항 */
   res_lght?: number
 
-  /**  암속성 저항 */
+  /** 암속성 저항 */
   res_dark?: number
 
-  /**  최대 중첩 횟수 */
+  /** 최대 중첩 횟수 */
   maxRepeat?: number
 
-  /**  기타 관심없는 효과 */
+  /** 기타 관심없는 효과 */
   misc?: string[]
 }
 
@@ -219,10 +219,10 @@ declare interface ConditionalNode {
   /** (exclusive일 때) 이 효과가 적용될 조건 */
   name?: string
 
-  /**  이 효과가 적용될 조건 */
+  /** 이 효과가 적용될 조건 */
   when?: string
 
-  /**  최대 중첩 횟수 (없으면 1) */
+  /** 최대 중첩 횟수 (없으면 1) */
   maxRepeat?: number
 
   /** 적용되는 효과 */
@@ -234,13 +234,13 @@ declare interface ConditionalNode {
  */
 declare interface ExclusiveSet {
 
-  /**  이 ExclusiveSet이 발동될 조건 */
+  /** 이 ExclusiveSet이 발동될 조건 */
   name?: string
 
-  /**  View에서 표시될 ExclusiveSet 이름 */
+  /** View에서 표시될 ExclusiveSet 이름 */
   label?: string
 
-  /**  이 ExclusiveSet의 조건이 만족되었을 때, 발동될 수 있는 효과 모음 */
+  /** 이 ExclusiveSet의 조건이 만족되었을 때, 발동될 수 있는 효과 모음 */
   children?: ConditionalNode[]
 }
 
@@ -248,55 +248,58 @@ declare interface ExclusiveSet {
 /** 잘 정리된 아이템 */
 declare interface DFItem {
 
-  /**  아이템 이름 */
+  /** 아이템 이름 */
   name: string
 
-  /**  아이템 아이콘 이름 */
+  /** 아이템 아이콘 이름 */
   image?: string
 
-  /**  아이템 오버레이 아이콘 이름 (환영극단 2막 등) */
+  /** 아이템 오버레이 아이콘 이름 (환영극단 2막 등) */
   overlay?: string
 
-  /**  아이템 레벨 (아이템 착용가능 레벨) */
+  /** 아이템 레벨 (아이템 착용가능 레벨) */
   level: number
 
-  /**  아이템 레어도 */
+  /** 아이템 레어도 */
   rarity: Rarity
 
-  /**  아이템 종류 */
+  /** 아이템 종류 */
   itype: Itype
 
-  /**  (카드일 때만) 이 카드를 바를 수 있는 장비 부위 */
-  part?: CardablePart[]
-
-  /**  (방어구일 때만) 재질 */
-  material?: ArmorMaterial
-
-  /**  이 아이템으로 활성화시킬 수 있는 세트 [ex) 에픽 환영극단, 개막/종막] */
+  /** 이 아이템으로 활성화시킬 수 있는 세트 [ex) 에픽 환영극단, 개막/종막] */
   setOf?: "all" | string[]
 
-  /**  이 아이템을 쓸 수 있는 직업 */
+  /** 이 아이템을 쓸 수 있는 직업 */
   who?: DFClassName[]
 
-  /**  이 아이템을 얻을 수 있는 컨텐츠 (환영극단, 오즈마 등) */
+  /** 이 아이템을 얻을 수 있는 컨텐츠 (환영극단, 오즈마 등) */
   content?: string[]
+
+  /** (카드일 때만) 이 카드를 바를 수 있는 장비 부위 */
+  part?: CardablePart[]
+
+  /** (방어구일 때만) 재질 */
+  material?: ArmorMaterial
+
+  /** (아티팩트일 때만) 아티팩트 색깔 */
+  ArtiColor?: "Red" | "Green" | "Blue"
 
   /** 아이템 효과 */
   attrs?: BaseAttrs
 
-  /**  특정 조건에만 적용되는 효과 모음 */
+  /** 특정 조건에만 적용되는 효과 모음 */
   branch?: ConditionalNode[]
 
-  /**  특정 조건을 만족할때 파티원 모두에게 적용되는 효과 모음 */
+  /** 특정 조건을 만족할때 파티원 모두에게 적용되는 효과 모음 */
   gives?: ConditionalNode[]
 
-  /**  특정 조건을 만족할때 생길 수 있는 효과가 여러 개 중에서 하나일 때, 그 모음 */
+  /** 특정 조건을 만족할때 생길 수 있는 효과가 여러 개 중에서 하나일 때, 그 모음 */
   exclusive?: ExclusiveSet[]
 }
 
 /** 아이템 세트 */
 declare interface DFISet {
-  /**  세트 이름 */
+  /** 세트 이름 */
   name?: string
   /**
    * 세트 아이템이 (key:2-9)개 모였을 때 나타나는 효과

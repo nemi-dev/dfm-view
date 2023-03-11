@@ -2,13 +2,15 @@ import { attrDefs, Elemental } from "../attrs"
 import { calcAtk, calcStat, criticalChance } from "../damage"
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
 import { AddSkillInc, RemoveSkillInc, SetBasicAttr, SetEltype, SetSkillInc } from "../feats/slices/calibrateSlice"
-import { selectAtype, selectMe, selectMeNoCond, selectMyFinalEltype } from "../feats/selectors"
+import { selectMe, selectMeNoCond, selectMyFinalEltype } from "../feats/selectors"
+import { selectAtype } from "../feats/selector/selfSelectors"
 import { beautyNumber } from "../utils"
-import { Gridy, Num } from "./CommonUI"
+import { Gridy } from "./widgets/CommonUI"
+import { Num } from "./widgets/NumberView"
 import { CheckboxGroup, DisposableInput, LabeledInput, NumberInput, RadioGroup, Checkie } from "./widgets/Forms"
 
 import styled from 'styled-components'
-import { VerboseResult } from "./AttrsView"
+import { VerboseResult } from "./widgets/AttrsView"
 import { SetAchieveLevel, SetAtype, SetLevel, set_atk_fixed } from "../feats/slices/slice"
 import { createContext, useContext, useState } from "react"
 

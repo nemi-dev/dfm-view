@@ -8,10 +8,13 @@ import { RuneModalFragment, SpellModalFragment } from "./CrackModal"
 import { DFClassModal } from "./DFClassModal"
 import { acceptEmblem } from "../../emblem"
 import { useAppSelector } from "../../feats/hooks"
-import { selectSpell, selectItem, selectCard, selectEmblemSpecs } from "../../feats/selectors"
+import { selectSpell } from "../../feats/selectors"
+import { selectArtifacts, selectArtifact } from "../../feats/selector/creatureSelectors"
+import { selectItem, selectCard, selectEmblemSpecs } from "../../feats/selector/equipSelectors"
 import { isCardable } from "../../items"
-import { ItemName } from "../CommonUI"
+import { ItemName } from "../widgets/ItemNameView"
 import { ItemIcon, EmblemIcon } from "../widgets/Icons"
+import { ArtifactModalFragment, CreatureModalFragment } from "./CreatureModal"
 
 
 interface ItemModalProps {
@@ -26,11 +29,16 @@ function CloseModalButton() {
 }
 
 
-function ItemSelectModal() {
+function ModalRouter() {
   const { message } = useContext(ModalContext)
+  const { name } = message as ModalRequest
+  if (name !== "item") return
   const { part, target } = message as ModalRequestForItem
+
   if (part === "봉인석") return <RuneModalFragment />
   if (part === "정수") return <SpellModalFragment />
+  if (part === "크리쳐") return <CreatureModalFragment />
+  if (part === "아티팩트") return <ArtifactModalFragment />
   if (target === "MainItem") return <EquipModalFragment />
   if (target === "Card") return <CardModalFragment />
   return <EmblemModalFragment />
@@ -38,14 +46,15 @@ function ItemSelectModal() {
 
 
 
-function mainItemSelector(part: WholePart, index?: number) {
-  if (part === "정수") return selectSpell(index)
+function mainItemSelector(part: WholePart, index?: number | "Red" | "Green" | "Blue") {
+  if (part === "정수") return selectSpell(index as number)
+  if (part === "아티팩트") return selectArtifact(index as "Red"|"Green"|"Blue")
   return selectItem[part]
 }
 
 interface CurrentPartProps {
   part: WholePart
-  index?: number
+  index?: number | "Red" | "Green" | "Blue"
 }
 
 function CurrentPart({ part, index }: CurrentPartProps) {
@@ -72,14 +81,14 @@ function CurrentPart({ part, index }: CurrentPartProps) {
 }
 
 
-function ModalRouter() {
+function ModalFragment() {
   const { message } = useContext(ModalContext)
   switch(message.name) {
     case "item":
       return (
         <>
           <CurrentPart part={message.part} index={message.index} />
-          <ItemSelectModal />
+          <ModalRouter />
         </>)
     case "dfclass":
       return <DFClassModal />
@@ -94,7 +103,7 @@ export default function TheModal({ isOpen }: ItemModalProps) {
     onRequestClose={() => setOpen(false)}>
     <CloseModalButton />
     <div className="ModalContent">
-      <ModalRouter />
+      <ModalFragment />
     </div>
   </Modal>)
 }

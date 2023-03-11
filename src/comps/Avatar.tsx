@@ -1,15 +1,16 @@
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
-import { ItemName } from './CommonUI'
+import { ItemName } from "./widgets/ItemNameView"
 import { EmblemIcon, SquareIcon, ItemIcon } from "./widgets/Icons"
 import { useCallback, useContext } from 'react'
 import { getAvatarAttr } from '../avatar'
 import { SetAvatarRarity, SetAvatarTypeAll } from '../feats/slices/avatarSlice'
-import { SimpleBaseAttrView } from './AttrsView'
+import { SimpleBaseAttrView } from './widgets/AttrsView'
 import { ModalContext } from "../modalContext"
 import styled from 'styled-components'
 import { PortraitMode } from '../responsiveContext'
-import { selectAvatarSetAttr, selectCard, selectEmblemSpecs, selectItem, selectRareAvatarCount } from '../feats/selectors'
-import { CondsAttrsView, Partie } from './ConditionalAttrs'
+import { selectAvatarSetAttr, selectRareAvatarCount } from '../feats/selectors'
+import { selectCard, selectEmblemSpecs, selectItem } from "../feats/selector/equipSelectors"
+import { Condyce } from './ConditionalAttrs'
 
 
 export function DFTitle() {
@@ -131,6 +132,7 @@ const AvatarsSecondLayout = styled.div`
 export function Avatars() {
   const { openModal } = useContext(ModalContext)
   const rareCount = useAppSelector(selectRareAvatarCount)
+  const dftitle = useAppSelector(selectItem["칭호"])
   const weaponAvatar = useAppSelector(selectItem["무기아바타"])
   const aura = useAppSelector(selectItem["오라"])
   const dispatch = useAppDispatch()
@@ -178,7 +180,7 @@ export function Avatars() {
         {rareCount < 8 ? <button onClick={setAll}>레압풀셋 착용하기</button> : null}
       </div>
       <div>
-        <Partie part="칭호" />
+        <Condyce iii={dftitle} />
       </div>
       <div>
         <h4>아바타 세트 효과</h4>

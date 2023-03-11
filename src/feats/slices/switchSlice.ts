@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-const switchInit: ConditionalSelectors = {
+const switchInit: Choices = {
   branches: {},
   gives: {},
   exclusives: {}

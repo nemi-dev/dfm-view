@@ -1,53 +1,100 @@
-declare interface PartType {
-  /** 이 부위에 장착된 아이템 이름 */
-  name: string
 
-  /** 
-   * 강화로 얻는 수치 (무기, 방어구, 악세서리, 보조장비에만 있다)  
-   * "강화 단계"가 아니고 힘/지능 또는 물리/마법 공격력 증가 수치임!!!
-   * */
-  upgrade?: number
+declare interface ItemsState {
+  무기: string
+  상의: string
+  하의: string
+  머리어깨: string
+  벨트: string
+  신발: string
+  팔찌: string
+  목걸이: string
+  반지: string
+  보조장비: string
+  칭호: string
+  오라: string
+  무기아바타: string
+  봉인석: string
+  정수: string[]
+  크리쳐: string
+  아티팩트: {
+    Red: string
+    Green: string
+    Blue: string
+  }
+}
 
-  /** 품질 (무기, 방어구, 악세서리, 보조장비에만 있다) */
-  kaledo?: number
+declare interface CardState {
+  무기: string
+  상의: string
+  하의: string
+  머리어깨: string
+  벨트: string
+  신발: string
+  팔찌: string
+  목걸이: string
+  반지: string
+  보조장비: string
+  칭호: string
+}
 
-  /** 엠블렘 (무기, 방어구, 악세서리, 보조장비, 칭호에만 있다) */
-  emblems?: EmblemSpec[]
+declare interface EmblemState {
+  무기: EmblemSpec[]
+  상의: EmblemSpec[]
+  하의: EmblemSpec[]
+  머리어깨: EmblemSpec[]
+  벨트: EmblemSpec[]
+  신발: EmblemSpec[]
+  팔찌: EmblemSpec[]
+  목걸이: EmblemSpec[]
+  반지: EmblemSpec[]
+  보조장비: EmblemSpec[]
+  칭호: EmblemSpec[]
+}
 
-  /** 장착된 카드 이름 (무기, 방어구, 악세서리, 보조장비, 칭호에만 있다) */
-  card?: string
+declare interface MagicPropsState {
+  무기: MagicPropsCareAbout[]
+  상의: MagicPropsCareAbout[]
+  하의: MagicPropsCareAbout[]
+  머리어깨: MagicPropsCareAbout[]
+  벨트: MagicPropsCareAbout[]
+  신발: MagicPropsCareAbout[]
+  팔찌: MagicPropsCareAbout[]
+  목걸이: MagicPropsCareAbout[]
+  반지: MagicPropsCareAbout[]
+  보조장비: MagicPropsCareAbout[]
+  봉인석: MagicPropsCareAbout[]
+}
 
-  /** 마법봉인 (무기, 방어구, 악세서리, 보조장비, 봉인석에만 있다) */
-  magicProps?: MagicPropsCareAbout[]
-
-  /** 아이템 재질 (방어구에만 있다) */
-  material?: ArmorMaterial
-
+declare interface UpgradeOrKaledoState {
+  무기: number
+  상의: number
+  하의: number
+  머리어깨: number
+  벨트: number
+  신발: number
+  팔찌: number
+  목걸이: number
+  반지: number
+  보조장비: number
 }
 
 
-declare interface EquipsState {
 
-  무기: PartType
-  상의: PartType
-  하의: PartType
-  머리어깨: PartType
-  벨트: PartType
-  신발: PartType
-  팔찌: PartType
-  목걸이: PartType
-  반지: PartType
-  보조장비: PartType
-  칭호: PartType
-  봉인석: PartType
-
+declare interface MaterialState {
+  상의: ArmorMaterial
+  하의: ArmorMaterial
+  머리어깨: ArmorMaterial
+  벨트: ArmorMaterial
+  신발: ArmorMaterial
 }
+
+declare type WearAvatarRarity = "Common" | "Uncommon" | "Rare"
+declare type WearAvatarState = { [k in WearAvatarPart]: WearAvatarRarity }
+
+
 
 declare type AvatarState = {
   [k in WearAvatarPart]: "Uncommon" | "Rare"
-} & {
-  오라: string
-  무기아바타: string
 }
 
 
@@ -83,38 +130,23 @@ declare interface GuildState {
 }
 
 
-declare interface CreatureState {
+declare interface CreaturePropState {
 
   /** 크리쳐가 주는 모든스탯 보너스 */
-  stat: number
-  
-  /** 크리쳐 스킬 보너스 */
-  skill: {
-    stat: number
-    el_all: number
-    dmg_add: number
-  }
+  CreatureStat: number
 
-  /** 아티팩트 */
-  Artifacts: {
+  /** 레드 아티팩트 옵션에서 "내 스탯" 증가량 총합 */
+  RedPropsValue: number
 
-    /** 빨간색 아티팩트에서 얻는 스탯증가 수치 */
-    stat: number
+  /** 블루 아티팩트 옵션에서 오는 "내 타입 공격력" 증가량 총합 */
+  BluePropsValue: number
 
-    /** 파란색 아티팩트에서 얻는 물리/마법공격력 증가 수치 */
-    atk: number
-
-    /** 초록색 아티팩트에서 얻는 모든속성 강화 수치 */
-    el_all: number
-
-    speed_atk: number
-    speed_cast: number
-
-  }
+  /** 그린 아티팩트 옵션에서 오는 "내 속성강화 + 모든 속성강화" 증가량 총합 */
+  GreenPropsEl: number
 
 }
 
-declare interface ConditionalSelectors {
+declare interface Choices {
   branches: Record<string, boolean>
   gives: Record<string, boolean>
   exclusives: Record<string, string>
@@ -160,3 +192,19 @@ declare interface CalibrateState {
   target_def: number,
   target_res: number
 }
+
+
+declare interface DFCharState {
+  Item?: ItemsState
+  Card?: CardState
+  Emblem?: EmblemState
+  MagicProps?: MagicPropsState
+  Upgrade?: UpgradeOrKaledoState
+  Kaledo?: UpgradeOrKaledoState
+  Material?: MaterialState
+  Avatar?: WearAvatarState
+  Tonic?: TonicState
+  Guild?: GuildState
+  CreatureProp?: CreaturePropState
+}
+

@@ -3,18 +3,18 @@ import Fuse from "fuse.js"
 import { useCallback, useContext, useMemo, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../feats/hooks"
 import { getCardsForPart, getItem, getItemsByPart, isAccessPart, isArmorPart } from "../../items"
-import { ItemName } from "../CommonUI"
+import { ItemName } from "../widgets/ItemNameView"
 import { ItemIcon } from "../widgets/Icons"
 import { ModalContext } from "../../modalContext"
 
 import _left from "../../../data/sets/left.json"
 import _right from "../../../data/sets/right.json"
 import { Checkie } from "../widgets/Forms"
-import { whois } from "../../dfclass"
 import { FetchItems, SetCard, SetCardsAllPossible, SetItem } from "../../feats/slices/itemSlice"
-import { selectMyDFClass } from "../../feats/selectors"
+import { selectMyDFClass } from "../../feats/selector/selfSelectors"
+import { Select } from "./Select"
 
-type EquipShotgun = Partial<Omit<ItemsState, "정수">>
+type EquipShotgun = Partial<Pick<ItemsState, EquipPart>>
 
 const left = _left as Record<string, EquipShotgun>
 const right = _right as Record<string, EquipShotgun>
@@ -22,22 +22,6 @@ const right = _right as Record<string, EquipShotgun>
 const CheckieInline = styled(Checkie)`
   display: inline-flex;
 `
-
-function EquipSelect({ item }: { item: DFItem }) {
-  const { message, setOpen } = useContext(ModalContext)
-  const { part } = message as ModalRequestForItem
-  const dispatch = useAppDispatch()
-  const onClick = useCallback(() => {
-    dispatch(SetItem([part as EquipPart | "칭호" | "오라" | "무기아바타", item.name]))
-    setOpen(false)
-  }, [part, item.name])
-  return (
-    <div className="ModalItemSelect" onClick={onClick}>
-      <ItemIcon item={item}/>
-      <ItemName item={item} className="ItemNameResponsive" />
-    </div>
-  )
-}
 
 interface IsetCatalog {
   name: string
@@ -105,13 +89,19 @@ function pickItems(items: DFItem[], part: WholePart, myWeapons: WeaponType[]) {
 }
 
 export function EquipModalFragment() {
-  const { message } = useContext(ModalContext)
+  const { message, setOpen } = useContext(ModalContext)
   const { part } = message as ModalRequestForItem
   const isets = loadShotgun(part) ?? []
   const [query, setQuery] = useState("")
   const [showMyWeaponsOnly, setShowMyWeaponsOnly] = useState(true)
   const myDFclass = useAppSelector(selectMyDFClass)
   const myWeapons = myDFclass.weapons
+
+  const dispatch = useAppDispatch()
+  const onClick = useCallback((item: DFItem) => {
+    dispatch(SetItem([part as EquipPart | "칭호" | "오라" | "무기아바타", item.name]))
+    setOpen(false)
+  }, [part])
   
   const dependencies = [part, showMyWeaponsOnly, myDFclass.name]
 
@@ -124,7 +114,7 @@ export function EquipModalFragment() {
   const iresult = useMemo(() => query? fusei.search(query).map(s => s.item) : isets, [...dependencies, query])
   return (
     <>
-    <SearchField type="text" placeholder="아이템 이름으로 검색해보세요오옷!!" value={query} onChange={ev => setQuery(ev.target.value)} />
+    <SearchField type="text" placeholder="아이템 이름으로 검색해보세요!!" value={query} onChange={ev => setQuery(ev.target.value)} />
     {part === "무기"? <CheckieInline label="착용가능 무기만 표시하기" checked={showMyWeaponsOnly} onChange={setShowMyWeaponsOnly} /> : null}
     <div className="ModalMenuScrollable">
       {iresult.length > 0?
@@ -141,7 +131,7 @@ export function EquipModalFragment() {
       <h4>단일 장비</h4>
       <div className="ItemSelectArray">
       {result.map((item) => (
-        <EquipSelect key={item.name} item={item} />
+        <Select key={item.name} item={item} onClick={() => onClick(item)} />
       ))}
       </div></> : null
       }
