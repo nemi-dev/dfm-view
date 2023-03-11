@@ -1,8 +1,8 @@
-import { combineReducers, configureStore, createReducer, createAction } from "@reduxjs/toolkit"
+import { combineReducers, configureStore } from "@reduxjs/toolkit"
 import { creatureSlice, profileSlice } from "./slices/slice"
 // import { crackSlice } from "./slices/cracksSlice"
 import { tonicSlice } from "./slices/tonicSlice"
-import { guildSlice } from "./slices/guildSlice"
+import { FetchGuild, guildSlice } from "./slices/guildSlice"
 // import { equipSlice } from "./slices/equipSlice"
 import { switchSlice } from "./slices/switchSlice"
 import { avatarSlice } from "./slices/avatarSlice"
@@ -16,6 +16,7 @@ import { cardSlice, emblemSlice, itemSlice, magicPropsSlice, materialSlice, upgr
 const reducer = 
 
 combineReducers({
+  Profile: profileSlice.reducer,
   Item: itemSlice.reducer,
   Card: cardSlice.reducer,
   Emblem: emblemSlice.reducer,
@@ -26,11 +27,12 @@ combineReducers({
   Tonic: tonicSlice.reducer,
   Guild: guildSlice.reducer,
   Creature: creatureSlice.reducer,
-  Profile: profileSlice.reducer,
   Choice: switchSlice.reducer,
   Calibrate: calibrateSlice.reducer,
   SkillInput: skillInputSlice.reducer
 })
+
+
 /*
 const persistedReducer = persistReducer({
   key: "root",

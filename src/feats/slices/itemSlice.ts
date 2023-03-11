@@ -1,6 +1,7 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { createAction, createReducer, createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { accessParts, armorParts, getItem, oneEmblemParts } from "../../items"
-import _initState from "./initStateN.json"
+import _initState from "./initStateMt.json"
+import { DFCharLoad } from "./motherfucker"
 
 
 const itemsInit = _initState.Item as ItemsState
@@ -23,7 +24,12 @@ export const itemSlice = createSlice({
     FetchSpells: (s, { payload }: PayloadAction<string[]>) => {
       s["정수"] = payload
     }
-  }
+  },
+  extraReducers: builder => {
+    builder.addCase(DFCharLoad, (state, { payload }) => {
+      Object.assign(state, payload.Item)
+    })
+  },
 })
 export const {
   SetItem, FetchItems, SetSpell, SetSpellAll, FetchSpells
@@ -47,6 +53,11 @@ export const cardSlice = createSlice({
     FetchCards: (s, { payload: cards }: PayloadAction<CardState>) => {
       Object.assign(s, cards)
     }
+  },
+  extraReducers: builder => {
+    builder.addCase(DFCharLoad, (s, { payload }) => {
+      Object.assign(s, payload.Card)
+    })
   }
 })
 export const {
@@ -76,6 +87,11 @@ export const emblemSlice = createSlice({
     FetchEmblems: (s, { payload: emblems }: PayloadAction<EmblemState>) => {
       Object.assign(s, emblems)
     }
+  },
+  extraReducers: builder => {
+    builder.addCase(DFCharLoad, (s, { payload }) => {
+      Object.assign(s, payload)
+    })
   }
 })
 export const {
@@ -103,6 +119,11 @@ export const magicPropsSlice = createSlice({
     FetchMagicProps: (s, { payload }: PayloadAction<MagicPropsState>) => {
       Object.assign(s, payload)
     }
+  },
+  extraReducers: builder => {
+    builder.addCase(DFCharLoad, (s, { payload }) => {
+      Object.assign(s, payload.MagicProps)
+    })
   }
 })
 export const {
@@ -128,6 +149,11 @@ export const upgradeSlice = createSlice({
     FetchUpgrades: (s, { payload }: PayloadAction<UpgradeOrKaledoState>) => {
       Object.assign(s, payload)
     }
+  },
+  extraReducers: builder => {
+    builder.addCase(DFCharLoad, (s, { payload }) => {
+      Object.assign(s, payload.Upgrade)
+    })
   }
 })
 export const {
@@ -149,8 +175,15 @@ export const materialSlice = createSlice({
     FetchMaterials: (s, { payload }: PayloadAction<MaterialState>) => {
       Object.assign(s, payload)
     }
+  },
+  extraReducers: builder => {
+    builder.addCase(DFCharLoad, (s, { payload }) => {
+      Object.assign(s, payload.Material)
+    })
   }
 })
 export const {
   SetMaterial, SetMaterialAll, FetchMaterials
 } = materialSlice.actions
+
+
