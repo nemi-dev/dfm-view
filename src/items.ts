@@ -242,7 +242,7 @@ export function getBlessing(...items: DFItem[]): [name: string, attrs: BaseAttrs
 export const getCracksOnly = memoizee(
 function getCracksOnly(itype: "봉인석" | "정수", atype: Atype) {
   const attrKey = MyAttrKey[atype]["Stat"]
-  return _items_index_Part[itype].filter(item => item[attrKey])
+  return _items_index_Part[itype].filter(item => item.attrs[attrKey])
 }
 , { primitive: true })
 
