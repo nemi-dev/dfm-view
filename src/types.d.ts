@@ -37,7 +37,7 @@ declare type AccessPart = "팔찌" | "목걸이" | "반지"
 
 declare type ArmorMaterial = "천" | "가죽" | "경갑" | "중갑" | "판금"
 
-
+declare type SingleItemPart = EquipPart | "칭호" | "오라" | "무기아바타" | "봉인석" | "크리쳐"
 declare type WholePart = EquipPart | "칭호" | "오라" | "무기아바타" | "봉인석" | "정수" | "크리쳐" | "아티팩트"
 declare type WearAvatarPart = "모자" | "얼굴" | "상의" | "목가슴" | "신발" | "머리" | "하의" | "허리"
 
@@ -50,6 +50,9 @@ declare type EmblemLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 declare type EmblemType = "Red" | "Yellow" | "Green" | "Blue" | "Stren" | "Intel" | "Fire" | "Ice" | "Light" | "Dark"
 
 declare type EmblemSpec = [EmblemType, EmblemLevel]
+
+declare type WearAvatarRarity = "Common" | "Uncommon" | "Rare"
+
 
 
 /** 아이템/아이템 세트/버프 스킬/패시브 스킬 등의 (항상 적용되는) 효과 */
@@ -250,6 +253,9 @@ declare interface DFItem {
 
   /** 아이템 이름 */
   name: string
+
+  /** 아이템 ID */
+  id?: number | string
 
   /** 아이템 아이콘 이름 */
   image?: string

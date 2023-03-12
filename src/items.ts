@@ -16,6 +16,7 @@ export const weaponType: readonly Itype[] = Object.freeze([
 export const armorParts: readonly ArmorPart[] = Object.freeze(["상의", "하의", "머리어깨", "벨트", "신발"])
 export const accessParts: readonly AccessPart[] = Object.freeze(["팔찌", "목걸이", "반지"])
 export const equipParts: readonly EquipPart[] = Object.freeze(["무기", ...armorParts, ...accessParts, "보조장비"])
+export const singleItemParts: readonly SingleItemPart[] = Object.freeze([...equipParts,  "칭호", "오라", "무기아바타", "봉인석", "크리쳐",])
 export const wholeParts: readonly WholePart[] = Object.freeze([...equipParts, "칭호", "오라", "무기아바타", "봉인석", "정수", "크리쳐", "아티팩트"])
 
 /** 단 한 종류의 엠블렘만 넣을 수 있는 부위 모음 */
@@ -37,9 +38,8 @@ export const isArmorPart = (key: WholePart): key is ArmorPart => armorParts.incl
 export const isAccessPart = (key: WholePart): key is AccessPart => accessParts.includes(key as AccessPart)
 
 /** p가 카드/엠블렘 장착 가능 부위인가? */
-export function isCardable(p: WholePart): p is CardablePart {
-  return cardableParts.includes(p as any)
-}
+export const isCardable= (p: WholePart): p is CardablePart => cardableParts.includes(p as any)
+
 
 /** 주어진 부위의 "상위 종류"를 얻는다. (ex. "방어구", "악세서리", "무기", "봉인석") */
 export function getSupertype(part: EquipPart | "봉인석") {
@@ -81,7 +81,7 @@ function assignIset(item: DFItem, setOf: string | string[]) {
   isetChildren[setOf].push(name)
 }
 
-for (const item of items) {
+for (const item of items) {  
   _items_index_Name[item.name] = item
 
   const part = getPart(item.itype)

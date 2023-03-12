@@ -8,7 +8,7 @@ import { SimpleBaseAttrView } from './widgets/AttrsView'
 import { ModalContext } from "../modalContext"
 import styled from 'styled-components'
 import { PortraitMode } from '../responsiveContext'
-import { selectAvatarSetAttr, selectRareAvatarCount } from '../feats/selectors'
+import { selectAvatarSetAttr, selectRareAvatarCount } from "../feats/selector/avatarSelectors"
 import { selectCard, selectEmblemSpecs, selectItem } from "../feats/selector/equipSelectors"
 import { Condyce } from './ConditionalAttrs'
 

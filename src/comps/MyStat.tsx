@@ -2,8 +2,8 @@ import { attrDefs, Elemental } from "../attrs"
 import { calcAtk, calcStat, criticalChance } from "../damage"
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
 import { AddSkillInc, RemoveSkillInc, SetBasicAttr, SetEltype, SetSkillInc } from "../feats/slices/calibrateSlice"
-import { selectMe, selectMeNoCond, selectMyFinalEltype } from "../feats/selectors"
-import { selectAtype } from "../feats/selector/selfSelectors"
+import { selectMe, selectMeNoCond, selectMyFinalEltype } from "../feats/selector/selectors"
+import { selectSpecifiedAtype } from "../feats/selector/selfSelectors"
 import { beautyNumber } from "../utils"
 import { Gridy } from "./widgets/CommonUI"
 import { Num } from "./widgets/NumberView"
@@ -121,7 +121,7 @@ function SkillInc() {
 
 export function MyStat() {
   const [excludeCond, setExcludeCond] = useState(false)
-  const atype = useAppSelector(selectAtype)
+  const atype = useAppSelector(selectSpecifiedAtype)
   const me = excludeCond? useAppSelector(selectMeNoCond) : useAppSelector(selectMe)
   const calibrateEltypes = useAppSelector(state => state.Calibrate.eltype)
 
@@ -129,9 +129,9 @@ export function MyStat() {
   const dispatch = useAppDispatch()
 
   const
-    my_level = useAppSelector(state => state.Profile.level),
-    AchieveLevel = useAppSelector(state => state.Profile.achieveLevel),
-    atk_fixed = useAppSelector(state => state.Profile.atk_fixed)
+    my_level = useAppSelector(state => state.Self.level),
+    AchieveLevel = useAppSelector(state => state.Self.achieveLevel),
+    atk_fixed = useAppSelector(state => state.Self.atk_fixed)
   return (
     <MyselfContext.Provider value={me} >
     <div className="MyStat">

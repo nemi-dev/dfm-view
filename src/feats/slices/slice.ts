@@ -28,39 +28,18 @@ export const {
 
 
 
-interface ProfileState {
-
-  /** 얘 이름 */
-  myName: string
-
-  /** 얘 직업 */
-  dfclass: DFClassName
-
-  /** 캐릭터 레벨 (최대 65) */
-  level: number
-
-  /** 업적 레벨 (최대 9) */
-  achieveLevel: number
-  atk_fixed: number
-  atype: Atype
-  targetDefense: number
-  targetElementResist: number
-}
-
-const profileInit : ProfileState = {
+const selfInit : SelfState = {
   myName: "내캐릭터",
   dfclass: "미스트리스",
   level: 65,
   achieveLevel: 9,
   atype: "Magic",
   atk_fixed: 317,
-  targetDefense: 19500,
-  targetElementResist: 0,
 }
 
-export const profileSlice = createSlice({
-  name: 'Profile',
-  initialState: profileInit,
+export const selfSlice = createSlice({
+  name: 'Self',
+  initialState: selfInit,
   reducers: {
     SetMyName: (s, { payload }: PayloadAction<string>) => {
       s.myName = payload
@@ -74,12 +53,7 @@ export const profileSlice = createSlice({
     set_atk_fixed: (s, pay : PayloadAction<number>) => {
       s.atk_fixed = pay.payload
     },
-    SetTargetDefense: (s, pay : PayloadAction<number>) => {
-      s.targetDefense = pay.payload
-    },
-    SetTragetResist: (s, pay : PayloadAction<number>) => {
-      s.targetElementResist = pay.payload
-    },
+    
   }
 })
 
@@ -90,7 +64,29 @@ export const {
   SetAchieveLevel,
   SetAtype,
   set_atk_fixed,
-  SetTargetDefense,
-  SetTragetResist,
-} = profileSlice.actions
+  
+} = selfSlice.actions
 
+
+const enemyTargetInit: EnemyTargetState = {
+  Defense: 19500,
+  ElRes: 0
+}
+
+export const enemyTargetSlice = createSlice({
+  name: "EnemyTarget",
+  initialState: enemyTargetInit,
+  reducers: {
+    SetEnemyDefense: (s, pay : PayloadAction<number>) => {
+      s.Defense = pay.payload
+    },
+    SetEnemyResist: (s, pay : PayloadAction<number>) => {
+      s.ElRes = pay.payload
+    },
+  }
+})
+
+export const {
+  SetEnemyDefense,
+  SetEnemyResist,
+} = enemyTargetSlice.actions

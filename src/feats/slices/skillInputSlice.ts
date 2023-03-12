@@ -1,11 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
-interface SkillInputInit {
-  cases: SkillOneAttackSpec[]
-}
 
-const initialState: SkillInputInit = {
+const initialState: SkillInputState = {
   cases: [
     { name: "평타",value: 381, fixed: 96, isSkill: false },
     { name: "평타 막타",value: 505, fixed: 128, isSkill: false },

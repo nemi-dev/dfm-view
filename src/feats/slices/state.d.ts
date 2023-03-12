@@ -1,3 +1,27 @@
+declare interface SelfState {
+
+  /** 얘 이름 */
+  myName: string
+
+  /** 얘 직업 */
+  dfclass: DFClassName
+
+  /** 캐릭터 레벨 (최대 65) */
+  level: number
+
+  /** 
+   * 공격타입
+   * @deprecated `selectMyDFClass` 또는 `whois`로 얻은 객체의 `Atype`을 쓸것
+   */
+  atype: Atype
+
+  /** 업적 레벨 (최대 9) */
+  achieveLevel: number
+  
+  /** 독립 공격력 */
+  atk_fixed: number
+
+}
 
 declare interface ItemsState {
   무기: string
@@ -78,8 +102,6 @@ declare interface UpgradeOrKaledoState {
   보조장비: number
 }
 
-
-
 declare interface MaterialState {
   상의: ArmorMaterial
   하의: ArmorMaterial
@@ -88,15 +110,7 @@ declare interface MaterialState {
   신발: ArmorMaterial
 }
 
-declare type WearAvatarRarity = "Common" | "Uncommon" | "Rare"
-declare type WearAvatarState = { [k in WearAvatarPart]: WearAvatarRarity }
-
-
-
-declare type AvatarState = {
-  [k in WearAvatarPart]: "Uncommon" | "Rare"
-}
-
+declare type AvatarRarityState = { [k in WearAvatarPart]: WearAvatarRarity }
 
 declare interface TonicState {
   el_all: number
@@ -110,29 +124,38 @@ declare interface TonicState {
   Accu: number
 }
 
-declare interface CracksState {
-
-  /** 장착 중인 정수 이름 */
-  Spells: string[]
-}
-
-
 declare interface GuildState {
+  /** 내 스탯 개인버프 레벨 */
   StatLv: number
+
+  /** 내 타입 공격력 개인버프 레벨 */
   AtkLv: number
+
+  /** 내 공격타입 크리티컬 개인버프 레벨 */
   CritLv: number
+
+  /** 모든속성 강화 개인버프 레벨 */
   ElLv: number
+
+  /** 공격속도 개인버프 레벨 */
   SpeedAtkLv: number
+
+  /** 캐스팅속도 개인버프 레벨 */
   SpeedCastLv: number
+
+  /** 이동속도 개인버프 레벨 */
   SpeedMoveLv: number
+
+  /** 적중 개인버프 레벨 */
   AccuLv: number
+
+  /** 길드 공용버프 레벨 */
   PublicStatLv: number
 }
 
-
 declare interface CreaturePropState {
 
-  /** 크리쳐가 주는 모든스탯 보너스 */
+  /** 크리쳐 레벨에 따라 크리쳐가 주는 모든스탯 보너스 */
   CreatureStat: number
 
   /** 레드 아티팩트 옵션에서 "내 스탯" 증가량 총합 */
@@ -193,8 +216,13 @@ declare interface CalibrateState {
   target_res: number
 }
 
+declare interface SkillInputState {
+  cases: SkillOneAttackSpec[]
+}
 
+/** 여기까지가 "캐릭터 저장" 단위다  */
 declare interface DFCharState {
+  Self?: SelfState
   Item?: ItemsState
   Card?: CardState
   Emblem?: EmblemState
@@ -202,9 +230,17 @@ declare interface DFCharState {
   Upgrade?: UpgradeOrKaledoState
   Kaledo?: UpgradeOrKaledoState
   Material?: MaterialState
-  Avatar?: WearAvatarState
+  Avatar?: AvatarRarityState
   Tonic?: TonicState
   Guild?: GuildState
   CreatureProp?: CreaturePropState
+  Choice?: Choices
+  Calibrate?: CalibrateState
+  SkillInput?: SkillInputState
+}
+
+declare interface EnemyTargetState {
+  Defense: number
+  ElRes: number
 }
 

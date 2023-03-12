@@ -6,7 +6,7 @@ import { AttrIcon } from "./widgets/Icons"
 import { Num } from "./widgets/NumberView"
 import { useCallback, useContext } from "react"
 import { PortraitMode } from "../responsiveContext"
-import { selectAtype } from "../feats/selector/selfSelectors"
+import { selectSpecifiedAtype } from "../feats/selector/selfSelectors"
 import { selectMagicPropNames } from "../feats/selector/equipSelectors"
 import { SetMagicProps } from "../feats/slices/itemSlice"
 
@@ -43,7 +43,7 @@ export function MagicProps({ item, part }: MagicPropsArrayProps) {
   const { level, rarity } = item
   const dispatch = useDispatch()
   const array = useAppSelector(selectMagicPropNames[part])
-  const atype = useAppSelector(selectAtype)
+  const atype = useAppSelector(selectSpecifiedAtype)
   const current = useAppSelector(selectMagicPropNames[part])
   const clickHandler = useCallback((index: number) => {
     const next = nextMagicProps(part, current[index], level, rarity, index === 0)

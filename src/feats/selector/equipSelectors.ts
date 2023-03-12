@@ -1,9 +1,9 @@
 import { createSelector } from "@reduxjs/toolkit"
 import { atx, combine } from "../../attrs"
-import { getActiveISets, getArmorBase, getItem, equipParts, isArmorPart, magicPropsParts, cardableParts, getActiveCondyces } from "../../items"
+import { getActiveISets, getArmorBase, getItem, equipParts, isArmorPart, magicPropsParts, cardableParts, getActiveCondyces, singleItemParts } from "../../items"
 import { getEmblem } from "../../emblem"
 import { getMagicPropsAttrs } from "../../magicProps"
-import { selectAtype } from "./selfSelectors"
+import { selectSpecifiedAtype } from "./selfSelectors"
 
 import type { RootState } from "../store"
 
@@ -18,7 +18,7 @@ export function Noot2<T, P extends WholePart>(func: ($p: P) => (s: RootState) =>
 
 
 /** 특정 부위에 장착중인 아이템을 선택한다 */
-export const selectItem = Noot2(part => state => getItem(state.Item[part]), [...equipParts, "칭호", "오라", "무기아바타", "봉인석", "크리쳐"])
+export const selectItem = Noot2(part => state => getItem(state.Item[part]), singleItemParts)
 
 /** 특정 부위의 아이템에 바른 카드를 선택한다 */
 export const selectCard = Noot2(part => state => (getItem(state.Card[part])), cardableParts)
@@ -58,7 +58,7 @@ export const selectArmorBase = Noot2(
 /** 특정 부위의 마법봉인 효과를 선택한다. */
 export const selectMagicProps = Noot2(
   part => createSelector(
-    selectAtype,
+    selectSpecifiedAtype,
     selectItem[part],
     selectMagicPropNames[part],
     (atype, item, magicProps) => {
@@ -125,9 +125,7 @@ export const selectWholePartAttrs = createSelector(
 /** 현재 착용한 장비들로부터 활성화되는 모든 세트를 얻는다. */
 export const selectISets = createSelector(
   equipParts.map(part => selectItem[part]),
-  (...items) => {
-    return getActiveISets(...items)
-  }
+  getActiveISets
 )
 
 /** 현재 착용중인 10부위 모든장비+카드+엠블렘+강화+마법봉인+세트 효과를 모두 선택한다.
@@ -142,15 +140,13 @@ export const selectEquipsNoConds = createSelector(
 )
 
 /** 현재 착용중인 10장비들로부터 오는 모든 아이템+카드+엠블렘+강화+마법봉인 및 세트 효과, 그리고 이들 중에서 내가 체크한 조건부 효과를 싸그리 긁어모은다. */
-export function selectEquips(state: RootState) {
-
-  const isets = selectISets(state)
-  const isetattrs = isets.map(ii => ii.attrs)
-  const J = isets.flatMap(ii => getActiveCondyces(ii, state.Choice).map(n => n.attrs))
-
-  return combine(
-    ...equipParts.map(part => selectPartAttrs[part](state)),
-    ...isetattrs,
-    ...J
-  )
-}
+export const selectEquips = createSelector(
+  selectISets,
+  selectWholePartAttrs,
+  (state: RootState) => state.Choice,
+  (isets, iattr, choice) => {
+    const isetattrs = isets.map(ii => ii.attrs)
+    const J = isets.flatMap(ii => getActiveCondyces(ii, choice).map(n => n.attrs))    
+    return combine( iattr, ...isetattrs, ...J )
+  }
+)
