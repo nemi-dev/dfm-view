@@ -3,19 +3,19 @@ import { combine } from "../attrs"
 import { RootState } from "./store"
 import { GuildAccu, GuildAtk, GuildCrit, GuildEl, GuildSpeedAtk, GuildStat, GuildStatPublic } from "../guild"
 
-export function selectGuildStat({ Guild: { StatLv }, Profile: { atype }}: RootState) {
+export function selectGuildStat({ Guild: { StatLv }, Self: { atype }}: RootState) {
   return GuildStat(StatLv, atype)
 }
 
-export function selectGuildStatPublic({ Guild: { PublicStatLv }, Profile: { atype }}: RootState) {
+export function selectGuildStatPublic({ Guild: { PublicStatLv }, Self: { atype }}: RootState) {
   return GuildStatPublic(PublicStatLv, atype)
 }
 
-export function selectGuildAtk({ Guild: { AtkLv }, Profile: { atype }}: RootState) {
+export function selectGuildAtk({ Guild: { AtkLv }, Self: { atype }}: RootState) {
   return GuildAtk(AtkLv, atype)
 }
 
-export function selectGuildCrit({ Guild: { CritLv }, Profile: { atype }}: RootState) {
+export function selectGuildCrit({ Guild: { CritLv }, Self: { atype }}: RootState) {
   return GuildCrit(CritLv, atype)
 }
 

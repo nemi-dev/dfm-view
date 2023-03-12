@@ -9,7 +9,7 @@ export const itemSlice = createSlice({
   name: "Item",
   initialState: itemsInit,
   reducers: {
-    SetItem: (s, { payload: [part, itemName] }: PayloadAction<[Exclude<WholePart, "정수"|"아티팩트">, string]>) => {
+    SetItem: (s, { payload: [part, itemName] }: PayloadAction<[SingleItemPart, string]>) => {
       s[part] = itemName
     },
     SetSpell: (s, { payload: [index, itemName] }: PayloadAction<[number, string]>) => {
@@ -21,8 +21,7 @@ export const itemSlice = createSlice({
     SetArtifact: (s, { payload: [ color, name ] }: PayloadAction<["Red"|"Green"|"Blue", string]>) => {
       s["아티팩트"][color] = name
     },
-
-    FetchItems: (s, { payload: items }: PayloadAction<Partial<Omit<ItemsState, "정수">>>) => {
+    FetchItems: (s, { payload: items }: PayloadAction<Partial<ItemsState>>) => {
       Object.assign(s, items)
     },
   },

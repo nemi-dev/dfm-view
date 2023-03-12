@@ -1,5 +1,5 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit"
-import { creatureSlice, profileSlice } from "./slices/slice"
+import { creatureSlice, enemyTargetSlice, selfSlice } from "./slices/slice"
 // import { crackSlice } from "./slices/cracksSlice"
 import { tonicSlice } from "./slices/tonicSlice"
 import { FetchGuild, guildSlice } from "./slices/guildSlice"
@@ -16,7 +16,7 @@ import { cardSlice, emblemSlice, itemSlice, magicPropsSlice, materialSlice, upgr
 const reducer = 
 
 combineReducers({
-  Profile: profileSlice.reducer,
+  Self: selfSlice.reducer,
   Item: itemSlice.reducer,
   Card: cardSlice.reducer,
   Emblem: emblemSlice.reducer,
@@ -29,7 +29,8 @@ combineReducers({
   CreatureProp: creatureSlice.reducer,
   Choice: switchSlice.reducer,
   Calibrate: calibrateSlice.reducer,
-  SkillInput: skillInputSlice.reducer
+  SkillInput: skillInputSlice.reducer,
+  EnemyTarget: enemyTargetSlice.reducer
 })
 
 

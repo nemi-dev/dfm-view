@@ -219,5 +219,4 @@ export function whatElType(el: El, activeTypes: Eltype | Eltype[]): Eltype[] {
   if (typeof activeTypes === "string") return [activeTypes]
   const maxValue = Math.max(...activeTypes.map(eltype => el[Elemental[eltype].el]))
   return activeTypes.filter(eltype => el[Elemental[eltype].el] == maxValue)
-  
 }

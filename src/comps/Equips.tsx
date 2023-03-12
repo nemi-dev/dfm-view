@@ -18,6 +18,7 @@ import { acceptEmblem } from "../emblem"
 import { ArmorMaterialSelect, EmblemArray } from "./Itemy"
 import { DecreaseEmblemLevel, SetUpgradeValue } from "../feats/slices/itemSlice"
 import { combine } from "../attrs"
+import { magicPropsParts } from "../items"
 
 
 interface PartProps {
@@ -27,7 +28,7 @@ interface PartProps {
 }
 
 
-function NormalAddonsArray({ part, interactive = false, showUpgarde = false }: PartProps) {
+function NormalAddons({ part, interactive = false, showUpgarde = false }: PartProps) {
   const { openModal } = useContext(ModalContext)
   const dispatch = useAppDispatch()
   const card = useAppSelector(selectCard[part])
@@ -70,7 +71,7 @@ function PartCompact({ part }: PartProps) {
         <ItemIcon item={item}
         onClick={() => openModal({ name: "item", part, target:"MainItem", index:0 })} />
         <SlotHeading part={part} onItemNameClicked={() => setDetail(!detail)} />
-        {item? <NormalAddonsArray part={part}/> : null}
+        {item? <NormalAddons part={part}/> : null}
       </div>
     </div>
   )
@@ -115,8 +116,8 @@ function PartWide({ part }: PartProps) {
         <ItemIcon item={item}
         onClick={() => openModal({name: "item", part, target: "MainItem", index: 0})} />
         <SlotHeading part={part} onItemNameClicked={() => setDetail(!detail)} />
-        {item? <NormalAddonsArray part={part} showUpgarde interactive /> : null}
-        {item? <MagicPropsLayout>
+        {item? <NormalAddons part={part} showUpgarde interactive /> : null}
+        {magicPropsParts.includes(part) && item? <MagicPropsLayout>
         <MagicProps item={item} part={part} />
         </MagicPropsLayout> : null}
       </div>

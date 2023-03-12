@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import { MyAttrKey } from '../attrs'
 import { selectGuildAccu, selectGuildAtk, selectGuildCrit, selectGuildSpeedAtk, selectGuildStat, selectGuildStatPublic } from '../feats/guildSelectors'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
-import { selectAtype } from "../feats/selector/selfSelectors"
+import { selectSpecifiedAtype } from "../feats/selector/selfSelectors"
 import { PerfectGuild, SetGuild } from "../feats/slices/guildSlice"
 import { RootState } from '../feats/store'
 import { SimpleBaseAttrView } from './widgets/AttrsView'
@@ -80,7 +80,7 @@ function GuildPropOne({ label, value, target, src, max, selector }: GuildsInputP
 
 export function Guilds() {
   const { StatLv, AtkLv, CritLv, ElLv, SpeedAtkLv: SpeedAtkLv, AccuLv, PublicStatLv } =  useAppSelector(state => state.Guild)
-  const atype = useAppSelector(selectAtype)
+  const atype = useAppSelector(selectSpecifiedAtype)
   const { Stat: keyStat, Atk: keyAtk, Crit: keyCrit, 스탯, 타입 } = MyAttrKey[atype]
   const dispatch = useAppDispatch()
   return (

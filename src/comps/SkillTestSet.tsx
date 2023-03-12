@@ -1,12 +1,14 @@
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
-import { selectMe, selectMyFinalEltype } from '../feats/selectors'
-import { selectAtype } from "../feats/selector/selfSelectors"
+import { selectBaseEnemyDefense, selectBaseEnemyElRes, selectMe, selectMyFinalEltype } from '../feats/selector/selectors'
+import { selectSpecifiedAtype } from "../feats/selector/selfSelectors"
 import { beautyNumber } from '../utils'
 import { criticalChance, criticize, getDamage } from '../damage'
 import { SetSkillFixValue, SetSkillInputName, SetSkillUsesSkillInc, SetSkillValue } from '../feats/slices/skillInputSlice'
 import { Checkie, LabeledInput } from "./widgets/Forms"
 import { VerboseResult } from './widgets/AttrsView'
 import { Elemental, MyAttrKey } from '../attrs'
+import { SetEnemyDefense, SetEnemyResist } from '../feats/slices/slice'
+import { Gridy } from './widgets/CommonUI'
 
 
 
@@ -34,10 +36,10 @@ interface SkillOutputOneProps {
 }
 function SkillTestOne({ index, SkillOneAttackSpec }: SkillOutputOneProps) {
 
-  const atype = useAppSelector(selectAtype)
+  const atype = useAppSelector(selectSpecifiedAtype)
 
   const attrs = useAppSelector(selectMe)
-  const atkFix = useAppSelector(state => state.Profile.atk_fixed)
+  const atkFix = useAppSelector(state => state.Self.atk_fixed)
   const me = useAppSelector(selectMe)
   const eltype = useAppSelector(selectMyFinalEltype)
   const el = me[Elemental[eltype[0]]?.el] ?? 0
@@ -62,9 +64,21 @@ function SkillTestOne({ index, SkillOneAttackSpec }: SkillOutputOneProps) {
 
 export function SkillTestSet() {
   const cases = useAppSelector(state => state.SkillInput.cases)
+  const enemyDefense = useAppSelector(selectBaseEnemyDefense)
+  const enemyResist = useAppSelector(selectBaseEnemyElRes)
+  const dispatch = useAppDispatch()
   return (
-    <div style={{ position: "relative" }}>
-      <h3>스킬</h3>
+    <div>
+      <header>
+        <h3>적</h3>
+      </header>
+      <Gridy columns={2} colSize="1fr">
+        <LabeledInput label="적 방어력" value={enemyDefense} onChange={v => dispatch(SetEnemyDefense(v))} />
+        <LabeledInput label="적 속성저항" value={enemyResist} onChange={v => dispatch(SetEnemyResist(v))} />
+      </Gridy>
+      <header>
+        <h3>스킬</h3>
+      </header>
       <div className="SkillTestSet">
       {cases.map((a, index) => (
         <SkillTestOne key={index} index={index} SkillOneAttackSpec={a} />
