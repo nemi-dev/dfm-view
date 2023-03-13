@@ -1,8 +1,8 @@
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
 import { SimpleBaseAttrView } from "./widgets/AttrsView"
-import { SetBranch, SetExclusive, SetGives } from "../feats/slices/switchSlice"
+import { SetBranch, SetExclusive, SetGives } from "../feats/slices/choiceSlice"
 import { selectItem } from "../feats/selector/equipSelectors"
-import { Checkie, RadioGroup } from "./widgets/Forms"
+import { LabeledSwitch, LabeledNumberInput, RadioGroup } from "./widgets/Forms"
 import { equipParts, getActiveISets } from "../items"
 import styled from "styled-components"
 
@@ -18,12 +18,18 @@ interface LeafViewProps {
   Action: (typeof SetBranch | typeof SetGives)
 }
 function LeafView({ itemKey, node, what, Action }: LeafViewProps) {
-  const checked = useAppSelector(state => state.Choice[what][itemKey] ?? false)
+  const value = useAppSelector(state => state.My.Choice[what][itemKey] ?? 0)
+  const maxValue = node.maxRepeat ?? 1
+  console.log(( node ));
+  
   const dispatch = useAppDispatch()
   return (
-    <Checkie checked={checked}
+    <LabeledNumberInput
+      value={value}
       label={<>{node.when}<SimpleBaseAttrView attrs={node.attrs} /></>}
-      onChange={b => dispatch(Action([itemKey, b]))}
+      onChange={v => dispatch(Action([itemKey, v]))}
+      min={0}
+      max={maxValue}
     />
   )
 }
@@ -61,7 +67,7 @@ export function BranchOrGivesView({ name, nodes, what }: BrachViewProps) {
 
 function ExclusiveNodeView({ prefix, node }: { prefix: string, node: ExclusiveSet }) {
   const values = node.children.map(n => n.name)
-  const value = useAppSelector(state => state.Choice.exclusives[prefix])
+  const value = useAppSelector(state => state.My.Choice.exclusives[prefix])
   const dispatch = useAppDispatch()
   return <RadioGroup groupName={node.label} name={prefix} values={values} value={value}
     dispatcher={val => dispatch(SetExclusive([prefix, val]))}

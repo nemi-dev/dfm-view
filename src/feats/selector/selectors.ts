@@ -11,7 +11,7 @@ import { selectWholeAvatarAttrs, selectWholeAvatarAttrsNoCond } from "./avatarSe
 
 /** 마력결정 스탯보너스를 모두 얻는다. */
 export function selectTonics(state: RootState): BaseAttrs {
-  const { el_all, hpmax, mpmax, strn_intl, vit_psi, def_ph, def_mg, Crit, Accu } = state.Tonic
+  const { el_all, hpmax, mpmax, strn_intl, vit_psi, def_ph, def_mg, Crit, Accu } = state.My.Tonic
 
   return {
     strn: strn_intl,
@@ -41,8 +41,8 @@ export function selectTonics(state: RootState): BaseAttrs {
 
 /** 스탯을 보정한 값만을 가져온다. */
 export function selectCalibrated(state: RootState): BaseAttrs {
-  const sk_inc = state.Calibrate.sk_inc.reduce(percent_inc_mul, 0)
-  return { ...state.Calibrate, sk_inc }
+  const sk_inc = state.My.Calibrate.sk_inc.reduce(percent_inc_mul, 0)
+  return { ...state.My.Calibrate, sk_inc }
 }
 
 

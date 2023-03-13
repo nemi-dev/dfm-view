@@ -1,18 +1,22 @@
 import memoizee from "memoizee"
 import { percent_inc_mul, add, combineArray, add_object, mul_object } from "./utils"
 
-export const MyAttrKey = {
+export const AtypeAttrKey = {
   "Physc": {
     "Stat": "strn",
+    "StatInc": "str_inc",
     "Atk" : "atk_ph",
+    "AtkInc": "atk_ph_inc",
     "Crit": "crit_ph",
     "CritCh": "crit_ph_pct",
     "스탯": "힘",
-    "타입": "물리"
+    "타입": "물리",
   },
   "Magic": {
     "Stat": "intl",
+    "StatInc": "int_inc",
     "Atk" : "atk_mg",
+    "AtkInc": "atk_mg_inc",
     "Crit": "crit_mg",
     "CritCh": "crit_mg_pct",
     "스탯": "지능",
@@ -44,14 +48,6 @@ export const Elemental = {
 } as const
 
 
-export const elMapRev = {
-  "el_fire": "화",
-  "el_ice" : "수",
-  "el_lght": "명",
-  "el_dark": "암"
-} as const
-
-
 /** 단 하나의 옵션을 가진 효과를 만든다. */
 export const at1 = memoizee((key: keyof BaseAttrs, value: number): BaseAttrs => ({ [key]: value }), { primitive: true })
 
@@ -70,7 +66,7 @@ function atx(is: "Stat" | "Atk" | "Crit" | "El", val: number): BaseAttrs {
 export function scalarProduct(attr: BaseAttrs, k: number) {
   const copy: BaseAttrs = { }
   for (const key in attr) {
-    if (attrDefs?.[key as keyof BaseAttrs].reducer === add)
+    if (attrDefs[key as keyof BaseAttrs]?.reducer === add)
     copy[key] = attr[key] * k
   }
   return copy

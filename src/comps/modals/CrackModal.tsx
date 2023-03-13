@@ -3,7 +3,7 @@ import { useCallback, useContext, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../feats/hooks"
 import { getCracksOnly } from "../../items"
 import { ModalContext } from "../../modalContext"
-import { Checkie } from "../widgets/Forms"
+import { LabeledSwitch } from "../widgets/Forms"
 import { selectSpecifiedAtype } from "../../feats/selector/selfSelectors"
 import { SetItem, SetSpell, SetSpellAll } from "../../feats/slices/itemSlice"
 import { Select } from "./Select"
@@ -26,7 +26,7 @@ export function RuneModalFragment() {
   )
 }
 
-const Checkie2 = styled(Checkie)`
+const Checkie2 = styled(LabeledSwitch)`
   display: inline-flex;
 `
 

@@ -9,14 +9,14 @@ import { selectItem, selectCard, selectEmblemSpecs } from "./equipSelectors"
 /** 지금 착용중인 레어 아바타의 수를 선택한다. */
 export function selectRareAvatarCount(state: RootState) {
   return avatarParts
-    .map(part => state.Avatar[part])
+    .map(part => state.My.Avatar[part])
     .reduce((n, rarity) => rarity === "Rare" ? n + 1 : n, 0)
 }
 
 /** 지금 착용중인 언커먼 아바타의 수를 선택한다. */
 export function selectUncommonAvatarCount(state: RootState) {
   return avatarParts
-    .map(part => state.Avatar[part])
+    .map(part => state.My.Avatar[part])
     .reduce((n, rarity) => rarity === "Uncommon" ? n + 1 : n, 0)
 }
 
@@ -39,7 +39,7 @@ export const selectAvatarSetAttr = createSelector(
 /** (칭호/오라/무기아바타 빼고) 아바타 효과 + 아바타세트 효과를 모두 선택한다. */
 export function selectAvatarAttrs(state: RootState) {
   return combine(
-    ...avatarParts.map(p => getAvatarAttr(p, state.Avatar[p])),
+    ...avatarParts.map(p => getAvatarAttr(p, state.My.Avatar[p])),
     selectAvatarSetAttr(state)
   )
 }
@@ -55,7 +55,7 @@ export const selectDFTitleAttrsNoCond = createSelector(
 /** 칭호의 조건부 옵션들 중 내가 활성화한 것을 선택한다. */
 export function selectDFTitleCondAttrs(state: RootState) {
   const dftitle = selectItem["칭호"](state)
-  const conds = getActiveCondyces(dftitle, state.Choice)
+  const conds = getActiveCondyces(dftitle, state.My.Choice)
   return combine(...conds.map(co => co.attrs))
 }
 

@@ -4,7 +4,7 @@ import { creatureSlice, enemyTargetSlice, selfSlice } from "./slices/slice"
 import { tonicSlice } from "./slices/tonicSlice"
 import { FetchGuild, guildSlice } from "./slices/guildSlice"
 // import { equipSlice } from "./slices/equipSlice"
-import { switchSlice } from "./slices/switchSlice"
+import { choiceSlice } from "./slices/choiceSlice"
 import { avatarSlice } from "./slices/avatarSlice"
 import { calibrateSlice } from "./slices/calibrateSlice"
 import { skillInputSlice } from "./slices/skillInputSlice"
@@ -13,7 +13,7 @@ import storage from "redux-persist/lib/storage"
 import { cardSlice, emblemSlice, itemSlice, magicPropsSlice, materialSlice, upgradeSlice } from "./slices/itemSlice"
 
 
-const reducer = 
+const My = 
 
 combineReducers({
   Self: selfSlice.reducer,
@@ -27,10 +27,9 @@ combineReducers({
   Tonic: tonicSlice.reducer,
   Guild: guildSlice.reducer,
   CreatureProp: creatureSlice.reducer,
-  Choice: switchSlice.reducer,
+  Choice: choiceSlice.reducer,
   Calibrate: calibrateSlice.reducer,
-  SkillInput: skillInputSlice.reducer,
-  EnemyTarget: enemyTargetSlice.reducer
+  CustomSklill: skillInputSlice.reducer,
 })
 
 
@@ -55,7 +54,10 @@ export const store = configureStore({
 
 */
 export const store = configureStore({
-  reducer
+  reducer: {
+    My,
+    EnemyTarget: enemyTargetSlice.reducer
+  }
 })
 
 

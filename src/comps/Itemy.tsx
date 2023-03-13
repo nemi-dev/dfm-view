@@ -1,5 +1,5 @@
 import { useAppSelector, useAppDispatch } from "../feats/hooks"
-import { isArmorPart } from "../items"
+import { isArmor } from "../items"
 import { selectItem, selectCustomMaterial } from "../feats/selector/equipSelectors"
 import { EmblemIcon } from "./widgets/Icons"
 import { SetMaterial } from "../feats/slices/itemSlice"
@@ -11,7 +11,7 @@ export interface EquipProps {
 }
 
 export function ArmorMaterialSelect({ part }: EquipProps) {
-  if (!isArmorPart(part)) return null
+  if (!isArmor(part)) return null
   const item = useAppSelector(selectItem[part])
   if (!item) return null
   const material = useAppSelector(selectCustomMaterial[part])

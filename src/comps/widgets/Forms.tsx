@@ -1,16 +1,17 @@
-import React, { useCallback, useEffect, useId, useState } from 'react'
+import type { ReactNode, HTMLProps, ChangeEvent, ChangeEventHandler, PropsWithChildren } from 'react'
+import { useCallback, useEffect, useId, useState, useRef } from 'react'
 import styled from 'styled-components'
 
 function prevent(ev : WheelEvent) {
   (ev.target as HTMLElement).blur()
 }
-interface NumberInputProps extends Omit<React.HTMLProps<HTMLInputElement>, "onChange" | "value"> {
+interface NumberInputProps extends Omit<HTMLProps<HTMLInputElement>, "onChange" | "value"> {
   value: number
   onChange: (val: number) => void
 }
 export function NumberInput({ onWheel, value, type, onChange, ...props }: NumberInputProps) {
-  const ref = React.useRef<HTMLInputElement>()
-  React.useEffect(() => {
+  const ref = useRef<HTMLInputElement>()
+  useEffect(() => {
     ref.current.addEventListener("wheel", prevent, { passive: false })
   }, [])
 
@@ -21,35 +22,52 @@ export function NumberInput({ onWheel, value, type, onChange, ...props }: Number
 
   }, [value])
 
-  const _onChange = useCallback((ev: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = parseInt(ev.target.value)
+  const _onChange = useCallback((ev: ChangeEvent<HTMLInputElement>) => {
+    const newValue = Number(ev.target.value)
     setInnerValue(ev.target.value as NumberZ)
-    if (Number.isNaN(newValue))
-      onChange(0)
-    else
-      onChange(newValue)
+    if (Number.isNaN(newValue)) onChange(0)
+    else onChange(newValue)
 
   }, [])
 
   return <input type="number" value={innerValue} onChange={_onChange} ref={ref} {...props} />
 }
-interface LabeledInputProps extends Omit<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, "className" | "label" | "value" | "onChange"> {
-  className?: string
-  label: string
+
+
+
+interface LabeledInputProps extends Omit<HTMLProps<HTMLInputElement>, "label" | "value" | "onChange"> {
+  label: ReactNode
   value: number
   onChange: (val: number) => void
 }
-export function LabeledInput({ className = "", label, value, onChange, placeholder, ...props }: LabeledInputProps) {
+export function LabeledNumberInput({ className = "", label, value, onChange, placeholder, ...props }: LabeledInputProps) {
   const id = useId()
-  if (Number.isNaN(value))
-    value = 0
+  if (Number.isNaN(value)) value = 0
   return (
     <div className={("InputGroup FormDF " + className).trim()}>
       <label className="FormDFName" htmlFor={id}>{label}</label>
-      <NumberInput className="FormDFValue Hovergraph FormDFDeepArea" id={id} value={value} onChange={onChange} placeholder={label} {...props} />
+      <NumberInput className="FormDFValue Hovergraph" id={id} value={value} onChange={onChange} {...props} />
     </div>
   )
 }
+
+interface FlexibleTextInputProps extends Omit<HTMLProps<HTMLInputElement>, "onChange"> {
+  value: string
+  onChange: (v: string) => any
+}
+
+export function FlexibleTextInput({ value, onChange, style, ...props } : FlexibleTextInputProps) {
+  const width = Math.max(value.length, 2).toString() + "ch"
+  return (
+    <input type="text" value={value} onChange={ev => onChange(ev.target.value)} {...props}
+      style={{ width }}
+    />
+  )
+}
+
+
+
+
 interface DisposableInputProps {
   index: number
   value: number
@@ -59,16 +77,10 @@ interface DisposableInputProps {
 export function DisposableInput({ index, value, update, del }: DisposableInputProps) {
   return (
     <div className="DisposableInput">
-      <NumberInput className="FormDFValue" value={value} onChange={v => update(v, index)} />
+      <NumberInput value={value} onChange={v => update(v, index)} />
       <button onClick={() => del(index)}>⨯</button>
     </div>
   )
-}
-interface CheckieProps extends React.PropsWithChildren {
-  checked?: boolean
-  className?: string
-  onChange?: (b: boolean) => any
-  label?: React.ReactNode
 }
 const CustomCheckboxView = styled.label`
   cursor: pointer;
@@ -103,11 +115,36 @@ const CustomCheckboxView = styled.label`
   }
 
   input[type=checkbox]:checked + &::before {
-    left: 13px
+    left: 13px;
   }
 `
+
+interface SwitchProps {
+  id: string
+  checked: boolean
+  onChange?: (b: boolean) => any
+}
+
+export function Switch({ id, checked, onChange }: SwitchProps) {
+  return (
+    <span>
+      <input type="checkbox" checked={checked} id={id} onChange={ev => onChange(ev.target.checked)} />
+      <CustomCheckboxView htmlFor={id} />
+    </span>
+  )
+}
+
+
+interface CheckieProps extends PropsWithChildren {
+  checked?: boolean
+  className?: string
+  onChange?: (b: boolean) => any
+  label?: ReactNode
+}
 const CheckieLabel = styled.label`
   border-radius: 20px;
+  text-align: center;
+  flex-grow: 2;
   cursor: pointer!important;
   font-weight: 600!important;
   font-size: 0.9rem!important;
@@ -120,16 +157,64 @@ const CheckieLabel = styled.label`
     padding-block: 0;
   }
 `
-export function Checkie({ className = "", checked = false, label = "", onChange }: CheckieProps) {
+export function LabeledSwitch({ className = "", checked = false, label = "", onChange }: CheckieProps) {
   const id = useId()
   return (
     <span className={"FormDF Hovergraph " + className}>
       <input type="checkbox" checked={checked} id={id} onChange={ev => onChange(ev.target.checked)} />
-      <CustomCheckboxView htmlFor={id}></CustomCheckboxView>
-      <CheckieLabel className="FormDFName FormDFValue" htmlFor={id}>{label}</CheckieLabel>
+      <CustomCheckboxView htmlFor={id} />
+      <CheckieLabel htmlFor={id}>{label}</CheckieLabel>
     </span>
   )
 }
+
+
+
+
+
+
+interface RadioOneProps<T extends number | string> {
+  name: string
+  type: "checkbox" | "radio"
+  value: T
+  checked: boolean
+  label: string | number
+  onChange: ChangeEventHandler<HTMLInputElement>
+}
+
+const CheckButtonLayout = styled.span`
+  > input[type=radio], > input[type=checkbox] {
+
+    + label {
+      flex-grow: 1;
+      color: white;
+      font-size: 0.9rem;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+
+      min-height: 26px;
+      box-sizing: border-box;
+    }
+
+    &:checked + label {
+      background-color: rgb(255, 217, 92);
+      color: black;
+    }
+  }
+`
+
+function CheckButton<T extends number | string>({ name, type, label, value, checked, onChange }: RadioOneProps<T>) {
+  return (
+  <CheckButtonLayout className="FormDFValue">
+    <input type="checkbox" name={name} value={value} id={`Radio-${name}-${value}`} checked={checked} onChange={onChange} />
+    <label className="Hovergraph" htmlFor={`Radio-${name}-${value}`}>{label}</label>
+  </CheckButtonLayout>
+  )
+}
+
 interface RadioGroupProps<T extends number | string> {
   name: string
   groupName?: string
@@ -140,23 +225,28 @@ interface RadioGroupProps<T extends number | string> {
   dispatcher: (value: T) => any
 }
 
+
 export function RadioGroup<T extends string | number>({ name, groupName = name, className = "", values, labels = values, value, dispatcher }: RadioGroupProps<T>) {
-  const onChange = useCallback((ev: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = useCallback((ev: ChangeEvent<HTMLInputElement>) => {
     dispatcher(ev.target.value as T)
   }, [])
-  const id = useId()
   return (
-    <span className={("RadioGroup FormDF " + className).trim()}>
+    <span className={"FormDF " + className}>
       <span className="FormDFName">{groupName}</span>
       {values.map((v, i) => (
-        <span key={v} className="RadioOne FormDFValue">
-          <input type="radio" name={name} value={v} id={`Radio-${name}-${v}`} checked={v === value} onChange={onChange} />
-          <label className="Hovergraph" htmlFor={`Radio-${name}-${v}`}>{labels[i]}</label>
-        </span>
+        <CheckButton key={v} name={name} type="radio" label={labels[i]} value={v} checked={v === value} onChange={onChange} />
       ))}
     </span>
   )
 }
+
+
+
+
+
+
+
+
 interface CheckboxGroupProps<T extends number | string> {
   name: string
   className?: string
@@ -166,18 +256,17 @@ interface CheckboxGroupProps<T extends number | string> {
   dispatcher: (value: T, checked: boolean) => any
 }
 export function CheckboxGroup<T extends string | number>({ name, className = "", values, labels = values, value, dispatcher }: CheckboxGroupProps<T>) {
-  const onChange = useCallback((ev: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = useCallback((ev: ChangeEvent<HTMLInputElement>) => {
     dispatcher(ev.target.value as T, ev.target.checked)
   }, [])
 
   return (
-    <span className={("RadioGroup FormDF" + className).trim()}>
+    <span className={"FormDF" + className}>
       <span className="FormDFName">{name}</span>
       {values.map((v, i) => (
-        <span key={v} className="RadioOne FormDFValue">
-          <input type="checkbox" name={name} value={v} id={`Radio-${name}-${v}`} checked={value.includes(v)} onChange={onChange} />
-          <label className="Hovergraph" htmlFor={`Radio-${name}-${v}`}>{labels[i]}</label>
-        </span>
+        <CheckButton key={v} type="checkbox" name={name} label={labels[i]} 
+          value={v} checked={value.includes(v)} onChange={onChange}
+         />
       ))}
     </span>
   )

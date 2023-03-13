@@ -38,24 +38,29 @@
     flex-grow: 1;
     font-size: 0.8rem;
     cursor: default;
-    line-height: 24px;
+    line-height: 22px;
   }
 
   .FormDFValue {
     flex-grow: 2;
   }
 
-  .FormDFDeepArea {
-    border-radius: 20px;
-    background-color: rgba($color: #000000, $alpha: 0.3);
-  }
 
   input {
     padding: 0!important;
   }
 
+  input[type=number], input[type=text] {
+    border-radius: 20px;
+    background-color: rgba($color: #000000, $alpha: 0.3);
+  }
+
   input[type=checkbox], input[type=radio] {
     display: none;
+  }
+
+  .AttrOne {
+    padding-block: 0!important;
   }
 
 }
@@ -71,31 +76,6 @@
   }
 }
 
-.RadioGroup {
-  > .RadioOne {
-    > input {
-
-      + label {
-        flex-grow: 1;
-        color: white;
-        font-size: 0.9rem;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-
-        min-height: 26px;
-        box-sizing: border-box;
-      }
-
-      &:checked + label {
-        background-color: rgb(255, 217, 92);
-        color: black;
-      }
-    }
-  }
-}
 
 .OneClickGroup {
   button {

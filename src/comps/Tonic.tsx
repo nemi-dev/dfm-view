@@ -12,8 +12,8 @@ interface TonicInputProps {
 
 function TonicGem({ label, target, target2 = undefined, image }: TonicInputProps) {
   const dispatch = useAppDispatch()
-  const value = useAppSelector(state => state.Tonic[target])
-  const value2 = target2? useAppSelector(state => state.Tonic[target2]) : undefined
+  const value = useAppSelector(state => state.My.Tonic[target])
+  const value2 = target2? useAppSelector(state => state.My.Tonic[target2]) : undefined
   const id = useId()
   return (
     <div className="TonicGem">

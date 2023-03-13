@@ -10,7 +10,7 @@ import styled from 'styled-components'
 import { PortraitMode } from '../responsiveContext'
 import { selectAvatarSetAttr, selectRareAvatarCount } from "../feats/selector/avatarSelectors"
 import { selectCard, selectEmblemSpecs, selectItem } from "../feats/selector/equipSelectors"
-import { Condyce } from './ConditionalAttrs'
+import { Condyce } from './Choices'
 
 
 export function DFTitle() {
@@ -66,8 +66,8 @@ const AvatarPartLayout = styled.div`
 `
 
 function AvatarPart({ part }: AvatarProps) {
-  const rarity = useAppSelector(state => state.Avatar[part])
-  const attrs = useAppSelector(state => getAvatarAttr(part, state.Avatar[part]))
+  const rarity = useAppSelector(state => state.My.Avatar[part])
+  const attrs = useAppSelector(state => getAvatarAttr(part, state.My.Avatar[part]))
   const dispatch = useAppDispatch()
   const onClick = useCallback(() => {
     const newValue = rarity === "Rare" ? "Uncommon" : "Rare"
@@ -86,7 +86,7 @@ function AvatarPart({ part }: AvatarProps) {
 
 
 function AvatarPartCompact({ part }: AvatarProps) {
-  const rarity = useAppSelector(state => state.Avatar[part])
+  const rarity = useAppSelector(state => state.My.Avatar[part])
   const dispatch = useAppDispatch()
   const onClick = useCallback(() => {
     const newValue = rarity === "Rare" ? "Uncommon" : "Rare"
