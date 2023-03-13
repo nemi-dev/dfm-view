@@ -45,11 +45,10 @@ declare type MagicPropsCareAbout = "dmg_inc" | "Stat" | "Atk" | "el_fire" | "el_
 | "Crit" | "speed_atk" | "Accu" | null
 
 
-declare type EmblemLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 
 declare type EmblemType = "Red" | "Yellow" | "Green" | "Blue" | "Stren" | "Intel" | "Fire" | "Ice" | "Light" | "Dark"
 
-declare type EmblemSpec = [EmblemType, EmblemLevel]
+declare type EmblemSpec = [EmblemType, number]
 
 declare type WearAvatarRarity = "Common" | "Uncommon" | "Rare"
 
@@ -255,7 +254,7 @@ declare interface DFItem {
   name: string
 
   /** 아이템 ID */
-  id?: number | string
+  id?: number
 
   /** 아이템 아이콘 이름 */
   image?: string
@@ -355,12 +354,35 @@ declare interface ComplexAttrSource extends AttrSource {
   exclusive?: ExclusiveSet[]
 }
 
-
+/** 공격 스킬의 공격 하나하나를 나타낸다. */
 declare interface SkillOneAttackSpec {
+  /** 스킬 공격 세부 이름 */
   name: string
+
+  /** 스킬 계수 */
   value: number
-  fixed: number  
-  isSkill: boolean 
+
+  /** 스킬 고정값 */
+  fixed: number
+
+  /** 스증 적용 여부 */
+  isSkill: boolean
+
+  /** 타격 횟수 */
+  // maxHit: number
+}
+
+/** 우리가 쓰는 바로 그 스킬이다. */
+declare interface SkillSpec {
+  /** 스킬 이름 */
+  name: string
+
+  /** 스증 적용 여부 */
+  isSkill: boolean
+
+  /** 스킬 썼을때 공격 효과들 */
+  attacks: SkillOneAttackSpec[]
+
 }
 
 

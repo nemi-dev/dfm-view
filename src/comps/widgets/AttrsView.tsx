@@ -106,13 +106,13 @@ export function SimpleBaseAttrView({ attrs }: { attrs: BaseAttrs }) {
 
 
 
-interface VerboseResultProps {
+interface ResultProps {
   name: string
   value: number | string | JSX.Element
   className?: string
 }
 
-export function VerboseResult({ name, value = 0, className = ""}: VerboseResultProps) {
+export function Result({ name, value = 0, className = ""}: ResultProps) {
   return (
   <span className={"Result " + className}>
     {name? <div className="AttrName">{name}</div> : null}

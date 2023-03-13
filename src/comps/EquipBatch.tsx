@@ -5,7 +5,7 @@ import { selectSpecifiedAtype } from "../feats/selector/selfSelectors"
 import { selectCustomMaterial, selectEmblemSpecs, selectUpgrade } from "../feats/selector/equipSelectors"
 import { SetPerfectMagicPropsStat, SetPerfectMagicPropsEl, SetColorEmblemLevelAll, SetMaterialAll, SetArmorUpgradeAll, SetAccessUpgradeAll } from "../feats/slices/itemSlice"
 import { accessParts, armorParts, oneEmblemParts } from "../items"
-import { LabeledInput, RadioGroup, OneClickButtonGroup } from "./widgets/Forms"
+import { LabeledNumberInput, RadioGroup, OneClickButtonGroup } from "./widgets/Forms"
 
 
 
@@ -54,13 +54,13 @@ export function EquipBatch() {
     <div className="EquipBatch">
       <h4>장비 모두 설정</h4>
       <div className="EquipBatchLayout">
-        <LabeledInput label="방어구 강화보너스" value={armorUpgradeValue} onChange={v => {
+        <LabeledNumberInput label="방어구 강화보너스" value={armorUpgradeValue} onChange={v => {
           dispatch(SetArmorUpgradeAll(v))
         }} />
-        <LabeledInput label="악세서리 강화보너스" value={accessUpgradeValue} onChange={v => {
+        <LabeledNumberInput label="악세서리 강화보너스" value={accessUpgradeValue} onChange={v => {
           dispatch(SetAccessUpgradeAll(v))
         }} />
-        <LabeledInput label="고정엠블렘 레벨" value={colorEmblemLevel}
+        <LabeledNumberInput label="고정엠블렘 레벨" value={colorEmblemLevel}
           min={5} max={10} step={1}
           onChange={v => {
           dispatch(SetColorEmblemLevelAll(v))

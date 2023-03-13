@@ -3,7 +3,7 @@ import _isets from "../data/itemsets.json"
 import _armorbases from "./armorbase.json"
 
 import memoizee from "memoizee"
-import { atx, MyAttrKey } from "./attrs"
+import { atx, AtypeAttrKey } from "./attrs"
 
 export const weaponType: readonly Itype[] = Object.freeze([
   "소검","도","둔기","대검","광검",
@@ -32,25 +32,26 @@ export const magicPropsParts: readonly MagicPropsPart[] = Object.freeze([...equi
 export const isWeapon = (itype: Itype | "무기") => (itype === "무기" || weaponType.includes(itype))
 
 /** `key`가 방어구 부위인가? */
-export const isArmorPart = (key: WholePart): key is ArmorPart => armorParts.includes(key as ArmorPart)
+export const isArmor = (key: WholePart): key is ArmorPart => armorParts.includes(key as ArmorPart)
 
 /** `key`가 악세서리 부위인가? */
-export const isAccessPart = (key: WholePart): key is AccessPart => accessParts.includes(key as AccessPart)
+export const isAccess = (key: WholePart): key is AccessPart => accessParts.includes(key as AccessPart)
 
 /** p가 카드/엠블렘 장착 가능 부위인가? */
-export const isCardable= (p: WholePart): p is CardablePart => cardableParts.includes(p as any)
+export const isCardable = (p: WholePart): p is CardablePart => cardableParts.includes(p as any)
 
 
 /** 주어진 부위의 "상위 종류"를 얻는다. (ex. "방어구", "악세서리", "무기", "봉인석") */
 export function getSupertype(part: EquipPart | "봉인석") {
-  if (isArmorPart(part as EquipPart)) return "방어구"
-  if (isAccessPart(part as EquipPart)) return "악세서리"
+  if (isArmor(part as EquipPart)) return "방어구"
+  if (isAccess(part as EquipPart)) return "악세서리"
   return part as "무기" | "봉인석"
 }
 
 /** 이 아이템을 어디에 장착할 수 있는지 판단한다. */
-function getPart(s: Itype): WholePart {
+function getCato(s: Itype): WholePart | "카드" | null {
   if (wholeParts.includes(s as WholePart)) return s as WholePart
+  if (s === "카드") return "카드"
   if (isWeapon(s)) return "무기"
   return null
 }
@@ -58,23 +59,27 @@ function getPart(s: Itype): WholePart {
 
 
 const items = _items as DFItem[]
-const isets = _isets as DFISet[]
+const isets = _isets as unknown as DFISet[]
 const armorbases = _armorbases as DFItem[]
-const cards: DFItem[] = []
 
-type PartIndex = { [k in WholePart]: DFItem[] }
+type PartIndex = { [k in WholePart | "카드"]: DFItem[] }
 
 const _items_index_Name: Record<string, DFItem> = {}
-const _items_index_Part = (()=>{
+const _items_index_ID: Record<number, DFItem> = {}
+const _items_index_Part_or_Card = (()=>{
   const x = {} as PartIndex
-  wholeParts.forEach(p => x[p] = [])
+  [...wholeParts, "카드"].forEach(p => x[p] = [])
   return x
 })()
+
+const _item_name_to_id: Record<string, number> = {}
+const _item_id_to_name: Record<number, string> = {}
+
 
 const isetChildren: Record<string, string[]> = {}
 
 /** `isetChildren`에 `item`을 `setOf`의 세트 구성 아이템으로 등록한다. */
-function assignIset(item: DFItem, setOf: string | string[]) {
+function assignIset(item: DFItem, setOf: string | string[]): void {
   const { name } = item;
   if (setOf instanceof Array) return setOf.forEach(s => assignIset(item, s))
   if (!(setOf in isetChildren)) isetChildren[setOf] = []
@@ -83,21 +88,19 @@ function assignIset(item: DFItem, setOf: string | string[]) {
 
 for (const item of items) {  
   _items_index_Name[item.name] = item
+  _items_index_ID[item.id] = item
 
-  const part = getPart(item.itype)
-  if (part) _items_index_Part[part].push(item)
-  if (item.itype === "카드") cards.push(item)
+  _item_name_to_id[item.name] = item.id
+  _item_id_to_name[item.id] = item.name
+
+  const part = getCato(item.itype)
+  if (part) _items_index_Part_or_Card[part].push(item)
   if (item.setOf) assignIset(item, item.setOf)
 }
 
 const ISetsNameMap: Record<string, DFISet> = {}
 
 for (const iset of isets) ISetsNameMap[iset.name] = iset
-
-
-
-
-
 
 
 
@@ -125,7 +128,14 @@ export const getArmorBase = memoizee(
 export const getItem = (name: string) => _items_index_Name[name]
 
 /** 부위별 아이템 모음을 얻는다. */
-export const getItemsByPart = (part: WholePart) => _items_index_Part[part]
+export const getItemsByPart = (part: WholePart) => _items_index_Part_or_Card[part]
+
+
+/** 아이템 이름을 ID로 바꾼다. */
+export const itemNameToId = (name: string) => _item_name_to_id[name] ?? 0
+
+/** 아이템 ID를 이름으로 바꾼다. */
+export const itemIdToName = (id: number) => _item_id_to_name[id]
 
 /** 세트를 구성하는 아이템을 얻는다. */
 export const getEquipsOfISet = memoizee(
@@ -178,21 +188,21 @@ export function getActiveISets(...items: DFItem[]) {
 /** 주어진 부위의 장비에 바를 수 있는 카드(+보주) 목록을 얻는다. */
 export const getCardsForPart = memoizee(
   function _getCardsForPart(part: EquipPart | "칭호") {
-    return cards.filter(card => card.part.includes(part))
+    return _items_index_Part_or_Card["카드"].filter(card => card.part.includes(part))
   },
 { primitive: true })
 
 
 
 /** 주어진 아이템 또는 아이템 세트에서 "내가 체크한" branch 조건부 옵션들을 배열로 얻는다. */
-export function getActiveBranch(iii: ComplexAttrSource, activeKeys: Record<string, boolean>) {
+export function getActiveBranch(iii: ComplexAttrSource, activeKeys: Record<string, OptionalChoiceType>) {
   if (!(iii?.branch)) return []
   const { name, branch } = iii
   return branch.filter(child => activeKeys[`${name}::${child.when}`])
 }
 
 /** "내가 체크한" gives 조건부 옵션이 이 아이템의 gives를 발동시킨다면 그 gives를 얻는다. */
-export function getActiveGives(iii: ComplexAttrSource, activeKeys: Record<string, boolean>) {
+export function getActiveGives(iii: ComplexAttrSource, activeKeys: Record<string, OptionalChoiceType>) {
   if (!(iii?.gives)) return []
   const { name, gives } = iii
   return gives.filter(child => activeKeys[`${name}::${child.when}`])
@@ -255,8 +265,8 @@ export function getBlessing(...items: DFItem[]): [name: string, attrs: BaseAttrs
 /** 내 공격타입에 맞는 봉인석/정수만 얻는다. */
 export const getCracksOnly = memoizee(
 function getCracksOnly(itype: "봉인석" | "정수", atype: Atype) {
-  const attrKey = MyAttrKey[atype]["Stat"]
-  return _items_index_Part[itype].filter(item => item.attrs[attrKey])
+  const attrKey = AtypeAttrKey[atype]["Stat"]
+  return _items_index_Part_or_Card[itype].filter(item => item.attrs[attrKey])
 }
 , { primitive: true })
 

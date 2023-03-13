@@ -1,6 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit"
 import { atx, combine } from "../../attrs"
-import { getActiveISets, getArmorBase, getItem, equipParts, isArmorPart, magicPropsParts, cardableParts, getActiveCondyces, singleItemParts } from "../../items"
+import { getActiveISets, getArmorBase, getItem, equipParts, isArmor, magicPropsParts, cardableParts, getActiveCondyces, singleItemParts } from "../../items"
 import { getEmblem } from "../../emblem"
 import { getMagicPropsAttrs } from "../../magicProps"
 import { selectSpecifiedAtype } from "./selfSelectors"
@@ -18,28 +18,28 @@ export function Noot2<T, P extends WholePart>(func: ($p: P) => (s: RootState) =>
 
 
 /** 특정 부위에 장착중인 아이템을 선택한다 */
-export const selectItem = Noot2(part => state => getItem(state.Item[part]), singleItemParts)
+export const selectItem = Noot2(part => state => getItem(state.My.Item[part]), singleItemParts)
 
 /** 특정 부위의 아이템에 바른 카드를 선택한다 */
-export const selectCard = Noot2(part => state => (getItem(state.Card[part])), cardableParts)
+export const selectCard = Noot2(part => state => (getItem(state.My.Card[part])), cardableParts)
 
 /** 특정 부위의 아이템에 박은 엠블렘 스펙을 모두 선택한다 */
-export const selectEmblemSpecs = Noot2(part => state => state.Emblem[part], cardableParts)
+export const selectEmblemSpecs = Noot2(part => state => state.My.Emblem[part], cardableParts)
 
 /** 특정 부위 아이템의 마법봉인 이름을 선택한다 */
 export const selectMagicPropNames = Noot2(
-  part => state => state.MagicProps[part],
+  part => state => state.My.MagicProps[part],
   magicPropsParts
 )
 
 /** 특정 부위의 "내가 선택한" 방어구 재질을 선택한다 */
 export const selectCustomMaterial = Noot2(
-  part => state => isArmorPart(part) ? state.Material[part] : null,
+  part => state => isArmor(part) ? state.My.Material[part] : null,
   equipParts
 )
 
 /** 특정 부위의 강화보너스 수치(무기는 물/마공, 다른장비는 스탯)를 선택한다 */
-export const selectUpgrade = Noot2(part => state => state.Upgrade[part], equipParts)
+export const selectUpgrade = Noot2(part => state => state.My.Upgrade[part], equipParts)
 
 /** 특정 부위의 방어구 재질 아이템을 선택한다 */
 export const selectArmorBase = Noot2(
@@ -47,7 +47,7 @@ export const selectArmorBase = Noot2(
     selectItem[part],
     selectCustomMaterial[part],
     (item, customMaterial) => {
-      if (!isArmorPart(part))
+      if (!isArmor(part))
         return {} as DFItem
       const { level, rarity, material = customMaterial } = item
       return getArmorBase(level, rarity, material, part)
@@ -74,8 +74,8 @@ export const selectMagicProps = Noot2(
 /** 현재 착용중인 어느 한 부위의 장비에서 내가 체크한 조건부 노드들을 얻는다. */
 export const selectActiveConds = Noot2(
   part => state => {
-    const item = getItem(state.Item[part])
-    return getActiveCondyces(item, state.Choice)
+    const item = getItem(state.My.Item[part])
+    return getActiveCondyces(item, state.My.Choice)
   }, equipParts
 )
 
@@ -143,7 +143,7 @@ export const selectEquipsNoConds = createSelector(
 export const selectEquips = createSelector(
   selectISets,
   selectWholePartAttrs,
-  (state: RootState) => state.Choice,
+  (state: RootState) => state.My.Choice,
   (isets, iattr, choice) => {
     const isetattrs = isets.map(ii => ii.attrs)
     const J = isets.flatMap(ii => getActiveCondyces(ii, choice).map(n => n.attrs))    

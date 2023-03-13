@@ -3,31 +3,39 @@ import { combine } from "../attrs"
 import { RootState } from "./store"
 import { GuildAccu, GuildAtk, GuildCrit, GuildEl, GuildSpeedAtk, GuildStat, GuildStatPublic } from "../guild"
 
-export function selectGuildStat({ Guild: { StatLv }, Self: { atype }}: RootState) {
+export function selectGuildStat(state: RootState) {
+  const atype = state.My.Self.atype
+  const StatLv = state.My.Guild.StatLv
   return GuildStat(StatLv, atype)
 }
 
-export function selectGuildStatPublic({ Guild: { PublicStatLv }, Self: { atype }}: RootState) {
+export function selectGuildStatPublic(state: RootState) {
+  const atype = state.My.Self.atype
+  const PublicStatLv = state.My.Guild.PublicStatLv
   return GuildStatPublic(PublicStatLv, atype)
 }
 
-export function selectGuildAtk({ Guild: { AtkLv }, Self: { atype }}: RootState) {
+export function selectGuildAtk(state: RootState) {
+  const atype = state.My.Self.atype
+  const AtkLv = state.My.Guild.AtkLv
   return GuildAtk(AtkLv, atype)
 }
 
-export function selectGuildCrit({ Guild: { CritLv }, Self: { atype }}: RootState) {
+export function selectGuildCrit(state: RootState) {
+  const atype = state.My.Self.atype
+  const CritLv = state.My.Guild.CritLv
   return GuildCrit(CritLv, atype)
 }
 
-export function selectGuildEl({ Guild: { ElLv }}: RootState) {
+export function selectGuildEl({ My: { Guild: { ElLv }}}: RootState) {
   return GuildEl(ElLv)
 }
 
-export function selectGuildSpeedAtk({ Guild: { SpeedAtkLv }}: RootState) {
+export function selectGuildSpeedAtk({ My: { Guild: { SpeedAtkLv }}}: RootState) {
   return GuildSpeedAtk(SpeedAtkLv)
 }
 
-export function selectGuildAccu({ Guild: { AccuLv }}: RootState) {
+export function selectGuildAccu({ My: { Guild: { AccuLv }}}: RootState) {
   return GuildAccu(AccuLv)
 }
 

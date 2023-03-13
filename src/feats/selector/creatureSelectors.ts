@@ -7,12 +7,12 @@ import { selectItem } from "./equipSelectors"
 
 /** 아티팩트 하나를 선택한다 */
 export const selectArtifact = memoizee(
-  (color: "Red" | "Green" | "Blue") => (state: RootState) => getItem(state.Item["아티팩트"][color]),
+  (color: "Red" | "Green" | "Blue") => (state: RootState) => getItem(state.My.Item["아티팩트"][color]),
   { primitive: true })
 
 /** 지금 장착 중인 아티팩트를 모두 선택한다 */
 export function selectArtifacts(state: RootState) {
-  const { Red: redName, Green: greenName, Blue: blueName } = state.Item["아티팩트"]
+  const { Red: redName, Green: greenName, Blue: blueName } = state.My.Item["아티팩트"]
   return {
     Red: getItem(redName), Green: getItem(greenName), Blue: getItem(blueName)
   }
@@ -21,7 +21,7 @@ export function selectArtifacts(state: RootState) {
 /** 크리쳐 스탯 효과 + 아티팩트 옵션 효과를 선택한다 (이들은 마을에서 적용된다) */
 export function selectCreaturePropsAttrs(state: RootState) {
   const
-    stat = state.CreatureProp.CreatureStat, stat_arti = state.CreatureProp.RedPropsValue, atk = state.CreatureProp.BluePropsValue, el_all = state.CreatureProp.GreenPropsEl
+    stat = state.My.CreatureProp.CreatureStat, stat_arti = state.My.CreatureProp.RedPropsValue, atk = state.My.CreatureProp.BluePropsValue, el_all = state.My.CreatureProp.GreenPropsEl
   return {
     strn: stat + stat_arti,
     intl: stat + stat_arti,
@@ -58,7 +58,7 @@ export const selectActiveCreatureCondyces = createSelector(
   selectItem["크리쳐"],
   selectArtifacts,
   selectCreatureSets,
-  (state: RootState) => state.Choice,
+  (state: RootState) => state.My.Choice,
   (creature, { Red, Green, Blue }, sets, choices) => {
     return [creature, Red, Green, Blue, ...sets].flatMap(iii => getActiveCondyces(iii, choices))
   }

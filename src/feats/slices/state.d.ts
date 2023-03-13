@@ -169,9 +169,11 @@ declare interface CreaturePropState {
 
 }
 
+declare type OptionalChoiceType = number
+
 declare interface Choices {
-  branches: Record<string, boolean>
-  gives: Record<string, boolean>
+  branches: Record<string, OptionalChoiceType>
+  gives: Record<string, OptionalChoiceType>
   exclusives: Record<string, string>
 }
 
@@ -216,7 +218,7 @@ declare interface CalibrateState {
   target_res: number
 }
 
-declare interface SkillInputState {
+declare interface CustomSkillState {
   cases: SkillOneAttackSpec[]
 }
 
@@ -236,7 +238,7 @@ declare interface DFCharState {
   CreatureProp?: CreaturePropState
   Choice?: Choices
   Calibrate?: CalibrateState
-  SkillInput?: SkillInputState
+  CustomSklill?: CustomSkillState
 }
 
 declare interface EnemyTargetState {
@@ -244,3 +246,46 @@ declare interface EnemyTargetState {
   ElRes: number
 }
 
+declare interface SavedChar {
+  id: string
+  TimeStamp: number
+  DFChar: DFCharState
+  AtkGrab: number
+}
+
+declare interface EquipPreset {
+  id: string
+  label?: string
+  TimeStamp: number
+  Equips: {
+    [k in EquipPart]: string
+  }
+}
+
+declare interface CustomSkillPreset {
+  id: string
+  label?: string
+  TimeStamp: number
+  Skills: CustomSkillState
+}
+
+declare interface SavedCharCollection {
+  byID: {
+    [k: string]: SavedChar
+  }
+  IDs: string[]
+}
+
+declare interface EquipPresetCollection {
+  byID: {
+    [k: string]: EquipPreset
+  }
+  IDs: string[]
+}
+
+declare interface CustomSkillPresetCollection {
+  byID: {
+    [k: string]: CustomSkillPreset
+  }
+  IDs: string[]
+}

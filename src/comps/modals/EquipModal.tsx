@@ -2,14 +2,14 @@ import styled from "styled-components"
 import Fuse from "fuse.js"
 import { useCallback, useContext, useMemo, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../feats/hooks"
-import { getCardsForPart, getItem, getItemsByPart, isAccessPart, isArmorPart } from "../../items"
+import { getCardsForPart, getItem, getItemsByPart, isAccess, isArmor } from "../../items"
 import { ItemName } from "../widgets/ItemNameView"
 import { ItemIcon } from "../widgets/Icons"
 import { ModalContext } from "../../modalContext"
 
 import _left from "../../../data/sets/left.json"
 import _right from "../../../data/sets/right.json"
-import { Checkie } from "../widgets/Forms"
+import { LabeledSwitch } from "../widgets/Forms"
 import { FetchItems, SetCard, SetCardsAllPossible, SetItem } from "../../feats/slices/itemSlice"
 import { selectMyDFClass } from "../../feats/selector/selfSelectors"
 import { Select } from "./Select"
@@ -19,7 +19,7 @@ type EquipShotgun = Partial<Pick<ItemsState, EquipPart>>
 const left = _left as Record<string, EquipShotgun>
 const right = _right as Record<string, EquipShotgun>
 
-const CheckieInline = styled(Checkie)`
+const CheckieInline = styled(LabeledSwitch)`
   display: inline-flex;
 `
 
@@ -51,8 +51,8 @@ function inflate(m: Record<string, string>) {
 
 function loadShotgun(part: WholePart) {
   let v: Record<string, EquipShotgun>
-  if (isArmorPart(part)) v = left
-  else if (isAccessPart(part)) v = right
+  if (isArmor(part)) v = left
+  else if (isAccess(part)) v = right
   else return
 
   const w: IsetCatalog[] = []

@@ -14,8 +14,9 @@ import { PortraitMode, TabContext } from '../responsiveContext'
 import ItemSelectModal from './modals/index'
 import { ModalContext } from "../modalContext"
 import { MyStat } from './MyStat'
-import { SkillTestSet } from './SkillTestSet'
+import { SkillTestSet } from './CustomSkill'
 import { StickyNav } from './StickyNav'
+import { EnemyTarget } from './EnemyTarget'
 
 
 function NavLink({ name, children }: React.PropsWithChildren<{ name: string }> ) {
@@ -103,7 +104,7 @@ function App() {
 
   const modalContextValue = { isOpen, setOpen, message, openModal }
   
-
+  
   useEffect(() => {
     function onResize(ev: UIEvent) {
       if (window.innerWidth >= 1000) setPortrait(false)
@@ -131,6 +132,7 @@ function App() {
             <MyStat />
           </div>
         </div>
+        <EnemyTarget />
         <SkillTestSet />
       </div>
     </PortraitMode.Provider>

@@ -1,12 +1,12 @@
 import styled from 'styled-components'
-import { MyAttrKey } from '../attrs'
+import { AtypeAttrKey } from '../attrs'
 import { selectGuildAccu, selectGuildAtk, selectGuildCrit, selectGuildSpeedAtk, selectGuildStat, selectGuildStatPublic } from '../feats/guildSelectors'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { selectSpecifiedAtype } from "../feats/selector/selfSelectors"
 import { PerfectGuild, SetGuild } from "../feats/slices/guildSlice"
 import { RootState } from '../feats/store'
 import { SimpleBaseAttrView } from './widgets/AttrsView'
-import { LabeledInput } from "./widgets/Forms"
+import { LabeledNumberInput } from "./widgets/Forms"
 
 
 const GuildLayout = styled.div`
@@ -70,7 +70,7 @@ function GuildPropOne({ label, value, target, src, max, selector }: GuildsInputP
   return (
     <div className="GuildPropOne">
       <img src={src} alt={label} />
-      <LabeledInput label={label + " Lv."} value={value} min={0} max={max} step={1}  onChange={v => dispatch(SetGuild([target, v]))} />
+      <LabeledNumberInput label={label + " Lv."} value={value} min={0} max={max} step={1}  onChange={v => dispatch(SetGuild([target, v]))} />
       <div className="AttrOut">
         <SimpleBaseAttrView attrs={attr} />
       </div>
@@ -79,9 +79,9 @@ function GuildPropOne({ label, value, target, src, max, selector }: GuildsInputP
 }
 
 export function Guilds() {
-  const { StatLv, AtkLv, CritLv, ElLv, SpeedAtkLv: SpeedAtkLv, AccuLv, PublicStatLv } =  useAppSelector(state => state.Guild)
+  const { StatLv, AtkLv, CritLv, ElLv, SpeedAtkLv: SpeedAtkLv, AccuLv, PublicStatLv } =  useAppSelector(state => state.My.Guild)
   const atype = useAppSelector(selectSpecifiedAtype)
-  const { Stat: keyStat, Atk: keyAtk, Crit: keyCrit, 스탯, 타입 } = MyAttrKey[atype]
+  const { Stat: keyStat, Atk: keyAtk, Crit: keyCrit, 스탯, 타입 } = AtypeAttrKey[atype]
   const dispatch = useAppDispatch()
   return (
     <div id="Guilds">

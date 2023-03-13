@@ -1,6 +1,6 @@
 import magicProps from "./magicProps.json"
 import { getSupertype } from "./items"
-import { at1, MyAttrKey } from "./attrs"
+import { at1, AtypeAttrKey } from "./attrs"
 
 interface MagicPropsMint {
   order: MagicPropsCareAbout[]
@@ -26,7 +26,7 @@ const magicPropsPicker = (() => {
 })()
 
 export function getRealAttrKey(name: MagicPropsCareAbout, atype: Atype) {
-  if (name === "Stat" || name === "Atk" || name === "Crit") return MyAttrKey[atype][name]
+  if (name === "Stat" || name === "Atk" || name === "Crit") return AtypeAttrKey[atype][name]
   return name
 }
 
@@ -65,6 +65,7 @@ export function nextMagicProps(part: MagicPropsPart, current: MagicPropsCareAbou
 
 /** 현재 파트에 장착중인 아이템과 그에 설정된 마법봉인 종류(키워드)에 맞는 수치값만을 얻는다. */
 export function getOneMagicPropValue(name: MagicPropsCareAbout, id: MagicPropsTargetId) {
+  if (name == null) return 0
   const mint = available(id)
   return mint.attrSet[name]
 }

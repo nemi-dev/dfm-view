@@ -86,7 +86,6 @@ input[type=text], input[type=number] {
   border-radius: 2px;
   padding: 0.2rem;
   font-size: 0.9rem;
-  width: 50px;
 }
 
 button {

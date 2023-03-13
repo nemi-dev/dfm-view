@@ -28,7 +28,7 @@ export const {
 
 
 
-const selfInit : SelfState = {
+const selfInit: SelfState = {
   myName: "내캐릭터",
   dfclass: "미스트리스",
   level: 65,

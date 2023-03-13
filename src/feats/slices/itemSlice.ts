@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { accessParts, armorParts, getItem, oneEmblemParts } from "../../items"
 import _initState from "./initStateMt.json"
-import { DFCharLoad } from "../actions"
+import { ImportDFChar } from "../actions"
 
 
 const itemsInit = _initState.Item as ItemsState
@@ -26,7 +26,7 @@ export const itemSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(DFCharLoad, (state, { payload }) => {
+    builder.addCase(ImportDFChar, (state, { payload }) => {
       Object.assign(state, payload.Item)
     })
   },
@@ -55,7 +55,7 @@ export const cardSlice = createSlice({
     }
   },
   extraReducers: builder => {
-    builder.addCase(DFCharLoad, (s, { payload }) => {
+    builder.addCase(ImportDFChar, (s, { payload }) => {
       Object.assign(s, payload.Card)
     })
   }
@@ -73,23 +73,23 @@ export const emblemSlice = createSlice({
   initialState: emblemInit,
   reducers: {
     SetEmblem: (s, { payload: [part, index, emblemType, emblemLevel] }: PayloadAction<[CardablePart, number, EmblemType, number]>) => {
-      s[part][index] = [emblemType, emblemLevel as EmblemLevel]
+      s[part][index] = [emblemType, emblemLevel]
     },
     DecreaseEmblemLevel: (s, { payload: [part, index] }: PayloadAction<[Exclude<CardablePart, "무기"|"보조장비"|"칭호">, number]>) => {
       const level = s[part][index][1]
       let nextLevel = level - 1
       if (nextLevel < 5) nextLevel = 10
-      s[part][index][1] = nextLevel as EmblemLevel
+      s[part][index][1] = nextLevel
     },
     SetColorEmblemLevelAll: (s, { payload: level }: PayloadAction<number>) => {
-      oneEmblemParts.forEach(part => s[part].forEach(sp => sp[1] = level as EmblemLevel))
+      oneEmblemParts.forEach(part => s[part].forEach(sp => sp[1] = level))
     },
     FetchEmblems: (s, { payload: emblems }: PayloadAction<EmblemState>) => {
       Object.assign(s, emblems)
     }
   },
   extraReducers: builder => {
-    builder.addCase(DFCharLoad, (s, { payload }) => {
+    builder.addCase(ImportDFChar, (s, { payload }) => {
       Object.assign(s, payload)
     })
   }
@@ -121,7 +121,7 @@ export const magicPropsSlice = createSlice({
     }
   },
   extraReducers: builder => {
-    builder.addCase(DFCharLoad, (s, { payload }) => {
+    builder.addCase(ImportDFChar, (s, { payload }) => {
       Object.assign(s, payload.MagicProps)
     })
   }
@@ -151,7 +151,7 @@ export const upgradeSlice = createSlice({
     }
   },
   extraReducers: builder => {
-    builder.addCase(DFCharLoad, (s, { payload }) => {
+    builder.addCase(ImportDFChar, (s, { payload }) => {
       Object.assign(s, payload.Upgrade)
     })
   }
@@ -177,7 +177,7 @@ export const materialSlice = createSlice({
     }
   },
   extraReducers: builder => {
-    builder.addCase(DFCharLoad, (s, { payload }) => {
+    builder.addCase(ImportDFChar, (s, { payload }) => {
       Object.assign(s, payload.Material)
     })
   }

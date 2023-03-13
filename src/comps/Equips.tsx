@@ -5,11 +5,11 @@ import { useCallback, useContext, useState } from "react"
 
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
 import { SimpleBaseAttrView } from "./widgets/AttrsView"
-import { selectArmorBase, selectCard, selectEmblemSpecs, selectItem } from "../feats/selector/equipSelectors"
+import { selectArmorBase, selectCard, selectEmblemSpecs, selectItem, selectUpgrade } from "../feats/selector/equipSelectors"
 import { ItemName } from "./widgets/ItemNameView"
 import { NumberInput } from "./widgets/Forms"
 import { ItemIcon } from "./widgets/Icons"
-import { CondsAttrsView } from "./ConditionalAttrs"
+import { CondsAttrsView } from "./Choices"
 import { ModalContext } from "../modalContext"
 import { MagicProps } from "./MagicProps"
 import { PortraitMode } from "../responsiveContext"
@@ -32,7 +32,7 @@ function NormalAddons({ part, interactive = false, showUpgarde = false }: PartPr
   const { openModal } = useContext(ModalContext)
   const dispatch = useAppDispatch()
   const card = useAppSelector(selectCard[part])
-  const upgradeBonus = useAppSelector(state => state.Upgrade[part])
+  const upgradeBonus = useAppSelector(selectUpgrade[part])
   const emblems = useAppSelector(selectEmblemSpecs[part])
   const emblemAccept = acceptEmblem(part)
   const onItemClick = useCallback((index: number) => {
@@ -64,14 +64,11 @@ function NormalAddons({ part, interactive = false, showUpgarde = false }: PartPr
 function PartCompact({ part }: PartProps) {
   const { openModal } = useContext(ModalContext)
   const item = useAppSelector(selectItem[part])
-  const [detail, setDetail] = useState(false)
   return (
     <div className="EquipSlot">
       <div className="EquipPartLayout">
         <ItemIcon item={item}
         onClick={() => openModal({ name: "item", part, target:"MainItem", index:0 })} />
-        <SlotHeading part={part} onItemNameClicked={() => setDetail(!detail)} />
-        {item? <NormalAddons part={part}/> : null}
       </div>
     </div>
   )
@@ -93,8 +90,6 @@ const MagicPropsLayout = styled.div`
 `
 
 function SlotHeading({ part, onItemNameClicked }: PartProps & { onItemNameClicked: React.MouseEventHandler<HTMLDivElement> }) {
-  const portrait = useContext(PortraitMode)
-  if (portrait) return null
   const item = useAppSelector(selectItem[part])
   return (
     <div className="SlotHeading">
