@@ -7,8 +7,6 @@ import { SetSkillFixValue, SetSkillInputName, SetSkillUsesSkillInc, SetSkillValu
 import { LabeledSwitch, LabeledNumberInput } from "./widgets/Forms"
 import { Result } from './widgets/AttrsView'
 import { Elemental, AtypeAttrKey } from '../attrs'
-import { SetEnemyDefense, SetEnemyResist } from '../feats/slices/slice'
-import { Gridy } from './widgets/CommonUI'
 import styled from 'styled-components'
 
 
@@ -61,12 +59,9 @@ function SkillTestOne({ index, SkillOneAttackSpec }: SkillOutputOneProps) {
 
   const attrs = useAppSelector(selectMe)
   const atkFix = useAppSelector(state => state.My.Self.atk_fixed)
-  const me = useAppSelector(selectMe)
   const eltype = useAppSelector(selectMyFinalEltype)
-  const el = me[Elemental[eltype[0]]?.el] ?? 0
-  const eldmg = me[Elemental[eltype[0]]?.eldmg] ?? 0
 
-  const withoutCrit = getDamage(atype, attrs, atkFix, el, eldmg, SkillOneAttackSpec)
+  const withoutCrit = getDamage(atype, eltype[0], attrs, atkFix, SkillOneAttackSpec)
   const withCrit = criticize(withoutCrit, attrs["cdmg_inc"])
 
   const { Crit, CritCh } = AtypeAttrKey[atype]

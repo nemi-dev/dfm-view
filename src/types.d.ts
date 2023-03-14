@@ -216,6 +216,10 @@ declare interface BaseAttrs {
   misc?: string[]
 }
 
+type El_val = "el_fire" | "el_ice" | "el_lght" | "el_dark" | 
+"eldmg_fire" | "eldmg_ice" | "eldmg_lght" | "eldmg_dark" 
+declare type El = Pick<BaseAttrs, El_val>
+
 
 declare interface ConditionalNode {
   /** (exclusive일 때) 이 효과가 적용될 조건 */

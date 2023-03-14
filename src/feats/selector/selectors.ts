@@ -76,6 +76,12 @@ export const selectMyFinalEltype = createSelector(
   attrs =>  whatElType(attrs, attrs.eltype)
 )
 
+
+
+
+
+
+
 /** 내가 입려한 적 방어력을 선택한다. */
 export function selectBaseEnemyDefense(state: RootState) {
   return state.EnemyTarget.Defense

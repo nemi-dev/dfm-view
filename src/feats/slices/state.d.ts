@@ -224,21 +224,20 @@ declare interface CustomSkillState {
 
 /** 여기까지가 "캐릭터 저장" 단위다  */
 declare interface DFCharState {
-  Self?: SelfState
-  Item?: ItemsState
-  Card?: CardState
-  Emblem?: EmblemState
-  MagicProps?: MagicPropsState
-  Upgrade?: UpgradeOrKaledoState
-  Kaledo?: UpgradeOrKaledoState
-  Material?: MaterialState
-  Avatar?: AvatarRarityState
-  Tonic?: TonicState
-  Guild?: GuildState
-  CreatureProp?: CreaturePropState
-  Choice?: Choices
-  Calibrate?: CalibrateState
-  CustomSklill?: CustomSkillState
+  Self: SelfState
+  Item: ItemsState
+  Card: CardState
+  Emblem: EmblemState
+  MagicProps: MagicPropsState
+  Upgrade: UpgradeOrKaledoState
+  Material: MaterialState
+  Avatar: AvatarRarityState
+  Tonic: TonicState
+  Guild: GuildState
+  CreatureProp: CreaturePropState
+  Choice: Choices
+  Calibrate: CalibrateState
+  CustomSklill: CustomSkillState
 }
 
 declare interface EnemyTargetState {

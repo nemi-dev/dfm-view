@@ -1,4 +1,53 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import _initState from "./initStateMt.json"
+
+
+const selfInit = _initState.Self as SelfState
+
+export const selfSlice = createSlice({
+  name: 'Self',
+  initialState: selfInit,
+  reducers: {
+    SetMyName: (s, { payload }: PayloadAction<string>) => {
+      s.myName = payload
+    },
+    SetDFClass: (s, { payload }: PayloadAction<DFClassName>) => {
+      s.dfclass = payload
+    },
+    SetLevel: (s, { payload }: PayloadAction<number>) => {
+      s.level = payload
+    },
+    SetAchieveLevel: (s, { payload }: PayloadAction<number>) => {
+      s.achieveLevel = payload
+    },
+    SetAtype: (s, { payload }: PayloadAction<Atype>) => {
+      s.atype = payload
+    },
+    set_atk_fixed: (s, pay : PayloadAction<number>) => {
+      s.atk_fixed = pay.payload
+    },
+  }
+})
+
+export const {
+  SetMyName,
+  SetDFClass,
+  SetLevel,
+  SetAchieveLevel,
+  SetAtype,
+  set_atk_fixed,
+} = selfSlice.actions
+
+
+
+export const currentIDSlice = createSlice({
+  name: 'currentID',
+  initialState: {
+    value: "Set this later"
+  },
+  reducers: { }
+})
+
 
 
 const creatureInit: CreaturePropState = 
@@ -28,45 +77,6 @@ export const {
 
 
 
-const selfInit: SelfState = {
-  myName: "내캐릭터",
-  dfclass: "미스트리스",
-  level: 65,
-  achieveLevel: 9,
-  atype: "Magic",
-  atk_fixed: 317,
-}
-
-export const selfSlice = createSlice({
-  name: 'Self',
-  initialState: selfInit,
-  reducers: {
-    SetMyName: (s, { payload }: PayloadAction<string>) => {
-      s.myName = payload
-    },
-    SetDFClass: (s, { payload }: PayloadAction<DFClassName>) => { s.dfclass = payload },
-    SetLevel: (s, { payload }: PayloadAction<number>) => { s.level = payload },
-    SetAchieveLevel: (s, { payload }: PayloadAction<number>) => { s.achieveLevel = payload },
-    SetAtype: (s, { payload }: PayloadAction<Atype>) => {
-      s.atype = payload
-    },
-    set_atk_fixed: (s, pay : PayloadAction<number>) => {
-      s.atk_fixed = pay.payload
-    },
-    
-  }
-})
-
-export const {
-  SetMyName,
-  SetDFClass,
-  SetLevel,
-  SetAchieveLevel,
-  SetAtype,
-  set_atk_fixed,
-  
-} = selfSlice.actions
-
 
 const enemyTargetInit: EnemyTargetState = {
   Defense: 19500,
@@ -90,3 +100,16 @@ export const {
   SetEnemyDefense,
   SetEnemyResist,
 } = enemyTargetSlice.actions
+
+
+
+const initSavedCharState: SavedCharCollection = {
+  byID: {},
+  IDs: []
+}
+export const savedCharSlice = createSlice({
+  name: "SavedChars",
+  initialState: initSavedCharState,
+  reducers: { }
+})
+

@@ -1,4 +1,12 @@
 {
+  "Self": {
+    "myName": "미스트리스약해요상향좀",
+    "dfclass": "미스트리스",
+    "level": 65,
+    "atype": "Magic",
+    "achieveLevel": 9,
+    "atk_fixed": 317
+  },
   "Item": {
     "무기": "워터 토쳐 사이드",
     "상의": "암살자의 서슬 자켓",

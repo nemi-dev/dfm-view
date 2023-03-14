@@ -206,9 +206,7 @@ export function combine(...attrsList: BaseAttrs[]) {
   return prev
 }
 
-type El_val = "el_fire" | "el_ice" | "el_lght" | "el_dark"
 
-type El = Pick<BaseAttrs, El_val>
 
 export function whatElType(el: El, activeTypes: Eltype | Eltype[]): Eltype[] {
   if (activeTypes == null) return []

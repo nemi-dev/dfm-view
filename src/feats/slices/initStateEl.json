@@ -1,4 +1,12 @@
 {
+  "Self": {
+    "myName": "븜미에양",
+    "dfclass": "엘레멘탈마스터",
+    "level": 65,
+    "atype": "Magic",
+    "achieveLevel": 9,
+    "atk_fixed": 317
+  },
   "Item": {
     "무기": "계약의 인장",
     "상의": "암살자의 서슬 자켓",
