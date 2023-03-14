@@ -3,7 +3,7 @@ import { AtkOut, StatOut, criticalChance } from "../damage"
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
 import { AddSkillInc, RemoveSkillInc, SetBasicAttr, SetEltype, SetSkillInc } from "../feats/slices/calibrateSlice"
 import { selectMe, selectMeNoCond, selectMyFinalEltype } from "../feats/selector/selectors"
-import { selectSpecifiedAtype } from "../feats/selector/selfSelectors"
+import { selectClassAtype } from "../feats/selector/selfSelectors"
 import { Gridy } from "./widgets/CommonUI"
 import { Num } from "./widgets/NumberView"
 import { CheckboxGroup, DisposableInput, LabeledNumberInput, NumberInput, RadioGroup, LabeledSwitch } from "./widgets/Forms"
@@ -116,7 +116,7 @@ function SkillInc() {
 
 export function MyStat() {
   const [excludeCond, setExcludeCond] = useState(false)
-  const atype = useAppSelector(selectSpecifiedAtype)
+  const atype = useAppSelector(selectClassAtype)
   const me = excludeCond? useAppSelector(selectMeNoCond) : useAppSelector(selectMe)
   const calibrateEltypes = useAppSelector(state => state.My.Calibrate.eltype)
 

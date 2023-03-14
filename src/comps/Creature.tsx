@@ -8,7 +8,6 @@ import { ModalContext } from '../modalContext'
 import { ClosedCondyceSet } from './Choices'
 import { LabeledNumberInput } from "./widgets/Forms"
 import { ItemIcon } from './widgets/Icons'
-import { ItemName } from './widgets/ItemNameView'
 
 const IconsLayout = styled.div`
   display: flex;
@@ -29,13 +28,12 @@ const CreatureOrArtiLayout = styled.div`
   }
 `
 
-function CreatureOrArtifactView({ item }: { item: DFItem }) {
+function CreatureOrArtifactView({ item, part, color }: { item: DFItem, part: "크리쳐" | "아티팩트", color?: "Red" | "Green" | "Blue" }) {
   const { openModal } = useContext(ModalContext)
-  const part = item.itype as "크리쳐" | "아티팩트"
+
   return (
     <CreatureOrArtiLayout>
-      <ItemIcon item={item} onClick={() => openModal({ name: "item", part, index: item.ArtiColor })} />
-      {/* <ItemName item={item} /> */}
+      <ItemIcon item={item} onClick={() => openModal({ name: "item", part, index: color })} />
     </CreatureOrArtiLayout>
   )
 }
@@ -57,10 +55,10 @@ export function Creatures() {
       <h3>크리쳐</h3>
       </header>
       <IconsLayout>
-        <CreatureOrArtifactView item={creature} />
-        <CreatureOrArtifactView item={Red} />
-        <CreatureOrArtifactView item={Green} />
-        <CreatureOrArtifactView item={Blue} />
+        <CreatureOrArtifactView item={creature} part="크리쳐" />
+        <CreatureOrArtifactView item={Red} part="아티팩트" color="Red"  />
+        <CreatureOrArtifactView item={Green} part="아티팩트" color="Green"  />
+        <CreatureOrArtifactView item={Blue} part="아티팩트" color="Blue"  />
       </IconsLayout>
       <div className="InputArea">
         <LabeledNumberInput label="크리쳐 스탯" value={stat} onChange={value => dispatch(SetCreatureStat(value))} />

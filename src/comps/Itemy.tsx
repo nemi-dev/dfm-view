@@ -11,11 +11,11 @@ export interface EquipProps {
 }
 
 export function ArmorMaterialSelect({ part }: EquipProps) {
-  if (!isArmor(part)) return null
   const item = useAppSelector(selectItem[part])
-  if (!item) return null
   const material = useAppSelector(selectCustomMaterial[part])
   const dispatch = useAppDispatch()
+  if (!isArmor(part)) return null
+  if (!item) return null
   return (
     <select className="ArmorMaterialSelector" value={material}
       onChange={ev => dispatch(SetMaterial([part, ev.target.value as ArmorMaterial]))}>

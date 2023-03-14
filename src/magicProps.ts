@@ -4,17 +4,18 @@ import { at1, AtypeAttrKey } from "./attrs"
 
 interface MagicPropsMint {
   order: MagicPropsCareAbout[]
-  cycle: Partial<Record<MagicPropsCareAbout, MagicPropsCareAbout>>
-  attrSet: Partial<Record<MagicPropsCareAbout, number>>
+  cycle: Record<NonNullable<MagicPropsCareAbout>, MagicPropsCareAbout>
+  attrSet: Record<NonNullable<MagicPropsCareAbout>, number>
 }
 
 const magicPropsPicker = (() => {
   const z: { [key: string]: MagicPropsMint } = {}
   for (const magicPropsKey in magicProps) {
     const array: [MagicPropsCareAbout, number][] = magicProps[magicPropsKey]
+    array.push([null, 0])
     const order: MagicPropsCareAbout[] = []
-    const cycle: Partial<Record<MagicPropsCareAbout, MagicPropsCareAbout>> = {}
-    const attrSet: Partial<Record<MagicPropsCareAbout, number>> = {}
+    const cycle = {} as Record<MagicPropsCareAbout, MagicPropsCareAbout>
+    const attrSet = {} as Record<MagicPropsCareAbout, number>
     array.forEach(([attrKey, value], index) => {
       order.push(attrKey)
       cycle[attrKey] = array[(index + 1) % array.length][0]
@@ -53,13 +54,16 @@ function available(id: MagicPropsTargetId) {
 }
 
 /** `available`로 찾은 컬렉션에서 마법봉인 옵션 하나를 만든다. */
-function makeAttrs(name: MagicPropsCareAbout, atype: Atype, mint: MagicPropsMint,) {
-  return at1(getRealAttrKey(name, atype), mint.attrSet[name])
+function makeAttrs(name: MagicPropsCareAbout, atype: Atype, mint: MagicPropsMint): BaseAttrs {
+  const attrKey = getRealAttrKey(name, atype)
+  if (attrKey == null) return {}
+  return at1(attrKey, mint.attrSet[name])
 }
 
 /** 어떤 마법봉인 옵션을 클릭했을 때, 다음에 어떤 마법봉인으로 바꿀지 판단한다. */
 export function nextMagicProps(part: MagicPropsPart, current: MagicPropsCareAbout, level: number, rarity: Rarity, prime: boolean) {
   const mint = available({ level, rarity, part, prime })
+  if (!mint.order.includes(current)) return mint.order[0]
   return mint.cycle[current]
 }
 
@@ -67,7 +71,7 @@ export function nextMagicProps(part: MagicPropsPart, current: MagicPropsCareAbou
 export function getOneMagicPropValue(name: MagicPropsCareAbout, id: MagicPropsTargetId) {
   if (name == null) return 0
   const mint = available(id)
-  return mint.attrSet[name]
+  return mint.attrSet[name] ?? 0
 }
 
 export function getMagicPropsAttrs(mp: MagicPropsCareAbout[], atype: Atype, level: number, rarity: Rarity, part: MagicPropsPart) {

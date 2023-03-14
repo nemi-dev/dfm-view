@@ -13,7 +13,7 @@ import { selectCard, selectEmblemSpecs, selectItem } from "../feats/selector/equ
 import { Condyce } from './Choices'
 
 
-export function DFTitle() {
+function DFTitle() {
   const { openModal } = useContext(ModalContext)
   const dftitle = useAppSelector(selectItem["칭호"])
   const card = useAppSelector(selectCard["칭호"])
@@ -25,19 +25,36 @@ export function DFTitle() {
         <div className="SlotHeading">
           <ItemName item={dftitle} alt="칭호 없음" />
         </div>
-        <div className="EquipAddons">
+        {dftitle? <div className="EquipAddons">
           <ItemIcon className="Card" item={card} onClick={() => openModal({name:"item", part: "칭호", target: "Card"})} />
           <EmblemIcon spec={emblem} accept={"Platinum"}
             onClick={() => openModal({name:"item", part: "칭호", target: "Emblem", index:0})}
           />
-        </div>
+        </div> : null }
       </div>
       <div>
-        <SimpleBaseAttrView attrs={dftitle.attrs} />
+        <SimpleBaseAttrView attrs={dftitle?.attrs} />
       </div>
     </div>
   )
 }
+
+function WeaponAvatarOrAura({ item, part }: { item: DFItem, part: "무기아바타" | "오라" }) {
+  const { openModal } = useContext(ModalContext)
+  return (
+    <div className="EquipSlot AlwaysEquipPartLayout Hovering Bordered">
+    <ItemIcon className="AvatarIcon" item={item}
+    onClick={() => openModal({name:"item", part, target:"MainItem"})} />
+    <div className="SlotHeading">
+      {item?.name ?? `${part} 없음`}
+    </div>
+    <div className="AvatarAttrs">
+      <SimpleBaseAttrView attrs={item?.attrs} />
+    </div>
+  </div>
+  )
+}
+
 interface AvatarProps {
   part: WearAvatarPart
 }
@@ -65,7 +82,7 @@ const AvatarPartLayout = styled.div`
   }
 `
 
-function AvatarPart({ part }: AvatarProps) {
+function WearAvatarPart({ part }: AvatarProps) {
   const rarity = useAppSelector(state => state.My.Avatar[part])
   const attrs = useAppSelector(state => getAvatarAttr(part, state.My.Avatar[part]))
   const dispatch = useAppDispatch()
@@ -85,7 +102,7 @@ function AvatarPart({ part }: AvatarProps) {
 }
 
 
-function AvatarPartCompact({ part }: AvatarProps) {
+function WearAvatarPartCompact({ part }: AvatarProps) {
   const rarity = useAppSelector(state => state.My.Avatar[part])
   const dispatch = useAppDispatch()
   const onClick = useCallback(() => {
@@ -130,17 +147,16 @@ const AvatarsSecondLayout = styled.div`
 
 
 export function Avatars() {
-  const { openModal } = useContext(ModalContext)
   const rareCount = useAppSelector(selectRareAvatarCount)
   const dftitle = useAppSelector(selectItem["칭호"])
   const weaponAvatar = useAppSelector(selectItem["무기아바타"])
   const aura = useAppSelector(selectItem["오라"])
   const dispatch = useAppDispatch()
   const portrait = useContext(PortraitMode)
-  const AvatarPartComp = portrait? AvatarPartCompact : AvatarPart
   const setAll = useCallback(() => {
     dispatch(SetAvatarTypeAll("Rare"))
   }, [rareCount])
+  const AvatarPartComp = portrait? WearAvatarPartCompact : WearAvatarPart
   return (
     <div className="Avatars">
       <header>
@@ -149,22 +165,8 @@ export function Avatars() {
       </header>
       <AvatarsFirstLayout className="AvatarsGridBox">
         <DFTitle />
-        <div className="EquipSlot AlwaysEquipPartLayout Hovering Bordered">
-          <ItemIcon className="AvatarIcon" item={weaponAvatar}
-          onClick={() => openModal({name:"item", part:"무기아바타", target:"MainItem"})} />
-          <div className="SlotHeading">{weaponAvatar.name}</div>
-          <div className="AvatarAttrs">
-            <SimpleBaseAttrView attrs={weaponAvatar.attrs} />
-          </div>
-        </div>
-        <div className="EquipSlot AlwaysEquipPartLayout Hovering Bordered">
-          <ItemIcon className="AvatarIcon" item={aura}
-          onClick={() => openModal({name:"item", part:"오라", target:"MainItem"})} />
-          <div className="SlotHeading">{aura.name}</div>
-          <div className="AvatarAttrs">
-            <SimpleBaseAttrView attrs={aura.attrs} />
-          </div>
-        </div>
+        <WeaponAvatarOrAura item={weaponAvatar} part="무기아바타" />
+        <WeaponAvatarOrAura item={aura} part="오라" />
       </AvatarsFirstLayout>
       <AvatarsSecondLayout>
         <AvatarPartComp part="모자" />

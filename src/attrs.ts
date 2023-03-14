@@ -67,6 +67,7 @@ export function scalarProduct(attr: BaseAttrs, k: number) {
   const copy: BaseAttrs = { }
   for (const key in attr) {
     if (attrDefs[key as keyof BaseAttrs]?.reducer === add)
+    // @ts-ignore
     copy[key] = attr[key] * k
   }
   return copy
@@ -97,7 +98,7 @@ const reduce_eltype = (p: Eltype | Eltype[], n: Eltype | Eltype[]) => {
 }
 
 
-const reducers: Partial<Record<keyof BaseAttrs, (p, n)=>any>> = {}
+const reducers: Partial<Record<keyof BaseAttrs, (p: any, n: any)=>any>> = {}
 
 
 export type AttrExpressionType = 
@@ -110,7 +111,9 @@ interface AttrDef {
   expression: AttrExpressionType
 }
 
-export const attrDefs : { [k in keyof BaseAttrs]: AttrDef } & { array?: AttrDef[] } = {}
+export const attrDefs : { [k in keyof BaseAttrs]: AttrDef } & { array: AttrDef[] } = {
+  array: []
+}
 
 function defineAttr(key: keyof BaseAttrs, name: string, reducer: (a: any, b: any) => any, expression: AttrExpressionType) {
   const _a = { key, name, reducer, expression }
@@ -188,13 +191,13 @@ const attrDefsArray = [
 
 attrDefs.array = attrDefsArray
 
+
 export function combine(...attrsList: BaseAttrs[]) {
   const prev: BaseAttrs = {}
 
   for (const attrs of attrsList) {
     if (attrs == null) continue
     for (const key in attrs) {
-      
       if (!(key in reducers)) continue
       if (!(key in prev)) {
         prev[key] = attrs[key]
@@ -211,6 +214,6 @@ export function combine(...attrsList: BaseAttrs[]) {
 export function whatElType(el: El, activeTypes: Eltype | Eltype[]): Eltype[] {
   if (activeTypes == null) return []
   if (typeof activeTypes === "string") return [activeTypes]
-  const maxValue = Math.max(...activeTypes.map(eltype => el[Elemental[eltype].el]))
+  const maxValue = Math.max(...activeTypes.map(eltype => el[Elemental[eltype].el] ?? 0))
   return activeTypes.filter(eltype => el[Elemental[eltype].el] == maxValue)
 }

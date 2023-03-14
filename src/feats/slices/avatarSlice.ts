@@ -1,12 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { avatarParts } from "../../avatar"
 
-import _initState from "./initStateMt.json"
-const avatarInit = _initState.Avatar as AvatarRarityState
+import initState from "./initState"
 
 export const avatarSlice = createSlice({
   name: "Avatar",
-  initialState: avatarInit,
+  initialState: initState.Avatar,
   reducers: {
     SetAvatarRarity: (s, { payload: [part, rarity] }: PayloadAction<[WearAvatarPart, "Uncommon" | "Rare"]>) => {
       s[part] = rarity

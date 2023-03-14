@@ -150,6 +150,7 @@ export const getEquipsOfISet = memoizee(
 function countISets(items: DFItem[]) {
   const counts: Record<string, number> = {}
   for (const item of items) {
+    if (!item) continue
     const s = item.setOf
     if (!s) continue
     if (s === "all") {

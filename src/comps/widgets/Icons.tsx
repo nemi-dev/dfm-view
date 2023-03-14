@@ -38,11 +38,11 @@ function imageSource(attrs: DFItem) {
       return [im`/img/item/${attrs}.png`, `/img/frame/${attrs.rarity}.png`]
   }
 }
-interface ItemIcon2Props extends HTMLProps<HTMLDivElement> {
-  item: DFItem
+interface ItemIconProps extends HTMLProps<HTMLDivElement> {
+  item: DFItem | undefined
 }
 
-export function ItemIcon({ item, children, className, ...props }: ItemIcon2Props) {
+export function ItemIcon({ item, children, className, ...props }: ItemIconProps) {
   if (!item)
     return <SquareIcon className={"ItemIcon " + (className ?? "")} children={children} src="" frame="/img/frame/Common.png" {...props} />
   const [src, frame] = imageSource(item)

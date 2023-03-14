@@ -77,7 +77,7 @@ const expressionToComponent: Record<AttrExpressionType, React.FC<any>> = {
 
 
 
-export function SimpleBaseAttrView({ attrs }: { attrs: BaseAttrs }) {
+export function SimpleBaseAttrView({ attrs }: { attrs: BaseAttrs | undefined | null }) {
   if (!attrs) return null
   const views: JSX.Element[] = []
   for (const { key, expression, name } of attrDefs.array) {
@@ -104,21 +104,3 @@ export function SimpleBaseAttrView({ attrs }: { attrs: BaseAttrs }) {
   )
 }
 
-
-
-interface ResultProps {
-  name: string
-  value: number | string | JSX.Element
-  className?: string
-}
-
-export function Result({ name, value = 0, className = ""}: ResultProps) {
-  return (
-  <span className={"Result " + className}>
-    {name? <div className="AttrName">{name}</div> : null}
-    <div className={"AttrValue " + className}>
-      {value}
-    </div>
-  </span>
-  )
-}

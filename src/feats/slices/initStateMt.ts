@@ -1,14 +1,14 @@
-{
+const state: DFCharState = {
   "Self": {
-    "myName": "븜미에양",
-    "dfclass": "엘레멘탈마스터",
+    "myName": "미스트리스약해요상향좀",
+    "dfclass": "미스트리스",
     "level": 65,
     "atype": "Magic",
     "achieveLevel": 9,
     "atk_fixed": 317
   },
   "Item": {
-    "무기": "계약의 인장",
+    "무기": "워터 토쳐 사이드",
     "상의": "암살자의 서슬 자켓",
     "하의": "암살자의 서슬 팬츠",
     "머리어깨": "암살자의 서슬 스트랩",
@@ -29,15 +29,15 @@
     }
   },
   "Card": {
-    "무기": "스페셜 데미지 보주",
+    "무기": "모디스 카드",
     "상의": "여제 스테로페 카드",
     "하의": "여제 스테로페 카드",
     "머리어깨": "기어의 디샤 카드",
     "벨트": "사룡 스피라찌의 머리 카드",
     "신발": "허의 환혼 카드",
-    "팔찌": "파리앗쵸 카드",
-    "목걸이": "파리앗쵸 카드",
-    "반지": "파리앗쵸 카드",
+    "팔찌": "긴발의 로터스 카드",
+    "목걸이": "긴발의 로터스 카드",
+    "반지": "긴발의 로터스 카드",
     "보조장비": "불의 사념체 카드",
     "칭호": null
   },
@@ -61,9 +61,9 @@
     "머리어깨": ["Stat", "Stat", "Stat"],
     "벨트": ["Stat", "Stat", "Stat"],
     "신발": ["Stat", "Stat", "Stat"],
-    "팔찌": ["Stat", "Stat", "Stat"],
-    "목걸이": ["Stat", "Stat", "Stat"],
-    "반지": ["Stat", "Stat", "Stat"],
+    "팔찌": ["el_ice", "el_ice", "el_ice"],
+    "목걸이": ["el_ice", "el_ice", "el_ice"],
+    "반지": ["el_ice", "el_ice", "el_ice"],
     "보조장비": ["Crit", "Crit", "Crit"],
     "봉인석": ["Atk", "Stat", "Accu"]
   },
@@ -80,13 +80,13 @@
     "보조장비": 46
   },
   "Material": {
-    "상의": "천",
-    "하의": "천",
-    "머리어깨": "천",
-    "벨트": "천",
-    "신발": "천"
+    "상의": "중갑",
+    "하의": "중갑",
+    "머리어깨": "중갑",
+    "벨트": "중갑",
+    "신발": "중갑"
   },
-  "Avatar" : {
+  "Avatar": {
     "모자": "Rare",
     "얼굴": "Rare",
     "상의": "Rare",
@@ -95,5 +95,73 @@
     "머리": "Rare",
     "하의": "Rare",
     "허리": "Rare"
+  },
+  "Guild": {
+    "StatLv": 30,
+    "AtkLv": 30,
+    "CritLv": 30,
+    "ElLv": 14,
+    "SpeedAtkLv": 14,
+    "SpeedCastLv": 14,
+    "SpeedMoveLv": 14,
+    "AccuLv": 30,
+    "PublicStatLv": 5
+  },
+  "Tonic": {
+    "el_all": 25,
+    "hpmax": 1240,
+    "mpmax": 630,
+    "strn_intl": 237,
+    "vit_psi": 237,
+    "def_ph": 2100,
+    "def_mg": 1600,
+    "Crit": 237,
+    "Accu": 239,
+  },
+  "CreatureProp": {
+    "CreatureStat": 156,
+    "RedPropsValue": 50,
+    "BluePropsValue": 50,
+    "GreenPropsEl": 10,
+  },
+  "Choice": {
+    "branches": {},
+    "gives": {},
+    "exclusives": {}
+  },
+  "Calibrate": {
+    "strn": 0,
+    "intl": 0,
+    "str_inc": 0,
+    "int_inc": 0,
+    "atk_ph": 0,
+    "atk_mg": 0,
+    "atk_ph_inc": 0,
+    "atk_mg_inc": 0,
+    "crit_ph": 0,
+    "crit_mg": 0,
+    "crit_ph_pct": 0,
+    "crit_mg_pct": 0,
+    "dmg_inc": 0,
+    "cdmg_inc": 0,
+    "dmg_add": 0,
+    "eltype": [],
+    "el_fire": 0,
+    "el_ice": 0,
+    "el_lght": 0,
+    "el_dark": 0,
+    "eldmg_fire": 0,
+    "eldmg_ice": 0,
+    "eldmg_lght": 0,
+    "eldmg_dark": 0,
+    "sk_inc": [ 0 ],
+    "sk_inc_sum": 0,
+    "target_def": 0,
+    "target_res": 0
+  },
+  "CustomSklill": {
+    "cases": []
   }
 }
+
+export default state

@@ -1,9 +1,7 @@
 import styled from "styled-components"
-import { useContext } from "react"
 import { useAppDispatch, useAppSelector } from "../../feats/hooks"
-import { selectMyName } from "../../feats/selector/selfSelectors"
+import { selectMyDFClass, selectMyName } from "../../feats/selector/selfSelectors"
 import { SetDFClass, SetMyName } from "../../feats/slices/slice"
-import { ModalContext } from "../../modalContext"
 
 const DFClassLayout = styled.div`
   display: grid;
@@ -18,10 +16,9 @@ input[type=text]& {
 `
 
 function DFClassSelect({ name }: { name: DFClassName }) {
-  if (!name) return <div />
-  const { setOpen } = useContext(ModalContext)
   const dispatch = useAppDispatch()
-  return <img src={`/img/dfclass/${name}.png`} onClick={()=>(dispatch(SetDFClass(name)), setOpen(false))} />
+  if (!name) return <div />
+  return <img src={`/img/dfclass/${name}.png`} onClick={()=>(dispatch(SetDFClass(name)))} />
 }
 
 const dfclassOrder: DFClassName[] = [
@@ -37,13 +34,16 @@ const dfclassOrder: DFClassName[] = [
 
 export function DFClassModal() {
   const dispatch = useAppDispatch()
+  const myClass = useAppSelector(selectMyDFClass)
   const myName = useAppSelector(selectMyName)
   return (
     <div>
       <header>
-        <h3>직업 바꾸기</h3>
-        <div>여기서는 직변권이 무한!!!</div>
+        <h3>캐릭터/직업 설정하기</h3>
       </header>
+      <div>
+        <img src={`/img/dfclass/${myClass.name}.png`} alt="" />
+      </div>
       <DFCharNameInput type="text" maxLength={20} value={myName} onChange={ev => dispatch(SetMyName(ev.target.value))} />
       <div className="ModalMenuScrollable">
       <DFClassLayout>

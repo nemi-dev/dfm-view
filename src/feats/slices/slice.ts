@@ -1,12 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import _initState from "./initStateMt.json"
+import initState from "./initState"
+const { Self } = initState
 
-
-const selfInit = _initState.Self as SelfState
 
 export const selfSlice = createSlice({
   name: 'Self',
-  initialState: selfInit,
+  initialState: Self,
   reducers: {
     SetMyName: (s, { payload }: PayloadAction<string>) => {
       s.myName = payload
@@ -53,7 +52,9 @@ export const currentIDSlice = createSlice({
 const creatureInit: CreaturePropState = 
 {
   CreatureStat: 156,
-  RedPropsValue: 50, BluePropsValue: 50, GreenPropsEl: 10,
+  RedPropsValue: 50,
+  BluePropsValue: 50,
+  GreenPropsEl: 10,
 }
 
 export const creatureSlice = createSlice({

@@ -49,15 +49,22 @@ export const selectDFTitleAttrsNoCond = createSelector(
   selectItem["칭호"],
   selectCard["칭호"],
   selectEmblemSpecs["칭호"],
-  (item, card, emblem) => combine(item.attrs, card?.attrs, getEmblem(emblem[0]))
+  (dftitle, card, emblem) => {
+    if (!dftitle) return {}
+    return combine(dftitle.attrs, card?.attrs, getEmblem(emblem[0]))
+  }
 )
 
-/** 칭호의 조건부 옵션들 중 내가 활성화한 것을 선택한다. */
-export function selectDFTitleCondAttrs(state: RootState) {
-  const dftitle = selectItem["칭호"](state)
-  const conds = getActiveCondyces(dftitle, state.My.Choice)
-  return combine(...conds.map(co => co.attrs))
-}
+/** 칭호의 조건부 옵션들 중 내가 활성화한 효과를 선택한다. */
+export const selectDFTitleCondAttrs = createSelector(
+  selectItem["칭호"],
+  (state: RootState) => state.My.Choice,
+  (dftitle, choice) => {
+    if (!dftitle) return {}
+    const conds = getActiveCondyces(dftitle, choice)
+    return combine(...conds.map(co => co.attrs))
+  }
+)
 
 /** 칭호+칭호에 박은 보주+엠블렘 효과를 선택한다. */
 export const selectDFTitleAttrs = createSelector(
@@ -74,7 +81,7 @@ export const selectWholeAvatarAttrsNoCond = createSelector(
   selectAvatarAttrs,
   selectItem["무기아바타"],
   selectItem["오라"],
-  (dftitleAttrs, avatarAttrs, weaponAvatar, aura) => combine(dftitleAttrs, avatarAttrs, weaponAvatar.attrs, aura.attrs)
+  (dftitleAttrs, avatarAttrs, weaponAvatar, aura) => combine(dftitleAttrs, avatarAttrs, weaponAvatar?.attrs, aura?.attrs)
 )
 
 /** **(조건부 빼고)** 칭호+오라+무기아바타+다른 아바타 효과+아바타 세트효과를 모두 선택한다. */
@@ -83,5 +90,5 @@ export const selectWholeAvatarAttrs = createSelector(
   selectAvatarAttrs,
   selectItem["무기아바타"],
   selectItem["오라"],
-  (dftitleAttrs, avatarAttrs, weaponAvatar, aura) => combine(dftitleAttrs, avatarAttrs, weaponAvatar.attrs, aura.attrs)
+  (dftitleAttrs, avatarAttrs, weaponAvatar, aura) => combine(dftitleAttrs, avatarAttrs, weaponAvatar?.attrs, aura?.attrs)
 )

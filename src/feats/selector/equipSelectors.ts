@@ -3,12 +3,12 @@ import { atx, combine } from "../../attrs"
 import { getActiveISets, getArmorBase, getItem, equipParts, isArmor, magicPropsParts, cardableParts, getActiveCondyces, singleItemParts } from "../../items"
 import { getEmblem } from "../../emblem"
 import { getMagicPropsAttrs } from "../../magicProps"
-import { selectSpecifiedAtype } from "./selfSelectors"
+import { selectClassAtype } from "./selfSelectors"
 
 import type { RootState } from "../store"
 
 /** Redux Selector를 무진장 찍어낸다 */
-export function Noot2<T, P extends WholePart>(func: ($p: P) => (s: RootState) => T, parts: (P[] | readonly P[])): {
+export function Noot<T, P extends WholePart>(func: ($p: P) => (s: RootState) => T, parts: (P[] | readonly P[])): {
   [k in P]: (state: RootState) => T
 } {
   const _o: any = {}
@@ -18,37 +18,36 @@ export function Noot2<T, P extends WholePart>(func: ($p: P) => (s: RootState) =>
 
 
 /** 특정 부위에 장착중인 아이템을 선택한다 */
-export const selectItem = Noot2(part => state => getItem(state.My.Item[part]), singleItemParts)
+export const selectItem = Noot(part => state => getItem(state.My.Item[part]), singleItemParts)
 
 /** 특정 부위의 아이템에 바른 카드를 선택한다 */
-export const selectCard = Noot2(part => state => (getItem(state.My.Card[part])), cardableParts)
+export const selectCard = Noot(part => state => (getItem(state.My.Card[part])), cardableParts)
 
 /** 특정 부위의 아이템에 박은 엠블렘 스펙을 모두 선택한다 */
-export const selectEmblemSpecs = Noot2(part => state => state.My.Emblem[part], cardableParts)
+export const selectEmblemSpecs = Noot(part => state => state.My.Emblem[part], cardableParts)
 
 /** 특정 부위 아이템의 마법봉인 이름을 선택한다 */
-export const selectMagicPropNames = Noot2(
+export const selectMagicPropNames = Noot(
   part => state => state.My.MagicProps[part],
   magicPropsParts
 )
 
 /** 특정 부위의 "내가 선택한" 방어구 재질을 선택한다 */
-export const selectCustomMaterial = Noot2(
+export const selectCustomMaterial = Noot(
   part => state => isArmor(part) ? state.My.Material[part] : null,
   equipParts
 )
 
 /** 특정 부위의 강화보너스 수치(무기는 물/마공, 다른장비는 스탯)를 선택한다 */
-export const selectUpgrade = Noot2(part => state => state.My.Upgrade[part], equipParts)
+export const selectUpgrade = Noot(part => state => state.My.Upgrade[part], equipParts)
 
 /** 특정 부위의 방어구 재질 아이템을 선택한다 */
-export const selectArmorBase = Noot2(
+export const selectArmorBase = Noot(
   part => createSelector(
     selectItem[part],
     selectCustomMaterial[part],
     (item, customMaterial) => {
-      if (!isArmor(part))
-        return {} as DFItem
+      if (!item || !isArmor(part)) return {} as DFItem
       const { level, rarity, material = customMaterial } = item
       return getArmorBase(level, rarity, material, part)
     }
@@ -56,9 +55,9 @@ export const selectArmorBase = Noot2(
 )
 
 /** 특정 부위의 마법봉인 효과를 선택한다. */
-export const selectMagicProps = Noot2(
+export const selectMagicProps = Noot(
   part => createSelector(
-    selectSpecifiedAtype,
+    selectClassAtype,
     selectItem[part],
     selectMagicPropNames[part],
     (atype, item, magicProps) => {
@@ -72,7 +71,7 @@ export const selectMagicProps = Noot2(
 )
 
 /** 현재 착용중인 어느 한 부위의 장비에서 내가 체크한 조건부 노드들을 얻는다. */
-export const selectActiveConds = Noot2(
+export const selectActiveConds = Noot(
   part => state => {
     const item = getItem(state.My.Item[part])
     return getActiveCondyces(item, state.My.Choice)
@@ -83,7 +82,7 @@ export const selectActiveConds = Noot2(
  * 어떤 한 장비 부의의 아이템 옵션, 업그레이드 보너스, 마법봉인, 엠블렘, 카드 옵션을 얻는다.
  * (조건부 옵션은 완전히 배제한다.)
  */
-export const selectPartAttrsNoCond = Noot2(
+export const selectPartAttrsNoCond = Noot(
   part => createSelector(
     selectItem[part],
     selectMagicProps[part],
@@ -92,6 +91,7 @@ export const selectPartAttrsNoCond = Noot2(
     selectArmorBase[part],
     selectUpgrade[part],
     (item, magicProps, card, emblems, armorbase, upgrade) => {
+      if (!item) return {}
       const upgradeAttr = atx(part === "무기" ? "Atk" : "Stat", upgrade)
       return combine(item.attrs, armorbase.attrs, upgradeAttr, magicProps, ...emblems.map(getEmblem), card?.attrs)
     }
@@ -99,7 +99,7 @@ export const selectPartAttrsNoCond = Noot2(
 )
 
 /** 어떤 한 장비 부의의 아이템 옵션, 업그레이드 보너스, 마법봉인, 엠블렘, 카드 옵션, 활성화시킨 조건부 옵션을 얻는다. */
-export const selectPartAttrs = Noot2(
+export const selectPartAttrs = Noot(
   part => createSelector(
     selectPartAttrsNoCond[part],
     selectActiveConds[part],

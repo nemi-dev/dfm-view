@@ -15,8 +15,5 @@ export const selectClassAtype = createSelector(
   (dfclass) => dfclass?.atype ?? "Physc"
 )
 
-/** 내가 직접 체크한 공격타입을 선택한다 */
-export const selectSpecifiedAtype = (state: RootState) => state.My.Self.atype
-
 /** 업적달성레벨로 얻는 보너스 효과를 얻는다.. */
 export const selectAchievementAttrs = (state: RootState) => atx("Stat", state.My.Self.achieveLevel * 7 - 2)

@@ -9,9 +9,6 @@ export const percent_inc_mul = (a: number, b: number) => (b + a + b * a / 100)
 /** 두 배열을 결합한 새로운 배열을 만든다. */
 export const combineArray = (p: string[], n: string[]) => p.concat(n)
 
-/** 어떤 수의 소숫점을 버리고, 자릿수를 분리한다. */
-export const beautyNumber = (n: number) => Math.floor(n).toLocaleString()
-
 /** n을 100배한 후, 소숫점 둘째 자리에서 반올림하고 "%"를 붙인다. */
 export const percentee = (n : number) => `${Math.round(n * 10000) / 100}%`
 

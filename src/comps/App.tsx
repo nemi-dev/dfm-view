@@ -112,7 +112,7 @@ function App() {
     }
 
     window.addEventListener('resize', onResize)
-    return () => window.removeEventListener('reset', onResize)
+    return () => window.removeEventListener('resize', onResize)
   })
 
 

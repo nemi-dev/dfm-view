@@ -29,13 +29,11 @@ const AttrsLayout = styled.div`
 
 export function Cracks() {
   const { openModal } = useContext(ModalContext)
-  
   const rune = useAppSelector(selectItem["봉인석"])
   const spells = useAppSelector(selectSpells)
   const blessing = useAppSelector(selectBlessing)
   const isetattr = useAppSelector(selectCrackISetAttrs)
 
-  
   return (
     <div className="Cracks">
       <h3>성안의 봉인</h3>

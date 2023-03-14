@@ -6,7 +6,7 @@ import { AttrIcon } from "./widgets/Icons"
 import { Num } from "./widgets/NumberView"
 import { useCallback, useContext } from "react"
 import { PortraitMode } from "../responsiveContext"
-import { selectSpecifiedAtype } from "../feats/selector/selfSelectors"
+import { selectClassAtype } from "../feats/selector/selfSelectors"
 import { selectMagicPropNames } from "../feats/selector/equipSelectors"
 import { SetMagicProps } from "../feats/slices/itemSlice"
 
@@ -38,17 +38,17 @@ const MagicPropOne = styled.div`
 `
 
 export function MagicProps({ item, part }: MagicPropsArrayProps) {
-  if (!item) return null
   const isPortrait = useContext(PortraitMode)
   const { level, rarity } = item
   const dispatch = useDispatch()
   const array = useAppSelector(selectMagicPropNames[part])
-  const atype = useAppSelector(selectSpecifiedAtype)
+  const atype = useAppSelector(selectClassAtype)
   const current = useAppSelector(selectMagicPropNames[part])
   const clickHandler = useCallback((index: number) => {
     const next = nextMagicProps(part, current[index], level, rarity, index === 0)
     dispatch(SetMagicProps([part, index, next]))
-  }, [item.name, part, current])
+  }, [item?.name, part, current])
+  if (!item) return null
   return (
     <>
       {array.map((name, index) => index > 0 || rarity === "Epic" ?

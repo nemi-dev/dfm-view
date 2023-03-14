@@ -103,7 +103,7 @@ function PartWide({ part }: PartProps) {
   const { openModal } = useContext(ModalContext)
   const item = useAppSelector(selectItem[part])
   const armorbase = useAppSelector(selectArmorBase[part])
-  const attrs = combine(item.attrs, armorbase?.attrs)
+  const attrs = item? combine(item.attrs, armorbase?.attrs): {}
   const [detail, setDetail] = useState(false)
   return (
     <div className="EquipSlot Bordered Hovering">

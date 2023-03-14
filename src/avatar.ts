@@ -2,14 +2,14 @@ import memoizee from "memoizee"
 
 export const avatarParts = ["모자", "얼굴", "상의", "목가슴", "신발", "머리", "하의", "허리"] as WearAvatarPart[]
 
-const attrMap: Partial<Record<WearAvatarPart, [keyof BaseAttrs, number, number]>> = {
+const attrMap = {
   모자: ["speed_cast", 12, 14],
   얼굴: ["speed_atk", 5, 6],
   목가슴: ["speed_atk", 5, 6],
   신발: ["speed_move", 5, 6],
   머리: ["speed_cast", 12, 14],
   하의: ["hpmax", 418, 682]
-}
+} as const
 
 const rareCoat = { sk_lv: {
   "@Lv10": 1, "@Lv15": 1, "@Lv20": 1, "@Lv25": 1, "@Lv30": 1

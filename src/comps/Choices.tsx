@@ -22,7 +22,12 @@ function LeafView({ itemKey, node, what, Action }: LeafViewProps) {
   const maxValue = node.maxRepeat ?? 1
   
   const dispatch = useAppDispatch()
-  return (
+  return ( maxValue == 1?
+    <LabeledSwitch checked={!!value}
+      label={<>{node.when}<SimpleBaseAttrView attrs={node.attrs} /></>}
+      onChange={b => dispatch(Action([itemKey, b? 1: 0]))}
+    />
+    :
     <LabeledNumberInput
       value={value}
       label={<>{node.when}<SimpleBaseAttrView attrs={node.attrs} /></>}
@@ -65,9 +70,9 @@ export function BranchOrGivesView({ name, nodes, what }: BrachViewProps) {
 }
 
 function ExclusiveNodeView({ prefix, node }: { prefix: string, node: ExclusiveSet }) {
-  const values = node.children.map(n => n.name)
-  const value = useAppSelector(state => state.My.Choice.exclusives[prefix])
   const dispatch = useAppDispatch()
+  const value = useAppSelector(state => state.My.Choice.exclusives[prefix])
+  const values = node.children.map(n => n.name)
   return <RadioGroup groupName={node.label} name={prefix} values={values} value={value}
     dispatcher={val => dispatch(SetExclusive([prefix, val]))}
   />
@@ -121,7 +126,7 @@ export function ClosedCondyceSet({ items }: { items: DFItem[] }) {
   const isets = getActiveISets(...items)
   return (
     <CondArray>
-      {items.map(item => <Condyce key={item.name} iii={item} />)}
+      {items.map(item => item? <Condyce key={item.name} iii={item} /> : null)}
       {isets.map(iset => <Condyce key={iset.name} iii={iset} />)}
     </CondArray>
   )

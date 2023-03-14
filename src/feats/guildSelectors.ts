@@ -2,27 +2,28 @@ import { createSelector } from "@reduxjs/toolkit"
 import { combine } from "../attrs"
 import { RootState } from "./store"
 import { GuildAccu, GuildAtk, GuildCrit, GuildEl, GuildSpeedAtk, GuildStat, GuildStatPublic } from "../guild"
+import { whois } from "../dfclass"
 
 export function selectGuildStat(state: RootState) {
-  const atype = state.My.Self.atype
+  const atype = whois(state.My.Self.dfclass).atype
   const StatLv = state.My.Guild.StatLv
   return GuildStat(StatLv, atype)
 }
 
 export function selectGuildStatPublic(state: RootState) {
-  const atype = state.My.Self.atype
+  const atype = whois(state.My.Self.dfclass).atype
   const PublicStatLv = state.My.Guild.PublicStatLv
   return GuildStatPublic(PublicStatLv, atype)
 }
 
 export function selectGuildAtk(state: RootState) {
-  const atype = state.My.Self.atype
+  const atype = whois(state.My.Self.dfclass).atype
   const AtkLv = state.My.Guild.AtkLv
   return GuildAtk(AtkLv, atype)
 }
 
 export function selectGuildCrit(state: RootState) {
-  const atype = state.My.Self.atype
+  const atype = whois(state.My.Self.dfclass).atype
   const CritLv = state.My.Guild.CritLv
   return GuildCrit(CritLv, atype)
 }

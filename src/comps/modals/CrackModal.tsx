@@ -4,13 +4,13 @@ import { useAppDispatch, useAppSelector } from "../../feats/hooks"
 import { getCracksOnly } from "../../items"
 import { ModalContext } from "../../modalContext"
 import { LabeledSwitch } from "../widgets/Forms"
-import { selectSpecifiedAtype } from "../../feats/selector/selfSelectors"
+import { selectClassAtype } from "../../feats/selector/selfSelectors"
 import { SetItem, SetSpell, SetSpellAll } from "../../feats/slices/itemSlice"
 import { Select } from "./Select"
 
 export function RuneModalFragment() {
   const { setOpen, } = useContext(ModalContext)
-  const atype = useAppSelector(selectSpecifiedAtype)
+  const atype = useAppSelector(selectClassAtype)
   const items = getCracksOnly("봉인석", atype)
   const dispatch = useAppDispatch()
   const onClick = useCallback((name: string) => {
@@ -34,7 +34,7 @@ export function SpellModalFragment() {
   const { setOpen, message } = useContext(ModalContext)
   const { index: spellIndex } = message as ModalRequestForItem
   const [all, setAll] = useState(false)
-  const atype = useAppSelector(selectSpecifiedAtype)
+  const atype = useAppSelector(selectClassAtype)
   const items = getCracksOnly("정수", atype)
   const dispatch = useAppDispatch()
   const onClick = useCallback((name: string) => {

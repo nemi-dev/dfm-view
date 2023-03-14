@@ -1,7 +1,7 @@
 import { createSelector } from "@reduxjs/toolkit"
 import { useCallback } from "react"
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
-import { selectSpecifiedAtype } from "../feats/selector/selfSelectors"
+import { selectClassAtype } from "../feats/selector/selfSelectors"
 import { selectCustomMaterial, selectEmblemSpecs, selectUpgrade } from "../feats/selector/equipSelectors"
 import { SetPerfectMagicPropsStat, SetPerfectMagicPropsEl, SetColorEmblemLevelAll, SetMaterialAll, SetArmorUpgradeAll, SetAccessUpgradeAll } from "../feats/slices/itemSlice"
 import { accessParts, armorParts, oneEmblemParts } from "../items"
@@ -32,8 +32,14 @@ const selectSynchronizedMaterial = createSelector(
 )
 
 export function EquipBatch() {
-  const myAtype = useAppSelector(selectSpecifiedAtype)
+  const myAtype = useAppSelector(selectClassAtype)
   
+
+  const dispatch = useAppDispatch()
+  const armorUpgradeValue = useAppSelector(selectMaxArmorUpgradeValue)
+  const accessUpgradeValue = useAppSelector(selectMaxAccessUpgradeValue)
+  const colorEmblemLevel = useAppSelector(selectColorEmblemLevels)
+  const mat = useAppSelector(selectSynchronizedMaterial)
   const onButtonClick = useCallback((v: string) => {
     switch (v) {
       case "magicPropLeft":
@@ -45,11 +51,6 @@ export function EquipBatch() {
 
     }
   }, [myAtype])
-  const dispatch = useAppDispatch()
-  const armorUpgradeValue = useAppSelector(selectMaxArmorUpgradeValue)
-  const accessUpgradeValue = useAppSelector(selectMaxAccessUpgradeValue)
-  const colorEmblemLevel = useAppSelector(selectColorEmblemLevels)
-  const mat = useAppSelector(selectSynchronizedMaterial)
   return (
     <div className="EquipBatch">
       <h4>장비 모두 설정</h4>

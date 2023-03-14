@@ -1,13 +1,12 @@
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { selectBaseEnemyDefense, selectBaseEnemyElRes, selectMe, selectMyFinalEltype } from '../feats/selector/selectors'
-import { selectSpecifiedAtype } from "../feats/selector/selfSelectors"
-import { beautyNumber } from '../utils'
+import { selectClassAtype } from "../feats/selector/selfSelectors"
 import { criticalChance, criticize, getDamage } from '../damage'
 import { SetSkillFixValue, SetSkillInputName, SetSkillUsesSkillInc, SetSkillValue } from '../feats/slices/skillInputSlice'
 import { LabeledSwitch, LabeledNumberInput } from "./widgets/Forms"
-import { Result } from './widgets/AttrsView'
-import { Elemental, AtypeAttrKey } from '../attrs'
+import { AtypeAttrKey } from '../attrs'
 import styled from 'styled-components'
+import { Num } from './widgets/NumberView'
 
 
 const SkillOneAttackHeader = styled.div`
@@ -55,7 +54,7 @@ interface SkillOutputOneProps {
 }
 function SkillTestOne({ index, SkillOneAttackSpec }: SkillOutputOneProps) {
 
-  const atype = useAppSelector(selectSpecifiedAtype)
+  const atype = useAppSelector(selectClassAtype)
 
   const attrs = useAppSelector(selectMe)
   const atkFix = useAppSelector(state => state.My.Self.atk_fixed)
@@ -71,9 +70,18 @@ function SkillTestOne({ index, SkillOneAttackSpec }: SkillOutputOneProps) {
   return (
     <div className="SkillTestOne">
       <SkillOneAttack index={index} {...SkillOneAttackSpec} />
-      <Result className={"Vertical " + atype} name={"데미지"} value={beautyNumber(withoutCrit)} />
-      <Result className={"Vertical " + atype} name={"평균 데미지"} value={beautyNumber(mean)} />
-      <Result className={"Vertical " + atype} name={"크리티컬 데미지"} value={beautyNumber(withCrit)} />
+      <div className={"Result " + atype}>
+        <div className="AttrName">데미지</div>
+        <Num className="AttrValue" value={withoutCrit} separated />
+      </div>
+      <div className={"Result " + atype}>
+        <div className="AttrName">평균 데미지</div>
+        <Num className="AttrValue" value={mean} separated />
+      </div>
+      <div className={"Result " + atype}>
+        <div className="AttrName">크리티컬 데미지</div>
+        <Num className="AttrValue" value={withCrit} separated />
+      </div>
     </div>
   )
 }

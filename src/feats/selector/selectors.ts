@@ -82,7 +82,7 @@ export const selectMyFinalEltype = createSelector(
 
 
 
-/** 내가 입려한 적 방어력을 선택한다. */
+/** 내가 입력한 적 방어력을 선택한다. */
 export function selectBaseEnemyDefense(state: RootState) {
   return state.EnemyTarget.Defense
 }

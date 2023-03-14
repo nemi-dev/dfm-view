@@ -1,13 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { accessParts, armorParts, getItem, oneEmblemParts } from "../../items"
-import _initState from "./initStateMt.json"
 import { ImportDFChar } from "../actions"
+import initState from "./initState"
+
+const { Item, Card, Emblem, MagicProps, Upgrade, Material } = initState
 
 
-const itemsInit = _initState.Item as ItemsState
 export const itemSlice = createSlice({
   name: "Item",
-  initialState: itemsInit,
+  initialState: Item,
   reducers: {
     SetItem: (s, { payload: [part, itemName] }: PayloadAction<[SingleItemPart, string]>) => {
       s[part] = itemName
@@ -37,10 +38,9 @@ export const {
 
 
 
-const cardsInit = _initState.Card as CardState
 export const cardSlice = createSlice({
   name: "Card",
-  initialState: cardsInit,
+  initialState: Card,
   reducers: {
     SetCard: (s, { payload: [part, cardName] }: PayloadAction<[CardablePart, string]>) => {
       s[part] = cardName
@@ -67,10 +67,9 @@ export const {
 
 
 
-const emblemInit = _initState.Emblem as EmblemState
 export const emblemSlice = createSlice({
   name: "Emblem",
-  initialState: emblemInit,
+  initialState: Emblem,
   reducers: {
     SetEmblem: (s, { payload: [part, index, emblemType, emblemLevel] }: PayloadAction<[CardablePart, number, EmblemType, number]>) => {
       s[part][index] = [emblemType, emblemLevel]
@@ -100,10 +99,9 @@ export const {
 
 
 
-const magicPropsInit = _initState.MagicProps as MagicPropsState
 export const magicPropsSlice = createSlice({
   name: "MagicProps",
-  initialState: magicPropsInit,
+  initialState: MagicProps,
   reducers: {
     SetMagicProps: (s, { payload: [part, index, magicProps]}: PayloadAction<[MagicPropsPart, number, MagicPropsCareAbout]>) => {
       s[part][index] = magicProps
@@ -132,10 +130,9 @@ export const {
 
 
 
-const upgradeInit = _initState.Upgrade as UpgradeOrKaledoState
 export const upgradeSlice = createSlice({
   name: "Upgrade",
-  initialState: upgradeInit,
+  initialState: Upgrade,
   reducers: {
     SetUpgradeValue: (s, { payload: [part, value] }: PayloadAction<[EquipPart, number]>) => {
       s[part] = value
@@ -161,10 +158,9 @@ export const {
 } = upgradeSlice.actions
 
 
-const materialInit = _initState.Material as MaterialState
 export const materialSlice = createSlice({
   name: "Material",
-  initialState: materialInit,
+  initialState: Material,
   reducers: {
     SetMaterial: (s, { payload: [part, value] }: PayloadAction<[ArmorPart, ArmorMaterial]>) => {
       s[part] = value
