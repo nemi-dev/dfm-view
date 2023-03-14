@@ -1,5 +1,5 @@
 import { AtypeAttrKey, Elemental } from "../attrs"
-import { calcAtk, calcStat, criticalChance } from "../damage"
+import { AtkOut, StatOut, criticalChance } from "../damage"
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
 import { AddSkillInc, RemoveSkillInc, SetBasicAttr, SetEltype, SetSkillInc } from "../feats/slices/calibrateSlice"
 import { selectMe, selectMeNoCond, selectMyFinalEltype } from "../feats/selector/selectors"
@@ -55,8 +55,8 @@ interface StatAtkCritProps {
 function StatAtkCrit({ atype, className = "" }: StatAtkCritProps) {
   const me = useContext(MyAttrsContext)
   const { Stat, StatInc, Atk, AtkInc, Crit, CritCh, 스탯, 타입 } = AtypeAttrKey[atype]
-  const stat = calcStat(me[Stat], me[StatInc])
-  const atk = calcAtk(me[Atk], me[AtkInc], me[Stat], me[StatInc])
+  const stat = StatOut(me[Stat], me[StatInc])
+  const atk = AtkOut(me[Atk], me[AtkInc], me[Stat], me[StatInc])
   const chance = criticalChance(me[Crit], me[CritCh])
   return (
     <div className={atype+" "+className} >
@@ -156,7 +156,7 @@ export function MyStat() {
           </Gridy>
           <SkillInc />
         <div className="Result">
-          <div className="AttrName">스킬 공격력</div>
+          <div className="AttrName">스킬 공격력 증가</div>
           <Num className="AttrValue" value={me["sk_inc"] + me["sk_inc_sum"]} signed percented />
         </div>
         <CheckboxGroup name="공격속성" 

@@ -34,3 +34,27 @@ export function mul_object(p: Record<string, number>, b: Record<string, number>)
   }
   return prev
 }
+
+
+
+/** 객체를 완전 복사한다. */
+export function deepCopy<T>(obj: T, path: any[] = []): T {
+  if (typeof obj !== 'object' || obj === null) {
+    return obj;
+  }
+
+  let copy: any = Array.isArray(obj) ? [] : {};
+
+  path.push(obj)
+  for (let key in obj) {
+    if (path.includes(obj[key])) throw Error("The object may have a circular referennce.")
+    copy[key] = deepCopy(obj[key], path);
+  }
+  console.assert(path.pop() === obj)
+  return copy;
+}
+
+/** 두 수가 (거의) 같은지 판단한다. */
+export function almostEqual(a: number, b: number, t: number = 1 / 4096) {
+  return Math.abs(a - b) < t
+}

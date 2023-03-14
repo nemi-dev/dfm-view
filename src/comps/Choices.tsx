@@ -20,7 +20,6 @@ interface LeafViewProps {
 function LeafView({ itemKey, node, what, Action }: LeafViewProps) {
   const value = useAppSelector(state => state.My.Choice[what][itemKey] ?? 0)
   const maxValue = node.maxRepeat ?? 1
-  console.log(( node ));
   
   const dispatch = useAppDispatch()
   return (
