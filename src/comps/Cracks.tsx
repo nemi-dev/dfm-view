@@ -64,9 +64,9 @@ export function Cracks() {
       </MagicPropsLayout>: null}
       {blessing?
         <div>
-          <h4>{blessing[0]}</h4>
+          <h4>{blessing.name}</h4>
           <AttrsLayout>
-            <SimpleBaseAttrView attrs={blessing[1]}/>
+            <SimpleBaseAttrView attrs={blessing.attrs}/>
           </AttrsLayout>
         </div>: null}
       {isets.map((iii) => (

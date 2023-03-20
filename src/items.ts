@@ -68,7 +68,7 @@ const _items_index_Name: Record<string, DFItem> = {}
 const _items_index_ID: Record<number, DFItem> = {}
 const _items_index_Part_or_Card = (()=>{
   const x = {} as PartIndex
-  [...wholeParts, "카드"].forEach(p => x[p] = [])
+  ([...wholeParts, "카드"] as (WholePart | "카드")[]).forEach((p) => x[p] = [])
   return x
 })()
 
@@ -88,10 +88,12 @@ function assignIset(item: DFItem, setOf: string | string[]): void {
 
 for (const item of items) {  
   _items_index_Name[item.name] = item
-  _items_index_ID[item.id] = item
 
-  _item_name_to_id[item.name] = item.id
-  _item_id_to_name[item.id] = item.name
+  if (item.id != null) {
+    _items_index_ID[item.id] = item
+    _item_name_to_id[item.name] = item.id
+    _item_id_to_name[item.id] = item.name
+  }
 
   const part = getCato(item.itype)
   if (part) _items_index_Part_or_Card[part].push(item)
@@ -100,14 +102,14 @@ for (const item of items) {
 
 const ISetsNameMap: Record<string, DFISet> = {}
 
-for (const iset of isets) ISetsNameMap[iset.name] = iset
+for (const iset of isets) if (iset.name) ISetsNameMap[iset.name] = iset
 
 
 
 
 
 
-/** "방어구 재질"을 얻는다. */
+/** "방어구 재질"을 얻는다. **얘는 AttrSource가 아니어야 한다** */
 export const getArmorBase = memoizee(
   function getArmorBase(level: number, rarity: Rarity, material: ArmorMaterial, part: EquipPart): DFItem {
     const find = armorbases.find(attr => {
@@ -189,7 +191,7 @@ export function getActiveISets(...items: DFItem[]) {
 /** 주어진 부위의 장비에 바를 수 있는 카드(+보주) 목록을 얻는다. */
 export const getCardsForPart = memoizee(
   function _getCardsForPart(part: EquipPart | "칭호") {
-    return _items_index_Part_or_Card["카드"].filter(card => card.part.includes(part))
+    return _items_index_Part_or_Card["카드"].filter(card => card.part?.includes(part))
   },
 { primitive: true })
 
@@ -203,7 +205,7 @@ export function createCondyceKey2(sourceName: string, node: ConditionalNode) {
 }
 
 /** 주어진 아이템 또는 아이템 세트에서 "내가 활성화한" branch/gives 조건부 옵션들을 배열로 얻는다 **(중첩횟수 적용)** */
-export function createActiveNode(attrSourceName: string, nodes: ConditionalNode[], activeKeys: Record<string, OptionalChoiceType>) {
+export function createActiveNode(attrSourceName: string, nodes: ConditionalNode[] | null | undefined, activeKeys: Record<string, OptionalChoiceType>) {
   const d: ConditionalNode[] = []
   if (nodes)
   for (const child of nodes) {
@@ -226,11 +228,21 @@ export function createExclusiveKey2(itemName: string, exclusiveSet: ExclusiveSet
 }
 
 /** 주어진 아이템 또는 아이템 세트에서 "내가 체크한" Exclusive 조건부 노드들 중 선택된 값의 것들을 배열로 얻는다. */
-export function getActiveExclusive(item: ComplexAttrSource, activeKeys: Record<string, string>) {
+export function getActiveExclusive(item: ComplexAttrSource, activeKeys: Record<string, string>): ConditionalNode[] {
   if (!(item.exclusive)) return []
-  return item.exclusive
-  .filter(exclusiveSet => activeKeys[exclusiveKey(item, exclusiveSet)])
-  .map(exclusiveSet => exclusiveSet.children.find(exclusiveNode => exclusiveNode.name === activeKeys[exclusiveKey(item, exclusiveSet)]))
+  const d: ConditionalNode[] = []
+  for (const exclusiveSet of item.exclusive) {
+    const key = exclusiveKey(item, exclusiveSet)
+    if (activeKeys[key]) {
+      const { children } = exclusiveSet
+      const found = children.find(exclusiveNode => exclusiveNode.name === activeKeys[key])
+      if (found) d.push(found)
+    }
+  }
+  return d
+  // return item.exclusive
+  // .filter(exclusiveSet => activeKeys[exclusiveKey(item, exclusiveSet)])
+  // .map(exclusiveSet => exclusiveSet.children.find(exclusiveNode => exclusiveNode.name === activeKeys[exclusiveKey(item, exclusiveSet)]))
 }
 
 
@@ -272,8 +284,12 @@ const blessings = [
 export function getBlessing(...items: DFItem[]): AttrSource {
   const counts = items.reduce((p, { rarity }) => (p[rarity] += 1, p),
   { Common: 0, Uncommon: 0, Rare: 0, Unique: 0, Epic: 0 })
-
-  const [name, value, rarity, count] = blessings.find(([, , rarity, minCount]) => counts[rarity] >= minCount)
+  const blessing = blessings.find(([, , rarity, minCount]) => counts[rarity] >= minCount)
+  if (!blessing) return {
+    name: "[성안의 봉인]가호 없음",
+    attrs: {}
+  }
+  const [name, value, rarity, count] = blessing
   return {
     name: `${name} (${rarity} ${count}개 이상 장착)`,
     attrs: atx("Stat", value)

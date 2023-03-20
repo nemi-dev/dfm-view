@@ -19,23 +19,21 @@ function fuckyou<T>() { return (t: T) => ({ payload: t }) }
 
 export const ImportDF = createAction("DFM/Import", fuckyou<DFCharState>())
 export const LoadDF = createAction("DFM/Load", fuckyou<string>())
-export const SaveDF = createAction("DFM/Save", fuckyou<void>())
-export const CloneDF = createAction("DFM/Clone", fuckyou<void>())
-export const CreateDF = createAction("DFM/New", fuckyou<void>())
-export const InitChar = createAction("DFM/Init", fuckyou<void>())
+export const SaveDF = createAction("DFM/Save")
+export const CloneDF = createAction("DFM/Clone")
+export const CreateDF = createAction("DFM/New")
+export const InitChar = createAction("DFM/Init")
 export const DeleteDFChar = createAction("DFM/Delete", fuckyou<string>())
 
-export const SaveEquip = createAction("DFM/SaveEquip", fuckyou<void>())
+export const SaveEquip = createAction("DFM/SaveEquip")
 export const LoadEquip = createAction("DFM/LoadEquip", fuckyou<string>())
 export const DeleteEquip = createAction("DFM/DeleteEquip", fuckyou<string>())
 export const ImportEquip = createAction("DFM/ImportEquip", fuckyou<Pick<ItemsState, EquipPart>>())
 
-export const SaveSkill = createAction("DFM/SaveSkill", fuckyou<void>())
+export const SaveSkill = createAction("DFM/SaveSkill")
 export const LoadSkill = createAction("DFM/LoadSkill", fuckyou<string>())
 export const DeleteSkill = createAction("DFM/DeleteSkill", fuckyou<string>())
 export const ImportSkill = createAction("DFM/ImportSkill", fuckyou<CustomSkillState>())
-
-
 
 
 
@@ -63,14 +61,16 @@ function createNew(state: RootState, draft: RootState, src: DFCharState, doCommi
   console.log(draft)
 }
 
+// @ts-ignore
 export const SaveReducer: Reducer<RootState, ReturnType<typeof SaveDF>> = 
-function Saver(state: RootState, action: { type: string, payload: any }) {
+function Saver(state: RootState, action) {
   if (action.type != SaveDF.type) return state
   return produce(state, draft => {
     commit(state, draft)
   })
 }
 
+// @ts-ignore
 export const LoadReducer: Reducer<RootState, ReturnType<typeof LoadDF>> =
 function Loader(state: RootState, action) {
   if (action.type != LoadDF.type) return state
@@ -85,8 +85,11 @@ function Loader(state: RootState, action) {
   })
 }
 
+
 type CreatorReducerActionType = 
 typeof CreateDF | typeof InitChar | typeof ImportDF | typeof CloneDF
+
+// @ts-ignore
 export const CreatorReducer: Reducer<RootState, ReturnType<CreatorReducerActionType>> =
 function (state: RootState, action) {
   switch (action.type) {

@@ -1,4 +1,4 @@
-import { combineReducers, configureStore, createReducer, Reducer } from "@reduxjs/toolkit"
+import { combineReducers, configureStore } from "@reduxjs/toolkit"
 import { creatureSlice, currentIDSlice, enemyTargetSlice, equipPresetSlice, savedCharSlice, selfSlice, skillPresetSlice } from "./slices/slice"
 import { tonicSlice } from "./slices/tonicSlice"
 import { guildSlice } from "./slices/guildSlice"

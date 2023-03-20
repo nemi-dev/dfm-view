@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import styled from "styled-components"
-import { useAppDispatch, useAppSelector } from "../feats/hooks"
+import { useAppSelector } from "../feats/hooks"
 import { selectMyDamage } from "../feats/selector/selectors"
 import { selectClassAtype, selectMyDFClass, selectMyName } from "../feats/selector/selfSelectors"
 import { ModalContext } from "../modalContext"
@@ -58,7 +58,13 @@ const DamageCapture = styled.div`
   }
 `
 
-function DamageOne({ name, value, atype }) {
+interface DamageOneProps {
+  name: string
+  value: number
+  atype: Atype
+}
+
+function DamageOne({ name, value, atype }: DamageOneProps) {
   return <div className="DamageOne">
     <span className="KeyName">{name}</span>
     <Num className={"AttrValue "+atype} value={value} />
@@ -75,7 +81,7 @@ export function StickyNav() {
   return (
     <StickyNavStyle>
       <DFCharInfo>
-        <img src={`/img/dfclass/${dfclass.name}.png`}
+        <img src={`/img/dfclass/${dfclass?.name}.png`}
         onClick={() => openModal({ name: "dfclass" })} />
         <span>{myName}</span>
       </DFCharInfo>

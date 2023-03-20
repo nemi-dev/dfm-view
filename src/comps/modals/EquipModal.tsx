@@ -80,9 +80,8 @@ function myItemSroter(myWeapons: WeaponType[], a: DFItem, b: DFItem) {
   return myWeapons.indexOf(a.itype as WeaponType) - myWeapons.indexOf(b.itype as WeaponType)
 }
 
-function pickItems(items: DFItem[], part: WholePart, myWeapons: WeaponType[]) {
-  if (part !== "무기") return items
-  if (!myWeapons) return items
+function pickItems(items: DFItem[], part: WholePart, myWeapons: WeaponType[] | null) {
+  if (part !== "무기" || !myWeapons) return items
   return items
   .filter(item => myWeapons.includes(item.itype as WeaponType))
   .sort(myItemSroter.bind(null, myWeapons))
@@ -95,7 +94,7 @@ export function EquipModalFragment() {
   const [query, setQuery] = useState("")
   const [showMyWeaponsOnly, setShowMyWeaponsOnly] = useState(true)
   const myDFclass = useAppSelector(selectMyDFClass)
-  const myWeapons = myDFclass.weapons
+  const myWeapons = myDFclass?.weapons ?? []
 
   const dispatch = useAppDispatch()
   const onClick = useCallback((item: DFItem) => {
@@ -103,7 +102,7 @@ export function EquipModalFragment() {
     setOpen(false)
   }, [part])
   
-  const dependencies = [part, showMyWeaponsOnly, myDFclass.name]
+  const dependencies = [part, showMyWeaponsOnly, myDFclass?.name]
 
   const items = useMemo(() => pickItems(getItemsByPart(part), part, showMyWeaponsOnly? myWeapons : null), dependencies)
 

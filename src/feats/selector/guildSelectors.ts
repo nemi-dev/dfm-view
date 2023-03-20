@@ -2,31 +2,39 @@ import { createSelector } from "@reduxjs/toolkit"
 import { combine } from "../../attrs"
 import { RootState } from "../store"
 import { GuildAccu, GuildAtk, GuildCrit, GuildEl, GuildSpeedAtk, GuildStat, GuildStatPublic } from "../../guild"
-import { whois } from "../../dfclass"
+import { selectClassAtype } from "./selfSelectors"
 
-export function selectGuildStat(state: RootState) {
-  const atype = whois(state.My.Self.dfclass).atype
-  const StatLv = state.My.Guild.StatLv
-  return GuildStat(StatLv, atype)
+function selectGuildState(state: RootState) {
+  return state.My.Guild
 }
 
-export function selectGuildStatPublic(state: RootState) {
-  const atype = whois(state.My.Self.dfclass).atype
-  const PublicStatLv = state.My.Guild.PublicStatLv
-  return GuildStatPublic(PublicStatLv, atype)
-}
+export const selectGuildStat = createSelector(
+  selectGuildState, selectClassAtype,
+  (guild, atype) => {
+    return GuildStat(guild.StatLv, atype)
+  }
+)
 
-export function selectGuildAtk(state: RootState) {
-  const atype = whois(state.My.Self.dfclass).atype
-  const AtkLv = state.My.Guild.AtkLv
-  return GuildAtk(AtkLv, atype)
-}
+export const selectGuildStatPublic = createSelector(
+  selectGuildState, selectClassAtype,
+  (guild, atype) => {
+    return GuildStatPublic(guild.PublicStatLv, atype)
+  }
+)
 
-export function selectGuildCrit(state: RootState) {
-  const atype = whois(state.My.Self.dfclass).atype
-  const CritLv = state.My.Guild.CritLv
-  return GuildCrit(CritLv, atype)
-}
+export const selectGuildAtk = createSelector(
+  selectGuildState, selectClassAtype,
+  (guild, atype) => {
+    return GuildAtk(guild.AtkLv, atype)
+  }
+)
+
+export const selectGuildCrit = createSelector(
+  selectGuildState, selectClassAtype,
+  (guild, atype) => {
+    return GuildCrit(guild.CritLv, atype)
+  }
+)
 
 export function selectGuildEl({ My: { Guild: { ElLv }}}: RootState) {
   return GuildEl(ElLv)

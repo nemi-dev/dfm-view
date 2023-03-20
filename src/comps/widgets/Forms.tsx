@@ -11,9 +11,9 @@ interface NumberInputProps extends Omit<HTMLProps<HTMLInputElement>, "onChange" 
   onChange: (val: number) => void
 }
 export function NumberInput({ onWheel, value, type, onChange, ...props }: NumberInputProps) {
-  const ref = useRef<HTMLInputElement>()
+  const ref = useRef<HTMLInputElement>(null)
   useEffect(() => {
-    ref.current.addEventListener("wheel", prevent, { passive: false })
+    ref.current?.addEventListener("wheel", prevent, { passive: false })
   }, [])
 
   const _onChange = useCallback((ev: ChangeEvent<HTMLInputElement>) => {
@@ -121,7 +121,7 @@ interface SwitchProps {
 export function Switch({ id, checked, onChange }: SwitchProps) {
   return (
     <span>
-      <input type="checkbox" checked={checked} id={id} onChange={ev => onChange(ev.target.checked)} />
+      <input type="checkbox" checked={checked} id={id} onChange={ev => onChange?.(ev.target.checked)} />
       <CustomCheckboxView htmlFor={id} />
     </span>
   )
@@ -154,7 +154,7 @@ export function LabeledSwitch({ className = "", checked = false, label = "", onC
   const id = useId()
   return (
     <span className={"FormDF Hovery " + className}>
-      <input type="checkbox" checked={checked} id={id} onChange={ev => onChange(ev.target.checked)} />
+      <input type="checkbox" checked={checked} id={id} onChange={ev => onChange?.(ev.target.checked)} />
       <CustomCheckboxView htmlFor={id} />
       <CheckieLabel htmlFor={id}>{label}</CheckieLabel>
     </span>

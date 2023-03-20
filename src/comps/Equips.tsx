@@ -5,7 +5,7 @@ import { useCallback, useContext, useState } from "react"
 
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
 import { SimpleBaseAttrView } from "./widgets/AttrsView"
-import { selectArmorBase, selectCard, selectEmblemSpecs, selectItem, selectUpgrade } from "../feats/selector/equipSelectors"
+import { selectCard, selectEmblemSpecs, selectItem, selectUpgrade } from "../feats/selector/equipSelectors"
 import { ItemName } from "./widgets/ItemNameView"
 import { NumberInput } from "./widgets/Forms"
 import { ItemIcon } from "./widgets/Icons"
@@ -102,8 +102,8 @@ function SlotHeading({ part, onItemNameClicked }: PartProps & { onItemNameClicke
 function PartWide({ part }: PartProps) {
   const { openModal } = useContext(ModalContext)
   const item = useAppSelector(selectItem[part])
-  const armorbase = useAppSelector(selectArmorBase[part])
-  const attrs = item? combine(item.attrs, armorbase?.attrs): {}
+  // const armorbase = useAppSelector(selectArmorBase[part])
+  // const attrs = item? combine(item.attrs, armorbase?.attrs): {}
   const [detail, setDetail] = useState(false)
   return (
     <div className="EquipSlot Bordered Hovering">
@@ -118,7 +118,7 @@ function PartWide({ part }: PartProps) {
       </div>
       {
         (detail && item)?
-        <SimpleBaseAttrView attrs={attrs} /> : null
+        <SimpleBaseAttrView attrs={item?.attrs} /> : null
       }
     </div>
   )

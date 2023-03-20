@@ -23,7 +23,7 @@ const Percise = [
   10000000000
 ]
 interface NumberViewProps {
-  value: number
+  value?: number
   className?: string
   signed?: boolean
   percented?: boolean
@@ -32,7 +32,7 @@ interface NumberViewProps {
 }
 
 
-export function Num({ value, className = "", signed = false, percented = false, separated = false, percision = 0 }: NumberViewProps) {
+export function Num({ value = 0, className = "", signed = false, percented = false, separated = false, percision = 0 }: NumberViewProps) {
   value = value ?? 0
   const dip =  percision <= 10? Percise[percision] : 10 ** percision
   const ve = Math.round(value * dip) / dip

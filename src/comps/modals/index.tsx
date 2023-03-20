@@ -32,7 +32,7 @@ function CloseModalButton() {
 function ModalRouter() {
   const { message } = useContext(ModalContext)
   const { name } = message as ModalRequest
-  if (name !== "item") return
+  if (name !== "item") return null
   const { part, target } = message as ModalRequestForItem
 
   if (part === "봉인석") return <RuneModalFragment />
@@ -83,6 +83,7 @@ function CurrentPart({ part, index }: CurrentPartProps) {
 
 function ModalFragment() {
   const { message } = useContext(ModalContext)
+  if (!message) return null
   switch(message.name) {
     case "item":
       return (

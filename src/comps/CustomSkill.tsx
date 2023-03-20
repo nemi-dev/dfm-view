@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { selectEnemyDefRate, selectEnemyElRes, selectMe, selectMyFinalEltype } from '../feats/selector/selectors'
 import { selectClassAtype } from "../feats/selector/selfSelectors"
-import { critFt, criticalChance, getDamage } from '../damage'
+import { critFt, critChance, getDamage } from '../damage'
 import { SetSkillFixValue, SetSkillInputName, SetSkillMaxHit, SetSkillUsesSkillInc, SetSkillValue } from '../feats/slices/customSkillSlice'
 import { LabeledSwitch, LabeledNumberInput } from "./widgets/Forms"
 import { AtypeAttrKey, Elemental } from '../attrs'
@@ -60,7 +60,7 @@ function SkillTestOne({ index, SkillOneAttackSpec }: SkillOutputOneProps) {
   const attrs = useAppSelector(selectMe)
   const atkFix = useAppSelector(state => state.My.Self.atk_fixed)
   const eltype = useAppSelector(selectMyFinalEltype)
-  const el = eltype.length > 0? attrs[Elemental[eltype[0]].el] : 0
+  const el = eltype.length > 0? (attrs[Elemental[eltype[0]].el] ?? 0) : 0
   const targetElRes = useAppSelector(selectEnemyElRes)
 
   const defRate = useAppSelector(selectEnemyDefRate)
@@ -70,7 +70,7 @@ function SkillTestOne({ index, SkillOneAttackSpec }: SkillOutputOneProps) {
   const damCrit = dam * critFt(attrs["cdmg_inc"], attrs["catk_inc"])
 
   const { Crit, CritCh } = AtypeAttrKey[atype]
-  const chance = criticalChance(attrs[Crit], attrs[CritCh])
+  const chance = critChance(attrs[Crit], attrs[CritCh])
   
   const mean = chance * damCrit + (1 - chance) * dam
 

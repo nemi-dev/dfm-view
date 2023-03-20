@@ -34,7 +34,7 @@ function DearEltype({ name, value }: { name: string, value: string | string[] })
 
 
 
-function SkillValue({ midfix, skills, percent }: { midfix: string, skills: Record<string, number>, percent: boolean }) {
+function SkillValue({ midfix, skills = {}, percent }: { midfix: string, skills?: Record<string, number>, percent: boolean }) {
   
   const skillNames = Object.keys(skills).sort()
   return(
@@ -96,7 +96,7 @@ export function SimpleBaseAttrView({ attrs }: { attrs: BaseAttrs | undefined | n
         views.push(<SkillValue key={key} midfix={name} skills={attrs[key]} percent={true} />)
         continue
       }
-      views.push(React.createElement(compo, { key, name: name, value: attrs[key] }))
+      views.push(React.createElement(compo, { key, name, value: attrs[key] }))
     }
 
   }

@@ -1,5 +1,5 @@
 import { AtypeAttrKey, Elemental } from "../attrs"
-import { AtkOut, StatOut, criticalChance } from "../damage"
+import { AtkOut, StatOut, critChance } from "../damage"
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
 import { AddSkillInc, RemoveSkillInc, SetBasicAttr, SetEltype, SetSkillInc } from "../feats/slices/calibrateSlice"
 import { selectMe, selectMeNoCond, selectMyFinalEltype } from "../feats/selector/selectors"
@@ -12,6 +12,7 @@ import styled from 'styled-components'
 import { SetAchieveLevel, SetAtype, SetLevel, set_atk_fixed } from "../feats/slices/slice"
 import { createContext, useContext, useState } from "react"
 import { PlusCircle } from 'react-feather'
+import { add } from "../utils"
 
 
 
@@ -54,9 +55,9 @@ interface StatAtkCritProps {
 function StatAtkCrit({ atype, className = "" }: StatAtkCritProps) {
   const me = useContext(MyAttrsContext)
   const { Stat, StatInc, Atk, AtkInc, Crit, CritCh, 스탯, 타입 } = AtypeAttrKey[atype]
-  const stat = StatOut(me[Stat], me[StatInc])
-  const atk = AtkOut(me[Atk], me[AtkInc], me[Stat], me[StatInc])
-  const chance = criticalChance(me[Crit], me[CritCh])
+  const stat = StatOut(me[Stat] ?? 0, me[StatInc] ?? 0)
+  const atk = AtkOut(me[Atk] ?? 0, me[AtkInc] ?? 0, me[Stat] ?? 0, me[StatInc] ?? 0)
+  const chance = critChance(me[Crit], me[CritCh])
   return (
     <div className={atype+" "+className} >
       <GridyTwo>
@@ -161,7 +162,7 @@ export function MyStat() {
           <SkillInc />
         <div className="Result">
           <div className="KeyName">스킬 공격력 증가</div>
-          <Num className="AttrValue" value={me["sk_inc"] + me["sk_inc_sum"]} signed percented />
+          <Num className="AttrValue" value={add(me["sk_inc"], me["sk_inc_sum"])} signed percented />
         </div>
         <CheckboxGroup name="공격속성" 
           labels={["화", "수", "명", "암"]}

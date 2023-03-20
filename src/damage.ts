@@ -1,4 +1,5 @@
 import { AtypeAttrKey, Elemental } from "./attrs";
+import { add } from "./utils";
 
 /** "스탯 증가"가 적용된 스탯 */
 export function StatOut(스탯: number, 스탯_퍼센트_증가: number = 0) {
@@ -114,18 +115,18 @@ export function critFt(cdmg_inc: number = 0, catk_inc: number = 0) {
 }
 
 /** 크리티컬 확률을 구한다. */
-export function criticalChance(crit: number, crit_pct: number) {
+export function critChance(crit: number = 0, crit_pct: number = 0) {
   return (3 + crit_pct) / 100 + crit / 2368
 }
 
 /** 독립공격력을 제외한 내 예상 데미지 (옵션버전) */
 export function getPlainDamage(atype: Atype, eltypes: Eltype[] | null, attrs: BaseAttrs) {
   let el: number = 0
-  if (eltypes && eltypes.length > 0) el = attrs[Elemental[eltypes[0]].el]
+  if (eltypes && eltypes.length > 0) el = attrs[Elemental[eltypes[0]].el] ?? 0
   const { Stat, StatInc, Atk, AtkInc } = AtypeAttrKey[atype]
   const {
-    [Stat]: stat, [StatInc]: statInc,
-    [Atk]: atk, [AtkInc]: atkInc,
+    [Stat]: stat = 0, [StatInc]: statInc = 0,
+    [Atk]: atk = 0, [AtkInc]: atkInc = 0,
     el_fire = 0, eldmg_fire = 0,
     el_ice = 0,  eldmg_ice = 0,
     el_lght = 0, eldmg_lght = 0,
@@ -136,8 +137,8 @@ export function getPlainDamage(atype: Atype, eltypes: Eltype[] | null, attrs: Ba
     statInc,
     atk,
     atkInc,
-    attrs["dmg_inc"],
-    attrs["dmg_add"],
+    attrs["dmg_inc"] ?? 0,
+    attrs["dmg_add"] ?? 0,
     el,
     [el_fire, el_ice, el_lght, el_dark],
     [eldmg_fire, eldmg_ice, eldmg_lght, eldmg_dark]
@@ -154,8 +155,8 @@ export function getDamage(
   if (Number.isNaN(el) || (el == null)) el = 0
   const { Stat, StatInc, Atk, AtkInc } = AtypeAttrKey[atype]
   const {
-    [Stat]: stat, [StatInc]: statInc,
-    [Atk]: atk, [AtkInc]: atkInc,
+    [Stat]: stat = 0, [StatInc]: statInc = 0,
+    [Atk]: atk = 0, [AtkInc]: atkInc = 0,
     el_fire = 0, eldmg_fire = 0,
     el_ice = 0,  eldmg_ice = 0,
     el_lght = 0, eldmg_lght = 0,
@@ -169,14 +170,14 @@ export function getDamage(
     atk,
     atkInc,
     atkFix,
-    attrs["dmg_inc"],
-    attrs["dmg_add"],
+    attrs["dmg_inc"] ?? 0,
+    attrs["dmg_add"] ?? 0,
     el,
     [el_fire, el_ice, el_lght, el_dark],
     [eldmg_fire, eldmg_ice, eldmg_lght, eldmg_dark]
   )
   if (isSkill) {
-    a *= 1 + (attrs["sk_inc"] + attrs["sk_inc_sum"]) / 100
+    a *= 1 + add(attrs["sk_inc"], attrs["sk_inc_sum"]) / 100
   }
   a *= maxHit
   return a

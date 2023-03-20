@@ -48,17 +48,17 @@ declare interface ItemsState {
 }
 
 declare interface CardState {
-  무기: string
-  상의: string
-  하의: string
-  머리어깨: string
-  벨트: string
-  신발: string
-  팔찌: string
-  목걸이: string
-  반지: string
-  보조장비: string
-  칭호: string
+  무기: string | null
+  상의: string | null
+  하의: string | null
+  머리어깨: string | null
+  벨트: string | null
+  신발: string | null
+  팔찌: string | null
+  목걸이: string | null
+  반지: string | null
+  보조장비: string | null
+  칭호: string | null
 }
 
 declare interface EmblemState {

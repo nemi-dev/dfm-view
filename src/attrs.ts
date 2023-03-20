@@ -204,7 +204,7 @@ const attrDefsArray = [
 attrDefs.array = attrDefsArray
 
 /** 두 개 이상의 옵션을 결합한다. */
-export function combine(...attrsList: BaseAttrs[]) {
+export function combine(...attrsList: (BaseAttrs | null | undefined)[]) {
   const prev: BaseAttrs = {}
 
   for (const attrs of attrsList) {
@@ -216,8 +216,10 @@ export function combine(...attrsList: BaseAttrs[]) {
       }
       if (!(key in reducers)) continue
       if (!(key in prev)) {
+        // @ts-ignore
         prev[key] = attrs[key]
       } else {
+        // @ts-ignore
         prev[key] = reducers[key](prev[key], attrs[key])
       }
     }

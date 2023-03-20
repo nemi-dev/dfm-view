@@ -1,6 +1,12 @@
-import magicProps from "./magicProps.json"
+import _magicProps from "./magicProps.json"
 import { getSupertype } from "./items"
 import { at1, AtypeAttrKey } from "./attrs"
+
+interface MagicPropsCatalog {
+  [k: string]: [MagicPropsCareAbout, number][]
+}
+
+const magicProps = _magicProps as unknown as MagicPropsCatalog
 
 interface MagicPropsMint {
   order: MagicPropsCareAbout[]
@@ -12,7 +18,7 @@ const magicPropsPicker = (() => {
   const z: { [key: string]: MagicPropsMint } = {}
   for (const magicPropsKey in magicProps) {
     const array: [MagicPropsCareAbout, number][] = magicProps[magicPropsKey]
-    array.push([null, 0])
+    array.push(["DontMind", 0])
     const order: MagicPropsCareAbout[] = []
     const cycle = {} as Record<MagicPropsCareAbout, MagicPropsCareAbout>
     const attrSet = {} as Record<MagicPropsCareAbout, number>
@@ -56,7 +62,7 @@ function available(id: MagicPropsTargetId) {
 /** `available`로 찾은 컬렉션에서 마법봉인 옵션 하나를 만든다. */
 function makeAttrs(name: MagicPropsCareAbout, atype: Atype, mint: MagicPropsMint): BaseAttrs {
   const attrKey = getRealAttrKey(name, atype)
-  if (attrKey == null) return {}
+  if (attrKey == null || attrKey == "DontMind") return {}
   return at1(attrKey, mint.attrSet[name])
 }
 

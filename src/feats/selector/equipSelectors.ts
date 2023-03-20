@@ -1,6 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit"
 import { atx, combine } from "../../attrs"
-import { getActiveISets, getArmorBase, getItem, equipParts, isArmor, magicPropsParts, cardableParts, createActiveCondyces, singleItemParts } from "../../items"
+import { getActiveISets, getArmorBase, getItem, equipParts, isArmor, magicPropsParts, cardableParts, createActiveCondyces, singleItemParts, armorParts } from "../../items"
 import { getEmblem } from "../../emblem"
 import { getMagicPropsAttrs } from "../../magicProps"
 import { selectClassAtype } from "./selfSelectors"
@@ -17,8 +17,15 @@ export function Noot<T, P extends WholePart>(func: ($p: P) => (s: RootState) => 
 }
 
 
-/** 특정 부위에 장착중인 아이템을 선택한다 */
-export const selectItem = Noot(part => state => getItem(state.My.Item[part]), singleItemParts)
+/** 특정 부위에 장착중인 아이템을 선택한다. */
+export const selectItem = Noot(part => state => {
+  const item = getItem(state.My.Item[part])
+  if (!isArmor(part)) return item
+  const { level, rarity, material = state.My.Material[part] } = item
+  const armorbase = getArmorBase(level, rarity, material, part)
+  return { ...item, attrs: combine(item.attrs, armorbase.attrs)}
+  // return getItem(state.My.Item[part])
+}, singleItemParts)
 
 /** 특정 부위의 아이템에 바른 카드를 선택한다 */
 export const selectCard = Noot(part => state => (getItem(state.My.Card[part])), cardableParts)
@@ -41,18 +48,6 @@ export const selectCustomMaterial = Noot(
 /** 특정 부위의 강화보너스 수치(무기는 물/마공, 다른장비는 스탯)를 선택한다 */
 export const selectUpgrade = Noot(part => state => state.My.Upgrade[part], equipParts)
 
-/** 특정 부위의 방어구 재질 아이템을 선택한다 */
-export const selectArmorBase = Noot(
-  part => createSelector(
-    selectItem[part],
-    selectCustomMaterial[part],
-    (item, customMaterial) => {
-      if (!item || !isArmor(part)) return {} as DFItem
-      const { level, rarity, material = customMaterial } = item
-      return getArmorBase(level, rarity, material, part)
-    }
-  ), equipParts
-)
 
 /** 특정 부위의 마법봉인 효과를 선택한다. */
 export const selectMagicProps = Noot(
@@ -87,12 +82,11 @@ export const selectPartAttrsNoCond = Noot(
     selectMagicProps[part],
     selectCard[part],
     selectEmblemSpecs[part],
-    selectArmorBase[part],
     selectUpgrade[part],
-    (item, magicProps, card, emblems, armorbase, upgrade) => {
+    (item, magicProps, card, emblems, /*armorbase, */upgrade) => {
       if (!item) return {}
       const upgradeAttr = atx(part === "무기" ? "Atk" : "Stat", upgrade)
-      return combine(item.attrs, armorbase.attrs, upgradeAttr, magicProps, ...emblems.map(getEmblem), card?.attrs)
+      return combine(item.attrs, /*armorbase.attrs, */upgradeAttr, magicProps, ...emblems.map(getEmblem), card?.attrs)
     }
   ), equipParts
 )

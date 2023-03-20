@@ -1,7 +1,7 @@
 import { createSelector } from "@reduxjs/toolkit"
 import { atx, combine, dualTrigger, whatElType } from "../../attrs"
 import type { RootState } from "../store"
-import { percent_inc_mul } from "../../utils"
+import { add, percent_inc_mul } from "../../utils"
 import { selectGuilds } from "./guildSelectors"
 import { selectEquips, selectEquipsNoConds } from "./equipSelectors"
 import { selectAchievementAttrs, selectClassAtype, selectMyDFClass, selectMyLevel } from "./selfSelectors"
@@ -56,7 +56,7 @@ export const selectMeNoCal = createSelector(
   selectAchievementAttrs,
   (dfc, e, av, c, tonic, cr, guild, ach) => {
     // 듀얼트리거는 던전 입장시에도 유지된다!
-    return dualTrigger(combine(dfc.attrs, e, av, c, tonic.attrs, cr, guild.attrs, ach))
+    return dualTrigger(combine(dfc?.attrs, e, av, c, tonic.attrs, cr, guild.attrs, ach))
   }
 )
 
@@ -67,7 +67,7 @@ export const selectMeNoCond = createSelector(
   selectCalibrated,
   (dfc, e, av, c, tonic, cr, guild, ach, cal) => {
     // 듀얼트리거는 던전 입장시에도 유지된다!
-    return dualTrigger(combine(dfc.attrs, e, av, c, tonic.attrs, cr, guild.attrs, ach, cal))
+    return dualTrigger(combine(dfc?.attrs, e, av, c, tonic.attrs, cr, guild.attrs, ach, cal))
   }
 )
 
@@ -96,7 +96,7 @@ export const selectMyDamage = createSelector(
     return +
     getPlainDamage(atype, eltypes, attrs)
     * critFt(attrs["cdmg_inc"], attrs["catk_inc"])
-    * (1 + (attrs["sk_inc"] ?? 0) / 100 + (attrs["sk_inc_sum"] ?? 0) / 100)
+    * (1 + add(attrs["sk_inc"], attrs["sk_inc_sum"]) / 100)
   }
 )
 

@@ -1,8 +1,8 @@
-/** 적어도 하나가 true인가? */
-export const anyOf = (a: boolean, b: boolean) => a || b
+/** 적어도 하나가 true인가? (`undefined`는 false로 취급한다.) */
+export const anyOf = (a: boolean = false, b: boolean = false) => a || b
 
-/** 두 수를 더한다. */
-export const add = (p: number, n: number) => p + n
+/** 두 수를 더한다. "==null"인 값이 들어간 쪽은 0으로 취급한다. */
+export const add = (p: number | null = 0, n: number | null = 0) => (p ?? 0) + (n ?? 0)
 
 /**
  * (A × B) ÷ 100 + A + B 의 값을 계산한다.  

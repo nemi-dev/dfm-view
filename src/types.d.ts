@@ -42,7 +42,7 @@ declare type WholePart = EquipPart | "칭호" | "오라" | "무기아바타" | "
 declare type WearAvatarPart = "모자" | "얼굴" | "상의" | "목가슴" | "신발" | "머리" | "하의" | "허리"
 
 declare type MagicPropsCareAbout = "dmg_inc" | "Stat" | "Atk" | "el_fire" | "el_ice" | "el_lght" | "el_dark"
-| "Crit" | "speed_atk" | "Accu" | null
+| "Crit" | "speed_atk" | "Accu" | "DontMind"
 
 
 
@@ -246,13 +246,13 @@ declare interface ConditionalNode {
 declare interface ExclusiveSet {
 
   /** 이 ExclusiveSet이 발동될 조건 */
-  name?: string
+  name: string
 
   /** View에서 표시될 ExclusiveSet 이름 */
   label?: string
 
   /** 이 ExclusiveSet의 조건이 만족되었을 때, 발동될 수 있는 효과 모음 */
-  children?: ConditionalNode[]
+  children: ConditionalNode[]
 }
 
 
@@ -299,7 +299,7 @@ declare interface DFItem {
   ArtiColor?: "Red" | "Green" | "Blue"
 
   /** 아이템 효과 */
-  attrs?: BaseAttrs
+  attrs: BaseAttrs
 
   /** 특정 조건에만 적용되는 효과 모음 */
   branch?: ConditionalNode[]

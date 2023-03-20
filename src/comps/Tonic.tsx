@@ -29,7 +29,7 @@ function TonicGem({ label, target, target2 = undefined, image }: TonicInputProps
       </label>
       <label htmlFor={id}>{label}</label>
       <NumberInput id={id} value={value} max={perfectTonic[target]} onChange={v => dispatch(SetTonic([target, v]))} />
-      {value2 != null? <NumberInput max={perfectTonic[target2]} value={value2} onChange={v => dispatch(SetTonic([target2, v]))} /> : null}
+      {target2 != null? <NumberInput max={perfectTonic[target2]} value={value2 as number} onChange={v => dispatch(SetTonic([target2, v]))} /> : null}
     </div>
   )
 }

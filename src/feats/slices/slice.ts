@@ -62,7 +62,7 @@ export const creatureSlice = createSlice({
     SetCreatureStat: (s, { payload }: PayloadAction<number>) => {
       s.CreatureStat = payload
     },
-    SetArtifactValue: (s, { payload: [attr_name, value] }: PayloadAction<["RedPropsValue"|"GreenPropsValue"|"BluePropsValue", number]>) => {
+    SetArtifactValue: (s, { payload: [attr_name, value] }: PayloadAction<["RedPropsValue"|"GreenPropsEl"|"BluePropsValue", number]>) => {
       s[attr_name] = value
     }
   }
