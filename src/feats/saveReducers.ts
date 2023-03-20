@@ -6,6 +6,7 @@ import { encode as encodeB64 } from "base64-arraybuffer"
 import { deepCopy } from "../utils"
 import { RootState } from "./store"
 import initState from "./slices/initState"
+import { selectMyDamage } from "./selector/selectors"
 
 function newID() {
   const uuid = uuidv4()
@@ -42,6 +43,8 @@ function commit(state: RootState, draft: RootState) {
   const currentID = state.currentID
   const currentIdIndex = state.SavedChars.IDs.indexOf(currentID)
   draft.SavedChars.byID[currentID].DFChar = deepCopy(state.My)
+  draft.SavedChars.byID[currentID].DamageGrab = selectMyDamage(state)
+  
   draft.SavedChars.IDs.splice(currentIdIndex, 1)
   draft.SavedChars.IDs.unshift(currentID)
 }
@@ -53,12 +56,11 @@ function createNew(state: RootState, draft: RootState, src: DFCharState, doCommi
   draft.currentID = id
   draft.SavedChars.IDs.unshift(id)
   draft.SavedChars.byID[id] = {
-    id: id,
+    id,
     TimeStamp: Date.now(),
     DFChar: deepCopy(src),
-    AtkGrab: 0,
+    DamageGrab: 0,
   }
-  console.log(draft)
 }
 
 // @ts-ignore

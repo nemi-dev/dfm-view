@@ -7,7 +7,7 @@ interface SelectProps {
   onClick: MouseEventHandler<HTMLDivElement>
 }
 
-export function Select({ item, onClick }: SelectProps) {
+export function ModalItemSelect({ item, onClick }: SelectProps) {
   const IconType = item.itype === "봉인석" || item.itype === "정수"? CrackIcon : ItemIcon
   return (
     <div className="ModalItemSelect" onClick={onClick}>

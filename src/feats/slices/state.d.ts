@@ -253,7 +253,7 @@ declare interface SavedChar {
   id: string
   TimeStamp: number
   DFChar: DFCharState
-  AtkGrab: number
+  DamageGrab: number
 }
 
 declare interface EquipPreset {

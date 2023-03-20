@@ -7,6 +7,7 @@ import { selectCrackISet, selectSpells, selectCracks, selectBlessing } from "../
 import { selectItem } from "../feats/selector/equipSelectors"
 import { SimpleBaseAttrView } from './widgets/AttrsView'
 import styled from 'styled-components'
+import { RuneModalFragment, SpellModalFragment } from './modals/CrackModal'
 
 
 
@@ -52,10 +53,12 @@ export function Cracks() {
         <div className="Crack">
           {spells.map((spell, i) => (
             <CrackIcon key={i} item={spell}
-            onClick={() => openModal({ name: "item", part:"정수", target:"MainItem", index:i })} />
+              onClick={() => openModal(<SpellModalFragment index={i} />)}
+            />
           ))}
           <CrackIcon item={rune}
-          onClick={() => openModal({ name: "item", part:"봉인석", target:"MainItem" })} />
+            onClick={() => openModal(<RuneModalFragment />)}
+          />
         </div>
       </div>
       {rune?

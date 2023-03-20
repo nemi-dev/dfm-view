@@ -5,8 +5,8 @@ import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { selectClassAtype } from "../feats/selector/selfSelectors"
 import { PerfectGuild, SetGuild } from "../feats/slices/guildSlice"
 import { RootState } from '../feats/store'
-import { SimpleBaseAttrView } from './widgets/AttrsView'
 import { LabeledNumberInput } from "./widgets/Forms"
+import { SimpleBaseAttrView } from './widgets/AttrsView'
 
 
 const GuildLayout = styled.div`

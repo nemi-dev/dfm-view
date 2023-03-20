@@ -86,3 +86,10 @@ export function AttrIcon({attrKey, className = "", ...props}: AttrIconProps) {
     <img src={`/img/attr/${attrKey}.png`} alt={attrKey} className={"AttrIcon "+className} {...props} />
   )
 }
+
+interface DFClassIconProps extends Omit<React.HTMLProps<HTMLImageElement>, "src" | "alt" > {
+  dfclassName?: DFClassName
+}
+export function DFClassIcon({ dfclassName, className = "", ...props }: DFClassIconProps) {
+  return <img src={`/img/dfclass/${dfclassName}.png`} alt="" className={"DFClassIcon "+className} {...props} />
+}

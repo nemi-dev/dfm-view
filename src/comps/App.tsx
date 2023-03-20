@@ -11,8 +11,8 @@ import { Cracks } from "./Cracks"
 import { Tonic } from "./Tonic"
 import { Avatars } from "./Avatar"
 import { PortraitMode, TabContext } from '../responsiveContext'
-import ItemSelectModal from './modals/index'
-import { ModalContext } from "../modalContext"
+import AppModal from './modals/index'
+import { ModalContext, ModalContextType } from "../modalContext"
 import { MyStat } from './MyStat'
 import { SkillTestSet } from './CustomSkill'
 import { StickyNav } from './StickyNav'
@@ -94,22 +94,25 @@ function Content() {
 
 function App() {
 
+  const dispatch = useAppDispatch()
   const [portrait, setPortrait] = useState(window.innerWidth < 1000)
   const [activeTab, setActiveTab] = useState("장비")
-
-  const [isOpen, setOpen] = useState(false)
-  const [message, setMessage] = useState<ModalRequest>()
-  const dispatch = useAppDispatch()
+  const [isModalOpen, setOpen] = useState(false)
+  const [modalFrag, setModalFrag] = useState<JSX.Element>()
   const lastIDs = useAppSelector(state => state.SavedChars.IDs)
   const rehydrated = store.getState()._persist.rehydrated
 
-  const openModal = useCallback((m: ModalRequest) => {
-    setMessage(m)
+
+  const closeModal = useCallback(() => {
+    setOpen(false)
+  }, [])
+
+  const openModal = useCallback((children: JSX.Element) => {
+    setModalFrag(children)
     setOpen(true)
   }, [])
 
-  const modalContextValue = { isOpen, setOpen, message, openModal }
-  
+  const modalContextValue: ModalContextType = { fragment: modalFrag, closeModal, openModal, }
   
   useEffect(() => {
     function onResize(ev: UIEvent) {
@@ -132,7 +135,7 @@ function App() {
     <ModalContext.Provider value={modalContextValue}>
     <PortraitMode.Provider value={portrait}>
       {lastIDs.length > 0 && rehydrated? <div className="App">
-        <ItemSelectModal isOpen={isOpen}/>
+        <AppModal isOpen={isModalOpen}/>
         <StickyNav />
         <div className="MainWrapper">
           <div className="LeftSide">

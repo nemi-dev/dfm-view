@@ -5,6 +5,7 @@ import { selectItem } from "../feats/selector/equipSelectors"
 import { LabeledSwitch, LabeledNumberInput, RadioGroup } from "./widgets/Forms"
 import { createExclusiveKey2, createCondyceKey2, equipParts, getActiveISets } from "../items"
 import styled from "styled-components"
+import { ErrorBoundary } from "react-error-boundary"
 
 
 interface LeafViewProps {
@@ -36,7 +37,7 @@ function LeafView({ itemKey, node, what, Action }: LeafViewProps) {
 
 interface BrachViewProps {
   name: string
-  nodes: ConditionalNode[]
+  nodes?: ConditionalNode[]
   what: "branches" | "gives"
 }
 
@@ -56,13 +57,15 @@ export function BranchOrGivesView({ name, nodes, what }: BrachViewProps) {
   if (!nodes) return null
   const Action = what === "branches" ? SetBranch : SetGives
   return (
-    <CondOne>
-      <div className="CondContainerName">{name}</div>
-      {nodes.map((node) => {
-        const key = createCondyceKey2(name, node)
-        return <LeafView key={key} what={what} Action={Action} itemKey={key} node={node} />
-      })}
-    </CondOne>
+    <ErrorBoundary fallback={<>이런! 이 옵션에 문제가 있나봐요. 개발자에게 알려주세요!</>}>
+      <CondOne>
+        <div className="CondContainerName">{name}</div>
+        {nodes.map((node) => {
+          const key = createCondyceKey2(name, node)
+          return <LeafView key={key} what={what} Action={Action} itemKey={key} node={node} />
+        })}
+      </CondOne>
+    </ErrorBoundary>
   )
 }
 
@@ -77,7 +80,7 @@ function ExclusiveNodeView({ prefix, node }: { prefix: string, node: ExclusiveSe
 
 interface ExclusiveViewProps {
   name: string
-  exclusives: ExclusiveSet[]
+  exclusives?: ExclusiveSet[]
 }
 
 

@@ -11,6 +11,9 @@ import { PortraitMode } from '../responsiveContext'
 import { selectAvatarSetAttr, selectRareAvatarCount } from "../feats/selector/avatarSelectors"
 import { selectCard, selectEmblemSpecs, selectItem } from "../feats/selector/equipSelectors"
 import { Condyce } from './Choices'
+import { EmblemModalViolent } from './modals/EmblemModal'
+import { CardModalFragment } from './modals/CardModal'
+import { EquipModalFragment } from './modals/EquipModal'
 
 
 function DFTitle() {
@@ -21,14 +24,18 @@ function DFTitle() {
   return (
     <div className="EquipSlot Hovering Bordered">
       <div className="AlwaysEquipPartLayout">
-        <ItemIcon item={dftitle} onClick={() => openModal({name:"item", part: "칭호", target: "MainItem"})}/>
+        <ItemIcon item={dftitle}
+          onClick={() => openModal(<EquipModalFragment part="칭호" />)}
+        />
         <div className="SlotHeading">
           <ItemName item={dftitle} alt="칭호 없음" />
         </div>
         {dftitle? <div className="EquipAddons">
-          <ItemIcon className="Card" item={card} onClick={() => openModal({name:"item", part: "칭호", target: "Card"})} />
+          <ItemIcon className="Card" item={card} 
+            onClick={() => openModal(<CardModalFragment part="칭호" />)}
+          />
           <EmblemIcon spec={emblem} accept={"Platinum"}
-            onClick={() => openModal({name:"item", part: "칭호", target: "Emblem", index:0})}
+            onClick={() => openModal(<EmblemModalViolent part="칭호" index={0} />)}
           />
         </div> : null }
       </div>
@@ -44,7 +51,8 @@ function WeaponAvatarOrAura({ item, part }: { item: DFItem, part: "무기아바�
   return (
     <div className="EquipSlot AlwaysEquipPartLayout Hovering Bordered">
     <ItemIcon className="AvatarIcon" item={item}
-    onClick={() => openModal({name:"item", part, target:"MainItem"})} />
+      onClick={() => openModal(<EquipModalFragment part={part} />)}
+    />
     <div className="SlotHeading">
       {item?.name ?? `${part} 없음`}
     </div>

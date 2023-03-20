@@ -17,18 +17,19 @@ import { EquipBatch } from "./EquipBatch"
 import { acceptEmblem } from "../emblem"
 import { ArmorMaterialSelect, EmblemArray } from "./Itemy"
 import { DecreaseEmblemLevel, SetUpgradeValue } from "../feats/slices/itemSlice"
-import { combine } from "../attrs"
-import { magicPropsParts } from "../items"
+import { isArmor, magicPropsParts } from "../items"
+import { ErrorBoundary, useErrorHandler } from "react-error-boundary"
+import { EmblemModalViolent } from "./modals/EmblemModal"
+import { CardModalFragment } from "./modals/CardModal"
+import { EquipModalFragment } from "./modals/EquipModal"
 
 
 interface PartProps {
   part: EquipPart
-  interactive?: boolean
-  showUpgarde?: boolean
 }
 
 
-function NormalAddons({ part, interactive = false, showUpgarde = false }: PartProps) {
+function WideAddons({ part }: PartProps) {
   const { openModal } = useContext(ModalContext)
   const dispatch = useAppDispatch()
   const card = useAppSelector(selectCard[part])
@@ -36,23 +37,22 @@ function NormalAddons({ part, interactive = false, showUpgarde = false }: PartPr
   const emblems = useAppSelector(selectEmblemSpecs[part])
   const emblemAccept = acceptEmblem(part)
   const onItemClick = useCallback((index: number) => {
-    if (!interactive) return
     if (part === "무기" || part === "보조장비")
-      openModal({ name: "item", part, target: "Emblem", index })
+      openModal(<EmblemModalViolent part={part} index={index} />)
     else
       dispatch(DecreaseEmblemLevel([part, index]))
-  }, [part, interactive])
+  }, [part])
   return(
     <div className="EquipAddons">
       <ItemIcon className="Card" item={card}
-      onClick={() => interactive && openModal({name:"item", part, target:"Card", index:0})} />
+        onClick={() => openModal(<CardModalFragment part={part} />)}
+      />
       <EmblemArray emblems={emblems} accept={emblemAccept}
         onItemClick={onItemClick}
       />
-      {showUpgarde?
       <div className="EquipUpgradeValue">
         +<NumberInput value={upgradeBonus} onChange={v => dispatch(SetUpgradeValue([part, v]))} />
-      </div>: null}
+      </div>
     </div>
   )
 }
@@ -68,7 +68,8 @@ function PartCompact({ part }: PartProps) {
     <div className="EquipSlot">
       <div className="EquipPartLayout">
         <ItemIcon item={item}
-        onClick={() => openModal({ name: "item", part, target:"MainItem", index:0 })} />
+          onClick={() => openModal(<CardModalFragment part={part} />)}
+        />
       </div>
     </div>
   )
@@ -94,7 +95,7 @@ function SlotHeading({ part, onItemNameClicked }: PartProps & { onItemNameClicke
   return (
     <div className="SlotHeading">
       <ItemName item={item} alt={`${part} 없음`} className="EquipName" onClick={onItemNameClicked} />
-      <ArmorMaterialSelect part={part} />
+      {isArmor(part)? <ArmorMaterialSelect part={part} /> : null}
     </div>
   )
 }
@@ -102,18 +103,18 @@ function SlotHeading({ part, onItemNameClicked }: PartProps & { onItemNameClicke
 function PartWide({ part }: PartProps) {
   const { openModal } = useContext(ModalContext)
   const item = useAppSelector(selectItem[part])
-  // const armorbase = useAppSelector(selectArmorBase[part])
-  // const attrs = item? combine(item.attrs, armorbase?.attrs): {}
   const [detail, setDetail] = useState(false)
   return (
     <div className="EquipSlot Bordered Hovering">
       <div className="EquipPartLayout">
         <ItemIcon item={item}
-        onClick={() => openModal({name: "item", part, target: "MainItem", index: 0})} />
+          onClick={() => openModal(<EquipModalFragment part={part} />)}
+        />
         <SlotHeading part={part} onItemNameClicked={() => setDetail(!detail)} />
-        {item? <NormalAddons part={part} showUpgarde interactive /> : null}
-        {magicPropsParts.includes(part) && item? <MagicPropsLayout>
-        <MagicProps item={item} part={part} />
+        {item? <WideAddons part={part} /> : null}
+        {magicPropsParts.includes(part) && item? 
+        <MagicPropsLayout>
+          <MagicProps item={item} part={part} />
         </MagicPropsLayout> : null}
       </div>
       {

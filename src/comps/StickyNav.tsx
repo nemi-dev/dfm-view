@@ -1,10 +1,15 @@
 import { useContext } from "react"
 import styled from "styled-components"
+import { Users } from "react-feather"
 import { useAppSelector } from "../feats/hooks"
 import { selectMyDamage } from "../feats/selector/selectors"
 import { selectClassAtype, selectMyDFClass, selectMyName } from "../feats/selector/selfSelectors"
 import { ModalContext } from "../modalContext"
 import { Num } from "./widgets/NumberView"
+import { SavedCharsFragment } from "./modals/SavedCharsModal"
+import { DFClassModal } from "./modals/DFClassModal"
+import { DFClassIcon } from "./widgets/Icons"
+
 
 
 const StickyNavStyle = styled.div`
@@ -46,6 +51,7 @@ const DamageCapture = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: start;
+  gap: 4px;
   .DamageOne {
     display: flex;
     flex-direction: row;
@@ -74,19 +80,21 @@ function DamageOne({ name, value, atype }: DamageOneProps) {
 export function StickyNav() {
   const myName = useAppSelector(selectMyName)
   const dfclass = useAppSelector(selectMyDFClass)
-  const { openModal } = useContext(ModalContext)
   const atype = useAppSelector(selectClassAtype)
   const plainDamage = useAppSelector(selectMyDamage)
+  const { openModal } = useContext(ModalContext)
   
   return (
     <StickyNavStyle>
       <DFCharInfo>
-        <img src={`/img/dfclass/${dfclass?.name}.png`}
-        onClick={() => openModal({ name: "dfclass" })} />
+        <DFClassIcon dfclassName={dfclass?.name} onClick={() => openModal(<DFClassModal />)} />
         <span>{myName}</span>
       </DFCharInfo>
       <DamageCapture>
-        <DamageOne name="아웃풋" value={plainDamage} atype={atype} />
+        <DamageOne name="데미지" value={plainDamage} atype={atype} />
+        <div onClick={() => openModal(<SavedCharsFragment />)}>
+          <Users />
+        </div>
       </DamageCapture>
     </StickyNavStyle>
   )

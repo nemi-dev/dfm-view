@@ -1,50 +1,53 @@
 import '../../style/Attrs.scss'
 import React from "react"
 import { Num } from "./NumberView"
-import { attrDefs, AttrExpressionType } from '../../attrs'
+import { attrDefs, AttrDef, Elemental } from '../../attrs'
+import { ErrorBoundary } from 'react-error-boundary'
 
 
 interface FlatValueIncrementProps {
   name: string
   value: number
+  percented?: boolean
 }
 
-function FlatValue({ name, value }: FlatValueIncrementProps) {
+function OneValue({ name, value, percented = false }: FlatValueIncrementProps) {
   return(
     <div className="AttrOne">
       <span className="KeyName">{name}</span>
-      <Num className="AttrValue" value={value} signed />
+      <Num className="AttrValue" value={value} signed percented={percented} />
     </div>
   )
 }
 
-function PercentValue({ name, value }: FlatValueIncrementProps) {
-  return(
-    <div className="AttrOne">
-      <span className="KeyName">{name}</span>
-      <Num className="AttrValue" value={value} signed percented />
-    </div>
-  )
-}
-
-function DearEltype({ name, value }: { name: string, value: string | string[] }) {
-  const eltype = typeof value === "string" ? value : value.join('+')
+function DearEltype({ value }: { value: Eltype | Eltype[] }) {
+  const eltype = typeof value === "string" ? 
+  Elemental[value]["속성"]
+  :value.map(et => Elemental[et]["속성"]).join('+')
   return( <div className="AttrOne Eltype">{eltype}공격속성</div> )
 }
 
+function DualTrigger() {
+  return <div className="AttrOne"><div className="AttrValue">듀얼 트리거</div></div>
+}
 
 
-function SkillValue({ midfix, skills = {}, percent }: { midfix: string, skills?: Record<string, number>, percent: boolean }) {
+interface SkillValueProps {
+  name: string
+  values?: Record<string, number>
+  percented?: boolean
+}
+function SkillValue({ name, values = {}, percented = false }: SkillValueProps) {
   
-  const skillNames = Object.keys(skills).sort()
+  const skillNames = Object.keys(values).sort()
   return(
     <>
     {skillNames.map(skillName => {
-      let value = skills[skillName]
+      let value = values[skillName]
       return (
         <div key={skillName} className="AttrOne">
-          <span className="KeyName">{skillName} {midfix}</span>
-          <Num className="AttrValue" value={value} signed percented={percent} />
+          <span className="KeyName">{skillName} {name}</span>
+          <Num className="AttrValue" value={value} signed percented={percented} />
         </div>
       )
     })}
@@ -52,7 +55,7 @@ function SkillValue({ midfix, skills = {}, percent }: { midfix: string, skills?:
   )
 }
 
-function Misc({ value }: { value: string[] } ) {
+function Misc({ value = [] }: { value: string[] } ) {
   return (
     <>
       {value.map((v, i) => 
@@ -64,44 +67,28 @@ function Misc({ value }: { value: string[] } ) {
   )
 }
 
-const expressionToComponent: Record<AttrExpressionType, React.FC<any>> = {
-  Flat: FlatValue,
-  Percent: PercentValue,
-  MapFlat: SkillValue,
-  MapPercent: SkillValue,
-  DearEltype: DearEltype,
-  Misc: Misc,
-  DualTrigger: Misc,
+
+function One({ attrDef, value }: { attrDef: AttrDef, value: any }) {
+  if (!attrDef) return null
+  const { name, expression } = attrDef
+  switch (expression) {
+    case "DearEltype":  return <DearEltype value={value} />
+    case "DualTrigger": return <DualTrigger />
+    case "Flat":    return <OneValue name={name} value={value as number} />
+    case "Percent": return <OneValue name={name} percented value={value as number} />
+    case "MapFlat": return <SkillValue name={name} values={value as Record<string, number>} />
+    case "MapPercent": return <SkillValue name={name} percented values={value as Record<string, number>} />
+    case "Misc": return <Misc value={value as string[]} />
+  }
 }
-
-
 
 
 
 export function SimpleBaseAttrView({ attrs }: { attrs: BaseAttrs | undefined | null }) {
   if (!attrs) return null
-  const views: JSX.Element[] = []
-  for (const { key, expression, name } of attrDefs.array) {
-    if (key in attrs) {
-      const compo = expressionToComponent[expression]
-      if (key === "sk_lv") {
-        views.push(<SkillValue key={key} midfix={name} skills={attrs[key]} percent={false} />)
-        continue
-      }
-      if (key === "sk_val") {
-        views.push(<SkillValue key={key} midfix={name} skills={attrs[key]} percent={true} />)
-        continue
-      }
-      if (key === "sk_cool") {
-        views.push(<SkillValue key={key} midfix={name} skills={attrs[key]} percent={true} />)
-        continue
-      }
-      views.push(React.createElement(compo, { key, name, value: attrs[key] }))
-    }
-
-  }
-  return (
-    <>{views}</>
-  )
+  return <ErrorBoundary fallback={<>앗! 효과를 보다가 문제가 생겼어요!</>} >
+  {attrDefs.array.filter(attrDef => attrDef.key in attrs)
+    .map(attrDef => <One key={attrDef.key} attrDef={attrDef} value={attrs[attrDef.key]} />)}
+  </ErrorBoundary>
 }
 

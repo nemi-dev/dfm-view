@@ -2,6 +2,7 @@ import styled from "styled-components"
 import { useAppDispatch, useAppSelector } from "../../feats/hooks"
 import { selectMyDFClass, selectMyName } from "../../feats/selector/selfSelectors"
 import { SetDFClass, SetMyName } from "../../feats/slices/slice"
+import { DFClassIcon } from "../widgets/Icons"
 
 const DFClassLayout = styled.div`
   display: grid;
@@ -14,12 +15,6 @@ input[type=text]& {
   text-align: center;
 }
 `
-
-function DFClassSelect({ name }: { name: DFClassName }) {
-  const dispatch = useAppDispatch()
-  if (!name) return <div />
-  return <img src={`/img/dfclass/${name}.png`} onClick={()=>(dispatch(SetDFClass(name)))} />
-}
 
 const dfclassOrder: DFClassName[] = [
   "버서커", "소울브링어", "웨펀마스터", "아수라",
@@ -42,12 +37,14 @@ export function DFClassModal() {
         <h3>캐릭터/직업 설정하기</h3>
       </header>
       <div>
-        <img src={`/img/dfclass/${myClass.name}.png`} alt="" />
+        <DFClassIcon dfclassName={myClass?.name} />
       </div>
       <DFCharNameInput type="text" maxLength={20} value={myName} onChange={ev => dispatch(SetMyName(ev.target.value))} />
       <div className="ModalMenuScrollable">
       <DFClassLayout>
-      {dfclassOrder.map((name, index) => <DFClassSelect key={index} name={name} />)}
+      {dfclassOrder.map((name) => 
+        <DFClassIcon key={name} dfclassName={name} onClick={() => dispatch(SetDFClass(name))} />
+      )}
       </DFClassLayout>
       </div>
     </div>

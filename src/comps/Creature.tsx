@@ -6,6 +6,7 @@ import { selectItem } from "../feats/selector/equipSelectors"
 import { SetArtifactValue, SetCreatureStat } from '../feats/slices/slice'
 import { ModalContext } from '../modalContext'
 import { ClosedCondyceSet } from './Choices'
+import { ArtifactModalFragment, CreatureModalFragment } from './modals/CreatureModal'
 import { LabeledNumberInput } from "./widgets/Forms"
 import { ItemIcon } from './widgets/Icons'
 
@@ -33,7 +34,10 @@ function CreatureOrArtifactView({ item, part, color }: { item: DFItem, part: "�
 
   return (
     <CreatureOrArtiLayout>
-      <ItemIcon item={item} onClick={() => openModal({ name: "item", part, index: color })} />
+      <ItemIcon item={item} onClick={() => {
+        if (part === "크리쳐") openModal(<CreatureModalFragment />)
+        else openModal(<ArtifactModalFragment artiColor={color} />)
+      }} />
     </CreatureOrArtiLayout>
   )
 }

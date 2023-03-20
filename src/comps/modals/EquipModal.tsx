@@ -2,17 +2,17 @@ import styled from "styled-components"
 import Fuse from "fuse.js"
 import { useCallback, useContext, useMemo, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../feats/hooks"
-import { getCardsForPart, getItem, getItemsByPart, isAccess, isArmor } from "../../items"
-import { ItemName } from "../widgets/ItemNameView"
+import { getItem, getItemsByPart, isAccess, isArmor } from "../../items"
 import { ItemIcon } from "../widgets/Icons"
 import { ModalContext } from "../../modalContext"
 
 import _left from "../../../data/sets/left.json"
 import _right from "../../../data/sets/right.json"
 import { LabeledSwitch } from "../widgets/Forms"
-import { FetchItems, SetCard, SetCardsAllPossible, SetItem } from "../../feats/slices/itemSlice"
+import { FetchItems, SetItem } from "../../feats/slices/itemSlice"
 import { selectMyDFClass } from "../../feats/selector/selfSelectors"
-import { Select } from "./Select"
+import { ModalItemSelect } from "./Select"
+import { CurrentPart } from "./CurrentPart"
 
 type EquipShotgun = Partial<Pick<ItemsState, EquipPart>>
 
@@ -31,9 +31,9 @@ interface IsetCatalog {
 
 function EquipShotgun({ name, itemChildren, useThisForPayload }: IsetCatalog) {
   const dispatch = useAppDispatch()
-  const { setOpen } = useContext(ModalContext)
+  const { closeModal } = useContext(ModalContext)
   return (
-    <div className="EquipShotgun" onClick={() => {dispatch(FetchItems(useThisForPayload)); setOpen(false) }}>
+    <div className="EquipShotgun" onClick={() => { dispatch(FetchItems(useThisForPayload)); closeModal() }}>
       <div className="IsetName">{name}</div>
       <div className="IsetIconArray">
       {itemChildren.map((item) => (
@@ -87,9 +87,8 @@ function pickItems(items: DFItem[], part: WholePart, myWeapons: WeaponType[] | n
   .sort(myItemSroter.bind(null, myWeapons))
 }
 
-export function EquipModalFragment() {
-  const { message, setOpen } = useContext(ModalContext)
-  const { part } = message as ModalRequestForItem
+export function EquipModalFragment({ part }: { part: WholePart }) {
+  const { closeModal } = useContext(ModalContext)
   const isets = loadShotgun(part) ?? []
   const [query, setQuery] = useState("")
   const [showMyWeaponsOnly, setShowMyWeaponsOnly] = useState(true)
@@ -99,7 +98,7 @@ export function EquipModalFragment() {
   const dispatch = useAppDispatch()
   const onClick = useCallback((item: DFItem) => {
     dispatch(SetItem([part as EquipPart | "칭호" | "오라" | "무기아바타", item.name]))
-    setOpen(false)
+    closeModal()
   }, [part])
   
   const dependencies = [part, showMyWeaponsOnly, myDFclass?.name]
@@ -113,6 +112,7 @@ export function EquipModalFragment() {
   const iresult = useMemo(() => query? fusei.search(query).map(s => s.item) : isets, [...dependencies, query])
   return (
     <>
+    <CurrentPart part={part} />
     <SearchField type="text" placeholder="아이템 이름으로 검색해보세요!!" value={query} onChange={ev => setQuery(ev.target.value)} />
     {part === "무기"? <CheckieInline label="착용가능 무기만 표시하기" checked={showMyWeaponsOnly} onChange={setShowMyWeaponsOnly} /> : null}
     <div className="ModalMenuScrollable">
@@ -130,7 +130,7 @@ export function EquipModalFragment() {
       <h4>단일 장비</h4>
       <div className="ItemSelectArray">
       {result.map((item) => (
-        <Select key={item.name} item={item} onClick={() => onClick(item)} />
+        <ModalItemSelect key={item.name} item={item} onClick={() => onClick(item)} />
       ))}
       </div></> : null
       }
@@ -141,39 +141,4 @@ export function EquipModalFragment() {
 
 
 
-function CardSelect({ card, all }: { card: DFItem, all: boolean }) {
-  const { message, setOpen } = useContext(ModalContext)
-  const { part } = message as ModalRequestForItem
-  const dispatch = useAppDispatch()
-  const onClick = useCallback(() => {
-    if (all) dispatch(SetCardsAllPossible(card.name))
-    else dispatch(SetCard([part as CardablePart, card.name]))
-    setOpen(false)
-  }, [part, card.name, all])
-  return (
-    <div className="ModalItemSelect" onClick={onClick}>
-      <ItemIcon item={card}/>
-      <ItemName item={card} className="ItemNameResponsive" />
-    </div>
-  )
-}
 
-
-export function CardModalFragment() {
-  const { message } = useContext(ModalContext)
-  const { part } = message as ModalRequestForItem
-  const items = getCardsForPart(part as EquipPart)
-  const [all ,setAll] = useState(false)
-  return (
-    <div className="ModalMenuScrollable">
-      <header>
-        <CheckieInline label="선택한 카드를 가능한 모든 부위에 바르기" checked={all} onChange={setAll} />
-      </header>
-      <div className="ItemSelectArray">
-      {items.map((card) => (
-        <CardSelect key={card.name} card={card} all={all} />
-      ))}
-      </div>
-    </div>
-  )
-}

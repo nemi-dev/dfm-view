@@ -111,15 +111,15 @@ for (const iset of isets) if (iset.name) ISetsNameMap[iset.name] = iset
 
 /** "방어구 재질"을 얻는다. **얘는 AttrSource가 아니어야 한다** */
 export const getArmorBase = memoizee(
-  function getArmorBase(level: number, rarity: Rarity, material: ArmorMaterial, part: EquipPart): DFItem {
+  function getArmorBase(level: number, rarity: Rarity, material: ArmorMaterial, part: EquipPart): BaseAttrs {
     const find = armorbases.find(attr => {
       return attr.level == level
       && attr.rarity == rarity
       && attr.material == material
       && attr.itype == part
     })
-    if (!find) throw new Error("적절한 방어구 재질을 찾을 수 없습니다!")
-    return find
+    if (!find) return {}
+    return find.attrs
   },
 { primitive: true })
 
@@ -190,15 +190,11 @@ export function getActiveISets(...items: DFItem[]) {
 
 /** 주어진 부위의 장비에 바를 수 있는 카드(+보주) 목록을 얻는다. */
 export const getCardsForPart = memoizee(
-  function _getCardsForPart(part: EquipPart | "칭호") {
+  function _getCardsForPart(part: CardablePart) {
     return _items_index_Part_or_Card["카드"].filter(card => card.part?.includes(part))
   },
 { primitive: true })
 
-
-export function createCondyceKey(source: ComplexAttrSource, node: ConditionalNode) {
-  return `${source.name}::${node.when}`
-}
 
 export function createCondyceKey2(sourceName: string, node: ConditionalNode) {
   return `${sourceName}::${node.when}`
@@ -212,7 +208,7 @@ export function createActiveNode(attrSourceName: string, nodes: ConditionalNode[
     const activeKey = createCondyceKey2(attrSourceName, child)
     if (activeKey in activeKeys) {
       const maxRepeat = activeKeys[activeKey]
-      d.push(repeatAttr(child, maxRepeat))
+      if (maxRepeat > 0) d.push(repeatAttr(child, maxRepeat))
     }
   }
   return d
@@ -240,9 +236,6 @@ export function getActiveExclusive(item: ComplexAttrSource, activeKeys: Record<s
     }
   }
   return d
-  // return item.exclusive
-  // .filter(exclusiveSet => activeKeys[exclusiveKey(item, exclusiveSet)])
-  // .map(exclusiveSet => exclusiveSet.children.find(exclusiveNode => exclusiveNode.name === activeKeys[exclusiveKey(item, exclusiveSet)]))
 }
 
 
@@ -257,12 +250,6 @@ export function createActiveCondyces(iii: ComplexAttrSource, { branches, gives, 
     ...createActiveNode(iii.name, iii.gives, gives),
     ...getActiveExclusive(iii, exclusives)
   ]
-}
-
-
-/** 내가 활성화한 조건부 노드들을....와우...이거 맞냐? */
-export function catastrophy(iii: ComplexAttrSource, { branches, gives, exclusives }: Choices) {
-
 }
 
 

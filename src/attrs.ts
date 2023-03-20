@@ -113,7 +113,7 @@ const reducers: Partial<Record<keyof BaseAttrs, (p: any, n: any)=>any>> = {}
 export type AttrExpressionType = 
 "Flat" | "Percent" | "MapFlat" | "MapPercent" | "DearEltype" | "DualTrigger" | "Misc"
 
-interface AttrDef {
+export interface AttrDef {
   key: keyof BaseAttrs
   name: string,
   reducer: (a: any, b: any) => any

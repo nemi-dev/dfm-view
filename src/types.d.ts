@@ -35,9 +35,12 @@ declare type ArmorPart = "상의" | "하의" | "머리어깨" | "벨트" | "신�
 /** 악세서리 부위 */
 declare type AccessPart = "팔찌" | "목걸이" | "반지"
 
+/** 방어구 재질 */
 declare type ArmorMaterial = "천" | "가죽" | "경갑" | "중갑" | "판금"
 
+/** 부위당 하나만 낄 수 있는 아이템 (정수/아티팩트는 여러개 낄 수 있다.) */
 declare type SingleItemPart = EquipPart | "칭호" | "오라" | "무기아바타" | "봉인석" | "크리쳐"
+
 declare type WholePart = EquipPart | "칭호" | "오라" | "무기아바타" | "봉인석" | "정수" | "크리쳐" | "아티팩트"
 declare type WearAvatarPart = "모자" | "얼굴" | "상의" | "목가슴" | "신발" | "머리" | "하의" | "허리"
 

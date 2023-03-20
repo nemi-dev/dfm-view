@@ -10,7 +10,7 @@ import { persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } fro
 import storage from "redux-persist/lib/storage"
 import { cardSlice, emblemSlice, itemSlice, magicPropsSlice, materialSlice, upgradeSlice } from "./slices/itemSlice"
 import reduceReducers from "reduce-reducers"
-import { CreatorReducer, LoadReducer, SaveReducer } from "./saveReducers"
+import { CreatorReducer, LoadReducer, SaveDF, SaveReducer } from "./saveReducers"
 import createMigrate from "redux-persist/es/createMigrate"
 
 
@@ -69,3 +69,9 @@ export default store
 export type RootState = ReturnType<typeof combinedReducer>
 export type AppDispatch = typeof store.dispatch
 
+
+
+
+window.addEventListener("beforeunload", () => {
+  store.dispatch(SaveDF())
+})

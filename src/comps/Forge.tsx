@@ -11,6 +11,9 @@ import { MagicProps } from "./MagicProps"
 import { selectCard, selectEmblemSpecs, selectItem, selectUpgrade } from "../feats/selector/equipSelectors"
 import { ArmorMaterialSelect, EmblemArray } from "./Itemy"
 import { SetUpgradeValue } from "../feats/slices/itemSlice"
+import { isArmor } from "../items"
+import { EmblemModalViolent } from "./modals/EmblemModal"
+import { CardModalFragment } from "./modals/CardModal"
 
 
 const PartLayout = styled.div`
@@ -41,8 +44,8 @@ const MagicPropsLayout = styled.div`
 `
 
 function Part({ part }: { part: EquipPart }) {
-  const item = useAppSelector(selectItem[part])
   const { openModal } = useContext(ModalContext)
+  const item = useAppSelector(selectItem[part])
   const dispatch = useAppDispatch()
   const card = useAppSelector(selectCard[part])
   const upgradeBonus = useAppSelector(selectUpgrade[part])
@@ -52,16 +55,17 @@ function Part({ part }: { part: EquipPart }) {
     <PartLayout className="Part Bordered">
       <div className={item? `Rarity_${item.rarity}`:""}>{part}</div>
       <ItemIcon item={item} />
-      <ArmorMaterialSelect part={part} />
+      {isArmor(part)? <ArmorMaterialSelect part={part} /> : null}
       <div className="EquipUpgradeValue">
         +<NumberInput value={upgradeBonus}
         onChange={v => dispatch(SetUpgradeValue([part, v]))} />
       </div>
       <ItemIcon className="Card" item={card}
-      onClick={() => openModal({name:"item", part, target: "Card", index: 0})} />
+        onClick={() => openModal(<CardModalFragment part={part} />)}
+      />
       <RowLayout>
         <EmblemArray emblems={emblems} accept={emblemAccept}
-          onItemClick={index => openModal({name:"item", part, target: "Emblem", index })}
+          onItemClick={index => openModal(<EmblemModalViolent part={part} index={index} />)}
         />
       </RowLayout>
       <MagicPropsLayout>

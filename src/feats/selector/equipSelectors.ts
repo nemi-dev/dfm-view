@@ -23,8 +23,7 @@ export const selectItem = Noot(part => state => {
   if (!isArmor(part)) return item
   const { level, rarity, material = state.My.Material[part] } = item
   const armorbase = getArmorBase(level, rarity, material, part)
-  return { ...item, attrs: combine(item.attrs, armorbase.attrs)}
-  // return getItem(state.My.Item[part])
+  return { ...item, attrs: combine(item.attrs, armorbase)}
 }, singleItemParts)
 
 /** 특정 부위의 아이템에 바른 카드를 선택한다 */
@@ -41,8 +40,8 @@ export const selectMagicPropNames = Noot(
 
 /** 특정 부위의 "내가 선택한" 방어구 재질을 선택한다 */
 export const selectCustomMaterial = Noot(
-  part => state => isArmor(part) ? state.My.Material[part] : null,
-  equipParts
+  part => state => state.My.Material[part],
+  armorParts
 )
 
 /** 특정 부위의 강화보너스 수치(무기는 물/마공, 다른장비는 스탯)를 선택한다 */

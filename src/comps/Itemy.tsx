@@ -1,5 +1,4 @@
 import { useAppSelector, useAppDispatch } from "../feats/hooks"
-import { isArmor } from "../items"
 import { selectItem, selectCustomMaterial } from "../feats/selector/equipSelectors"
 import { EmblemIcon } from "./widgets/Icons"
 import { SetMaterial } from "../feats/slices/itemSlice"
@@ -10,11 +9,14 @@ export interface EquipProps {
   showUpgarde?: boolean
 }
 
-export function ArmorMaterialSelect({ part }: EquipProps) {
+interface ArmorPartProps {
+  part: ArmorPart
+}
+
+export function ArmorMaterialSelect({ part }: ArmorPartProps) {
   const item = useAppSelector(selectItem[part])
   const material = useAppSelector(selectCustomMaterial[part])
   const dispatch = useAppDispatch()
-  if (!isArmor(part)) return null
   if (!item) return null
   return (
     <select className="ArmorMaterialSelector" value={material}
@@ -37,11 +39,11 @@ interface EmblemArrayProps {
   onItemClick?: (n: number) => any
 }
 
-export function EmblemArray({ emblems, accept, onItemClick }: EmblemArrayProps) {
+export function EmblemArray({ emblems = [], accept, onItemClick }: EmblemArrayProps) {
   return (
     <>
     {emblems.map((spec, index) => (
-      <EmblemIcon key={index} spec={spec} accept={accept} onClick={() => onItemClick(index)} />
+      <EmblemIcon key={index} spec={spec} accept={accept} onClick={() => onItemClick?.(index)} />
     ))}
     </>
   )
