@@ -17,6 +17,9 @@ import { MyStat } from './MyStat'
 import { SkillTestSet } from './CustomSkill'
 import { StickyNav } from './StickyNav'
 import { EnemyTarget } from './EnemyTarget'
+import { useAppDispatch, useAppSelector } from '../feats/hooks'
+import { InitChar } from '../feats/saveReducers'
+import store from '../feats/store'
 
 
 function NavLink({ name, children }: React.PropsWithChildren<{ name: string }> ) {
@@ -43,10 +46,10 @@ function Navigator() {
     <nav className="Navigator">
       <NavLink name="장비">장비</NavLink>
       <NavLink name="아바타">칭호/아바타</NavLink>
-      <NavLink name="봉인석">성안의 봉인</NavLink>
+      <NavLink name="봉인석">봉인석</NavLink>
       <NavLink name="크리쳐">크리쳐</NavLink>
-      <NavLink name="마력결정">마력 결정</NavLink>
-      <NavLink name="길드">길드 버프</NavLink>
+      <NavLink name="길드">길드</NavLink>
+      <NavLink name="마력결정">마력결정</NavLink>
     </nav>
   )
   else return (
@@ -54,7 +57,7 @@ function Navigator() {
       <NavLink name="장비">장비</NavLink>
       <NavLink name="대장간">대장간</NavLink>
       <NavLink name="아바타">칭호/아바타</NavLink>
-      <NavLink name="봉인석">성안의 봉인</NavLink>
+      <NavLink name="봉인석">봉인석</NavLink>
       <NavLink name="기타">기타</NavLink>
     </nav>
   )
@@ -67,10 +70,10 @@ function Content() {
     <>
       <Tab name="장비"><Equips /></Tab>
       <Tab name="아바타"><Avatars /></Tab>
-      <Tab name="크리쳐"><Creatures /></Tab>
-      <Tab name="마력결정"><Tonic /></Tab>
       <Tab name="봉인석"><Cracks /></Tab>
+      <Tab name="크리쳐"><Creatures /></Tab>
       <Tab name="길드"><Guilds /></Tab>
+      <Tab name="마력결정"><Tonic /></Tab>
     </>
   )
   else
@@ -96,6 +99,9 @@ function App() {
 
   const [isOpen, setOpen] = useState(false)
   const [message, setMessage] = useState<ModalRequest>()
+  const dispatch = useAppDispatch()
+  const lastIDs = useAppSelector(state => state.SavedChars.IDs)
+  const rehydrated = store.getState()._persist.rehydrated
 
   const openModal = useCallback((m: ModalRequest) => {
     setMessage(m)
@@ -111,16 +117,21 @@ function App() {
       else setPortrait(true)
     }
 
+    if (lastIDs.length === 0) {
+      dispatch(InitChar())
+    }
+    
     window.addEventListener('resize', onResize)
     return () => window.removeEventListener('resize', onResize)
-  })
+  }, [])
 
+  
 
   return (
     <TabContext.Provider value={{ activeTab, setActiveTab }}>
     <ModalContext.Provider value={modalContextValue}>
     <PortraitMode.Provider value={portrait}>
-      <div className="App">
+      {lastIDs.length > 0 && rehydrated? <div className="App">
         <ItemSelectModal isOpen={isOpen}/>
         <StickyNav />
         <div className="MainWrapper">
@@ -134,7 +145,7 @@ function App() {
         </div>
         <EnemyTarget />
         <SkillTestSet />
-      </div>
+      </div>: null}
     </PortraitMode.Provider>
     </ModalContext.Provider>
     </TabContext.Provider>

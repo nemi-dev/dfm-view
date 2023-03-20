@@ -3,7 +3,7 @@ import { CrackIcon } from "./widgets/Icons"
 import { MagicProps } from './MagicProps'
 import React, { useContext } from 'react'
 import { ModalContext } from '../modalContext'
-import { selectCrackISetAttrs, selectSpells, selectCracksAll, selectBlessing } from "../feats/selector/cracksSelectors"
+import { selectCrackISet, selectSpells, selectCracks, selectBlessing } from "../feats/selector/cracksSelectors"
 import { selectItem } from "../feats/selector/equipSelectors"
 import { SimpleBaseAttrView } from './widgets/AttrsView'
 import styled from 'styled-components'
@@ -32,7 +32,7 @@ export function Cracks() {
   const rune = useAppSelector(selectItem["봉인석"])
   const spells = useAppSelector(selectSpells)
   const blessing = useAppSelector(selectBlessing)
-  const isetattr = useAppSelector(selectCrackISetAttrs)
+  const isets = useAppSelector(selectCrackISet)
 
   return (
     <div className="Cracks">
@@ -69,19 +69,19 @@ export function Cracks() {
             <SimpleBaseAttrView attrs={blessing[1]}/>
           </AttrsLayout>
         </div>: null}
-      {Object.keys(isetattr).sort().map((isetname) => (
-          <React.Fragment key={isetname}>
-          <h4>{isetname}</h4>
+      {isets.map((iii) => (
+          <React.Fragment key={iii.name}>
+          <h4>{iii.name}</h4>
           <AttrsLayout>
-            <SimpleBaseAttrView attrs={isetattr[isetname].attrs}/>
+            <SimpleBaseAttrView attrs={iii.attrs}/>
           </AttrsLayout>
           </React.Fragment>
-        ))}
+      ))}
       {rune?
         <div>
           <h3>성안의 봉인 효과</h3>
           <AttrsLayout>
-          <SimpleBaseAttrView attrs={useAppSelector(selectCracksAll)}/>
+          <SimpleBaseAttrView attrs={useAppSelector(selectCracks)}/>
           </AttrsLayout>
         </div>: null}
     </div>

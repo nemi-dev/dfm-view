@@ -1,6 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit"
 import { atx, combine } from "../../attrs"
-import { getActiveISets, getArmorBase, getItem, equipParts, isArmor, magicPropsParts, cardableParts, getActiveCondyces, singleItemParts } from "../../items"
+import { getActiveISets, getArmorBase, getItem, equipParts, isArmor, magicPropsParts, cardableParts, createActiveCondyces, singleItemParts } from "../../items"
 import { getEmblem } from "../../emblem"
 import { getMagicPropsAttrs } from "../../magicProps"
 import { selectClassAtype } from "./selfSelectors"
@@ -61,8 +61,7 @@ export const selectMagicProps = Noot(
     selectItem[part],
     selectMagicPropNames[part],
     (atype, item, magicProps) => {
-      if (!item || !(magicProps?.length))
-        return {}
+      if (!item || !(magicProps?.length)) return {}
       const { level, rarity } = item
       const array = getMagicPropsAttrs(magicProps, atype, level, rarity, part)
       return combine(...array)
@@ -74,7 +73,7 @@ export const selectMagicProps = Noot(
 export const selectActiveConds = Noot(
   part => state => {
     const item = getItem(state.My.Item[part])
-    return getActiveCondyces(item, state.My.Choice)
+    return createActiveCondyces(item, state.My.Choice)
   }, equipParts
 )
 
@@ -109,8 +108,7 @@ export const selectPartAttrs = Noot(
 )
 
 
-/** 10장비의 모든 아이템+카드+엠블렘+마법봉인+강화 효과를 선택한다.
- * **(조건부 효과는 활성여부에 상관없이 모두 배제한다.)** */
+/** 10장비의 모든 아이템+카드+엠블렘+마법봉인+강화 효과를 선택한다. (조건부 효과 고려안함) */
 const selectWholePartAttrsNoCond = createSelector(
   equipParts.map(part => selectPartAttrsNoCond[part]),
   combine
@@ -146,7 +144,7 @@ export const selectEquips = createSelector(
   (state: RootState) => state.My.Choice,
   (isets, iattr, choice) => {
     const isetattrs = isets.map(ii => ii.attrs)
-    const J = isets.flatMap(ii => getActiveCondyces(ii, choice).map(n => n.attrs))    
+    const J = isets.flatMap(ii => createActiveCondyces(ii, choice).map(n => n.attrs))    
     return combine( iattr, ...isetattrs, ...J )
   }
 )

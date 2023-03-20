@@ -1,19 +1,21 @@
 import { combineReducers, configureStore, createReducer, Reducer } from "@reduxjs/toolkit"
-import { creatureSlice, currentIDSlice, enemyTargetSlice, savedCharSlice, selfSlice } from "./slices/slice"
+import { creatureSlice, currentIDSlice, enemyTargetSlice, equipPresetSlice, savedCharSlice, selfSlice, skillPresetSlice } from "./slices/slice"
 import { tonicSlice } from "./slices/tonicSlice"
 import { guildSlice } from "./slices/guildSlice"
 import { choiceSlice } from "./slices/choiceSlice"
 import { avatarSlice } from "./slices/avatarSlice"
 import { calibrateSlice } from "./slices/calibrateSlice"
-import { skillInputSlice } from "./slices/skillInputSlice"
+import { skillInputSlice } from "./slices/customSkillSlice"
 import { persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist"
 import storage from "redux-persist/lib/storage"
 import { cardSlice, emblemSlice, itemSlice, magicPropsSlice, materialSlice, upgradeSlice } from "./slices/itemSlice"
 import reduceReducers from "reduce-reducers"
+import { CreatorReducer, LoadReducer, SaveReducer } from "./saveReducers"
+import createMigrate from "redux-persist/es/createMigrate"
 
 
 
-const My = 
+const myStateReducer = 
 
 combineReducers({
   Self: selfSlice.reducer,
@@ -24,29 +26,31 @@ combineReducers({
   Upgrade: upgradeSlice.reducer,
   Material: materialSlice.reducer,
   Avatar: avatarSlice.reducer,
-  Tonic: tonicSlice.reducer,
   Guild: guildSlice.reducer,
   CreatureProp: creatureSlice.reducer,
   Choice: choiceSlice.reducer,
   Calibrate: calibrateSlice.reducer,
-  CustomSklill: skillInputSlice.reducer,
 })
 
 
-const reducer = combineReducers({
+const combinedReducer = combineReducers({
   currentID: currentIDSlice.reducer,
-  My,
+  My: myStateReducer,
+  Tonic: tonicSlice.reducer,
   EnemyTarget: enemyTargetSlice.reducer,
-  SavedChars: savedCharSlice.reducer
+  SavedChars: savedCharSlice.reducer,
+  EquipPresets: equipPresetSlice.reducer,
+  CustomSklill: skillInputSlice.reducer,
+  CustomSkillPresets: skillPresetSlice.reducer
 })
 
-const reducerForReal = reduceReducers(reducer)
-/*
+const modelReducer = reduceReducers(SaveReducer, LoadReducer, CreatorReducer, combinedReducer)
+
 const persistedReducer = persistReducer({
   key: "root",
   version: 1, 
-  storage
-}, reducer)
+  storage,
+}, modelReducer)
 
 
 export const store = configureStore({
@@ -60,19 +64,8 @@ export const store = configureStore({
   },
 })
 
-*/
-export const store = configureStore({
-  reducer: reducerForReal
-})
-
-
 export default store
-// export type RootState = ReturnType<typeof store.getState>
-export type RootState = {
-  currentID: { value: string }
-  My: DFCharState
-  EnemyTarget: EnemyTargetState
-  SavedChars: SavedCharCollection
-}
+
+export type RootState = ReturnType<typeof combinedReducer>
 export type AppDispatch = typeof store.dispatch
 

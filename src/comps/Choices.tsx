@@ -3,13 +3,9 @@ import { SimpleBaseAttrView } from "./widgets/AttrsView"
 import { SetBranch, SetExclusive, SetGives } from "../feats/slices/choiceSlice"
 import { selectItem } from "../feats/selector/equipSelectors"
 import { LabeledSwitch, LabeledNumberInput, RadioGroup } from "./widgets/Forms"
-import { equipParts, getActiveISets } from "../items"
+import { createExclusiveKey2, createCondyceKey2, equipParts, getActiveISets } from "../items"
 import styled from "styled-components"
 
-
-interface Named {
-  name: string
-}
 
 interface LeafViewProps {
   itemKey: string
@@ -38,7 +34,8 @@ function LeafView({ itemKey, node, what, Action }: LeafViewProps) {
   )
 }
 
-interface BrachViewProps extends Named {
+interface BrachViewProps {
+  name: string
   nodes: ConditionalNode[]
   what: "branches" | "gives"
 }
@@ -62,7 +59,7 @@ export function BranchOrGivesView({ name, nodes, what }: BrachViewProps) {
     <CondOne>
       <div className="CondContainerName">{name}</div>
       {nodes.map((node) => {
-        const key = `${name}::${node.when}`
+        const key = createCondyceKey2(name, node)
         return <LeafView key={key} what={what} Action={Action} itemKey={key} node={node} />
       })}
     </CondOne>
@@ -78,7 +75,8 @@ function ExclusiveNodeView({ prefix, node }: { prefix: string, node: ExclusiveSe
   />
 }
 
-interface ExclusiveViewProps extends Named {
+interface ExclusiveViewProps {
+  name: string
   exclusives: ExclusiveSet[]
 }
 
@@ -89,7 +87,7 @@ export function ExclusiveSetView({ name, exclusives }: ExclusiveViewProps) {
     <CondOne>
       <div className="CondContainerName">{name}</div>
       {exclusives.map((node) => {
-        const prefix = `${name}::${node.name}`
+        const prefix = createExclusiveKey2(name, node)
         return <ExclusiveNodeView key={prefix} prefix={prefix} node={node} />
       })}
     </CondOne>

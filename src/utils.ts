@@ -1,3 +1,6 @@
+/** 적어도 하나가 true인가? */
+export const anyOf = (a: boolean, b: boolean) => a || b
+
 /** 두 수를 더한다. */
 export const add = (p: number, n: number) => p + n
 

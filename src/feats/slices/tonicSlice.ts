@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-const perfectTonic: TonicState = {
+export const perfectTonic: TonicState = {
   el_all: 25,
   hpmax: 1240,
   mpmax: 630,

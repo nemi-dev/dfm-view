@@ -41,9 +41,7 @@ export const {
 
 export const currentIDSlice = createSlice({
   name: 'currentID',
-  initialState: {
-    value: "Set this later"
-  },
+  initialState: '' as string,
   reducers: { }
 })
 
@@ -111,6 +109,26 @@ const initSavedCharState: SavedCharCollection = {
 export const savedCharSlice = createSlice({
   name: "SavedChars",
   initialState: initSavedCharState,
+  reducers: { }
+})
+
+const equipPresetInit: EquipPresetCollection = {
+  byID: {},
+  IDs: []
+}
+export const equipPresetSlice = createSlice({
+  name: "EquipPresets",
+  initialState: equipPresetInit,
+  reducers: { }
+})
+
+const skillPresetInit: CustomSkillPresetCollection = {
+  byID: {},
+  IDs: []
+}
+export const skillPresetSlice = createSlice({
+  name: "CustomSkillPresets",
+  initialState: skillPresetInit,
   reducers: { }
 })
 

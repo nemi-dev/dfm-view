@@ -95,14 +95,17 @@ declare interface BaseAttrs {
   /** 데미지 증가 (%) */
   dmg_inc?: number
 
-  /** 크리티컬 데미지 증가 (%) */
+  /** 크리티컬 데미지 증가 [%] (암살복, 엘리신발 등) */
   cdmg_inc?: number
+
+  /** 크리티컬 공격력 증가 [%] (버서커/이단심판관 버프, 암살단원의 칼날반지에 있는거) */
+  catk_inc?: number
 
   /** 추가 데미지 (%) */
   dmg_add?: number
 
   /** 속성 부여 */
-  eltype?: Eltype | Eltype[]
+  eltype?: Eltype[]
 
   /** 화속성 강화 */
   el_fire?: number
@@ -127,6 +130,9 @@ declare interface BaseAttrs {
 
   /** 암속성 추가 데미지 (%) */
   eldmg_dark?: number
+
+  /** 이게 있으면 화속강과 명속강이 큰쪽으로 같아진다. (런처, 이단심판관) */
+  DualTrigger?: boolean
 
   /** 스킬 공격력 증가 (%) */
   sk_inc?: number
@@ -216,9 +222,8 @@ declare interface BaseAttrs {
   misc?: string[]
 }
 
-type El_val = "el_fire" | "el_ice" | "el_lght" | "el_dark" | 
-"eldmg_fire" | "eldmg_ice" | "eldmg_lght" | "eldmg_dark" 
-declare type El = Pick<BaseAttrs, El_val>
+type El_val = "el_fire" | "el_ice" | "el_lght" | "el_dark" 
+declare type El = Pick<BaseAttrs, El_val | "eltype">
 
 
 declare interface ConditionalNode {
@@ -370,10 +375,10 @@ declare interface SkillOneAttackSpec {
   fixed: number
 
   /** 스증 적용 여부 */
-  isSkill: boolean
+  isSkill?: boolean
 
   /** 타격 횟수 */
-  // maxHit: number
+  maxHit?: number
 }
 
 /** 우리가 쓰는 바로 그 스킬이다. */

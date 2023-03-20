@@ -9,7 +9,7 @@
 .ItemName { align-self: center; }
 
 
-.Hovergraph, :is(input[type=text], input[type=number]).Hovergraph {
+.Hovery, :is(input[type=text], input[type=number]).Hovery {
 
   border: 1px solid transparent;
   border-radius: 19px;
@@ -31,6 +31,15 @@
   padding-inline: 2px;
   background-color: rgba($color: #000000, $alpha: 0.3);
   border-radius: 20px;
+
+  input[type=text], input[type=number] {
+    @extend .Hovery;
+    text-align: center;
+    font-size: 1em;
+    height: 100%;
+    min-height: 26px;
+    box-sizing: border-box;
+  }
 
   > .FormDFName {
     font-weight: 400;
@@ -65,17 +74,6 @@
 
 }
 
-.InputGroup {
-
-  > input[type=number], > input[type=text] {
-    text-align: center;
-    font-size: 1em;
-    min-height: 26px;
-    box-sizing: border-box;
-
-  }
-}
-
 
 .OneClickGroup {
   button {
@@ -88,16 +86,15 @@
 
 .DisposableInput {
   background-color: rgba($color: #000000, $alpha: 0.3);
-  border-radius: 20px;
-  padding: 2px;
   display: flex;
-  height: 20px;
+  border-radius: 30px;
+  align-items: center;
+  justify-content: center;
+  max-height: 30px;
 
   input[type=number], input[type=text] {
-    text-align: center;
     font-size: 0.9rem;
     background-color: transparent;
-    box-sizing: border-box;
     padding: 0;
     flex-grow: 1;
   }

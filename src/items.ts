@@ -3,7 +3,7 @@ import _isets from "../data/itemsets.json"
 import _armorbases from "./armorbase.json"
 
 import memoizee from "memoizee"
-import { atx, AtypeAttrKey } from "./attrs"
+import { atx, AtypeAttrKey, repeatAttr, scalarProduct } from "./attrs"
 
 export const weaponType: readonly Itype[] = Object.freeze([
   "소검","도","둔기","대검","광검",
@@ -194,31 +194,43 @@ export const getCardsForPart = memoizee(
 { primitive: true })
 
 
-
-/** 주어진 아이템 또는 아이템 세트에서 "내가 체크한" branch 조건부 옵션들을 배열로 얻는다. */
-export function getActiveBranch(iii: ComplexAttrSource, activeKeys: Record<string, OptionalChoiceType>) {
-  if (!(iii?.branch)) return []
-  const { name, branch } = iii
-  return branch.filter(child => activeKeys[`${name}::${child.when}`])
+export function createCondyceKey(source: ComplexAttrSource, node: ConditionalNode) {
+  return `${source.name}::${node.when}`
 }
 
-/** "내가 체크한" gives 조건부 옵션이 이 아이템의 gives를 발동시킨다면 그 gives를 얻는다. */
-export function getActiveGives(iii: ComplexAttrSource, activeKeys: Record<string, OptionalChoiceType>) {
-  if (!(iii?.gives)) return []
-  const { name, gives } = iii
-  return gives.filter(child => activeKeys[`${name}::${child.when}`])
+export function createCondyceKey2(sourceName: string, node: ConditionalNode) {
+  return `${sourceName}::${node.when}`
 }
 
-function activeKey(item: ComplexAttrSource, exclusiveSet: ExclusiveSet) {
+/** 주어진 아이템 또는 아이템 세트에서 "내가 활성화한" branch/gives 조건부 옵션들을 배열로 얻는다 **(중첩횟수 적용)** */
+export function createActiveNode(attrSourceName: string, nodes: ConditionalNode[], activeKeys: Record<string, OptionalChoiceType>) {
+  const d: ConditionalNode[] = []
+  if (nodes)
+  for (const child of nodes) {
+    const activeKey = createCondyceKey2(attrSourceName, child)
+    if (activeKey in activeKeys) {
+      const maxRepeat = activeKeys[activeKey]
+      d.push(repeatAttr(child, maxRepeat))
+    }
+  }
+  return d
+}
+
+
+function exclusiveKey(item: ComplexAttrSource, exclusiveSet: ExclusiveSet) {
   return `${item.name}::${exclusiveSet.name}`
+}
+
+export function createExclusiveKey2(itemName: string, exclusiveSet: ExclusiveSet) {
+  return `${itemName}::${exclusiveSet.name}`
 }
 
 /** 주어진 아이템 또는 아이템 세트에서 "내가 체크한" Exclusive 조건부 노드들 중 선택된 값의 것들을 배열로 얻는다. */
 export function getActiveExclusive(item: ComplexAttrSource, activeKeys: Record<string, string>) {
-  if (!(item?.exclusive)) return []
+  if (!(item.exclusive)) return []
   return item.exclusive
-  .filter(exclusiveSet => activeKeys[activeKey(item, exclusiveSet)])
-  .map(exclusiveSet => exclusiveSet.children.find(exclusiveNode => exclusiveNode.name === activeKeys[activeKey(item, exclusiveSet)]))
+  .filter(exclusiveSet => activeKeys[exclusiveKey(item, exclusiveSet)])
+  .map(exclusiveSet => exclusiveSet.children.find(exclusiveNode => exclusiveNode.name === activeKeys[exclusiveKey(item, exclusiveSet)]))
 }
 
 
@@ -226,15 +238,20 @@ export function getActiveExclusive(item: ComplexAttrSource, activeKeys: Record<s
  * 주어진 아이템에서 "내가 체크한" 조건부 노드들을 배열로 얻는다.
  * @param iii 아이템일 수도 있고, 세트일 수도 있다.
  */
-export function getActiveCondyces(iii: ComplexAttrSource, { branches, gives, exclusives }: Choices) {
+export function createActiveCondyces(iii: ComplexAttrSource, { branches, gives, exclusives }: Choices) {
+  if (!iii) return []
   return [
-    ...getActiveBranch(iii, branches),
-    ...getActiveGives(iii, gives),
+    ...createActiveNode(iii.name, iii.branch, branches),
+    ...createActiveNode(iii.name, iii.gives, gives),
     ...getActiveExclusive(iii, exclusives)
   ]
 }
 
 
+/** 내가 활성화한 조건부 노드들을....와우...이거 맞냐? */
+export function catastrophy(iii: ComplexAttrSource, { branches, gives, exclusives }: Choices) {
+
+}
 
 
 
@@ -252,15 +269,16 @@ const blessings = [
 ] as const
 
 /** 성안의 봉인에서 활성화된 가호를 얻는다. */
-export function getBlessing(...items: DFItem[]): [name: string, attrs: BaseAttrs] {
+export function getBlessing(...items: DFItem[]): AttrSource {
   const counts = items.reduce((p, { rarity }) => (p[rarity] += 1, p),
   { Common: 0, Uncommon: 0, Rare: 0, Unique: 0, Epic: 0 })
 
   const [name, value, rarity, count] = blessings.find(([, , rarity, minCount]) => counts[rarity] >= minCount)
-  return [
-    `${name} (${rarity} ${count}개 이상 장착)`,
-    atx("Stat", value)
-  ]
+  return {
+    name: `${name} (${rarity} ${count}개 이상 장착)`,
+    attrs: atx("Stat", value)
+  }
+  
 }
 
 /** 내 공격타입에 맞는 봉인석/정수만 얻는다. */

@@ -1,8 +1,8 @@
 import { createSelector } from "@reduxjs/toolkit"
-import { combine } from "../attrs"
-import { RootState } from "./store"
-import { GuildAccu, GuildAtk, GuildCrit, GuildEl, GuildSpeedAtk, GuildStat, GuildStatPublic } from "../guild"
-import { whois } from "../dfclass"
+import { combine } from "../../attrs"
+import { RootState } from "../store"
+import { GuildAccu, GuildAtk, GuildCrit, GuildEl, GuildSpeedAtk, GuildStat, GuildStatPublic } from "../../guild"
+import { whois } from "../../dfclass"
 
 export function selectGuildStat(state: RootState) {
   const atype = whois(state.My.Self.dfclass).atype
@@ -50,5 +50,10 @@ export const selectGuilds = createSelector(
   selectGuildEl,
   selectGuildSpeedAtk,
   selectGuildAccu,
-  (a, b, c, d, e, f, g) => combine(a, b, c, d, e, f, g)
+  (a, b, c, d, e, f, g): AttrSource => {
+    return {
+      name: "길드 보너스",
+      attrs: combine(a, b, c, d, e, f, g)
+    }
+  }
 )

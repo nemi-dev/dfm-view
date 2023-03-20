@@ -11,7 +11,7 @@ import { CheckboxGroup, DisposableInput, LabeledNumberInput, NumberInput, RadioG
 import styled from 'styled-components'
 import { SetAchieveLevel, SetAtype, SetLevel, set_atk_fixed } from "../feats/slices/slice"
 import { createContext, useContext, useState } from "react"
-
+import { PlusCircle } from 'react-feather'
 
 
 
@@ -31,14 +31,13 @@ function OneAttrTriplet({ className = "", name, aKey, percent = false, signed = 
   const me = useContext(MyAttrsContext)
   const dispatch = useAppDispatch()
   return (
-    <div className={"AttrOne " + (percent? "Percented " : "") +  className}>
-      {name? <div className="AttrName">{name}</div>: null}
+    <div className={"FormDF AttrOne " +  className}>
+      {name? <div className="KeyName">{name}</div>: null}
       <Num className="AttrValue" value={me[aKey]} signed={signed} percented={percent} />
       <NumberInput value={cattr[aKey]} onChange={v => dispatch(SetBasicAttr([aKey, v]))} />
     </div>
   )
 }
-
 
 
 const GridyTwo = styled.div`
@@ -65,7 +64,7 @@ function StatAtkCrit({ atype, className = "" }: StatAtkCritProps) {
         <OneAttrTriplet aKey={StatInc} name="증가" percent signed />
       </GridyTwo>
       <div className="Result">
-        <div className="AttrName">{스탯}</div>
+        <div className="KeyName">{스탯}</div>
         <Num className="AttrValue" value={stat} separated />
       </div>
       <GridyTwo>
@@ -73,7 +72,7 @@ function StatAtkCrit({ atype, className = "" }: StatAtkCritProps) {
         <OneAttrTriplet aKey={AtkInc} name="증가" percent signed />
       </GridyTwo>
       <div className="Result">
-        <div className="AttrName">{`${타입} 공격력`}</div>
+        <div className="KeyName">{`${타입} 공격력`}</div>
         <Num className="AttrValue" value={atk} separated />
       </div>
       <GridyTwo>
@@ -81,7 +80,7 @@ function StatAtkCrit({ atype, className = "" }: StatAtkCritProps) {
         <OneAttrTriplet aKey={CritCh} name="확률" percent signed />
       </GridyTwo>
       <div className="Result">
-        <div className="AttrName">크리티컬 확률</div>
+        <div className="KeyName">크리티컬 확률</div>
         <Num className="AttrValue" value={chance * 100} percented percision={2} />
       </div>
     </div>
@@ -100,8 +99,13 @@ function SkillInc() {
   const sk_inc = useAppSelector(state => state.My.Calibrate.sk_inc)
   const dispatch = useAppDispatch()
   return (
-    <div className="SkillInc AttrOne">
-      <span className="AttrName">스증(장비)<button onClick={() => dispatch(AddSkillInc())}>+</button></span>
+    <div className="SkillInc AttrOne FormDF">
+      <span className="KeyName">
+        스증(장비)
+        <button onClick={() => dispatch(AddSkillInc())}>
+          <PlusCircle width={16} height={16} />
+        </button>
+      </span>
       <SkillIncValues>
         {sk_inc.map((v, i) => {
           return <DisposableInput key={i} index={i} value={v}
@@ -156,7 +160,7 @@ export function MyStat() {
           </Gridy>
           <SkillInc />
         <div className="Result">
-          <div className="AttrName">스킬 공격력 증가</div>
+          <div className="KeyName">스킬 공격력 증가</div>
           <Num className="AttrValue" value={me["sk_inc"] + me["sk_inc_sum"]} signed percented />
         </div>
         <CheckboxGroup name="공격속성" 
@@ -175,7 +179,7 @@ export function MyStat() {
           <OneAttrTriplet className="el_dark" aKey="eldmg_dark" name="암속추" percent signed />
         </GridyTwo>
         <div className="Result">
-          <div className="AttrName">공격속성</div>
+          <div className="KeyName">공격속성</div>
           <div className="AttrValue">
             {eltypeExpr}
           </div>

@@ -232,20 +232,24 @@ declare interface DFCharState {
   Upgrade: UpgradeOrKaledoState
   Material: MaterialState
   Avatar: AvatarRarityState
-  Tonic: TonicState
+  // Tonic: TonicState
   Guild: GuildState
   CreatureProp: CreaturePropState
   Choice: Choices
   Calibrate: CalibrateState
-  CustomSklill: CustomSkillState
+  // CustomSklill: CustomSkillState
 }
 
 declare interface EnemyTargetState {
+  /** 적 방어력 (물리+마법 모두) */
   Defense: number
+
+  /** 적 속성저항 (4속성 모두) */
   ElRes: number
 }
 
 declare interface SavedChar {
+  
   id: string
   TimeStamp: number
   DFChar: DFCharState

@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { AtypeAttrKey } from '../attrs'
-import { selectGuildAccu, selectGuildAtk, selectGuildCrit, selectGuildSpeedAtk, selectGuildStat, selectGuildStatPublic } from '../feats/guildSelectors'
+import { selectGuildAccu, selectGuildAtk, selectGuildCrit, selectGuildSpeedAtk, selectGuildStat, selectGuildStatPublic } from '../feats/selector/guildSelectors'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { selectClassAtype } from "../feats/selector/selfSelectors"
 import { PerfectGuild, SetGuild } from "../feats/slices/guildSlice"
@@ -16,6 +16,20 @@ const GuildLayout = styled.div`
   grid-template-columns: 1fr 1fr;
   
   gap: 2px;
+
+  @media screen and (max-width: 999px) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: stretch;
+
+    .GuildPropOne {
+      width: 100%;
+    }
+    input[type=number] {
+      flex-grow: 2;
+    }
+  }
 
   .GuildPropOne {
     display: grid;
@@ -99,7 +113,7 @@ export function Guilds() {
           label="적중"  src="/img/guild/Accu.png" />
         <GuildPropOne value={SpeedAtkLv} max={14} target="SpeedAtkLv" selector={selectGuildSpeedAtk}
           label="공격속도" src="/img/guild/speed_atk.png" />
-        <GuildPropOne value={PublicStatLv} target="PublicStatLv" selector={selectGuildStatPublic}
+        <GuildPropOne value={PublicStatLv} max={30} target="PublicStatLv" selector={selectGuildStatPublic}
           label={`공용 ${스탯}`} src={`/img/guild/${keyStat}_public.png`} />
       </GuildLayout>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center"}}>

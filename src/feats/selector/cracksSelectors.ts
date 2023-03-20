@@ -16,8 +16,8 @@ export function selectSpells(state: RootState) {
   return state.My.Item["정수"].map(getItem)
 }
 
-/** 현재 착용한 봉인석+정수로부터 활성화되는 모든 세트 옵션을 얻는다. */
-export const selectCrackISetAttrs = createSelector(
+/** 현재 착용한 봉인석+정수로부터 활성화되는 모든 세트를 얻는다. */
+export const selectCrackISet = createSelector(
   selectItem["봉인석"],
   selectSpells,
   (rune, spells) => {
@@ -29,22 +29,26 @@ export const selectCrackISetAttrs = createSelector(
 export const selectBlessing = createSelector(
   selectItem["봉인석"],
   selectSpells,
-  (rune, spells) => getBlessing(rune, ...spells)
+  (rune, spells) => {
+    if (!rune) return null
+    return getBlessing(rune, ...spells)
+  }
 )
 
 /** 성안의 봉인에서 오는 모든 효과를 얻는다. */
-export const selectCracksAll = createSelector(
+export const selectCracks = createSelector(
   selectItem["봉인석"],
   selectMagicProps["봉인석"],
   selectSpells,
   selectBlessing,
-  selectCrackISetAttrs,
+  selectCrackISet,
   (rune, mp, spells, blessing, isets) => {
+    if (!rune) return {}
     return combine(
       rune.attrs,
       mp,
       ...spells.map((s) => s.attrs),
-      blessing[1],
+      blessing?.attrs,
       ...isets.map((s) => s.attrs)
     )
   }

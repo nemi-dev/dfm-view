@@ -12,7 +12,7 @@ interface FlatValueIncrementProps {
 function FlatValue({ name, value }: FlatValueIncrementProps) {
   return(
     <div className="AttrOne">
-      <span className="AttrName">{name}</span>
+      <span className="KeyName">{name}</span>
       <Num className="AttrValue" value={value} signed />
     </div>
   )
@@ -21,7 +21,7 @@ function FlatValue({ name, value }: FlatValueIncrementProps) {
 function PercentValue({ name, value }: FlatValueIncrementProps) {
   return(
     <div className="AttrOne">
-      <span className="AttrName">{name}</span>
+      <span className="KeyName">{name}</span>
       <Num className="AttrValue" value={value} signed percented />
     </div>
   )
@@ -43,7 +43,7 @@ function SkillValue({ midfix, skills, percent }: { midfix: string, skills: Recor
       let value = skills[skillName]
       return (
         <div key={skillName} className="AttrOne">
-          <span className="AttrName">{skillName} {midfix}</span>
+          <span className="KeyName">{skillName} {midfix}</span>
           <Num className="AttrValue" value={value} signed percented={percent} />
         </div>
       )
@@ -57,7 +57,7 @@ function Misc({ value }: { value: string[] } ) {
     <>
       {value.map((v, i) => 
       <div key={`${i}=${v}`} className="AttrOne">
-        <span className="AttrName">{v}</span>
+        <span className="KeyName">{v}</span>
       </div>
       )}
     </>
@@ -65,12 +65,13 @@ function Misc({ value }: { value: string[] } ) {
 }
 
 const expressionToComponent: Record<AttrExpressionType, React.FC<any>> = {
-  Scalar: FlatValue,
+  Flat: FlatValue,
   Percent: PercentValue,
-  ComplexScalar: SkillValue,
-  ComplexPercent: SkillValue,
+  MapFlat: SkillValue,
+  MapPercent: SkillValue,
   DearEltype: DearEltype,
-  Misc: Misc
+  Misc: Misc,
+  DualTrigger: Misc,
 }
 
 

@@ -1,6 +1,7 @@
 import type { ReactNode, HTMLProps, ChangeEvent, ChangeEventHandler, PropsWithChildren } from 'react'
 import { useCallback, useEffect, useId, useState, useRef } from 'react'
 import styled from 'styled-components'
+import { X } from 'react-feather'
 
 function prevent(ev : WheelEvent) {
   (ev.target as HTMLElement).blur()
@@ -15,22 +16,14 @@ export function NumberInput({ onWheel, value, type, onChange, ...props }: Number
     ref.current.addEventListener("wheel", prevent, { passive: false })
   }, [])
 
-  const [innerValue, setInnerValue] = useState<NumberZ>(value)
-  useEffect(() => {
-    if (value != 0)
-      setInnerValue(value)
-
-  }, [value])
-
   const _onChange = useCallback((ev: ChangeEvent<HTMLInputElement>) => {
     const newValue = Number(ev.target.value)
-    setInnerValue(ev.target.value as NumberZ)
     if (Number.isNaN(newValue)) onChange(0)
     else onChange(newValue)
 
   }, [])
 
-  return <input type="number" value={innerValue} onChange={_onChange} ref={ref} {...props} />
+  return <input type="number" value={value} onChange={_onChange} ref={ref} {...props} />
 }
 
 
@@ -46,7 +39,7 @@ export function LabeledNumberInput({ className = "", label, value, onChange, pla
   return (
     <div className={("InputGroup FormDF " + className).trim()}>
       <label className="FormDFName" htmlFor={id}>{label}</label>
-      <NumberInput className="FormDFValue Hovergraph" id={id} value={value} onChange={onChange} {...props} />
+      <NumberInput className="FormDFValue Hovery" id={id} value={value} onChange={onChange} {...props} />
     </div>
   )
 }
@@ -78,7 +71,7 @@ export function DisposableInput({ index, value, update, del }: DisposableInputPr
   return (
     <div className="DisposableInput">
       <NumberInput value={value} onChange={v => update(v, index)} />
-      <button onClick={() => del(index)}>⨯</button>
+      <button onClick={() => del(index)}><X width={12} height={12} /></button>
     </div>
   )
 }
@@ -160,7 +153,7 @@ const CheckieLabel = styled.label`
 export function LabeledSwitch({ className = "", checked = false, label = "", onChange }: CheckieProps) {
   const id = useId()
   return (
-    <span className={"FormDF Hovergraph " + className}>
+    <span className={"FormDF Hovery " + className}>
       <input type="checkbox" checked={checked} id={id} onChange={ev => onChange(ev.target.checked)} />
       <CustomCheckboxView htmlFor={id} />
       <CheckieLabel htmlFor={id}>{label}</CheckieLabel>
@@ -206,11 +199,11 @@ const CheckButtonLayout = styled.span`
   }
 `
 
-function CheckButton<T extends number | string>({ name, type, label, value, checked, onChange }: RadioOneProps<T>) {
+function CheckButton<T extends number | string>({ name, label, value, checked, onChange }: RadioOneProps<T>) {
   return (
   <CheckButtonLayout className="FormDFValue">
     <input type="checkbox" name={name} value={value} id={`Radio-${name}-${value}`} checked={checked} onChange={onChange} />
-    <label className="Hovergraph" htmlFor={`Radio-${name}-${value}`}>{label}</label>
+    <label className="Hovery" htmlFor={`Radio-${name}-${value}`}>{label}</label>
   </CheckButtonLayout>
   )
 }
@@ -234,7 +227,8 @@ export function RadioGroup<T extends string | number>({ name, groupName = name, 
     <span className={"FormDF " + className}>
       <span className="FormDFName">{groupName}</span>
       {values.map((v, i) => (
-        <CheckButton key={v} name={name} type="radio" label={labels[i]} value={v} checked={v === value} onChange={onChange} />
+        <CheckButton key={v} type="radio" name={name} label={labels[i]}
+          value={v} checked={v === value} onChange={onChange} />
       ))}
     </span>
   )
@@ -271,8 +265,9 @@ export function CheckboxGroup<T extends string | number>({ name, className = "",
     </span>
   )
 }
-type ButtonGroupProps<T extends string | number> = Omit<RadioGroupProps<T>, "value">
 
+
+type ButtonGroupProps<T extends string | number> = Omit<RadioGroupProps<T>, "value">
 export function OneClickButtonGroup<T extends string | number>({ name, className = "", values, labels = values, dispatcher }: ButtonGroupProps<T>) {
   return (
     <span className={("OneClickGroup FormDF " + className).trim()}>

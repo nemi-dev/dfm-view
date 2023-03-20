@@ -1,10 +1,10 @@
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
-import { selectBaseEnemyDefense, selectBaseEnemyElRes, selectMe, selectMyFinalEltype } from '../feats/selector/selectors'
+import { selectEnemyDefRate, selectEnemyElRes, selectMe, selectMyFinalEltype } from '../feats/selector/selectors'
 import { selectClassAtype } from "../feats/selector/selfSelectors"
-import { criticalChance, criticize, getDamage } from '../damage'
-import { SetSkillFixValue, SetSkillInputName, SetSkillUsesSkillInc, SetSkillValue } from '../feats/slices/skillInputSlice'
+import { critFt, criticalChance, getDamage } from '../damage'
+import { SetSkillFixValue, SetSkillInputName, SetSkillMaxHit, SetSkillUsesSkillInc, SetSkillValue } from '../feats/slices/customSkillSlice'
 import { LabeledSwitch, LabeledNumberInput } from "./widgets/Forms"
-import { AtypeAttrKey } from '../attrs'
+import { AtypeAttrKey, Elemental } from '../attrs'
 import styled from 'styled-components'
 import { Num } from './widgets/NumberView'
 
@@ -33,7 +33,7 @@ interface SkillInputOneProps extends SkillOneAttackSpec {
   index: number
 }
 
-function SkillOneAttack({ index, value, fixed, isSkill, name }: SkillInputOneProps) {
+function SkillOneAttack({ index, value, fixed, isSkill = false, maxHit = 1, name }: SkillInputOneProps) {
   const dispatch = useAppDispatch()
   return (
     <SkillOneAttackLayout className="SkillOneAttack">
@@ -43,6 +43,7 @@ function SkillOneAttack({ index, value, fixed, isSkill, name }: SkillInputOnePro
       </SkillOneAttackHeader>
       <LabeledNumberInput label="계수(%)" value={value} onChange={v => dispatch(SetSkillValue([index, v]))} />
       <LabeledNumberInput label="고정값" value={fixed} onChange={v => dispatch(SetSkillFixValue([index, v]))} />
+      <LabeledNumberInput label="타격 횟수" value={maxHit} onChange={v => dispatch(SetSkillMaxHit([index, v]))} />
     </SkillOneAttackLayout>
   )
 }
@@ -59,35 +60,42 @@ function SkillTestOne({ index, SkillOneAttackSpec }: SkillOutputOneProps) {
   const attrs = useAppSelector(selectMe)
   const atkFix = useAppSelector(state => state.My.Self.atk_fixed)
   const eltype = useAppSelector(selectMyFinalEltype)
+  const el = eltype.length > 0? attrs[Elemental[eltype[0]].el] : 0
+  const targetElRes = useAppSelector(selectEnemyElRes)
 
-  const withoutCrit = getDamage(atype, eltype[0], attrs, atkFix, SkillOneAttackSpec)
-  const withCrit = criticize(withoutCrit, attrs["cdmg_inc"])
+  const defRate = useAppSelector(selectEnemyDefRate)
+
+  const dam = getDamage(atype, Math.max(el - targetElRes, 0), attrs, atkFix, SkillOneAttackSpec) * ( 1 - defRate )
+
+  const damCrit = dam * critFt(attrs["cdmg_inc"], attrs["catk_inc"])
 
   const { Crit, CritCh } = AtypeAttrKey[atype]
   const chance = criticalChance(attrs[Crit], attrs[CritCh])
   
-  const mean = chance * withCrit + (1 - chance) * withoutCrit
+  const mean = chance * damCrit + (1 - chance) * dam
+
+  
   return (
     <div className="SkillTestOne">
       <SkillOneAttack index={index} {...SkillOneAttackSpec} />
       <div className={"Result " + atype}>
-        <div className="AttrName">데미지</div>
-        <Num className="AttrValue" value={withoutCrit} separated />
+        <div className="KeyName">데미지</div>
+        <Num className="AttrValue" value={dam} separated />
       </div>
       <div className={"Result " + atype}>
-        <div className="AttrName">평균 데미지</div>
+        <div className="KeyName">평균 데미지</div>
         <Num className="AttrValue" value={mean} separated />
       </div>
       <div className={"Result " + atype}>
-        <div className="AttrName">크리티컬 데미지</div>
-        <Num className="AttrValue" value={withCrit} separated />
+        <div className="KeyName">크리티컬 데미지</div>
+        <Num className="AttrValue" value={damCrit} separated />
       </div>
     </div>
   )
 }
 
 export function SkillTestSet() {
-  const cases = useAppSelector(state => state.My.CustomSklill.cases)
+  const cases = useAppSelector(state => state.CustomSklill.cases)
   
   return (
     <div>

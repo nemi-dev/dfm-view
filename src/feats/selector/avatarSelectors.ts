@@ -1,7 +1,7 @@
 import { createSelector } from "@reduxjs/toolkit"
 import { combine } from "../../attrs"
 import { RootState } from "../store"
-import { getActiveCondyces } from "../../items"
+import { createActiveCondyces } from "../../items"
 import { getEmblem } from "../../emblem"
 import { avatarParts, rareSet, UncommonSet, getAvatarAttr } from "../../avatar"
 import { selectItem, selectCard, selectEmblemSpecs } from "./equipSelectors"
@@ -61,7 +61,7 @@ export const selectDFTitleCondAttrs = createSelector(
   (state: RootState) => state.My.Choice,
   (dftitle, choice) => {
     if (!dftitle) return {}
-    const conds = getActiveCondyces(dftitle, choice)
+    const conds = createActiveCondyces(dftitle, choice)
     return combine(...conds.map(co => co.attrs))
   }
 )

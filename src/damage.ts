@@ -58,7 +58,7 @@ function incFt(
   )
 }
 
-/** 스탯, 스탯증가, 공격력, 공격력증가, 데미지증가, 추가데미지, 속성강화, 속성추뎀이 적용된 데미지 (방어력, 크리증가, 스킬증가가 빠짐) */
+/** 스탯, 스탯증가, 공격력, 공격력증가, 데미지증가, 추가데미지, 속성강화, 속성추뎀이 적용된 데미지 (방어력, 크리티컬, 스킬증가가 빠짐) */
 export function dmg(
   스킬_계수: number, 스킬_고정값: number,
   스탯: number, 스탯_퍼센트_증가: number,
@@ -76,7 +76,7 @@ export function dmg(
     * incFt(데미지_증가, 추가_데미지, 내_속성강화, 속성강화들, 속성추가데미지들)
 }
 
-/** 독립공격력을 제외한 내 예상 데미지 */
+/**크리티컬 + 스킬공격력 증가 + 적 방어력을 제외한 내 퍼센트 물리/마법 데미지 */
 export function plainDmg(
   스탯: number, 스탯_퍼센트_증가: number,
   공격력: number, 공격력_증가: number,
@@ -89,6 +89,18 @@ export function plainDmg(
   return AtkOut(공격력, 공격력_증가, 스탯, 스탯_퍼센트_증가) * incFt(데미지_증가, 추가_데미지, 내_속성강화, 속성강화들, 속성추가데미지들)
 }
 
+/** 크리티컬 + 스킬공격력 증가 + 적 방어력을 제외한 내 퍼센트 독립공격력 데미지 (고뎀) */
+export function plainFixedDmg(
+  스탯: number, 스탯_퍼센트_증가: number, 독립공격력: number,
+  데미지_증가: number,
+  추가_데미지: number,
+  내_속성강화: number, 
+  속성강화들: number[],
+  속성추가데미지들: number[],
+) {
+  return AtkFixedOut(독립공격력, 스탯, 스탯_퍼센트_증가) * incFt(데미지_증가, 추가_데미지, 내_속성강화, 속성강화들, 속성추가데미지들)
+}
+
 /** 스킬 공격력 증가의 "퍼센트로 된 순수 증가치"만을 계산한다. */
 export function getSkillInc(스킬공격력_증가_곱 : number[], 스킬공격력_증가_합 : number[] = []) {
   let skill_inc_sum = 스킬공격력_증가_곱.map(val => (val / 100 + 1)).reduce((p, c) => p * c, 1);
@@ -96,9 +108,9 @@ export function getSkillInc(스킬공격력_증가_곱 : number[], 스킬공격�
   return skill_inc_sum + skill_inc_passives
 }
 
-/** 첫째 값이 크리티컬 아닌 데미지일 때, 크리티컬 데미지 값을 구한다. */
-export function criticize(val: number, cdmg_inc: number, catk_inc: number = 0) {
-  return val * (1.5 * (1 + catk_inc / 100) + cdmg_inc / 100)
+/** 크리티컬 계수 (크리티컬 적용 시 데미지에 곱해질 값) */
+export function critFt(cdmg_inc: number = 0, catk_inc: number = 0) {
+  return (1.5 * (1 + catk_inc / 100) + cdmg_inc / 100)
 }
 
 /** 크리티컬 확률을 구한다. */
@@ -106,10 +118,10 @@ export function criticalChance(crit: number, crit_pct: number) {
   return (3 + crit_pct) / 100 + crit / 2368
 }
 
-/** `plainDmg`의 옵션버전 */
-export function getPlainDamage(atype: Atype, eltype: Eltype | null, attrs: BaseAttrs) {
+/** 독립공격력을 제외한 내 예상 데미지 (옵션버전) */
+export function getPlainDamage(atype: Atype, eltypes: Eltype[] | null, attrs: BaseAttrs) {
   let el: number = 0
-  if (eltype) el = attrs[Elemental[eltype].el]
+  if (eltypes && eltypes.length > 0) el = attrs[Elemental[eltypes[0]].el]
   const { Stat, StatInc, Atk, AtkInc } = AtypeAttrKey[atype]
   const {
     [Stat]: stat, [StatInc]: statInc,
@@ -132,10 +144,14 @@ export function getPlainDamage(atype: Atype, eltype: Eltype | null, attrs: BaseA
   )
 }
 
-/** `dmg`의 옵션버전 */
-export function getDamage(atype: Atype, eltype: Eltype | null, attrs: BaseAttrs, atkFix: number, { value, fixed, isSkill }: SkillOneAttackSpec) {
-  let el: number = 0
-  if (eltype) el = attrs[Elemental[eltype].el]
+/** (옵션버전) 스탯 + 스탯증가 + 공격력 + 공격력증가 + 데미지증가 + 추가데미지 + 속성강화 + 속성추뎀 + 평타 또는 스킬 계수 + 스킬공격력 증가가 적용된 데미지 (적 방어력, 크리티컬 빠짐. 하지만 적 속성저항은 입력값에 따라 달려있다.) */
+export function getDamage(
+  atype: Atype,
+  el: number,
+  attrs: BaseAttrs,
+  atkFix: number,
+  { value, fixed, isSkill = false, maxHit = 1 }: SkillOneAttackSpec) {
+  if (Number.isNaN(el) || (el == null)) el = 0
   const { Stat, StatInc, Atk, AtkInc } = AtypeAttrKey[atype]
   const {
     [Stat]: stat, [StatInc]: statInc,
@@ -162,6 +178,7 @@ export function getDamage(atype: Atype, eltype: Eltype | null, attrs: BaseAttrs,
   if (isSkill) {
     a *= 1 + (attrs["sk_inc"] + attrs["sk_inc_sum"]) / 100
   }
+  a *= maxHit
   return a
 }
 

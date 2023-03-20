@@ -1,7 +1,7 @@
 import { createSelector } from "@reduxjs/toolkit"
 import { atx, combine } from "../../attrs"
 import { RootState } from "../store"
-import { getActiveISets, getItem, getActiveCondyces } from "../../items"
+import { getActiveISets, getItem, createActiveCondyces } from "../../items"
 import memoizee from "memoizee"
 import { selectItem } from "./equipSelectors"
 
@@ -60,7 +60,7 @@ export const selectActiveCreatureCondyces = createSelector(
   selectCreatureSets,
   (state: RootState) => state.My.Choice,
   (creature, { Red, Green, Blue }, sets, choices) => {
-    return [creature, Red, Green, Blue, ...sets].flatMap(iii => getActiveCondyces(iii, choices))
+    return [creature, Red, Green, Blue, ...sets].flatMap(iii => createActiveCondyces(iii, choices))
   }
 )
 

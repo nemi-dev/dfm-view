@@ -1,6 +1,7 @@
 import { useId } from 'react'
+import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
-import { SetTonic, SetTonicPerfect } from "../feats/slices/tonicSlice"
+import { perfectTonic, SetTonic, SetTonicPerfect } from "../feats/slices/tonicSlice"
 import { NumberInput } from "./widgets/Forms"
 
 interface TonicInputProps {
@@ -10,10 +11,16 @@ interface TonicInputProps {
   image: string
 }
 
+const TonicStyle = styled.div`
+  input[type=number] {
+    width: 50px;
+  }
+`
+
 function TonicGem({ label, target, target2 = undefined, image }: TonicInputProps) {
   const dispatch = useAppDispatch()
-  const value = useAppSelector(state => state.My.Tonic[target])
-  const value2 = target2? useAppSelector(state => state.My.Tonic[target2]) : undefined
+  const value = useAppSelector(state => state.Tonic[target])
+  const value2 = target2? useAppSelector(state => state.Tonic[target2]) : undefined
   const id = useId()
   return (
     <div className="TonicGem">
@@ -21,8 +28,8 @@ function TonicGem({ label, target, target2 = undefined, image }: TonicInputProps
         <img src={`/img/tonic/${image}.png`} alt={label} />
       </label>
       <label htmlFor={id}>{label}</label>
-      <NumberInput id={id} value={value} onChange={v => dispatch(SetTonic([target, v]))} />
-      {value2 != null? <NumberInput value={value2} onChange={v => dispatch(SetTonic([target2, v]))} /> : null}
+      <NumberInput id={id} value={value} max={perfectTonic[target]} onChange={v => dispatch(SetTonic([target, v]))} />
+      {value2 != null? <NumberInput max={perfectTonic[target2]} value={value2} onChange={v => dispatch(SetTonic([target2, v]))} /> : null}
     </div>
   )
 }
@@ -30,7 +37,7 @@ function TonicGem({ label, target, target2 = undefined, image }: TonicInputProps
 export function Tonic() {
   const dispatch = useAppDispatch()
   return (
-    <div className="Tonic">
+    <TonicStyle className="Tonic">
       <h3>마력 결정</h3>
       <div className="TonicGems">
         <TonicGem label="HP/MP MAX" image="Top" target="hpmax" target2="mpmax" />
@@ -44,6 +51,6 @@ export function Tonic() {
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
         <button onClick={() => dispatch(SetTonicPerfect())}>마력결정 최대로</button>
       </div>
-    </div>
+    </TonicStyle>
   )
 }

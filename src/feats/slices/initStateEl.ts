@@ -1,3 +1,5 @@
+import { customSkillInit } from "./customSkillInit"
+
 const state: DFCharState = {
   "Self": {
     "myName": "븜미에양",
@@ -107,18 +109,6 @@ const state: DFCharState = {
     "AccuLv": 30,
     "PublicStatLv": 5
   },
-  
-  "Tonic": {
-    "el_all": 25,
-    "hpmax": 1240,
-    "mpmax": 630,
-    "strn_intl": 237,
-    "vit_psi": 237,
-    "def_ph": 2100,
-    "def_mg": 1600,
-    "Crit": 237,
-    "Accu": 239,
-  },
   "CreatureProp": {
     "CreatureStat": 156,
     "RedPropsValue": 50,
@@ -160,9 +150,7 @@ const state: DFCharState = {
     "target_def": 0,
     "target_res": 0
   },
-  "CustomSklill": {
-    "cases": []
-  }
+  // "CustomSklill": customSkillInit
 }
 
 

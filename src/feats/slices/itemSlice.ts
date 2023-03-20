@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { accessParts, armorParts, getItem, oneEmblemParts } from "../../items"
-import { ImportDFChar } from "../actions"
 import initState from "./initState"
 
 const { Item, Card, Emblem, MagicProps, Upgrade, Material } = initState
@@ -26,11 +25,6 @@ export const itemSlice = createSlice({
       Object.assign(s, items)
     },
   },
-  extraReducers: builder => {
-    builder.addCase(ImportDFChar, (state, { payload }) => {
-      Object.assign(state, payload.Item)
-    })
-  },
 })
 export const {
   SetItem, SetSpell, SetSpellAll, SetArtifact, FetchItems
@@ -54,11 +48,6 @@ export const cardSlice = createSlice({
       Object.assign(s, cards)
     }
   },
-  extraReducers: builder => {
-    builder.addCase(ImportDFChar, (s, { payload }) => {
-      Object.assign(s, payload.Card)
-    })
-  }
 })
 export const {
   SetCard, SetCardsAllPossible, FetchCards
@@ -87,11 +76,6 @@ export const emblemSlice = createSlice({
       Object.assign(s, emblems)
     }
   },
-  extraReducers: builder => {
-    builder.addCase(ImportDFChar, (s, { payload }) => {
-      Object.assign(s, payload)
-    })
-  }
 })
 export const {
   SetEmblem, DecreaseEmblemLevel, SetColorEmblemLevelAll, FetchEmblems
@@ -118,11 +102,6 @@ export const magicPropsSlice = createSlice({
       Object.assign(s, payload)
     }
   },
-  extraReducers: builder => {
-    builder.addCase(ImportDFChar, (s, { payload }) => {
-      Object.assign(s, payload.MagicProps)
-    })
-  }
 })
 export const {
   SetMagicProps, SetPerfectMagicPropsStat, SetPerfectMagicPropsEl, FetchMagicProps
@@ -147,11 +126,6 @@ export const upgradeSlice = createSlice({
       Object.assign(s, payload)
     }
   },
-  extraReducers: builder => {
-    builder.addCase(ImportDFChar, (s, { payload }) => {
-      Object.assign(s, payload.Upgrade)
-    })
-  }
 })
 export const {
   SetUpgradeValue, SetArmorUpgradeAll, SetAccessUpgradeAll, FetchUpgrades
@@ -172,11 +146,6 @@ export const materialSlice = createSlice({
       Object.assign(s, payload)
     }
   },
-  extraReducers: builder => {
-    builder.addCase(ImportDFChar, (s, { payload }) => {
-      Object.assign(s, payload.Material)
-    })
-  }
 })
 export const {
   SetMaterial, SetMaterialAll, FetchMaterials
