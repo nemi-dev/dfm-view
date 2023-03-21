@@ -46,7 +46,7 @@ export const selectCracks = createSelector(
     if (!rune) return {}
     return combine(
       rune.attrs,
-      mp,
+      mp.attrs,
       ...spells.map((s) => s.attrs),
       blessing?.attrs,
       ...isets.map((s) => s.attrs)
