@@ -49,7 +49,7 @@ const modelReducer = reduceReducers(SaveReducer, LoadReducer, DeleteReducer, Cre
 export type RootState = ReturnType<typeof combinedReducer>
 
 const migration = {
-  2: (state: State_v1._RootState & PersistedState) => {
+  3: (state: State_v1._RootState & PersistedState) => {
     return produce(state, draft => {
       draft["CustomSkill"] = state.CustomSklill.cases
       delete draft.CustomSklill
