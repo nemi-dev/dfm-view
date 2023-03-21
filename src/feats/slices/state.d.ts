@@ -232,12 +232,10 @@ declare interface DFCharState {
   Upgrade: UpgradeOrKaledoState
   Material: MaterialState
   Avatar: AvatarRarityState
-  // Tonic: TonicState
   Guild: GuildState
   CreatureProp: CreaturePropState
   Choice: Choices
   Calibrate: CalibrateState
-  // CustomSklill: CustomSkillState
 }
 
 declare interface EnemyTargetState {

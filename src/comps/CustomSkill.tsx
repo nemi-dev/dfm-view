@@ -95,7 +95,7 @@ function SkillTestOne({ index, SkillOneAttackSpec }: SkillOutputOneProps) {
 }
 
 export function SkillTestSet() {
-  const cases = useAppSelector(state => state.CustomSklill.cases)
+  const cases = useAppSelector(state => state.CustomSkill)
   
   return (
     <div>

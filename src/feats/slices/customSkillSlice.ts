@@ -1,27 +1,27 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { customSkillInit } from "./customSkillInit";
+import { customSkillInit2 } from "./customSkillInit";
 
 
 
 export const skillInputSlice = createSlice({
-  name: "CustomSklill",
-  initialState: customSkillInit,
+  name: "CustomSkill",
+  initialState: customSkillInit2,
   reducers: {
 
     SetSkillInputName: (s, { payload: [index, val] }: PayloadAction<[number, string]>) => {
-      s.cases[index].name = val
+      s[index].name = val
     },
     SetSkillValue: (s, { payload: [index, val] }: PayloadAction<[number, number]>) => {
-      s.cases[index].value = val
+      s[index].value = val
     },
     SetSkillFixValue: (s, { payload: [index, val] }: PayloadAction<[number, number]>) => {
-      s.cases[index].fixed = val
+      s[index].fixed = val
     },
     SetSkillMaxHit: (s, { payload: [index, val] }: PayloadAction<[number, number]>) => {
-      s.cases[index].maxHit = Math.max(val, 1)
+      s[index].maxHit = Math.max(val, 1)
     },
     SetSkillUsesSkillInc: (s, { payload: [index, val] }: PayloadAction<[number, boolean]>) => {
-      s.cases[index].isSkill = val
+      s[index].isSkill = val
     }
   }
 })

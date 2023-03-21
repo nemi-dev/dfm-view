@@ -6,7 +6,7 @@ import { choiceSlice } from "./slices/choiceSlice"
 import { avatarSlice } from "./slices/avatarSlice"
 import { calibrateSlice } from "./slices/calibrateSlice"
 import { skillInputSlice } from "./slices/customSkillSlice"
-import { persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist"
+import { persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER, PersistedState } from "redux-persist"
 import storage from "redux-persist/lib/storage"
 import { cardSlice, emblemSlice, itemSlice, magicPropsSlice, materialSlice, upgradeSlice } from "./slices/itemSlice"
 import reduceReducers from "reduce-reducers"
@@ -40,17 +40,28 @@ const combinedReducer = combineReducers({
   EnemyTarget: enemyTargetSlice.reducer,
   SavedChars: savedCharSlice.reducer,
   EquipPresets: equipPresetSlice.reducer,
-  CustomSklill: skillInputSlice.reducer,
+  CustomSkill: skillInputSlice.reducer,
   CustomSkillPresets: skillPresetSlice.reducer
 })
 
 const modelReducer = reduceReducers(SaveReducer, LoadReducer, DeleteReducer, CreatorReducer, combinedReducer)
 
+export type RootState = ReturnType<typeof combinedReducer>
+
+const migration = {
+  2: (state: State_v1._RootState & PersistedState) => {
+    return produce(state, draft => {
+      draft["CustomSkill"] = state.CustomSklill.cases
+      delete draft.CustomSklill
+    })
+  }
+}
 
 const persistedReducer = persistReducer({
   key: "root",
   version: 2, 
   storage,
+  migrate: createMigrate(migration, { debug: false })
 }, modelReducer)
 
 
@@ -67,7 +78,6 @@ export const store = configureStore({
 
 export default store
 
-export type RootState = ReturnType<typeof combinedReducer>
 export type AppDispatch = typeof store.dispatch
 
 
