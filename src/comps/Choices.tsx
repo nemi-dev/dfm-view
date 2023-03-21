@@ -41,7 +41,7 @@ interface BrachViewProps {
   what: "branches" | "gives"
 }
 
-const CondOne = styled.div`
+const CondyceTypesStyle = styled.div`
   display: flex;
   flex-direction: column;
 
@@ -53,18 +53,18 @@ const CondOne = styled.div`
   }
 `
 
-export function BranchOrGivesView({ name, nodes, what }: BrachViewProps) {
+function BranchOrGivesView({ name, nodes, what }: BrachViewProps) {
   if (!nodes) return null
   const Action = what === "branches" ? SetBranch : SetGives
   return (
-    <ErrorBoundary fallback={<>이런! 이 옵션에 문제가 있나봐요. 개발자에게 알려주세요!</>}>
-      <CondOne>
+    <ErrorBoundary fallback={<>이런! 이 조건부 옵션에 문제가 있나봐요. 개발자에게 알려주세요!</>}>
+      <CondyceTypesStyle>
         <div className="CondContainerName">{name}</div>
         {nodes.map((node) => {
           const key = createCondyceKey2(name, node)
           return <LeafView key={key} what={what} Action={Action} itemKey={key} node={node} />
         })}
-      </CondOne>
+      </CondyceTypesStyle>
     </ErrorBoundary>
   )
 }
@@ -84,16 +84,18 @@ interface ExclusiveViewProps {
 }
 
 
-export function ExclusiveSetView({ name, exclusives }: ExclusiveViewProps) {
+function ExclusiveSetView({ name, exclusives }: ExclusiveViewProps) {
   if (!exclusives) return null
   return (
-    <CondOne>
-      <div className="CondContainerName">{name}</div>
-      {exclusives.map((node) => {
-        const prefix = createExclusiveKey2(name, node)
-        return <ExclusiveNodeView key={prefix} prefix={prefix} node={node} />
-      })}
-    </CondOne>
+    <ErrorBoundary fallback={<>이런! 이 옵션에 문제가 있나봐요. 개발자에게 알려주세요!</>}>
+      <CondyceTypesStyle>
+        <div className="CondContainerName">{name}</div>
+        {exclusives.map((node) => {
+          const prefix = createExclusiveKey2(name, node)
+          return <ExclusiveNodeView key={prefix} prefix={prefix} node={node} />
+        })}
+      </CondyceTypesStyle>
+    </ErrorBoundary>
   )
 }
 
@@ -133,7 +135,4 @@ export function ClosedCondyceSet({ items }: { items: DFItem[] }) {
   )
 }
 
-export function CondsAttrsView() {
-  const items = equipParts.map(part => useAppSelector(selectItem[part]))
-  return <ClosedCondyceSet items={items} />
-}
+

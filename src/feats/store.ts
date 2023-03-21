@@ -10,9 +10,9 @@ import { persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } fro
 import storage from "redux-persist/lib/storage"
 import { cardSlice, emblemSlice, itemSlice, magicPropsSlice, materialSlice, upgradeSlice } from "./slices/itemSlice"
 import reduceReducers from "reduce-reducers"
-import { CreatorReducer, LoadReducer, SaveDF, SaveReducer } from "./saveReducers"
+import { CreatorReducer, DeleteReducer, LoadReducer, SaveDF, SaveReducer } from "./saveReducers"
 import createMigrate from "redux-persist/es/createMigrate"
-
+import produce from "immer"
 
 
 const myStateReducer = 
@@ -44,11 +44,12 @@ const combinedReducer = combineReducers({
   CustomSkillPresets: skillPresetSlice.reducer
 })
 
-const modelReducer = reduceReducers(SaveReducer, LoadReducer, CreatorReducer, combinedReducer)
+const modelReducer = reduceReducers(SaveReducer, LoadReducer, DeleteReducer, CreatorReducer, combinedReducer)
+
 
 const persistedReducer = persistReducer({
   key: "root",
-  version: 1, 
+  version: 2, 
   storage,
 }, modelReducer)
 

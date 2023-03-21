@@ -15,6 +15,8 @@ export const weaponType: readonly Itype[] = Object.freeze([
 ]) 
 export const armorParts: readonly ArmorPart[] = Object.freeze(["상의", "하의", "머리어깨", "벨트", "신발"])
 export const accessParts: readonly AccessPart[] = Object.freeze(["팔찌", "목걸이", "반지"])
+
+/** 강화/칼레이도박스 가능한 아이템 부위 */
 export const equipParts: readonly EquipPart[] = Object.freeze(["무기", ...armorParts, ...accessParts, "보조장비"])
 export const singleItemParts: readonly SingleItemPart[] = Object.freeze([...equipParts,  "칭호", "오라", "무기아바타", "봉인석", "크리쳐",])
 export const wholeParts: readonly WholePart[] = Object.freeze([...equipParts, "칭호", "오라", "무기아바타", "봉인석", "정수", "크리쳐", "아티팩트"])
@@ -205,11 +207,18 @@ export function createActiveNode(attrSourceName: string, nodes: ConditionalNode[
   const d: ConditionalNode[] = []
   if (nodes)
   for (const child of nodes) {
-    const activeKey = createCondyceKey2(attrSourceName, child)
-    if (activeKey in activeKeys) {
-      const maxRepeat = activeKeys[activeKey]
-      if (maxRepeat > 0) d.push(repeatAttr(child, maxRepeat))
+    /* branch/gives에 "when"이 없다면 "던전 입장시"인 것으로 취급한다.
+      "던전 입장시"와 "최대 x중첩"이 같이 있는 옵션은 아직 없으므로 한번만 적용한다. */
+    if (!child.when) {
+      d.push(child)
+    } else {
+      const activeKey = createCondyceKey2(attrSourceName, child)
+      if (activeKey in activeKeys) {
+        const maxRepeat = activeKeys[activeKey]
+        if (maxRepeat > 0) d.push(repeatAttr(child, maxRepeat))
+      }
     }
+    
   }
   return d
 }

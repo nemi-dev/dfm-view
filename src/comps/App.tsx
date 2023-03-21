@@ -12,7 +12,7 @@ import { Tonic } from "./Tonic"
 import { Avatars } from "./Avatar"
 import { PortraitMode, TabContext } from '../responsiveContext'
 import AppModal from './modals/index'
-import { ModalContext, ModalContextType } from "../modalContext"
+import { ModalContext, ModalContextType } from "./modals/modalContext"
 import { MyStat } from './MyStat'
 import { SkillTestSet } from './CustomSkill'
 import { StickyNav } from './StickyNav'
@@ -20,13 +20,14 @@ import { EnemyTarget } from './EnemyTarget'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { InitChar } from '../feats/saveReducers'
 import store from '../feats/store'
+import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
 
 
 function NavLink({ name, children }: React.PropsWithChildren<{ name: string }> ) {
   const { activeTab, setActiveTab } = useContext(TabContext)
   const className = name === activeTab? "NavLink Active" : "NavLink"  
 
-  const onClick = useCallback(()=>{
+  const onClick = useCallback(() => {
     setActiveTab(name)
   }, [name])
   return (
@@ -34,9 +35,35 @@ function NavLink({ name, children }: React.PropsWithChildren<{ name: string }> )
   )
 }
 
+function TabIsBroken({ name, error, resetErrorBoundary }: FallbackProps & { name: string }) {
+  return (
+    <div>
+      <header>
+        <h3>아구구!</h3>
+        <div>{name} 탭이 고장나버렸어요! 어서 개발자에게 알려주세요!</div>
+      </header>
+      <div>
+        <h4>{error.name}</h4>
+        <div>
+          <pre>{error.message}</pre>
+        </div>
+      </div>
+      <div>
+        <button onClick={resetErrorBoundary}>다시 시도</button>
+      </div>
+    </div>
+  )
+}
+
 function Tab({ name, children }: React.PropsWithChildren<{ name: string }> ) {
   const { activeTab } = useContext(TabContext)
-  return name === activeTab ? (children as JSX.Element) : null
+  if (name === activeTab) return (
+    <ErrorBoundary children={children} fallbackRender={
+      ({ error, resetErrorBoundary }) => 
+      <TabIsBroken name={name} error={error} resetErrorBoundary={resetErrorBoundary} />
+    } />
+  )
+  return null
 }
 
 function Navigator() {

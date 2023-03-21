@@ -58,7 +58,7 @@ function SkillTestOne({ index, SkillOneAttackSpec }: SkillOutputOneProps) {
   const atype = useAppSelector(selectClassAtype)
 
   const attrs = useAppSelector(selectMe)
-  const atkFix = useAppSelector(state => state.My.Self.atk_fixed)
+  const atkFix = useAppSelector(state => state.My.Self.atkFixed)
   const eltype = useAppSelector(selectMyFinalEltype)
   const el = eltype.length > 0? (attrs[Elemental[eltype[0]].el] ?? 0) : 0
   const targetElRes = useAppSelector(selectEnemyElRes)

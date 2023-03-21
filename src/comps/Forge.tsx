@@ -2,13 +2,12 @@ import { useContext } from "react"
 import styled from "styled-components"
 import { acceptEmblem } from "../emblem"
 import { useAppSelector, useAppDispatch } from "../feats/hooks"
-// import { SetEquipUpgradeValue } from "../feats/slices/equipSlice"
 import { NumberInput } from "./widgets/Forms"
 import { ItemIcon } from "./widgets/Icons"
-import { ModalContext } from "../modalContext"
+import { ModalContext } from "./modals/modalContext"
 import { EquipBatch } from "./EquipBatch"
 import { MagicProps } from "./MagicProps"
-import { selectCard, selectEmblemSpecs, selectItem, selectUpgrade } from "../feats/selector/equipSelectors"
+import { selectCard, selectEmblemSpecs, selectItem, selectUpgradeValue } from "../feats/selector/equipSelectors"
 import { ArmorMaterialSelect, EmblemArray } from "./Itemy"
 import { SetUpgradeValue } from "../feats/slices/itemSlice"
 import { isArmor } from "../items"
@@ -48,14 +47,14 @@ function Part({ part }: { part: EquipPart }) {
   const item = useAppSelector(selectItem[part])
   const dispatch = useAppDispatch()
   const card = useAppSelector(selectCard[part])
-  const upgradeBonus = useAppSelector(selectUpgrade[part])
+  const upgradeBonus = useAppSelector(selectUpgradeValue[part])
   const emblems = useAppSelector(selectEmblemSpecs[part])
   const emblemAccept = acceptEmblem(part)
   return (
     <PartLayout className="Part Bordered">
       <div className={item? `Rarity_${item.rarity}`:""}>{part}</div>
       <ItemIcon item={item} />
-      {isArmor(part)? <ArmorMaterialSelect part={part} /> : null}
+      {(!item.material) && isArmor(part)? <ArmorMaterialSelect part={part} /> : null}
       <div className="EquipUpgradeValue">
         +<NumberInput value={upgradeBonus}
         onChange={v => dispatch(SetUpgradeValue([part, v]))} />

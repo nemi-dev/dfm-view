@@ -1,10 +1,10 @@
 import { useContext } from "react"
 import styled from "styled-components"
-import { Users } from "react-feather"
+import { Edit, Users } from "react-feather"
 import { useAppSelector } from "../feats/hooks"
 import { selectMyDamage } from "../feats/selector/selectors"
 import { selectClassAtype, selectMyDFClass, selectMyName } from "../feats/selector/selfSelectors"
-import { ModalContext } from "../modalContext"
+import { ModalContext } from "./modals/modalContext"
 import { Num } from "./widgets/NumberView"
 import { SavedCharsFragment } from "./modals/SavedCharsModal"
 import { DFClassModal } from "./modals/DFClassModal"
@@ -36,6 +36,12 @@ const StickyNavStyle = styled.div`
   input[type=text] {
     width: 120px;
     text-align: left;
+  }
+
+  svg {
+    width: 18px;
+    padding: 6px;
+    cursor: pointer;
   }
 `
 
@@ -78,23 +84,21 @@ function DamageOne({ name, value, atype }: DamageOneProps) {
 }
 
 export function StickyNav() {
+  const { openModal } = useContext(ModalContext)
   const myName = useAppSelector(selectMyName)
   const dfclass = useAppSelector(selectMyDFClass)
   const atype = useAppSelector(selectClassAtype)
   const plainDamage = useAppSelector(selectMyDamage)
-  const { openModal } = useContext(ModalContext)
   
   return (
     <StickyNavStyle>
       <DFCharInfo>
-        <DFClassIcon dfclassName={dfclass?.name} onClick={() => openModal(<DFClassModal />)} />
+        <DFClassIcon dfclassName={dfclass?.name} onClick={() => openModal(<SavedCharsFragment />)} />
         <span>{myName}</span>
+        <Edit className="Rarity_Epic" onClick={() => openModal(<DFClassModal />)} />
       </DFCharInfo>
       <DamageCapture>
         <DamageOne name="데미지" value={plainDamage} atype={atype} />
-        <div onClick={() => openModal(<SavedCharsFragment />)}>
-          <Users />
-        </div>
       </DamageCapture>
     </StickyNavStyle>
   )

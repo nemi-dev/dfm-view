@@ -2,7 +2,7 @@ import { createSelector } from "@reduxjs/toolkit"
 import { useCallback } from "react"
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
 import { selectClassAtype } from "../feats/selector/selfSelectors"
-import { selectCustomMaterial, selectEmblemSpecs, selectUpgrade } from "../feats/selector/equipSelectors"
+import { selectCustomMaterial, selectEmblemSpecs, selectUpgradeValue } from "../feats/selector/equipSelectors"
 import { SetPerfectMagicPropsStat, SetPerfectMagicPropsEl, SetColorEmblemLevelAll, SetMaterialAll, SetArmorUpgradeAll, SetAccessUpgradeAll } from "../feats/slices/itemSlice"
 import { accessParts, armorParts, oneEmblemParts } from "../items"
 import { LabeledNumberInput, RadioGroup, OneClickButtonGroup } from "./widgets/Forms"
@@ -10,12 +10,12 @@ import { LabeledNumberInput, RadioGroup, OneClickButtonGroup } from "./widgets/F
 
 
 const selectMaxArmorUpgradeValue = createSelector(
-  armorParts.map(part => selectUpgrade[part]),
+  armorParts.map(part => selectUpgradeValue[part]),
   Math.max
 )
 
 const selectMaxAccessUpgradeValue = createSelector(
-  accessParts.map(part => selectUpgrade[part]),
+  accessParts.map(part => selectUpgradeValue[part]),
   Math.max
 )
 

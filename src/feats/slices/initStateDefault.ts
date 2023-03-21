@@ -1,5 +1,3 @@
-import { customSkillInit } from "./customSkillInit"
-
 const state: DFCharState = {
   "Self": {
     "myName": "캐릭터 이름",
@@ -7,7 +5,7 @@ const state: DFCharState = {
     "level": 65,
     "atype": "Physc",
     "achieveLevel": 9,
-    "atk_fixed": 317
+    "atkFixed": 317
   },
   "Item": {
     "무기": "키리의 미완성 넨건",
@@ -158,7 +156,6 @@ const state: DFCharState = {
     "target_def": 0,
     "target_res": 0
   },
-  // "CustomSklill": customSkillInit
 }
 
 export default state

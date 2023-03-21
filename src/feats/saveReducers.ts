@@ -41,12 +41,8 @@ export const ImportSkill = createAction("DFM/ImportSkill", fuckyou<CustomSkillSt
 
 function commit(state: RootState, draft: RootState) {
   const currentID = state.currentID
-  const currentIdIndex = state.SavedChars.IDs.indexOf(currentID)
   draft.SavedChars.byID[currentID].DFChar = deepCopy(state.My)
   draft.SavedChars.byID[currentID].DamageGrab = selectMyDamage(state)
-  
-  draft.SavedChars.IDs.splice(currentIdIndex, 1)
-  draft.SavedChars.IDs.unshift(currentID)
 }
 
 function createNew(state: RootState, draft: RootState, src: DFCharState, doCommit: boolean) {
@@ -63,9 +59,19 @@ function createNew(state: RootState, draft: RootState, src: DFCharState, doCommi
   }
 }
 
+export const NewReducer: Reducer<RootState,
+ReturnType<typeof CreateDF>> =
+function NewReducer(state, action) {
+  if (action.type != CreateDF.type) return state
+  return produce(state, draft => {
+    createNew(state, draft, initState, true)
+  })
+}
+
 // @ts-ignore
-export const SaveReducer: Reducer<RootState, ReturnType<typeof SaveDF>> = 
-function Saver(state: RootState, action) {
+export const SaveReducer: Reducer<RootState, 
+ReturnType<typeof SaveDF>> = 
+function Saver(state, action) {
   if (action.type != SaveDF.type) return state
   return produce(state, draft => {
     commit(state, draft)
@@ -73,12 +79,13 @@ function Saver(state: RootState, action) {
 }
 
 // @ts-ignore
-export const LoadReducer: Reducer<RootState, ReturnType<typeof LoadDF>> =
-function Loader(state: RootState, action) {
+export const LoadReducer: Reducer<RootState,
+ReturnType<typeof LoadDF>> =
+function Loader(state, action) {
   if (action.type != LoadDF.type) return state
-  const id: string = action.payload
+  const id = action.payload
 
-  if (id === state.currentID) return state
+  if (id === state.currentID || !state.SavedChars.IDs.includes(id)) return state
   const saved = state.SavedChars.byID[id]
   return produce(state, draft => {
     commit(state, draft)
@@ -87,18 +94,27 @@ function Loader(state: RootState, action) {
   })
 }
 
+// @ts-ignore
+export const DeleteReducer: Reducer<RootState,
+ReturnType<typeof DeleteDFChar>> =
+function Deleter(state, action) {
+  if (action.type != DeleteDFChar.type) return state
+  const id = action.payload
+  if (id === state.currentID || !state.SavedChars.IDs.includes(id)) return state
+  return produce(state, draft => {
+    delete draft.SavedChars.byID[id]
+    const index = draft.SavedChars.IDs.indexOf(id)
+    draft.SavedChars.IDs.splice(index, 1)
+  })
+}
 
-type CreatorReducerActionType = 
-typeof CreateDF | typeof InitChar | typeof ImportDF | typeof CloneDF
 
 // @ts-ignore
-export const CreatorReducer: Reducer<RootState, ReturnType<CreatorReducerActionType>> =
-function (state: RootState, action) {
+export const CreatorReducer: Reducer<RootState,
+ReturnType<typeof InitChar | typeof ImportDF | typeof CloneDF>
+> =
+function (state, action) {
   switch (action.type) {
-    case CreateDF.type:
-      return produce(state, draft => {
-        createNew(state, draft, initState, true)
-      })
     case InitChar.type:
       if (state.currentID) return state
       return produce(state, draft => {

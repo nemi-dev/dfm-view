@@ -4,7 +4,7 @@ import { useCallback, useContext, useMemo, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../feats/hooks"
 import { getItem, getItemsByPart, isAccess, isArmor } from "../../items"
 import { ItemIcon } from "../widgets/Icons"
-import { ModalContext } from "../../modalContext"
+import { ModalContext } from "./modalContext"
 
 import _left from "../../../data/sets/left.json"
 import _right from "../../../data/sets/right.json"

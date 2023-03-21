@@ -1,15 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { perfectGuildStat } from "./initState"
 
-const perfectGuildStat = {
-  "StatLv": 30,
-  "AtkLv": 30,
-  "CritLv": 30,
-  "ElLv": 14,
-  "SpeedAtkLv": 14,
-  "SpeedCastLv": 14,
-  "SpeedMoveLv": 14,
-  "AccuLv": 30,
-} as const
 const hardCodedPublicStatLevel = 6
 
 export const guildSlice = createSlice({

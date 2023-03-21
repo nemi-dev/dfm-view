@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { dfclassNames } from "../../dfclass"
 import initState from "./initState"
 const { Self } = initState
 
@@ -11,7 +12,7 @@ export const selfSlice = createSlice({
       s.myName = payload
     },
     SetDFClass: (s, { payload }: PayloadAction<DFClassName>) => {
-      s.dfclass = payload
+      if (dfclassNames.includes(payload)) s.dfclass = payload
     },
     SetLevel: (s, { payload }: PayloadAction<number>) => {
       s.level = payload
@@ -22,8 +23,8 @@ export const selfSlice = createSlice({
     SetAtype: (s, { payload }: PayloadAction<Atype>) => {
       s.atype = payload
     },
-    set_atk_fixed: (s, pay : PayloadAction<number>) => {
-      s.atk_fixed = pay.payload
+    SetAtkFixed: (s, pay : PayloadAction<number>) => {
+      s.atkFixed = pay.payload
     },
   }
 })
@@ -34,7 +35,7 @@ export const {
   SetLevel,
   SetAchieveLevel,
   SetAtype,
-  set_atk_fixed,
+  SetAtkFixed,
 } = selfSlice.actions
 
 
@@ -109,8 +110,27 @@ const initSavedCharState: SavedCharCollection = {
 export const savedCharSlice = createSlice({
   name: "SavedChars",
   initialState: initSavedCharState,
-  reducers: { }
+  reducers: {
+    MoveDFCharUp: (state, { payload: id }: PayloadAction<string>) => {
+      const index = state.IDs.indexOf(id)
+      if (index > 0) {
+        state.IDs.splice(index, 1)
+        state.IDs.splice(index - 1, 0, id)
+      }
+    },
+    MoveDFCharDown: (state, { payload: id }: PayloadAction<string>) => {
+      const index = state.IDs.indexOf(id)
+      if (index > -1 && index < state.IDs.length - 1) {
+        state.IDs.splice(index, 1)
+        state.IDs.splice(index + 1, 0, id)
+      }
+    }
+  }
 })
+
+export const {
+  MoveDFCharUp, MoveDFCharDown
+} = savedCharSlice.actions
 
 const equipPresetInit: EquipPresetCollection = {
   byID: {},

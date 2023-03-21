@@ -1,28 +1,29 @@
-import "../style/Equips.scss"
-import styled from "styled-components"
+import '../style/Equips.scss'
 
-import { useCallback, useContext, useState } from "react"
+import { useCallback, useContext, useState } from 'react'
+import { ErrorBoundary, useErrorHandler } from 'react-error-boundary'
+import styled from 'styled-components'
 
-import { useAppDispatch, useAppSelector } from "../feats/hooks"
-import { SimpleBaseAttrView } from "./widgets/AttrsView"
-import { selectCard, selectEmblemSpecs, selectItem, selectUpgrade } from "../feats/selector/equipSelectors"
-import { ItemName } from "./widgets/ItemNameView"
-import { NumberInput } from "./widgets/Forms"
-import { ItemIcon } from "./widgets/Icons"
-import { CondsAttrsView } from "./Choices"
-import { ModalContext } from "../modalContext"
-import { MagicProps } from "./MagicProps"
-import { PortraitMode } from "../responsiveContext"
-import { EquipBatch } from "./EquipBatch"
-import { acceptEmblem } from "../emblem"
-import { ArmorMaterialSelect, EmblemArray } from "./Itemy"
-import { DecreaseEmblemLevel, SetUpgradeValue } from "../feats/slices/itemSlice"
-import { isArmor, magicPropsParts } from "../items"
-import { ErrorBoundary, useErrorHandler } from "react-error-boundary"
-import { EmblemModalViolent } from "./modals/EmblemModal"
-import { CardModalFragment } from "./modals/CardModal"
-import { EquipModalFragment } from "./modals/EquipModal"
-
+import { acceptEmblem } from '../emblem'
+import { useAppDispatch, useAppSelector } from '../feats/hooks'
+import {
+    selectCard, selectEmblemSpecs, selectItem, selectUpgradeValue
+} from '../feats/selector/equipSelectors'
+import { DecreaseEmblemLevel, SetUpgradeValue } from '../feats/slices/itemSlice'
+import { equipParts, isArmor, magicPropsParts } from '../items'
+import { PortraitMode } from '../responsiveContext'
+import { ClosedCondyceSet } from './Choices'
+import { EquipBatch } from './EquipBatch'
+import { ArmorMaterialSelect, EmblemArray } from './Itemy'
+import { MagicProps } from './MagicProps'
+import { CardModalFragment } from './modals/CardModal'
+import { EmblemModalViolent } from './modals/EmblemModal'
+import { EquipModalFragment } from './modals/EquipModal'
+import { ModalContext } from './modals/modalContext'
+import { SimpleBaseAttrView } from './widgets/AttrsView'
+import { NumberInput } from './widgets/Forms'
+import { ItemIcon } from './widgets/Icons'
+import { ItemName } from './widgets/ItemNameView'
 
 interface PartProps {
   part: EquipPart
@@ -33,7 +34,7 @@ function WideAddons({ part }: PartProps) {
   const { openModal } = useContext(ModalContext)
   const dispatch = useAppDispatch()
   const card = useAppSelector(selectCard[part])
-  const upgradeBonus = useAppSelector(selectUpgrade[part])
+  const upgradeBonus = useAppSelector(selectUpgradeValue[part])
   const emblems = useAppSelector(selectEmblemSpecs[part])
   const emblemAccept = acceptEmblem(part)
   const onItemClick = useCallback((index: number) => {
@@ -58,23 +59,6 @@ function WideAddons({ part }: PartProps) {
 }
 
 
-
-
-
-function PartCompact({ part }: PartProps) {
-  const { openModal } = useContext(ModalContext)
-  const item = useAppSelector(selectItem[part])
-  return (
-    <div className="EquipSlot">
-      <div className="EquipPartLayout">
-        <ItemIcon item={item}
-          onClick={() => openModal(<CardModalFragment part={part} />)}
-        />
-      </div>
-    </div>
-  )
-}
-
 const MagicPropsLayout = styled.div`
 
   grid-area: mgp;
@@ -95,7 +79,7 @@ function SlotHeading({ part, onItemNameClicked }: PartProps & { onItemNameClicke
   return (
     <div className="SlotHeading">
       <ItemName item={item} alt={`${part} 없음`} className="EquipName" onClick={onItemNameClicked} />
-      {isArmor(part)? <ArmorMaterialSelect part={part} /> : null}
+      {(!item.material) && isArmor(part)? <ArmorMaterialSelect part={part} /> : null}
     </div>
   )
 }
@@ -123,6 +107,28 @@ function PartWide({ part }: PartProps) {
       }
     </div>
   )
+}
+
+
+
+
+function PartCompact({ part }: PartProps) {
+  const { openModal } = useContext(ModalContext)
+  const item = useAppSelector(selectItem[part])
+  return (
+    <div className="EquipSlot">
+      <div className="EquipPartLayout">
+        <ItemIcon item={item}
+          onClick={() => openModal(<CardModalFragment part={part} />)}
+        />
+      </div>
+    </div>
+  )
+}
+
+export function CondsAttrsView() {
+  const items = equipParts.map(part => useAppSelector(selectItem[part]))
+  return <ClosedCondyceSet items={items} />
 }
 
 export function Equips() {

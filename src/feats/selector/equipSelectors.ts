@@ -21,16 +21,18 @@ export function Noot<T, P extends WholePart>(func: ($p: P) => (s: RootState) => 
 export const selectItem = Noot(part => state => {
   const item = getItem(state.My.Item[part])
   if (!isArmor(part)) return item
+
   const { level, rarity, material = state.My.Material[part] } = item
   const armorbase = getArmorBase(level, rarity, material, part)
   return { ...item, attrs: combine(item.attrs, armorbase)}
+
 }, singleItemParts)
 
 /** 특정 부위의 아이템에 바른 카드를 선택한다 */
-export const selectCard = Noot(part => state => (getItem(state.My.Card[part])), cardableParts)
+export const selectCard = Noot(part => state => getItem(state.My.Card[part]), cardableParts)
 
 /** 특정 부위의 아이템에 박은 엠블렘 스펙을 모두 선택한다 */
-export const selectEmblemSpecs = Noot(part => state => state.My.Emblem[part], cardableParts)
+export const selectEmblemSpecs = Noot(part => state => state.My.Emblem[part] ?? [], cardableParts)
 
 /** 특정 부위 아이템의 마법봉인 이름을 선택한다 */
 export const selectMagicPropNames = Noot(
@@ -38,15 +40,25 @@ export const selectMagicPropNames = Noot(
   magicPropsParts
 )
 
-/** 특정 부위의 "내가 선택한" 방어구 재질을 선택한다 */
+/** 특정 부위의 "내가 선택한" 방어구 재질을 선택한다 (해당 방어구재질이 고정되어있는지 여부는 고려하지 않는다.) */
 export const selectCustomMaterial = Noot(
   part => state => state.My.Material[part],
   armorParts
 )
 
 /** 특정 부위의 강화보너스 수치(무기는 물/마공, 다른장비는 스탯)를 선택한다 */
-export const selectUpgrade = Noot(part => state => state.My.Upgrade[part], equipParts)
+export const selectUpgradeValue = Noot(part => state => state.My.Upgrade[part], equipParts)
 
+/** 특정 부위의 강화 효과를 선택한다. */
+export const selectUpgrade = Noot(part => createSelector(
+  selectUpgradeValue[part],
+  (value) => {
+    return {
+      name: `강화[${part}]`,
+      attrs: atx(part === "무기" ? "Atk" : "Stat", value)
+    }
+  }
+), equipParts)
 
 /** 특정 부위의 마법봉인 효과를 선택한다. */
 export const selectMagicProps = Noot(
@@ -54,11 +66,12 @@ export const selectMagicProps = Noot(
     selectClassAtype,
     selectItem[part],
     selectMagicPropNames[part],
-    (atype, item, magicProps) => {
-      if (!item || !(magicProps?.length)) return {}
+    (atype, item, magicProps): AttrSource => {
+      if (!item || !(magicProps?.length))
+        return { name: `마법봉인[${part}]`, attrs: {} }
       const { level, rarity } = item
       const array = getMagicPropsAttrs(magicProps, atype, level, rarity, part)
-      return combine(...array)
+      return { name: `마법봉인[${part}]`, attrs: combine(...array) }
     }
   ), magicPropsParts
 )
@@ -82,13 +95,12 @@ export const selectPartAttrsNoCond = Noot(
     selectCard[part],
     selectEmblemSpecs[part],
     selectUpgrade[part],
-    (item, magicProps, card, emblems, /*armorbase, */upgrade) => {
+    (item, magicProps, card, emblems, upgrade) => {
       if (!item) return {}
-      const upgradeAttr = atx(part === "무기" ? "Atk" : "Stat", upgrade)
-      return combine(item.attrs, /*armorbase.attrs, */upgradeAttr, magicProps, ...emblems.map(getEmblem), card?.attrs)
+      return combine(item.attrs, upgrade.attrs, magicProps.attrs, ...emblems.map(getEmblem), card?.attrs)
     }
-  ), equipParts
-)
+  )
+,equipParts)
 
 /** 어떤 한 장비 부의의 아이템 옵션, 업그레이드 보너스, 마법봉인, 엠블렘, 카드 옵션, 활성화시킨 조건부 옵션을 얻는다. */
 export const selectPartAttrs = Noot(
@@ -97,8 +109,9 @@ export const selectPartAttrs = Noot(
     selectActiveConds[part],
     (attrs, activeOption) => {
       return combine(attrs, ...activeOption.map(n => n.attrs))
-    }), equipParts
-)
+    }
+  )
+,equipParts)
 
 
 /** 10장비의 모든 아이템+카드+엠블렘+마법봉인+강화 효과를 선택한다. (조건부 효과 고려안함) */

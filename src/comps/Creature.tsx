@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { selectArtifacts } from "../feats/selector/creatureSelectors"
 import { selectItem } from "../feats/selector/equipSelectors"
 import { SetArtifactValue, SetCreatureStat } from '../feats/slices/slice'
-import { ModalContext } from '../modalContext'
+import { ModalContext } from './modals/modalContext'
 import { ClosedCondyceSet } from './Choices'
 import { ArtifactModalFragment, CreatureModalFragment } from './modals/CreatureModal'
 import { LabeledNumberInput } from "./widgets/Forms"

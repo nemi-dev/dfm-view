@@ -50,17 +50,20 @@ export function selectCalibrated(state: RootState): BaseAttrs {
 
 
 
-/** 직업 + 장비 + 아바타 + 크리쳐 + 마력결정 + 성안의봉인 + 길드 + 업적보너스 (조건부옵션 포함, 보정값 제외) */
+/** 직업 + 장비 + 아바타 + 크리쳐 + 마력결정 + 성안의봉인 + 길드 + 업적보너스 (조건부옵션 포함, 보정값 제외)  
+ * **듀얼트리거가 포함되었다면 여기서 이미 적용된다. 듀얼트리거는 마을에서도 적용되기 때문**
+ */
 export const selectMeNoCal = createSelector(
   selectMyDFClass, selectEquips, selectWholeAvatarAttrs, selectCreatures, selectTonics, selectCracks, selectGuilds,
   selectAchievementAttrs,
   (dfc, e, av, c, tonic, cr, guild, ach) => {
-    // 듀얼트리거는 던전 입장시에도 유지된다!
     return dualTrigger(combine(dfc?.attrs, e, av, c, tonic.attrs, cr, guild.attrs, ach))
   }
 )
 
-/** 직업 + 장비 + 아바타 + 크리쳐 + 마력결정 + 성안의봉인 + 길드 + 업적보너스 + 보정값 (조건부옵션 제외, 보정값 포함) */
+/** 직업 + 장비 + 아바타 + 크리쳐 + 마력결정 + 성안의봉인 + 길드 + 업적보너스 + 보정값 (조건부옵션 제외, 보정값 포함)  
+ * **듀얼트리거가 포함되었다면 여기서 이미 적용된다. 듀얼트리거는 던전에서도 적용되기 때문**
+*/
 export const selectMeNoCond = createSelector(
   selectMyDFClass, selectEquipsNoConds, selectWholeAvatarAttrsNoCond, selectCreaturesNoCond, selectTonics, selectCracks, selectGuilds,
   selectAchievementAttrs,

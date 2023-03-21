@@ -9,7 +9,7 @@ import { Num } from "./widgets/NumberView"
 import { CheckboxGroup, DisposableInput, LabeledNumberInput, NumberInput, RadioGroup, LabeledSwitch } from "./widgets/Forms"
 
 import styled from 'styled-components'
-import { SetAchieveLevel, SetAtype, SetLevel, set_atk_fixed } from "../feats/slices/slice"
+import { SetAchieveLevel, SetAtype, SetLevel, SetAtkFixed } from "../feats/slices/slice"
 import { createContext, useContext, useState } from "react"
 import { PlusCircle } from 'react-feather'
 import { add } from "../utils"
@@ -132,7 +132,7 @@ export function MyStat() {
   const
     my_level = useAppSelector(state => state.My.Self.level),
     AchieveLevel = useAppSelector(state => state.My.Self.achieveLevel),
-    atk_fixed = useAppSelector(state => state.My.Self.atk_fixed)
+    atkFixed = useAppSelector(state => state.My.Self.atkFixed)
   return (
     <MyAttrsContext.Provider value={me} >
     <div className="MyStat">
@@ -144,7 +144,7 @@ export function MyStat() {
         <GridyTwo>
           <LabeledNumberInput label="캐릭터 레벨" value={my_level} onChange={v => dispatch(SetLevel(v))} />
           <LabeledNumberInput label="업적 레벨" value={AchieveLevel} onChange={v => dispatch(SetAchieveLevel(v))} />
-          <LabeledNumberInput label="독립 공격력" value={atk_fixed} onChange={v => dispatch(set_atk_fixed(v))} />
+          <LabeledNumberInput label="독립 공격력" value={atkFixed} onChange={v => dispatch(SetAtkFixed(v))} />
         </GridyTwo>
           <RadioGroup name="공격타입" className="AtypeSelector"
             labels={["물리", "마법"]}

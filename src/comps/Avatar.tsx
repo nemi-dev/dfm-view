@@ -5,7 +5,7 @@ import { useCallback, useContext } from 'react'
 import { getAvatarAttr } from '../avatar'
 import { SetAvatarRarity, SetAvatarTypeAll } from '../feats/slices/avatarSlice'
 import { SimpleBaseAttrView } from './widgets/AttrsView'
-import { ModalContext } from "../modalContext"
+import { ModalContext } from "./modals/modalContext"
 import styled from 'styled-components'
 import { PortraitMode } from '../responsiveContext'
 import { selectAvatarSetAttr, selectRareAvatarCount } from "../feats/selector/avatarSelectors"

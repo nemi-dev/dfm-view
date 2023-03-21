@@ -19,7 +19,7 @@ declare interface SelfState {
   achieveLevel: number
   
   /** 독립 공격력 */
-  atk_fixed: number
+  atkFixed: number
 
 }
 

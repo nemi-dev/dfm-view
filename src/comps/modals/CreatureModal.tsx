@@ -2,7 +2,7 @@ import { useContext, useCallback, useMemo } from "react"
 import { useAppDispatch } from "../../feats/hooks"
 import { SetArtifact, SetItem } from "../../feats/slices/itemSlice"
 import { getItemsByPart } from "../../items"
-import { ModalContext } from "../../modalContext"
+import { ModalContext } from "./modalContext"
 import { CurrentPart } from "./CurrentPart"
 import { ModalItemSelect } from "./Select"
 

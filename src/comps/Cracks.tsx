@@ -2,7 +2,7 @@ import { useAppSelector } from '../feats/hooks'
 import { CrackIcon } from "./widgets/Icons"
 import { MagicProps } from './MagicProps'
 import React, { useContext } from 'react'
-import { ModalContext } from '../modalContext'
+import { ModalContext } from './modals/modalContext'
 import { selectCrackISet, selectSpells, selectCracks, selectBlessing } from "../feats/selector/cracksSelectors"
 import { selectItem } from "../feats/selector/equipSelectors"
 import { SimpleBaseAttrView } from './widgets/AttrsView'
