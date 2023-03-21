@@ -59,7 +59,7 @@ const migration = {
 
 const persistedReducer = persistReducer({
   key: "root",
-  version: 2, 
+  version: 3, 
   storage,
   migrate: createMigrate(migration, { debug: false })
 }, modelReducer)
