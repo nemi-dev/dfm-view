@@ -1,5 +1,5 @@
-declare namespace State_v1 {
-  interface SkillOneAttackSpecV1 {
+declare namespace State_v2 {
+  interface _SkillOneAttackSpec {
     name: string
     value: number
     fixed: number
@@ -27,7 +27,7 @@ declare namespace State_v1 {
     SavedChars: SavedCharCollection
     EquipPresets: EquipPresetCollection
     CustomSklill: {
-      cases: SkillOneAttackSpecV1[]
+      cases: _SkillOneAttackSpec[]
     }
     CustomSkillPresets: CustomSkillPresetCollection
   }
