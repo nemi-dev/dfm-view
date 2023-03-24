@@ -9,7 +9,7 @@ import { selectCreatures, selectCreaturesNoCond } from "./creatureSelectors"
 import { selectCracks } from "./cracksSelectors"
 import { selectWholeAvatarAttrs, selectWholeAvatarAttrsNoCond } from "./avatarSelectors"
 import { critFt, defRate, getPlainDamage, } from "../../damage"
-import { calibrateInit } from "../slices/calibrateSlice"
+import { calibrateInit } from "../slices/initStateDefault"
 
 /** 마력결정 스탯보너스를 모두 얻는다. */
 export function selectTonics(state: RootState): AttrSource {
