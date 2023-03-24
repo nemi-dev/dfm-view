@@ -124,7 +124,6 @@ export const selectEnemyDefense = createSelector(
   selectBaseEnemyDefense,
   (attrs, def) => {
     const { target_def = 0, DefBreak = 0 } = attrs
-    // return Math.max(def + target_def, 0)
     return def * (1 - DefBreak/100) + target_def
   }
 )
