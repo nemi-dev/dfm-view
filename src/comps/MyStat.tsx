@@ -2,7 +2,7 @@ import { AtypeAttrKey, Elemental } from "../attrs"
 import { AtkOut, StatOut, critChance } from "../damage"
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
 import { AddSkillInc, RemoveSkillInc, SetBasicAttr, SetEltype, SetSkillInc } from "../feats/slices/calibrateSlice"
-import { selectMe, selectMeNoCond, selectMyFinalEltype } from "../feats/selector/selectors"
+import { selectMe, selectMeNoCond, selectMyFinalEltype, selectCalibrateOne } from "../feats/selector/selectors"
 import { selectClassAtype } from "../feats/selector/selfSelectors"
 import { Gridy } from "./widgets/CommonUI"
 import { Num } from "./widgets/NumberView"
@@ -28,14 +28,14 @@ const MyAttrsContext = createContext<BaseAttrs>({})
 
 
 function OneAttrTriplet({ className = "", name, aKey, percent = false, signed = false }: OneAttrTripletProps) {
-  const cattr = useAppSelector(state => state.My.Calibrate)
   const me = useContext(MyAttrsContext)
+  const value = useAppSelector(state => selectCalibrateOne(state, aKey))
   const dispatch = useAppDispatch()
   return (
     <div className={"FormDF AttrOne " +  className}>
       {name? <div className="KeyName">{name}</div>: null}
       <Num className="AttrValue" value={me[aKey]} signed={signed} percented={percent} />
-      <NumberInput value={cattr[aKey]} onChange={v => dispatch(SetBasicAttr([aKey, v]))} />
+      <NumberInput value={value} onChange={v => dispatch(SetBasicAttr([aKey, v]))} />
     </div>
   )
 }
@@ -155,6 +155,7 @@ export function MyStat() {
           <StatAtkCrit atype={atype} />
           <Gridy columns={2} colSize="1fr">
           <OneAttrTriplet aKey="cdmg_inc" name="크뎀증" percent signed />
+          <OneAttrTriplet aKey="catk_inc" name="크공증" percent signed />
           <OneAttrTriplet aKey="dmg_inc" name="뎀증" percent signed />
           <OneAttrTriplet aKey="dmg_add" name="추뎀" percent signed />
           <OneAttrTriplet aKey="sk_inc_sum" name={<>스증<br/>(패시브)</>} percent signed />
@@ -185,6 +186,10 @@ export function MyStat() {
             {eltypeExpr}
           </div>
         </div>
+        <Gridy columns={2} colSize="1fr">
+          <OneAttrTriplet aKey="target_def" name="고정방깎" percent />
+          <OneAttrTriplet aKey="DefBreak" name="퍼센트방깎" percent />
+        </Gridy>
       </div>
     </div>
     </MyAttrsContext.Provider>

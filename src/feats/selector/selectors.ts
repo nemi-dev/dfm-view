@@ -9,6 +9,7 @@ import { selectCreatures, selectCreaturesNoCond } from "./creatureSelectors"
 import { selectCracks } from "./cracksSelectors"
 import { selectWholeAvatarAttrs, selectWholeAvatarAttrsNoCond } from "./avatarSelectors"
 import { critFt, defRate, getPlainDamage, } from "../../damage"
+import { calibrateInit } from "../slices/calibrateSlice"
 
 /** 마력결정 스탯보너스를 모두 얻는다. */
 export function selectTonics(state: RootState): AttrSource {
@@ -38,8 +39,10 @@ export function selectTonics(state: RootState): AttrSource {
 
 
 
-
-
+/** 보정스탯에서 스탯 하나만을 가져온다. */
+export function selectCalibrateOne(state: RootState, key: keyof NumberCalibrate) {
+  return state.My.Calibrate[key] ?? calibrateInit[key]
+}
 
 
 /** 스탯을 보정한 값만을 가져온다. */
@@ -120,8 +123,9 @@ export const selectEnemyDefense = createSelector(
   selectMe,
   selectBaseEnemyDefense,
   (attrs, def) => {
-    const { target_def = 0 } = attrs
-    return Math.max(def + target_def, 0)
+    const { target_def = 0, DefBreak = 0 } = attrs
+    // return Math.max(def + target_def, 0)
+    return def * (1 - DefBreak/100) + target_def
   }
 )
 

@@ -4,7 +4,7 @@ declare type Atype = "Physc" | "Magic"
 declare type Rarity = "Common" | "Uncommon" | "Rare" | "Unique" | "Epic"
 declare type Eltype = "Fire" | "Ice" | "Light" | "Dark"
 
-declare type DFClassName = "버서커" | "소울브링어" | "웨펀마스터" | "아수라" | "레인저(남)" | "런처(남)" | "메카닉" | "스핏파이어" | "스트라이커" | "넨마스터" | "엘레멘탈마스터" | "마도학자" | "크루세이더(여)" | "미스트리스" | "이단심판관" | "무녀" | "소드마스터" | "베가본드" | "다크템플러" | "데몬슬레이어" | "크루세이더(남)" | "인파이터" | "와일드베인" | "윈드시어" 
+declare type DFClassName = "버서커" | "소울브링어" | "웨펀마스터" | "아수라" | "레인저(남)" | "런처(남)" | "메카닉" | "스핏파이어" | "스트라이커" | "넨마스터" | "엘레멘탈마스터" | "마도학자" | "크루세이더(여)" | "미스트리스" | "이단심판관" | "무녀" | "소드마스터" | "베가본드" | "다크템플러" | "데몬슬레이어" | "크루세이더(남)" | "인파이터" | "와일드베인" | "윈드시어" | "레인저(여)" | "런처(여)"
 
 declare type WeaponType = 
 "소검"|"도"|"둔기"|"대검"|"광검"
@@ -166,6 +166,9 @@ declare interface BaseAttrs {
 
   /** 적 속성저항 변화 (모든속성) */
   target_res?: number
+
+  /** 적 방어력 감소 (%) */
+  DefBreak?: number
 
   /** 공격 속도 +X% */
   speed_atk?: number

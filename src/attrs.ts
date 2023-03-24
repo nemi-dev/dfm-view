@@ -175,6 +175,7 @@ const attrDefsArray = [
 
   defineAttr("target_def", "적 방어력", add, "Flat"),
   defineAttr("target_res", "적 모든속성 저항", add, "Flat"),
+  defineAttr("DefBreak", "적 방어력 감소", add, "Percent"),
 
   defineAttr("speed_atk", "공격속도", add, "Percent"),
   defineAttr("speed_cast", "캐스팅속도", add, "Percent"),

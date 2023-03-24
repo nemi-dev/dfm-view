@@ -21,7 +21,7 @@ export function AtkFixedOut(독립공격력: number, 스탯: number, 스탯_퍼�
   return StatFt(스탯, 스탯_퍼센트_증가) * 독립공격력 / 100
 }
 
-/** 데미지 계산 시 곱해지는 속성강화 보정치 */
+/** 데미지 계산 시 곱해지는 속성강화 계수 */
 function ElFact(속성강화: number) {
   return (1.05 + 0.0045 * 속성강화)
 }

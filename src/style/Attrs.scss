@@ -108,22 +108,25 @@ img.AttrIcon {
     
   }
 
-  .Result {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    border: 0;
-    padding: 2px;
-    font-size: 1rem;
-    min-height: 26px;
-  }
+}
 
-  .Result .AttrValue {
+
+.Result {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  border: 0;
+  padding: 2px;
+  font-size: 1rem;
+  min-height: 26px;
+
+  .AttrValue {
     font-size: 1.2rem;
   }
 }
+
 
 .SkillTestSet {
 
@@ -142,24 +145,22 @@ img.AttrIcon {
     }
   }
 
-  .SkillTestOne {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
 
-    @media (max-width: 999px) {
-      grid-template-columns: repeat(3, 1fr);
-      grid-auto-rows: auto;
 
-      .SkillOneAttack {
-        grid-column: 1 / -1;
-      }
+.SkillTestOne {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 
-      .Result .AttrValue {
-        font-size: 1.15rem;
-      }
+  @media (max-width: 999px) {
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: auto;
+
+    .SkillOneAttack {
+      grid-column: 1 / -1;
     }
-  }
 
+  }
 }
 
 .SkillOneAttack {

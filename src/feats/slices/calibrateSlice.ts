@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
-const attrs: CalibrateState = {
+export const calibrateInit: CalibrateState = {
   strn: 0,
   intl: 0,
   str_inc: 0,
@@ -19,6 +19,7 @@ const attrs: CalibrateState = {
 
   dmg_inc: 0,
   cdmg_inc: 0,
+  catk_inc: 0,
   dmg_add: 0,
   
   eltype: [],
@@ -37,7 +38,9 @@ const attrs: CalibrateState = {
   sk_inc_sum: 0,
   
   target_def: 0,
-  target_res: 0
+  target_res: 0,
+
+  DefBreak: 0
 }
 
 type SetAttrAction = PayloadAction<[keyof NumberCalibrate, number]>
@@ -45,7 +48,7 @@ type SkillIncPayloadType = PayloadAction<[number, number]>
 
 export const calibrateSlice = createSlice({
   name: 'MyStat',
-  initialState: attrs,
+  initialState: calibrateInit,
   reducers: {
     SetBasicAttr: (s, { payload: [key, value] }: SetAttrAction) => {
       s[key] = value
