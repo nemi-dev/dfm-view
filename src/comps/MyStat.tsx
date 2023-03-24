@@ -187,7 +187,7 @@ export function MyStat() {
           </div>
         </div>
         <Gridy columns={2} colSize="1fr">
-          <OneAttrTriplet aKey="target_def" name="고정방깎" percent />
+          <OneAttrTriplet aKey="target_def" name="적방어력" signed />
           <OneAttrTriplet aKey="DefBreak" name="퍼센트방깎" percent />
         </Gridy>
       </div>

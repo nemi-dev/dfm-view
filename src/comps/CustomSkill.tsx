@@ -66,12 +66,9 @@ function SkillTestOne({ index, SkillOneAttackSpec }: SkillOutputOneProps) {
   const defRate = useAppSelector(selectEnemyDefRate)
 
   const dam = getDamage(atype, Math.max(el - targetElRes, 0), attrs, atkFix, SkillOneAttackSpec) * ( 1 - defRate )
-
   const damCrit = dam * critFt(attrs["cdmg_inc"], attrs["catk_inc"])
-
   const { Crit, CritCh } = AtypeAttrKey[atype]
   const chance = critChance(attrs[Crit], attrs[CritCh])
-  
   const mean = chance * damCrit + (1 - chance) * dam
 
   
