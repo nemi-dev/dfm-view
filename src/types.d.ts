@@ -346,7 +346,7 @@ declare interface AttrSource {
    * (패시브/버프일 때) 스킬 이름  
    * (그 외) "길드"/"마력결정"/"아바타"  
    */
-  name: string
+  name?: string
 
   /** 내가 받을 효과 */
   attrs?: BaseAttrs

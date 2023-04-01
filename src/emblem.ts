@@ -6,7 +6,7 @@ function linear(level: number, min: number, max: number, precision: number = 1) 
 }
 
 /** 엠블렘 문자열("(색깔 또는 속성)(레벨)")을 옵션으로 변환한다 */
-export const getEmblem = memoizee(
+export const getEmblemAttrs = memoizee(
 function _getEmblem([key, level]: EmblemSpec): BaseAttrs {
   switch (key) {
     case "Red":
@@ -30,6 +30,16 @@ function _getEmblem([key, level]: EmblemSpec): BaseAttrs {
   }
 }  
 , { primitive: true })
+
+export const getEmblem = memoizee(
+function createEmblem([key, level]: EmblemSpec): AttrSource {
+  return {
+    name: `${key} 엠블렘[${level}]`,
+    attrs: getEmblemAttrs([key, level])
+  }
+}
+)
+
 
 /** !! 이건 엠블렘 아이콘에서만 사용되는 것임!!!! */
 export function acceptEmblem(part: EquipPart | "칭호") {

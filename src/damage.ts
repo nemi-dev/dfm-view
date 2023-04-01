@@ -31,6 +31,11 @@ function EldmgFt(속성강화: number, 속성_추가데미지: number) {
   return 속성_추가데미지 / 100 * ElFact(속성강화)
 }
 
+/** 방깎적용된 적 방어력을 계산한다. */
+export function getRealdef(적_방어력: number, targetDef: number, defBreak: number) {
+  return (적_방어력 * (1 - defBreak / 100)) + targetDef
+}
+
 /** 방어율 (실제 상대가 받을 데미지는 (내 데미지) * (1 - 방어율)이 된다.)  */
 export function defRate(내_레벨 : number, 상대_방어 : number) {
   return 상대_방어 / (200 * 내_레벨 + 상대_방어)

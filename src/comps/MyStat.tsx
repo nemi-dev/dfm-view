@@ -2,7 +2,7 @@ import { AtypeAttrKey, Elemental } from "../attrs"
 import { AtkOut, StatOut, critChance } from "../damage"
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
 import { AddSkillInc, RemoveSkillInc, SetBasicAttr, SetEltype, SetSkillInc } from "../feats/slices/calibrateSlice"
-import { selectMe, selectMeNoCond, selectMyFinalEltype, selectCalibrateOne } from "../feats/selector/selectors"
+import { selectMe, selectAttrTown, selectMyFinalEltype } from "../feats/selector/selectors"
 import { selectClassAtype } from "../feats/selector/selfSelectors"
 import { Gridy } from "./widgets/CommonUI"
 import { Num } from "./widgets/NumberView"
@@ -13,6 +13,8 @@ import { SetAchieveLevel, SetAtype, SetLevel, SetAtkFixed } from "../feats/slice
 import { createContext, useContext, useState } from "react"
 import { PlusCircle } from 'react-feather'
 import { add } from "../utils"
+import { calibrateInit } from "../feats/slices/initStateDefault"
+import { RootState } from "../feats/store"
 
 
 
@@ -26,6 +28,12 @@ interface OneAttrTripletProps {
 
 const MyAttrsContext = createContext<BaseAttrs>({})
 
+
+
+/** 보정스탯에서 스탯 하나만을 가져온다. */
+function selectCalibrateOne(state: RootState, key: keyof NumberCalibrate) {
+  return state.My.Calibrate[key] ?? calibrateInit[key]
+}
 
 function OneAttrTriplet({ className = "", name, aKey, percent = false, signed = false }: OneAttrTripletProps) {
   const me = useContext(MyAttrsContext)
@@ -122,7 +130,7 @@ function SkillInc() {
 export function MyStat() {
   const [excludeCond, setExcludeCond] = useState(false)
   const atype = useAppSelector(selectClassAtype)
-  const me = excludeCond? useAppSelector(selectMeNoCond) : useAppSelector(selectMe)
+  const me = excludeCond? useAppSelector(selectAttrTown) : useAppSelector(selectMe)
   const calibrateEltypes = useAppSelector(state => state.My.Calibrate.eltype)
 
   const eltype = useAppSelector(selectMyFinalEltype)

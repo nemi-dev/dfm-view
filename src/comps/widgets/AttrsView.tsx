@@ -68,7 +68,7 @@ function Misc({ value = [] }: { value: string[] } ) {
 }
 
 
-function One({ attrDef, value }: { attrDef: AttrDef, value: any }) {
+export function AttrOneItem({ attrDef, value }: { attrDef: AttrDef, value: any }) {
   if (!attrDef) return null
   const { name, expression } = attrDef
   switch (expression) {
@@ -88,7 +88,7 @@ export function SimpleBaseAttrView({ attrs }: { attrs: BaseAttrs | undefined | n
   if (!attrs) return null
   return <ErrorBoundary fallback={<>앗! 효과를 보다가 문제가 생겼어요!</>} >
   {attrDefs.array.filter(attrDef => attrDef.key in attrs)
-    .map(attrDef => <One key={attrDef.key} attrDef={attrDef} value={attrs[attrDef.key]} />)}
+    .map(attrDef => <AttrOneItem key={attrDef.key} attrDef={attrDef} value={attrs[attrDef.key]} />)}
   </ErrorBoundary>
 }
 

@@ -39,6 +39,8 @@ export const isArmor = (key: WholePart): key is ArmorPart => armorParts.includes
 /** `key`가 악세서리 부위인가? */
 export const isAccess = (key: WholePart): key is AccessPart => accessParts.includes(key as AccessPart)
 
+export const isEquip = (p: WholePart): p is EquipPart => equipParts.includes(p as any)
+
 /** p가 카드/엠블렘 장착 가능 부위인가? */
 export const isCardable = (p: WholePart): p is CardablePart => cardableParts.includes(p as any)
 
@@ -276,19 +278,22 @@ const blessings = [
   ["치천사의 가호", 6, "Uncommon", 2],
 ] as const
 
+const NoneBlessing: AttrSource = {
+  name: "[성안의 봉인]가호 없음",
+  attrs: {}
+}
+
 /** 성안의 봉인에서 활성화된 가호를 얻는다. */
-export function getBlessing(...items: DFItem[]): AttrSource {
-  const counts = items.reduce((p, { rarity }) => (p[rarity] += 1, p),
+export function getBlessing(rune: DFItem, ...spells: DFItem[]): AttrSource {
+  if (!rune) return NoneBlessing
+  const counts = [rune, ...spells].reduce((p, { rarity }) => (p[rarity] += 1, p),
   { Common: 0, Uncommon: 0, Rare: 0, Unique: 0, Epic: 0 })
   const blessing = blessings.find(([, , rarity, minCount]) => counts[rarity] >= minCount)
-  if (!blessing) return {
-    name: "[성안의 봉인]가호 없음",
-    attrs: {}
-  }
+  if (!blessing) return NoneBlessing
   const [name, value, rarity, count] = blessing
   return {
     name: `${name} (${rarity} ${count}개 이상 장착)`,
-    attrs: atx("Stat", value)
+    attrs: atx("StatAll", value)
   }
   
 }

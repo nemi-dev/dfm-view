@@ -8,7 +8,7 @@ import { SimpleBaseAttrView } from './widgets/AttrsView'
 import { ModalContext } from "./modals/modalContext"
 import styled from 'styled-components'
 import { PortraitMode } from '../responsiveContext'
-import { selectAvatarSetAttr, selectRareAvatarCount } from "../feats/selector/avatarSelectors"
+import { selectAvatarSet, selectRareAvatarCount } from "../feats/selector/avatarSelectors"
 import { selectCard, selectEmblemSpecs, selectItem } from "../feats/selector/equipSelectors"
 import { Condyce } from './Choices'
 import { EmblemModalViolent } from './modals/EmblemModal'
@@ -164,6 +164,7 @@ export function Avatars() {
   const setAll = useCallback(() => {
     dispatch(SetAvatarTypeAll("Rare"))
   }, [rareCount])
+  const avatarSet = useAppSelector(selectAvatarSet)
   const AvatarPartComp = portrait? WearAvatarPartCompact : WearAvatarPart
   return (
     <div className="Avatars">
@@ -194,7 +195,7 @@ export function Avatars() {
       </div>
       <div>
         <h4>아바타 세트 효과</h4>
-        <SimpleBaseAttrView attrs={useAppSelector(selectAvatarSetAttr)} />
+        <SimpleBaseAttrView attrs={avatarSet.attrs} />
       </div>
     </div>
   )

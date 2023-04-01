@@ -1,5 +1,4 @@
 import { createSelector } from "@reduxjs/toolkit"
-import { combine } from "../../attrs"
 import { RootState } from "../store"
 import { getActiveISets, getItem, getBlessing } from "../../items"
 import memoizee from "memoizee"
@@ -30,7 +29,6 @@ export const selectBlessing = createSelector(
   selectItem["봉인석"],
   selectSpells,
   (rune, spells) => {
-    if (!rune) return null
     return getBlessing(rune, ...spells)
   }
 )
@@ -42,14 +40,14 @@ export const selectCracks = createSelector(
   selectSpells,
   selectBlessing,
   selectCrackISet,
-  (rune, mp, spells, blessing, isets) => {
-    if (!rune) return {}
-    return combine(
-      rune.attrs,
-      mp.attrs,
-      ...spells.map((s) => s.attrs),
-      blessing?.attrs,
-      ...isets.map((s) => s.attrs)
-    )
+  (rune, magicProps, spells, blessing, isets) => {
+    if (!rune) return []
+    return [
+      rune,
+      magicProps,
+      ...spells,
+      blessing,
+      ...isets
+    ]
   }
 )

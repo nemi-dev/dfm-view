@@ -19,7 +19,7 @@ const UncommonCoat = { sk_lv: { "@Lv15": 1 }}
 
 
 export const getAvatarAttr = memoizee(
-  function _getAvatarAttr(part: WearAvatarPart, rarity: WearAvatarRarity): BaseAttrs {
+  function _getAvatarAttr(part: WearAvatarPart, rarity: WearAvatarRarity = "Common"): BaseAttrs {
     if (rarity === "Common") return {}
     if (part === "허리") return { misc: ["회피 확률 증가"] }
     if (part === "상의") {

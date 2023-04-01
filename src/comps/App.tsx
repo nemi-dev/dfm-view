@@ -21,6 +21,7 @@ import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { InitChar } from '../feats/saveReducers'
 import store from '../feats/store'
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
+import { Detail } from './Detail'
 
 
 function NavLink({ name, children }: React.PropsWithChildren<{ name: string }> ) {
@@ -77,6 +78,7 @@ function Navigator() {
       <NavLink name="크리쳐">크리쳐</NavLink>
       <NavLink name="길드">길드</NavLink>
       <NavLink name="마력결정">마력결정</NavLink>
+      <NavLink name="자세히">자세히</NavLink>
     </nav>
   )
   else return (
@@ -86,6 +88,7 @@ function Navigator() {
       <NavLink name="아바타">칭호/아바타</NavLink>
       <NavLink name="봉인석">봉인석</NavLink>
       <NavLink name="기타">기타</NavLink>
+      <NavLink name="자세히">자세히</NavLink>
     </nav>
   )
 }
@@ -101,6 +104,7 @@ function Content() {
       <Tab name="크리쳐"><Creatures /></Tab>
       <Tab name="길드"><Guilds /></Tab>
       <Tab name="마력결정"><Tonic /></Tab>
+      <Tab name="자세히"><Detail /></Tab>
     </>
   )
   else
@@ -115,6 +119,7 @@ function Content() {
         <Tonic />
         <Creatures />
       </Tab>
+      <Tab name="자세히"><Detail /></Tab>
     </>
   )
 }

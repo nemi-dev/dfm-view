@@ -3,12 +3,12 @@ import { atx, combine, dualTrigger, whatElType } from "../../attrs"
 import type { RootState } from "../store"
 import { add, percent_inc_mul } from "../../utils"
 import { selectGuilds } from "./guildSelectors"
-import { selectEquips, selectEquipsNoConds } from "./equipSelectors"
+import { selectEquips, selectEquipsTown } from "./equipSelectors"
 import { selectAchievementAttrs, selectClassAtype, selectMyDFClass, selectMyLevel } from "./selfSelectors"
-import { selectCreatures, selectCreaturesNoCond } from "./creatureSelectors"
+import { selectCreatureAndArtifacts, selectCreatureAndArtisTown } from "./creatureSelectors"
 import { selectCracks } from "./cracksSelectors"
-import { selectWholeAvatarAttrs, selectWholeAvatarAttrsNoCond } from "./avatarSelectors"
-import { critFt, defRate, getPlainDamage, } from "../../damage"
+import { selectWholeAvatarAttrs, selectWholeAvatarAttrsTown } from "./avatarSelectors"
+import { critFt, defRate, getPlainDamage, getRealdef, } from "../../damage"
 import { calibrateInit } from "../slices/initStateDefault"
 
 /** 마력결정 스탯보너스를 모두 얻는다. */
@@ -39,10 +39,6 @@ export function selectTonics(state: RootState): AttrSource {
 
 
 
-/** 보정스탯에서 스탯 하나만을 가져온다. */
-export function selectCalibrateOne(state: RootState, key: keyof NumberCalibrate) {
-  return state.My.Calibrate[key] ?? calibrateInit[key]
-}
 
 
 /** 스탯을 보정한 값만을 가져온다. */
@@ -54,32 +50,63 @@ export function selectCalibrated(state: RootState): BaseAttrs {
 
 
 /** 직업 + 장비 + 아바타 + 크리쳐 + 마력결정 + 성안의봉인 + 길드 + 업적보너스 (조건부옵션 포함, 보정값 제외)  
- * **듀얼트리거가 포함되었다면 여기서 이미 적용된다. 듀얼트리거는 마을에서도 적용되기 때문**
+ * **듀얼트리거가 포함되었다면 여기서 적용된다.**
  */
-export const selectMeNoCal = createSelector(
-  selectMyDFClass, selectEquips, selectWholeAvatarAttrs, selectCreatures, selectTonics, selectCracks, selectGuilds,
+export const selectAttrNoCal = createSelector(
+  selectMyDFClass,
+  selectEquips,
+  selectWholeAvatarAttrs,
+  selectCreatureAndArtifacts,
+  selectTonics,
+  selectCracks,
+  selectGuilds,
   selectAchievementAttrs,
-  (dfc, e, av, c, tonic, cr, guild, ach) => {
-    return dualTrigger(combine(dfc?.attrs, e, av, c, tonic.attrs, cr, guild.attrs, ach))
+  (dfclass, equips, avatars, creatures, tonic, cracks, guild, ach) => {
+    return dualTrigger(combine(
+      dfclass?.attrs,
+      ...equips.map(e => e?.attrs),
+      avatars,
+      ...creatures.map(c => c?.attrs),
+      tonic.attrs,
+      ...cracks.map(c => c?.attrs),
+      guild.attrs,
+      ach
+    ))
   }
 )
 
 /** 직업 + 장비 + 아바타 + 크리쳐 + 마력결정 + 성안의봉인 + 길드 + 업적보너스 + 보정값 (조건부옵션 제외, 보정값 포함)  
- * **듀얼트리거가 포함되었다면 여기서 이미 적용된다. 듀얼트리거는 던전에서도 적용되기 때문**
+ * **듀얼트리거가 포함되었다면 여기서 적용된다.**
 */
-export const selectMeNoCond = createSelector(
-  selectMyDFClass, selectEquipsNoConds, selectWholeAvatarAttrsNoCond, selectCreaturesNoCond, selectTonics, selectCracks, selectGuilds,
+export const selectAttrTown = createSelector(
+  selectMyDFClass,
+  selectEquipsTown,
+  selectWholeAvatarAttrsTown,
+  selectCreatureAndArtisTown,
+  selectTonics,
+  selectCracks,
+  selectGuilds,
   selectAchievementAttrs,
   selectCalibrated,
-  (dfc, e, av, c, tonic, cr, guild, ach, cal) => {
-    // 듀얼트리거는 던전 입장시에도 유지된다!
-    return dualTrigger(combine(dfc?.attrs, e, av, c, tonic.attrs, cr, guild.attrs, ach, cal))
+  (dfc, equips, avatars, creatures, tonic, cracks, guild, ach, cal) => {
+    return dualTrigger(
+      combine(
+        dfc?.attrs,
+        ...equips.map(e => e?.attrs),
+        avatars,
+        ...creatures.map(c => c?.attrs),
+        tonic.attrs,
+        ...cracks.map(c => c?.attrs),
+        guild.attrs,
+        ach,
+        cal
+      ))
   }
 )
 
 /**  장비 + 아바타 + 크리쳐 + 마력결정 + 성안의봉인 + 길드 + 업적보너스 + 보정값 (조건부옵션 포함, 보정값 포함) */
 export const selectMe = createSelector(
-  selectMeNoCal, selectCalibrated,
+  selectAttrNoCal, selectCalibrated,
   (me, cal) => combine(me, cal)
 )
 
@@ -122,9 +149,9 @@ export function selectBaseEnemyElRes(state: RootState) {
 export const selectEnemyDefense = createSelector(
   selectMe,
   selectBaseEnemyDefense,
-  (attrs, def) => {
+  (attrs = {}, def) => {
     const { target_def = 0, DefBreak = 0 } = attrs
-    return def * (1 - DefBreak/100) + target_def
+    return getRealdef(def, target_def, DefBreak)
   }
 )
 
