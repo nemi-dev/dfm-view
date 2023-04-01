@@ -1,9 +1,10 @@
 import { createSelector } from "@reduxjs/toolkit"
-import { atx } from "../../attrs"
+import { atx, combine } from "../../attrs"
 import { RootState } from "../store"
-import { getActiveISets, getItem, createActiveCondyces } from "../../items"
+import { getActiveISets, getItem } from "../../items"
 import memoizee from "memoizee"
 import { selectItem } from "./equipSelectors"
+
 
 /** 아티팩트 하나를 선택한다 */
 export const selectArtifact = memoizee(
@@ -43,16 +44,27 @@ export function selectArtifacts(state: RootState) {
 }
 
 /** 크리쳐 스탯 효과를 선택한다. */
-export function selectCreatureStat(state: RootState) {
+export function selectCreatureStatAttr(state: RootState) {
   const stat = state.My.CreatureProp.CreatureStat
   return atx("StatAll", stat)
 }
 
-/** 내가 활성화한 크리쳐 스킬 효과를 선택한다. (마을에서 적용안됨) */
-export const selectCreatureSkill = createSelector(
+/** 
+ * 크리쳐를 선택한다. (?!)  
+ * 
+ * *현재까지는 모든 크리쳐가 레벨업 스탯 빼고는 마을 옵션이 없다. 그래서 모든 크리쳐의 `attrs`는 `{}`일 거임.*
+ */
+export const selectCreature = createSelector(
   selectItem["크리쳐"],
-  (state: RootState) => state.My.Choice,
-  (creature, choice) => createActiveCondyces(creature, choice)
+  selectCreatureStatAttr,
+  (creatureSelf, stat) => {
+    if (!creatureSelf) return creatureSelf
+    const creatureWithstat: DFItem = {
+      ...creatureSelf,
+      attrs: combine(creatureSelf.attrs, stat)
+    }
+    return creatureWithstat
+  }
 )
 
 /** 크리쳐 스탯 효과 + 아티팩트 옵션 효과를 선택한다 (이들은 마을에서 적용된다) */
@@ -82,13 +94,19 @@ export const selectCreatureSets = createSelector(
   }
 )
 
-/** 크리쳐 효과 + 크리쳐 스탯 효과 + 아티팩트 효과를 선택한다 (마을에서 적용되는 옵션들) */
-export const selectCreatureAndArtisTown = createSelector(
-  selectItem["크리쳐"],
+/**
+ * 크리쳐가 출전 중일 때, 크리쳐 + 아티팩트를 선택한다.  
+ * 크리쳐가 없으면 모든게 무효화된다.  
+ * 
+ * TODO: 크리쳐가 있고, 아티팩트가 없을 때 아티팩트 옵션은 포함된다. 아티팩트 빼면 아티팩트 옵션 빠지게 해봐.
+ */
+export const selectCreatureAndArtis = createSelector(
+  selectCreature,
   selectArtifacts,
   selectCreatureSets,
   selectCreaturePropsAttrs,
   (creature, { Red, Green, Blue }, sets, propAttrs) => {
+    if (!creature) return []
     return [
       creature,
       Red,
@@ -96,29 +114,6 @@ export const selectCreatureAndArtisTown = createSelector(
       Blue,
       ...sets,
       propAttrs
-    ]
-  }
-)
-
-/** 크리쳐 + 아티팩트 + 크리쳐 세트에서 "내가 체크한" 조건부 효과들을 모두 선택한다. */
-export const selectActiveCreatureCondyces = createSelector(
-  selectItem["크리쳐"],
-  selectArtifacts,
-  selectCreatureSets,
-  (state: RootState) => state.My.Choice,
-  (creature, { Red, Green, Blue }, sets, choices) => {
-    return [creature, Red, Green, Blue, ...sets].flatMap(iii => createActiveCondyces(iii, choices))
-  }
-)
-
-/** 크리쳐 + 아티팩트 + 크리쳐 세트 + 이들 중에서 활성화된 조건부 옵션 효과들을 모두 선택한다. */
-export const selectCreatureAndArtifacts = createSelector(
-  selectCreatureAndArtisTown,
-  selectActiveCreatureCondyces,
-  (attrs, nodes) => {
-    return [
-      ...attrs,
-      ...nodes
     ]
   }
 )

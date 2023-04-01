@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
-import { selectEnemyDefRate, selectEnemyElRes, selectMe, selectMyFinalEltype } from '../feats/selector/selectors'
+import { selectEnemyDefRate, selectEnemyElRes, selectMyAttr, selectMyFinalEltype } from '../feats/selector/selectors'
 import { selectClassAtype } from "../feats/selector/selfSelectors"
 import { critFt, critChance, getDamage } from '../damage'
 import { SetSkillFixValue, SetSkillInputName, SetSkillMaxHit, SetSkillUsesSkillInc, SetSkillValue } from '../feats/slices/customSkillSlice'
@@ -57,7 +57,7 @@ function SkillTestOne({ index, SkillOneAttackSpec }: SkillOutputOneProps) {
 
   const atype = useAppSelector(selectClassAtype)
 
-  const attrs = useAppSelector(selectMe)
+  const attrs = useAppSelector(selectMyAttr)
   const atkFix = useAppSelector(state => state.My.Self.atkFixed)
   const eltype = useAppSelector(selectMyFinalEltype)
   const el = eltype.length > 0? (attrs[Elemental[eltype[0]].el] ?? 0) : 0

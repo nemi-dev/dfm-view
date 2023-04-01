@@ -8,6 +8,7 @@ import { selectItem } from "../feats/selector/equipSelectors"
 import { SimpleBaseAttrView } from './widgets/AttrsView'
 import styled from 'styled-components'
 import { RuneModalFragment, SpellModalFragment } from './modals/CrackModal'
+import { combine } from '../attrs'
 
 
 
@@ -34,6 +35,10 @@ export function Cracks() {
   const spells = useAppSelector(selectSpells)
   const blessing = useAppSelector(selectBlessing)
   const isets = useAppSelector(selectCrackISet)
+
+  // 이게 왜 필요하냐면..... 봉인석 빼면 다 없어지거든...
+  const cracks = useAppSelector(selectCracks)
+
 
   return (
     <div className="Cracks">
@@ -84,7 +89,7 @@ export function Cracks() {
         <div>
           <h3>성안의 봉인 효과</h3>
           <AttrsLayout>
-          <SimpleBaseAttrView attrs={useAppSelector(selectCracks)}/>
+          <SimpleBaseAttrView attrs={combine(...cracks.map(c => c?.attrs))}/>
           </AttrsLayout>
         </div>: null}
     </div>

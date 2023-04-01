@@ -19,4 +19,4 @@ export const selectClassAtype = createSelector(
 )
 
 /** 업적달성레벨로 얻는 보너스 효과를 선택한다.. */
-export const selectAchievementAttrs = (state: RootState) => atx("StatAll", state.My.Self.achieveLevel * 7 - 2)
+export const selectAchBonus = (state: RootState): AttrSource => ({ name: "업적 달성 보너스", attrs: atx("StatAll", state.My.Self.achieveLevel * 7 - 2)})

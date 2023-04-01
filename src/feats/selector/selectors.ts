@@ -3,13 +3,13 @@ import { atx, combine, dualTrigger, whatElType } from "../../attrs"
 import type { RootState } from "../store"
 import { add, percent_inc_mul } from "../../utils"
 import { selectGuilds } from "./guildSelectors"
-import { selectEquips, selectEquipsTown } from "./equipSelectors"
-import { selectAchievementAttrs, selectClassAtype, selectMyDFClass, selectMyLevel } from "./selfSelectors"
-import { selectCreatureAndArtifacts, selectCreatureAndArtisTown } from "./creatureSelectors"
+import { selectEquips } from "./equipSelectors"
+import { selectAchBonus, selectClassAtype, selectMyDFClass, selectMyLevel } from "./selfSelectors"
+import { selectCreatureAndArtis } from "./creatureSelectors"
 import { selectCracks } from "./cracksSelectors"
-import { selectWholeAvatarAttrs, selectWholeAvatarAttrsTown } from "./avatarSelectors"
+import { selectAvatars } from "./avatarSelectors"
 import { critFt, defRate, getPlainDamage, getRealdef, } from "../../damage"
-import { calibrateInit } from "../slices/initStateDefault"
+import { CombineItems } from "../../items"
 
 /** 마력결정 스탯보너스를 모두 얻는다. */
 export function selectTonics(state: RootState): AttrSource {
@@ -34,85 +34,78 @@ export function selectTonics(state: RootState): AttrSource {
 }
 
 
-
-
-
-
-
-
-
 /** 스탯을 보정한 값만을 가져온다. */
-export function selectCalibrated(state: RootState): BaseAttrs {
+export function selectCalibrated(state: RootState): AttrSource {
   const sk_inc = state.My.Calibrate.sk_inc.reduce(percent_inc_mul, 0)
-  return { ...state.My.Calibrate, sk_inc }
+  return {
+    name: "스탯 조정값",
+    attrs: {
+      ...state.My.Calibrate, sk_inc
+    }
+  }
 }
 
 
 
-/** 직업 + 장비 + 아바타 + 크리쳐 + 마력결정 + 성안의봉인 + 길드 + 업적보너스 (조건부옵션 포함, 보정값 제외)  
- * **듀얼트리거가 포함되었다면 여기서 적용된다.**
+/** 
+ * 모든 "소스"를 선택한다.  
+ * 
+ * 직업 + 장비 + 아바타 + 크리쳐 + 마력결정 + 성안의봉인 + 길드 + 업적보너스 + 보정값  
  */
-export const selectAttrNoCal = createSelector(
+export const selectMe = createSelector(
   selectMyDFClass,
   selectEquips,
-  selectWholeAvatarAttrs,
-  selectCreatureAndArtifacts,
+  selectAvatars,
+  selectCreatureAndArtis,
   selectTonics,
   selectCracks,
   selectGuilds,
-  selectAchievementAttrs,
-  (dfclass, equips, avatars, creatures, tonic, cracks, guild, ach) => {
-    return dualTrigger(combine(
-      dfclass?.attrs,
-      ...equips.map(e => e?.attrs),
-      avatars,
-      ...creatures.map(c => c?.attrs),
-      tonic.attrs,
-      ...cracks.map(c => c?.attrs),
-      guild.attrs,
-      ach
-    ))
-  }
-)
-
-/** 직업 + 장비 + 아바타 + 크리쳐 + 마력결정 + 성안의봉인 + 길드 + 업적보너스 + 보정값 (조건부옵션 제외, 보정값 포함)  
- * **듀얼트리거가 포함되었다면 여기서 적용된다.**
-*/
-export const selectAttrTown = createSelector(
-  selectMyDFClass,
-  selectEquipsTown,
-  selectWholeAvatarAttrsTown,
-  selectCreatureAndArtisTown,
-  selectTonics,
-  selectCracks,
-  selectGuilds,
-  selectAchievementAttrs,
+  selectAchBonus,
   selectCalibrated,
   (dfc, equips, avatars, creatures, tonic, cracks, guild, ach, cal) => {
-    return dualTrigger(
-      combine(
-        dfc?.attrs,
-        ...equips.map(e => e?.attrs),
-        avatars,
-        ...creatures.map(c => c?.attrs),
-        tonic.attrs,
-        ...cracks.map(c => c?.attrs),
-        guild.attrs,
-        ach,
-        cal
-      ))
+    return [
+      dfc,
+      ...equips,
+      ...avatars,
+      ...creatures,
+      tonic,
+      ...cracks,
+      guild,
+      ach,
+      cal
+    ]
   }
 )
 
-/**  장비 + 아바타 + 크리쳐 + 마력결정 + 성안의봉인 + 길드 + 업적보너스 + 보정값 (조건부옵션 포함, 보정값 포함) */
-export const selectMe = createSelector(
-  selectAttrNoCal, selectCalibrated,
-  (me, cal) => combine(me, cal)
+
+/** 
+ * 마을에서 내 스탯을 선택한다.  
+ * **듀얼트리거가 포함되었다면 여기서 적용된다.**
+*/
+export const selectMyAttrTown = createSelector(
+  selectMe,
+  (sources) => {
+    const a = CombineItems(sources)
+    return dualTrigger(a)
+  }
 )
 
-/** 현재 상태에서 내 원소 공격속성을 선택한다. */
-export const selectMyFinalEltype = createSelector(
+/** 
+ * 던전에서 내 스탯을 선택한다. (조건부옵션이 명시적으로 포함됨)  
+ * **듀얼트리거가 포함되었다면 여기서 적용된다.**
+*/
+export const selectMyAttr = createSelector(
   selectMe,
+  (state: RootState) => state.My.Choice,
+  (sources, choice) => {
+    const a = CombineItems(sources, choice)
+    return dualTrigger(a)
+  }
+)
+
+/** 던전에서 내 원소 공격속성을 선택한다. */
+export const selectMyFinalEltype = createSelector(
+  selectMyAttr,
   whatElType
 )
 
@@ -120,9 +113,9 @@ export const selectMyFinalEltype = createSelector(
 
 
 
-/** 현재 상태에서 스증+크증이 모두 적용된 내 퍼센트 물/마공 데미지를 선택한다. */
+/** 던전에서 스증+크증이 모두 적용된 내 퍼센트 물/마공 데미지를 선택한다. */
 export const selectMyDamage = createSelector(
-  selectMe,
+  selectMyAttr,
   selectClassAtype,
   selectMyFinalEltype,
   (attrs, atype, eltypes) => {
@@ -147,7 +140,7 @@ export function selectBaseEnemyElRes(state: RootState) {
 
 /** 방깎 적용후 적 방어력을 선택한다 */
 export const selectEnemyDefense = createSelector(
-  selectMe,
+  selectMyAttr,
   selectBaseEnemyDefense,
   (attrs = {}, def) => {
     const { target_def = 0, DefBreak = 0 } = attrs
@@ -157,7 +150,7 @@ export const selectEnemyDefense = createSelector(
 
 /** 속깎 적용후 적 속성저항을 선택한다 */
 export const selectEnemyElRes = createSelector(
-  selectMe,
+  selectMyAttr,
   selectBaseEnemyElRes,
   (attrs, res) => {
     const { target_res = 0 } = attrs

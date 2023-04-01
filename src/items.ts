@@ -3,7 +3,7 @@ import _isets from "../data/itemsets.json"
 import _armorbases from "./armorbase.json"
 
 import memoizee from "memoizee"
-import { atx, AtypeAttrKey, repeatAttr, scalarProduct } from "./attrs"
+import { atx, AtypeAttrKey, combine, repeatAttr, scalarProduct } from "./attrs"
 
 export const weaponType: readonly Itype[] = Object.freeze([
   "소검","도","둔기","대검","광검",
@@ -143,6 +143,26 @@ export const itemNameToId = (name: string) => _item_name_to_id[name] ?? 0
 /** 아이템 ID를 이름으로 바꾼다. */
 export const itemIdToName = (id: number) => _item_id_to_name[id]
 
+
+/** 
+ * `name`이 방어구 아이템 이름인 것이 확실할 때, 실제 던파 방어구 아이템을 구현한다.  
+ * 
+ * @param mat "내가 설정한" 방어구 재질. (환영극단 2막, 루프트하펜 등 재질이 고정된 방어구는 이 재질을 씹는다.)
+ */
+export const getArmor: (name: string, mat: ArmorMaterial) => DFItem | undefined
+= memoizee(
+  function getArmor(name: string, myMaterial: ArmorMaterial) {
+    const item = getItem(name)
+    if (!item) return item
+    const part = item.itype as ArmorPart
+    const { level, rarity, material = myMaterial } = item
+    const armorbase = getArmorBase(level, rarity, material, part)
+    return { ...item, attrs: combine(item.attrs, armorbase)}
+  }
+)
+
+
+
 /** 세트를 구성하는 아이템을 얻는다. */
 export const getEquipsOfISet = memoizee(
   function _getEquipsOfISet (isetname: string) {
@@ -200,13 +220,20 @@ export const getCardsForPart = memoizee(
 { primitive: true })
 
 
+
+
+
+
+
+
 export function createCondyceKey2(sourceName: string, node: ConditionalNode) {
   return `${sourceName}::${node.when}`
 }
 
-/** 주어진 아이템 또는 아이템 세트에서 "내가 활성화한" branch/gives 조건부 옵션들을 배열로 얻는다 **(중첩횟수 적용)** */
+/** 주어진 아이템 또는 아이템 세트에서 "내가 활성화한" branch/gives 조건부 옵션들을 실체화한다. **(중첩횟수 적용)** */
 export function createActiveNode(attrSourceName: string, nodes: ConditionalNode[] | null | undefined, activeKeys: Record<string, OptionalChoiceType>) {
-  const d: ConditionalNode[] = []
+  // const d: ConditionalNode[] = []
+  const d: AttrSource[] = []
   if (nodes)
   for (const child of nodes) {
     /* branch/gives에 "when"이 없다면 "던전 입장시"인 것으로 취급한다.
@@ -234,10 +261,10 @@ export function createExclusiveKey2(itemName: string, exclusiveSet: ExclusiveSet
   return `${itemName}::${exclusiveSet.name}`
 }
 
-/** 주어진 아이템 또는 아이템 세트에서 "내가 체크한" Exclusive 조건부 노드들 중 선택된 값의 것들을 배열로 얻는다. */
-export function getActiveExclusive(item: ComplexAttrSource, activeKeys: Record<string, string>): ConditionalNode[] {
+/** 주어진 아이템 또는 아이템 세트에서 "내가 체크한" Exclusive 조건부 옵션을 실체화한다. */
+export function getActiveExclusive(item: ComplexAttrSource, activeKeys: Record<string, string>) {
   if (!(item.exclusive)) return []
-  const d: ConditionalNode[] = []
+  const d: AttrSource[] = []
   for (const exclusiveSet of item.exclusive) {
     const key = exclusiveKey(item, exclusiveSet)
     if (activeKeys[key]) {
@@ -305,4 +332,31 @@ function getCracksOnly(itype: "봉인석" | "정수", atype: Atype) {
   return _items_index_Part_or_Card[itype].filter(item => item.attrs[attrKey])
 }
 , { primitive: true })
+
+
+/** 아이템 목록에서 choice로 활성화되는 효과들을 각 아이템 뒤에 붙인다. */
+export function Interpolate(sources: (AttrSource | ComplexAttrSource | null | undefined)[], choice: Choices): (AttrSource | ComplexAttrSource)[] {
+  if (!sources) return []
+  return sources.flatMap(s => {
+    if (!s) return []
+    if (("branch" in s) || ("gives" in s) || ("exclusive" in s)) {
+      const cond = createActiveCondyces(s, choice)
+      return [s, ...cond]
+    }
+    return [s]
+  })
+}
+
+
+/** 
+ * - 아이템 배열의 모든 옵션을 결합한다.
+ * - Choice가 null도 undefined도 아니라면 아이템 배열에서 활성화되는 조건부 옵션까지 모두 선택한다.
+ * 
+ * 이게 진짜지 ㅋㅋㅋㅋ
+ */
+export function CombineItems(sources: (AttrSource | ComplexAttrSource | null | undefined)[], choice: Choices | null = null): BaseAttrs {
+  if (!sources) return {}
+  if (!choice) return combine(...sources.map(s => s?.attrs))
+  return combine(...Interpolate(sources, choice).map(s => s?.attrs))
+}
 

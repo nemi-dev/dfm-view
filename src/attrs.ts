@@ -205,7 +205,10 @@ const attrDefsArray = [
 
 attrDefs.array = attrDefsArray
 
-/** 두 개 이상의 옵션을 결합한다. */
+/** 
+ * 두 개 이상의 옵션을 결합한다.  
+ * **절대!!! 절대로!! 2개 이상의 "아이템" 옵션을 결합할 때는 쓰지 말것!!!!!!**
+ */
 export function combine(...attrsList: (BaseAttrs | null | undefined)[]) {
   const prev: BaseAttrs = {}
 
@@ -228,6 +231,7 @@ export function combine(...attrsList: (BaseAttrs | null | undefined)[]) {
   }
   return prev
 }
+
 
 /** 주어진 속성강화와 속성부여로부터, 최종적으로 적용되는 내 속성타입을 얻는다. */
 export function whatElType(el: El): Eltype[] {

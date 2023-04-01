@@ -1,7 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit"
 import { combine } from "../../attrs"
 import { RootState } from "../store"
-import { createActiveCondyces } from "../../items"
 import { getEmblem } from "../../emblem"
 import { avatarParts, rareSet, UncommonSet, getAvatarAttr } from "../../avatar"
 import { selectItem, selectCard, selectEmblemSpecs } from "./equipSelectors"
@@ -50,7 +49,7 @@ export const selectAvatarSet = createSelector(
   }
 )
 
-/** 마을에서의 칭호 효과를 선택한다. */
+/** 칭호를 장착 중일 때, 그 칭호 + 칭호에 박은 보주 + 엠블렘을 선택한다. */
 export const selectDFTitleTown = createSelector(
   selectItem["칭호"],
   selectCard["칭호"],
@@ -61,55 +60,20 @@ export const selectDFTitleTown = createSelector(
   }
 )
 
-/** 칭호의 조건부 옵션들 중 내가 활성화한 효과를 선택한다. */
-export const selectDFTitleCondyce = createSelector(
-  selectItem["칭호"],
-  (state: RootState) => state.My.Choice,
-  (dftitle, choice) => {
-    if (!dftitle) return []
-    return createActiveCondyces(dftitle, choice)
-  }
-)
-
-/** 칭호+칭호에 박은 보주+엠블렘 효과+칭호의 활성화된 조건부 효과를 선택한다. */
-export const selectDFTitle = createSelector(
-  selectDFTitleTown,
-  selectDFTitleCondyce,
-  (dftitle, condyce): AttrSource[] => {
-    return [ ...dftitle, ...condyce ]
-  }
-)
-
-/** **(조건부 빼고)** 칭호+오라+무기아바타+다른 아바타 효과+아바타 세트효과를 모두 선택한다. */
-export const selectWholeAvatarAttrsTown = createSelector(
-  selectDFTitleTown,
-  selectWearAvatarSource,
-  selectAvatarSet,
-  selectItem["무기아바타"],
-  selectItem["오라"],
-  (dftitle, wears, aset, weaponAvatar, aura) => 
-  combine(
-    ...dftitle.map(i => i?.attrs),
-    wears.attrs,
-    aset.attrs,
-    weaponAvatar?.attrs,
-    aura?.attrs
-  )
-)
 
 /** 칭호+오라+무기아바타+다른 아바타 효과+아바타 세트효과를 모두 선택한다. */
-export const selectWholeAvatarAttrs = createSelector(
-  selectDFTitle,
+export const selectAvatars = createSelector(
+  selectDFTitleTown,
   selectWearAvatarSource,
   selectAvatarSet,
   selectItem["무기아바타"],
   selectItem["오라"],
   (dftitle, wears, aset, weaponAvatar, aura) => 
-  combine(
-    ...dftitle.map(i => i?.attrs),
-    wears.attrs,
-    aset.attrs,
-    weaponAvatar?.attrs,
-    aura?.attrs
-  )
+  [
+    ...dftitle,
+    aura,
+    weaponAvatar,
+    wears,
+    aset
+  ]
 )

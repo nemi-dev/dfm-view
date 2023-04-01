@@ -2,7 +2,7 @@ import { AtypeAttrKey, Elemental } from "../attrs"
 import { AtkOut, StatOut, critChance } from "../damage"
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
 import { AddSkillInc, RemoveSkillInc, SetBasicAttr, SetEltype, SetSkillInc } from "../feats/slices/calibrateSlice"
-import { selectMe, selectAttrTown, selectMyFinalEltype } from "../feats/selector/selectors"
+import { selectMyAttr, selectMyAttrTown, selectMyFinalEltype } from "../feats/selector/selectors"
 import { selectClassAtype } from "../feats/selector/selfSelectors"
 import { Gridy } from "./widgets/CommonUI"
 import { Num } from "./widgets/NumberView"
@@ -130,7 +130,7 @@ function SkillInc() {
 export function MyStat() {
   const [excludeCond, setExcludeCond] = useState(false)
   const atype = useAppSelector(selectClassAtype)
-  const me = excludeCond? useAppSelector(selectAttrTown) : useAppSelector(selectMe)
+  const me = excludeCond? useAppSelector(selectMyAttrTown) : useAppSelector(selectMyAttr)
   const calibrateEltypes = useAppSelector(state => state.My.Calibrate.eltype)
 
   const eltype = useAppSelector(selectMyFinalEltype)

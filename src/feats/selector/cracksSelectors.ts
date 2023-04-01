@@ -33,7 +33,8 @@ export const selectBlessing = createSelector(
   }
 )
 
-/** 성안의 봉인에서 오는 모든 효과를 얻는다. */
+/** 봉인석을 장착 중일 때, 봉인석+정수+활성화된 가호+세트를 선택한다.  
+ * 봉인석이 없으면 모든게 무효화된다. */
 export const selectCracks = createSelector(
   selectItem["봉인석"],
   selectMagicProps["봉인석"],
