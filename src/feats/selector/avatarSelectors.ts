@@ -35,16 +35,11 @@ export const selectAvatarSet = createSelector(
     const name = ["아바타 세트 효과"]
     if (rareCount > 0) name.push(`레어[${rareCount}]`)
     if (uncommonCount > 0) name.push(`언커먼[${uncommonCount}]`)
-    const attrsArray: BaseAttrs[] = []
-    for (const i in rareSet)
-      if (Number(i) <= rareCount)
-        attrsArray.push(rareSet[i])
-    for (const i in UncommonSet)
-      if (Number(i) <= uncommonCount)
-        attrsArray.push(UncommonSet[i])
+    const r = Object.keys(rareSet).filter(i => (Number(i) <= rareCount)).map(i => rareSet[Number(i)])
+    const u = Object.keys(UncommonSet).filter(i => (Number(i) <= uncommonCount)).map(i => UncommonSet[Number(i)])
     return {
       name: name.join(" "),
-      attrs: combine(...attrsArray)
+      attrs: combine(...r, ...u)
     } as AttrSource
   }
 )
