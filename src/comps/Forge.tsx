@@ -10,7 +10,7 @@ import { MagicProps } from "./MagicProps"
 import { selectCard, selectEmblemSpecs, selectItem, selectUpgradeValue } from "../feats/selector/equipSelectors"
 import { ArmorMaterialSelect, EmblemArray } from "./Itemy"
 import { SetUpgradeValue } from "../feats/slices/itemSlice"
-import { isArmor } from "../items"
+import { getMaxEmblemCount, isArmor } from "../items"
 import { EmblemModalViolent } from "./modals/EmblemModal"
 import { CardModalFragment } from "./modals/CardModal"
 
@@ -50,6 +50,7 @@ function Part({ part }: { part: EquipPart }) {
   const upgradeBonus = useAppSelector(selectUpgradeValue[part])
   const emblems = useAppSelector(selectEmblemSpecs[part])
   const emblemAccept = acceptEmblem(part)
+  const maxEmblem = getMaxEmblemCount(item)
   return (
     <PartLayout className="Part Bordered">
       <div className={item? `Rarity_${item.rarity}`:""}>{part}</div>
@@ -63,7 +64,7 @@ function Part({ part }: { part: EquipPart }) {
         onClick={() => openModal(<CardModalFragment part={part} />)}
       />
       <RowLayout>
-        <EmblemArray emblems={emblems} accept={emblemAccept}
+        <EmblemArray emblems={emblems.slice(0, maxEmblem)} accept={emblemAccept}
           onItemClick={index => openModal(<EmblemModalViolent part={part} index={index} />)}
         />
       </RowLayout>

@@ -43,11 +43,10 @@ export function MagicProps({ item, part }: MagicPropsArrayProps) {
   const dispatch = useDispatch()
   const array = useAppSelector(selectMagicPropNames[part])
   const atype = useAppSelector(selectClassAtype)
-  const current = useAppSelector(selectMagicPropNames[part])
   const clickHandler = useCallback((index: number) => {
-    const next = nextMagicProps(part, current[index], level, rarity, index === 0)
+    const next = nextMagicProps(part, array[index], level, rarity, index === 0)
     dispatch(SetMagicProps([part, index, next]))
-  }, [item?.name, part, current])
+  }, [item?.name, part, array])
   if (!item) return null
   return (
     <>

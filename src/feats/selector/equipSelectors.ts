@@ -1,6 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit"
 import { atx, combine } from "../../attrs"
-import { getActiveISets, getItem, equipParts, isArmor, magicPropsParts, cardableParts, singleItemParts, armorParts, getArmor } from "../../items"
+import { getActiveISets, getItem, equipParts, isArmor, magicPropsParts, cardableParts, singleItemParts, armorParts, getArmor, getMaxEmblemCount } from "../../items"
 import { getEmblem } from "../../emblem"
 import { getMagicPropsAttrs } from "../../magicProps"
 import { selectClassAtype } from "./selfSelectors"
@@ -30,7 +30,7 @@ export const selectCard = Paw(part => state => getItem(state.My.Card[part]), car
 /** 특정 부위의 아이템에 박은 엠블렘 스펙을 모두 선택한다 */
 export const selectEmblemSpecs = Paw(part => state => state.My.Emblem[part] ?? [], cardableParts)
 
-/** 특정 부위 아이템의 마법봉인 이름을 선택한다 */
+/** 특정 부위 아이템의 마법봉인 이름을 선택한다. (장착 아이템 여부에 상관없이 3개 풀로 선택함) */
 export const selectMagicPropNames = Paw(
   part => state => state.My.MagicProps[part],
   magicPropsParts
@@ -75,6 +75,20 @@ export const selectMagicProps = Paw(
   ), magicPropsParts
 )
 
+/** 특정 부위의 엠블렘 효과를 선택한다. */
+export const selectEmblems = Paw(
+  part => createSelector(
+    selectItem[part],
+    selectEmblemSpecs[part],
+    (item, emblemSpecs) => {
+      const maxEmblemCount = getMaxEmblemCount(item)
+      const emblems = emblemSpecs.slice(0, maxEmblemCount).map(getEmblem)
+      console.log({ part, emblems });
+      
+      return emblems
+    }
+  )
+, cardableParts)
 
 /**
  * 어떤 한 장비 부의의 아이템 옵션, 업그레이드 보너스, 마법봉인, 엠블렘, 카드 옵션을 얻는다.  
@@ -85,11 +99,12 @@ export const selectEquipPart = Paw(
     selectItem[part],
     selectMagicProps[part],
     selectCard[part],
-    selectEmblemSpecs[part],
+    // selectEmblemSpecs[part],
+    selectEmblems[part],
     selectUpgrade[part],
     (item, magicProps, card, emblems, upgrade): AttrSource[] => {
       if (!item) return []
-      return [item, upgrade, card, magicProps, ...emblems.map(getEmblem)]
+      return [item, upgrade, card, magicProps, ...emblems]
     }
   )
 ,equipParts)

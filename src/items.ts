@@ -161,6 +161,36 @@ export const getArmor: (name: string, mat: ArmorMaterial) => DFItem | undefined
   }
 )
 
+/** 주어진 아이템에 박을 수 있는 최대 엠블렘 수를 얻는다. */
+export function getMaxEmblemCount(item: DFItem | null | undefined) {
+  // 커먼, 언커먼인 아이템, 장비 10부위 및 칭호가 아니면 엠블렘 착용불가능
+  if (!item
+    || item.rarity === "Common"
+    || item.rarity === "Uncommon"
+    || (!isWeapon(item.itype) && !isCardable(item.itype as WholePart))) 
+    return 0
+  
+  // 보조장비, 칭호는 최대 1개
+  if (item.itype === "보조장비" || item.itype === "칭호") return 1
+
+  // 장비 9부위(10부위에서 보장 뺀거) 에픽 또는 환극2막은 최대 2개
+  if (item.rarity === "Epic" || item.content?.includes("환영극단 2막")) return 2
+
+  // 장비 9부위 유니크 이하는 최대 1개
+  return 1
+}
+
+/** 해당 부위에 박을 수 있는 엠블렘 종류를 얻는다. */
+export function getEmblemSocketType(part: CardablePart): EmblemType[] {
+  switch (part) {
+    case "무기": return ["Red", "Yellow", "Green", "Blue"]
+    case "상의": case "하의": return ["Red"]
+    case "머리어깨": case "벨트": return ["Yellow"]
+    case "신발": case "팔찌": return ["Blue"]
+    case "목걸이": case "반지": return ["Green"]
+    case "보조장비": case "칭호": return ["Stren", "Intel", "Fire", "Ice", "Light", "Dark"]
+  }
+}
 
 
 /** 세트를 구성하는 아이템을 얻는다. */
@@ -190,7 +220,9 @@ function countISets(items: DFItem[]) {
     }
   }
   if (bumpAll > 0) for (const key in counts) {
-    counts[key] += bumpAll
+    // counts[key] += bumpAll
+    if (counts[key] + bumpAll == 5) counts[key] = 5
+    else if (counts[key] + bumpAll == 8) counts[key] = 8
   }
   return counts
 }

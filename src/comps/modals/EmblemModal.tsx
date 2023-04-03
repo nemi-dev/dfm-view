@@ -7,18 +7,8 @@ import { ModalContext } from "./modalContext"
 import { selectEmblemSpecs } from "../../feats/selector/equipSelectors"
 import { SetEmblem } from "../../feats/slices/itemSlice"
 import { CurrentPart } from "./CurrentPart"
+import { getEmblemSocketType } from "../../items"
 
-
-function __emblem_part_ (part: CardablePart): EmblemType[] {
-  switch (part) {
-    case "무기": return ["Red", "Yellow", "Green", "Blue"]
-    case "상의": case "하의": return ["Red"]
-    case "머리어깨": case "벨트": return ["Yellow"]
-    case "신발": case "팔찌": return ["Blue"]
-    case "목걸이": case "반지": return ["Green"]
-    case "보조장비": case "칭호": return ["Stren", "Intel", "Fire", "Ice", "Light", "Dark"]
-  }
-}
 
 function EmblemSelect({ part, index, type, level }: { part: CardablePart, index: number, type: EmblemType, level: number }) {
   const { closeModal } = useContext(ModalContext)
@@ -39,7 +29,7 @@ export function EmblemModalViolent({ part, index }: { part: CardablePart, index:
   const emblems = useAppSelector(selectEmblemSpecs[part])
   const currentSpec = emblems[index]
   const [newLevel, setNewLevel] = useState(currentSpec[1])
-  const availableEmblemTypes = __emblem_part_(part as CardablePart)
+  const availableEmblemTypes = getEmblemSocketType(part)
   return(<>
     <h3>엠블렘</h3>
     <CurrentPart part={part} index={index} />

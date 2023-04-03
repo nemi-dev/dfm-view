@@ -1,9 +1,8 @@
 import { createSelector } from "@reduxjs/toolkit"
 import { combine } from "../../attrs"
 import { RootState } from "../store"
-import { getEmblem } from "../../emblem"
 import { avatarParts, rareSet, UncommonSet, getAvatarAttr } from "../../avatar"
-import { selectItem, selectCard, selectEmblemSpecs } from "./equipSelectors"
+import { selectItem, selectCard, selectEmblems } from "./equipSelectors"
 
 /** 지금 착용중인 레어 아바타의 수를 선택한다. */
 export function selectRareAvatarCount(state: RootState) {
@@ -74,10 +73,10 @@ export const selectUncommonAvatarSetActive = createSelector(
 export const selectDFTitleTown = createSelector(
   selectItem["칭호"],
   selectCard["칭호"],
-  selectEmblemSpecs["칭호"],
+  selectEmblems["칭호"],
   (dftitle, card, emblem): AttrSource[] => {
     if (!dftitle) return []
-    return [dftitle, card, getEmblem(emblem[0])]
+    return [dftitle, card, ...emblem]
   }
 )
 
@@ -86,7 +85,6 @@ export const selectDFTitleTown = createSelector(
 export const selectAvatars = createSelector(
   selectDFTitleTown,
   selectWearAvatarsCombined,
-  // selectAvatarSet,
   selectRareAvatarSetActive,
   selectUncommonAvatarSetActive,
   selectItem["무기아바타"],

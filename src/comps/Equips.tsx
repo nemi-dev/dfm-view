@@ -10,7 +10,7 @@ import {
     selectCard, selectEmblemSpecs, selectItem, selectUpgradeValue
 } from '../feats/selector/equipSelectors'
 import { DecreaseEmblemLevel, SetUpgradeValue } from '../feats/slices/itemSlice'
-import { equipParts, isArmor, magicPropsParts } from '../items'
+import { equipParts, getMaxEmblemCount, isArmor, magicPropsParts } from '../items'
 import { PortraitMode } from '../responsiveContext'
 import { ClosedCondyceSet } from './Choices'
 import { EquipBatch } from './EquipBatch'
@@ -33,10 +33,13 @@ interface PartProps {
 function WideAddons({ part }: PartProps) {
   const { openModal } = useContext(ModalContext)
   const dispatch = useAppDispatch()
+  // 엠블렘 개수 하나때문에 이 셀렉터를 넣는게 말이나 되냐고!
+  const item = useAppSelector(selectItem[part])
   const card = useAppSelector(selectCard[part])
   const upgradeBonus = useAppSelector(selectUpgradeValue[part])
   const emblems = useAppSelector(selectEmblemSpecs[part])
   const emblemAccept = acceptEmblem(part)
+  const maxEmblem = getMaxEmblemCount(item)
   const onItemClick = useCallback((index: number) => {
     if (part === "무기" || part === "보조장비")
       openModal(<EmblemModalViolent part={part} index={index} />)
@@ -48,7 +51,7 @@ function WideAddons({ part }: PartProps) {
       <ItemIcon className="Card" item={card}
         onClick={() => openModal(<CardModalFragment part={part} />)}
       />
-      <EmblemArray emblems={emblems} accept={emblemAccept}
+      <EmblemArray emblems={emblems.slice(0, maxEmblem)} accept={emblemAccept}
         onItemClick={onItemClick}
       />
       <div className="EquipUpgradeValue">
