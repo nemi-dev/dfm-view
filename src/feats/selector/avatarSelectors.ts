@@ -19,30 +19,56 @@ export function selectUncommonAvatarCount(state: RootState) {
     .reduce((n, rarity) => rarity === "Uncommon" ? n + 1 : n, 0)
 }
 
+const asetMaker = (catalog: Record<number, BaseAttrs>, name: string) => 
+(count: number): (AttrSource | undefined) => {
+  if (count > 0) {
+    const r = Object.keys(catalog).filter(i => (Number(i) <= count)).map(i => catalog[Number(i)])
+    if (r.length > 0) 
+    return {
+      name : `${name} [${count}]`,
+      attrs: combine(...r)
+    }
+  }
+  return undefined
+}
+
 /** 지금 착용중인 아바타 8부위 효과를 선택한다. */
-export function selectWearAvatarSource(state: RootState): AttrSource {
+export function selectWearAvatarsCombined(state: RootState): AttrSource {
   return {
     name: "아바타",
     attrs: combine(...avatarParts.map(p => getAvatarAttr(p, state.My.Avatar[p])))
   } as AttrSource
 }
 
-/** 지금 착용중인 아바타로부터 아바타 세트 효과를 선택한다. */
-export const selectAvatarSet = createSelector(
-  selectUncommonAvatarCount,
+
+/** 지금 착용중인 레어아바타 세트효과를 선택한다. */
+export const selectRareAvatarSetActive = createSelector(
   selectRareAvatarCount,
-  (uncommonCount, rareCount) => {
-    const name = ["아바타 세트 효과"]
-    if (rareCount > 0) name.push(`레어[${rareCount}]`)
-    if (uncommonCount > 0) name.push(`언커먼[${uncommonCount}]`)
-    const r = Object.keys(rareSet).filter(i => (Number(i) <= rareCount)).map(i => rareSet[Number(i)])
-    const u = Object.keys(UncommonSet).filter(i => (Number(i) <= uncommonCount)).map(i => UncommonSet[Number(i)])
-    return {
-      name: name.join(" "),
-      attrs: combine(...r, ...u)
-    } as AttrSource
-  }
+  asetMaker(rareSet, "레어아바타 세트효과")
 )
+
+/** 지금 착용중인 상급아바타 세트효과를 선택한다. */
+export const selectUncommonAvatarSetActive = createSelector(
+  selectUncommonAvatarCount,
+  asetMaker(UncommonSet, "상급아바타 세트효과")
+)
+
+/** 지금 착용중인 아바타로부터 아바타 세트 효과를 선택한다. */
+// export const selectAvatarSet = createSelector(
+//   selectUncommonAvatarCount,
+//   selectRareAvatarCount,
+//   (uncommonCount, rareCount) => {
+//     const name = ["아바타 세트 효과"]
+//     if (rareCount > 0) name.push(`레어[${rareCount}]`)
+//     if (uncommonCount > 0) name.push(`언커먼[${uncommonCount}]`)
+//     const r = Object.keys(rareSet).filter(i => (Number(i) <= rareCount)).map(i => rareSet[Number(i)])
+//     const u = Object.keys(UncommonSet).filter(i => (Number(i) <= uncommonCount)).map(i => UncommonSet[Number(i)])
+//     return {
+//       name: name.join(" "),
+//       attrs: combine(...r, ...u)
+//     } as AttrSource
+//   }
+// )
 
 /** 칭호를 장착 중일 때, 그 칭호 + 칭호에 박은 보주 + 엠블렘을 선택한다. */
 export const selectDFTitleTown = createSelector(
@@ -59,16 +85,19 @@ export const selectDFTitleTown = createSelector(
 /** 칭호+오라+무기아바타+다른 아바타 효과+아바타 세트효과를 모두 선택한다. */
 export const selectAvatars = createSelector(
   selectDFTitleTown,
-  selectWearAvatarSource,
-  selectAvatarSet,
+  selectWearAvatarsCombined,
+  // selectAvatarSet,
+  selectRareAvatarSetActive,
+  selectUncommonAvatarSetActive,
   selectItem["무기아바타"],
   selectItem["오라"],
-  (dftitle, wears, aset, weaponAvatar, aura) => 
+  (dftitle, wears, asetRare, asetUnco, weaponAvatar, aura) => 
   [
     ...dftitle,
     aura,
     weaponAvatar,
     wears,
-    aset
+    asetRare,
+    asetUnco
   ]
 )

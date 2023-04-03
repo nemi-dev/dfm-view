@@ -119,7 +119,7 @@ function PartCompact({ part }: PartProps) {
     <div className="EquipSlot">
       <div className="EquipPartLayout">
         <ItemIcon item={item}
-          onClick={() => openModal(<CardModalFragment part={part} />)}
+          onClick={() => openModal(<EquipModalFragment part={part} />)}
         />
       </div>
     </div>
