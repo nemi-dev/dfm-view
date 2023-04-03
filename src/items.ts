@@ -175,23 +175,22 @@ export const getEquipsOfISet = memoizee(
 /** 아이템에서 세트 개수를 얻는다. */
 function countISets(items: DFItem[]) {
   const counts: Record<string, number> = {}
+  let bumpAll: number = 0
   for (const item of items) {
     if (!item) continue
     const s = item.setOf
     if (!s) continue
     if (s === "all") {
-      for (const key in counts) counts[key]++
+      bumpAll += 1
       continue
     }
-    if (typeof s === "string") {
-      if (!counts[s]) counts[s] = 0
-      counts[s]++
-    } else {
-      for (const k of s) {
-        if (!counts[k]) counts[k] = 0
-        counts[k]++
-      }
+    for (const k of s) {
+      if (!counts[k]) counts[k] = 0
+      counts[k]++
     }
+  }
+  if (bumpAll > 0) for (const key in counts) {
+    counts[key] += bumpAll
   }
   return counts
 }
