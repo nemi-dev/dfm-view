@@ -59,6 +59,7 @@ function createNew(state: RootState, draft: RootState, src: DFCharState, doCommi
   }
 }
 
+// @ts-ignore
 export const NewReducer: Reducer<RootState,
 ReturnType<typeof CreateDF>> =
 function NewReducer(state, action) {

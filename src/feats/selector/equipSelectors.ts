@@ -83,7 +83,6 @@ export const selectEmblems = Paw(
     (item, emblemSpecs) => {
       const maxEmblemCount = getMaxEmblemCount(item)
       const emblems = emblemSpecs.slice(0, maxEmblemCount).map(getEmblem)
-      console.log({ part, emblems });
       
       return emblems
     }
