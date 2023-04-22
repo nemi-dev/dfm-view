@@ -134,6 +134,9 @@ declare interface BaseAttrs {
   /** 암속성 추가 데미지 (%) */
   eldmg_dark?: number
 
+  /** 속성강화가 가장 높은 속성 추가 데미지 */
+  AddMaxEldmg?: number
+
   /** 이게 있으면 화속강과 명속강이 큰쪽으로 같아진다. (런처, 이단심판관) */
   DualTrigger?: boolean
 
@@ -232,14 +235,25 @@ type El_val = "el_fire" | "el_ice" | "el_lght" | "el_dark"
 declare type El = Pick<BaseAttrs, El_val | "eltype">
 
 
+/**
+ * 아이템/아이템세트의 `branch`/`gives`/`exclusive.children`에 들어가는 조건부 효과
+ * 
+ * 마을에서는 아예 적용되지 않는다.  
+ * `pick`을 만족할 때, `attrs`의 모든 효과가 적용되는 것으로 간주한다.  
+ * `pick`이 없으면 던전에서 항상 적용된다.
+ * */
 declare interface ConditionalNode {
-  /** (exclusive일 때) 이 효과가 적용될 조건 */
-  name?: string
 
-  /** 이 효과가 적용될 조건 */
-  when?: string
+  /** 
+   * 이 효과가 적용될 조건/이 조건부 효과의 이름 등 하위 조건부 효과를 기깔나게 표현한 키 이름  
+   * 없으면 "던전에서 항상 적용"된다.  
+   */
+  pick?: string
 
-  /** 최대 중첩 횟수 (없으면 1) */
+  /** 
+   * 최대 중첩 횟수 (없으면 1)  
+   * Exclusive일 때는 사용되지 않는다.
+   */
   maxRepeat?: number
 
   /** 적용되는 효과 */
@@ -251,10 +265,19 @@ declare interface ConditionalNode {
  */
 declare interface ExclusiveSet {
 
-  /** 이 ExclusiveSet이 발동될 조건 */
+  /** 이 ExclusiveSet의 Key name(이름 또는 적용될 조건이 가능하다.) */
+  pickSet?: string
+
+  /** 
+   * @deprecated `pickSet`을 쓰시오.
+   * 
+   * 이 ExclusiveSet이 발동될 조건 */
   name: string
 
-  /** View에서 표시될 ExclusiveSet 이름 */
+  /**
+   * @deprecated `pickSet`을 쓰시오.
+   * 
+   * View에서 표시될 ExclusiveSet 이름 */
   label?: string
 
   /** 이 ExclusiveSet의 조건이 만족되었을 때, 발동될 수 있는 효과 모음 */
@@ -329,14 +352,25 @@ declare interface DFISet {
 
 /** 직업 */
 declare interface DFClass {
+
+  /** 직업명 */
   name: DFClassName
+
+  /** 공격타입 (물리("Physc")|마법("Magic")만 가능, 컨버전 등이 나오면 다른방법을 써야한다.) */
   atype: Atype
+
+  /** 착용 가능한 무기 */
   weapons: WeaponType[]
-  attrs?: BaseAttrs
+
+  /** 이 직업에게 항상 적용되는 효과 */
+  attrs: BaseAttrs
 }
 
-/** 효과를 내는 것 (아이템/세트효과/스킬효과/아바타/마력결정/길드버프 등 모조리 포함)  
+/** 
+ * 효과를 내는 것 (아이템/세트효과/스킬효과/아바타/마력결정/길드버프 등 모조리 포함)  
  * 이것은 "추적"이 가능하게 설계되었고, 그래서 `Source`란 이름이 붙었다.
+ * 
+ * 이 효과는 이미 "적용된 것"으로 간주되어 `branch`, `gives`, `exclusive` 등이 없다.
  */
 declare interface AttrSource {
 
@@ -346,10 +380,10 @@ declare interface AttrSource {
    * (패시브/버프일 때) 스킬 이름  
    * (그 외) "길드"/"마력결정"/"아바타"  
    */
-  name?: string
+  name: string
 
   /** 내가 받을 효과 */
-  attrs?: BaseAttrs
+  attrs: BaseAttrs
 
 }
 

@@ -3,7 +3,7 @@ import _isets from "../data/itemsets.json"
 import _armorbases from "./armorbase.json"
 
 import memoizee from "memoizee"
-import { atx, AtypeAttrKey, combine, repeatAttr, scalarProduct } from "./attrs"
+import { atx, AtypeAttrKey, combine, createCondyceAttr } from "./attrs"
 
 export const weaponType: readonly Itype[] = Object.freeze([
   "소검","도","둔기","대검","광검",
@@ -258,7 +258,7 @@ export const getCardsForPart = memoizee(
 
 
 export function createCondyceKey2(sourceName: string, node: ConditionalNode) {
-  return `${sourceName}::${node.when}`
+  return `${sourceName}::${node.pick}`
 }
 
 /** 주어진 아이템 또는 아이템 세트에서 "내가 활성화한" branch/gives 조건부 옵션들을 실체화한다. **(중첩횟수 적용)** */
@@ -267,15 +267,15 @@ export function createActiveNode(attrSourceName: string, nodes: ConditionalNode[
   const d: AttrSource[] = []
   if (nodes)
   for (const child of nodes) {
-    /* branch/gives에 "when"이 없다면 "던전 입장시"인 것으로 취급한다.
+    /* branch/gives에 "pick"이 없다면 "던전 입장시"인 것으로 취급한다.
       "던전 입장시"와 "최대 x중첩"이 같이 있는 옵션은 아직 없으므로 한번만 적용한다. */
-    if (!child.when) {
-      d.push(child)
+    if (!child.pick) {
+      d.push(createCondyceAttr(attrSourceName, child))
     } else {
       const activeKey = createCondyceKey2(attrSourceName, child)
       if (activeKey in activeKeys) {
         const maxRepeat = activeKeys[activeKey]
-        if (maxRepeat > 0) d.push(repeatAttr(child, maxRepeat))
+        if (maxRepeat > 0) d.push(createCondyceAttr(attrSourceName, child, maxRepeat))
       }
     }
     
@@ -285,11 +285,11 @@ export function createActiveNode(attrSourceName: string, nodes: ConditionalNode[
 
 
 function exclusiveKey(item: ComplexAttrSource, exclusiveSet: ExclusiveSet) {
-  return `${item.name}::${exclusiveSet.name}`
+  return `${item.name}::${exclusiveSet.pickSet}`
 }
 
 export function createExclusiveKey2(itemName: string, exclusiveSet: ExclusiveSet) {
-  return `${itemName}::${exclusiveSet.name}`
+  return `${itemName}::${exclusiveSet.pickSet}`
 }
 
 /** 주어진 아이템 또는 아이템 세트에서 "내가 체크한" Exclusive 조건부 옵션을 실체화한다. */
@@ -300,8 +300,8 @@ export function getActiveExclusive(item: ComplexAttrSource, activeKeys: Record<s
     const key = exclusiveKey(item, exclusiveSet)
     if (activeKeys[key]) {
       const { children } = exclusiveSet
-      const found = children.find(exclusiveNode => exclusiveNode.name === activeKeys[key])
-      if (found) d.push(found)
+      const found = children.find(exclusiveNode => exclusiveNode.pick === activeKeys[key])
+      if (found) d.push(createCondyceAttr(item.name, found))
     }
   }
   return d
@@ -382,8 +382,6 @@ export function Interpolate(sources: (AttrSource | ComplexAttrSource | null | un
 /** 
  * - 아이템 배열의 모든 옵션을 결합한다.
  * - Choice가 null도 undefined도 아니라면 아이템 배열에서 활성화되는 조건부 옵션까지 모두 선택한다.
- * 
- * 이게 진짜지 ㅋㅋㅋㅋ
  */
 export function CombineItems(sources: (AttrSource | ComplexAttrSource | null | undefined)[], choice: Choices | null = null): BaseAttrs {
   if (!sources) return {}

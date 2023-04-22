@@ -74,14 +74,18 @@ export function scalarProduct(attr: BaseAttrs, k: number) {
   return copy
 }
 
+
 /** 
- * 주어진 조건부 노드의 옵션만을 `k`배한다.  
+ * 주어진 조건부 노드를 효과로 실체화한다.  
  * 아이템 옵션에 "최대 x중첩"이 없거나, `k` === 1이면 노드를 그대로 돌려받는다.
   */
-export function repeatAttr(node: ConditionalNode, k: number): ConditionalNode {
-  if (node?.maxRepeat == null || k === 1) return node
-  return { ...node, attrs: scalarProduct(node.attrs, k) }
+export function createCondyceAttr(parentName: string, node: ConditionalNode, repeat: number = 1): AttrSource {
+  if (node?.maxRepeat == null || repeat === 1) return {
+    name: `${parentName}::${node.pick ?? "던전에서"}`,
+    attrs: scalarProduct(node.attrs, repeat)
+  }
 }
+
 
 const reduce_eltype = (p: Eltype | Eltype[], n: Eltype | Eltype[]) => {
   if (p == null) return n
@@ -163,6 +167,7 @@ const attrDefsArray = [
   defineAttr("eldmg_ice", "수속성 추가 데미지", add, "Percent"),
   defineAttr("eldmg_lght", "명속성 추가 데미지", add, "Percent"),
   defineAttr("eldmg_dark", "암속성 추가 데미지", add, "Percent"),
+  defineAttr("AddMaxEldmg", "속성 추가 데미지 (내 최대속성)", add, "Percent"),
   defineAttr("DualTrigger", "듀얼 트리거", anyOf, "DualTrigger"),
 
   defineAttr("sk_inc", "스킬 공격력 증가", percent_inc_mul, "Percent"),
@@ -232,6 +237,14 @@ export function combine(...attrsList: (BaseAttrs | null | undefined)[]) {
   return prev
 }
 
+/** 입력 옵션에 "듀얼 트리거"가 켜져있으면 화속강과 명속강을 더 큰쪽으로 같게 만든다. (이걸 쓰는 시점이 중요!!!) */
+export function dualTrigger(attrs: BaseAttrs) {
+  if (attrs["DualTrigger"]) {
+    const max = Math.max(attrs["el_fire"] ?? 0, attrs["el_lght"] ?? 0)
+    if (max > 0) return { ...attrs, ["el_fire"]: max, ["el_lght"]: max }
+  }
+  return attrs
+}
 
 /** 주어진 속성강화와 속성부여로부터, 최종적으로 적용되는 내 속성타입을 얻는다. */
 export function whatElType(el: El): Eltype[] {
@@ -241,11 +254,29 @@ export function whatElType(el: El): Eltype[] {
   return activeTypes.filter(eltype => el[Elemental[eltype].el] == maxValue)
 }
 
-/** 입력 옵션에 "듀얼 트리거"가 켜져있으면 화속강과 명속강을 더 큰쪽으로 같게 만든다. (이걸 쓰는 시점이 중요!!!) */
-export function dualTrigger(attrs: BaseAttrs) {
-  if (attrs["DualTrigger"]) {
-    const max = Math.max(attrs["el_fire"] ?? 0, attrs["el_lght"] ?? 0)
-    if (max > 0) return { ...attrs, ["el_fire"]: max, ["el_lght"]: max }
+
+/** (속성부여에 상관없이) 속성강화가 가장 높은 속성에 대해, [속성강화 값, ...속성]을 얻는다. */
+export function maxEl(el: El): [number, ...Eltype[]] {
+  const eltypes: Eltype[] = ["Fire", "Ice", "Light", "Dark"]
+  const maxValue = Math.max(...eltypes.map(eltype => el[Elemental[eltype].el] ?? 0))
+  if (maxValue == 0) return [0]
+  const maxEls = eltypes.filter(eltype => el[Elemental[eltype].el] == maxValue)
+  return [maxValue, ...maxEls]
+}
+
+/** 최대 속성강화 추가 데미지가 있으면 그걸 적용한다. */
+export function applyAddMaxEldmg(attrs: BaseAttrs) {
+  if (attrs["AddMaxEldmg"]) {
+    const val = attrs["AddMaxEldmg"]
+    const [max, ...eltypes] = maxEl(attrs)
+    if (!max) return attrs
+    const eltype = eltypes[0]
+    const atomAttr: BaseAttrs = {
+      [Elemental[eltype].eldmg] : val
+    }
+    const { AddMaxEldmg: _, ...at } = attrs
+    return combine(at, atomAttr)
   }
   return attrs
 }
+

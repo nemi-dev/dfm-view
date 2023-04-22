@@ -2,6 +2,7 @@
   "name": "dfm-view",
   "version": "0.2.4",
   "type": "module",
+  "license": "MIT",
   "scripts": {
     "dev": "vite --host",
     "build": "tsc && vite build",

@@ -21,13 +21,13 @@ function LeafView({ itemKey, node, what, Action }: LeafViewProps) {
   const dispatch = useAppDispatch()
   return ( maxValue == 1?
     <LabeledSwitch checked={!!value}
-      label={<>{node.when}<SimpleBaseAttrView attrs={node.attrs} /></>}
+      label={<>{node.pick}<SimpleBaseAttrView attrs={node.attrs} /></>}
       onChange={b => dispatch(Action([itemKey, b? 1: 0]))}
     />
     :
     <LabeledNumberInput
       value={value}
-      label={<>{node.when}<SimpleBaseAttrView attrs={node.attrs} /></>}
+      label={<>{node.pick}<SimpleBaseAttrView attrs={node.attrs} /></>}
       onChange={v => dispatch(Action([itemKey, v]))}
       min={0}
       max={maxValue}
@@ -72,15 +72,15 @@ function BranchOrGivesView({ name, nodes, what }: BrachViewProps) {
 function ExclusiveNodeView({ prefix, node }: { prefix: string, node: ExclusiveSet }) {
   const dispatch = useAppDispatch()
   const value = useAppSelector(state => state.My.Choice.exclusives[prefix])
-  const values = node.children.map(n => n.name)
-  return <RadioGroup groupName={node.label} name={prefix} values={values} value={value}
+  const values = node.children.map(n => n.pick)
+  return <RadioGroup groupName={node.pickSet} name={prefix} values={values} value={value}
     dispatcher={val => dispatch(SetExclusive([prefix, val]))}
   />
 }
 
 interface ExclusiveViewProps {
   name: string
-  exclusives?: ExclusiveSet[]
+  exclusives: ExclusiveSet[] | null | undefined
 }
 
 

@@ -1,5 +1,5 @@
 import { createSelector } from "@reduxjs/toolkit"
-import { atx, combine, dualTrigger, whatElType } from "../../attrs"
+import { applyAddMaxEldmg, atx, combine, dualTrigger, whatElType } from "../../attrs"
 import type { RootState } from "../store"
 import { add, percent_inc_mul } from "../../utils"
 import { selectGuilds } from "./guildSelectors"
@@ -86,7 +86,7 @@ export const selectMyAttrTown = createSelector(
   selectMe,
   (sources) => {
     const a = CombineItems(sources)
-    return dualTrigger(a)
+    return applyAddMaxEldmg(dualTrigger(a))
   }
 )
 
@@ -99,7 +99,7 @@ export const selectMyAttr = createSelector(
   (state: RootState) => state.My.Choice,
   (sources, choice) => {
     const a = CombineItems(sources, choice)
-    return dualTrigger(a)
+    return applyAddMaxEldmg(dualTrigger(a))
   }
 )
 

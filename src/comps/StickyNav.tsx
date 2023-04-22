@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import styled from "styled-components"
-import { Edit, Users } from "react-feather"
+import { Edit } from "react-feather"
 import { useAppSelector } from "../feats/hooks"
 import { selectMyDamage } from "../feats/selector/selectors"
 import { selectClassAtype, selectMyDFClass, selectMyName } from "../feats/selector/selfSelectors"
