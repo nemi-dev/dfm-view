@@ -32,8 +32,8 @@ $guild-icon-size: 60px;
 
 
 .TonicGems {
-  @include polygonal(6);
-  min-height: 450px;
+  @include polygonal(6, 120px);
+  min-height: 400px;
 
   .TonicGem {
 
@@ -58,17 +58,6 @@ $guild-icon-size: 60px;
     }
 
 
-    &:nth-child(7) {
-      width: 150px;
-      height: 150px;
-
-      .GemImageWrapper {
-        height: 48px;
-        img {
-          transform: translate(-50%, -50%) scale(1);
-        }
-      }
-    }
 
     label {
       color: white;
@@ -81,55 +70,22 @@ $guild-icon-size: 60px;
       }
     }
   }
-}
 
 
-.CrackWrapper {
-
-  position: relative;
-  scale: 0.8;
-  
-  .CrackUnderlay {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    > img {
-      position: absolute;
-      display: block;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-  }
-  .CrackSpellSockets {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    > img {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      display: block;
-      transform-origin: top left;
-      --translate: translate(-50%, calc(-100% - 50px));
-      --angle: 72deg;
-      @for $i from 1 through 5 {
-        &:nth-child(#{$i}) {
-          transform: rotate(calc(var(--angle) * #{$i - 1})) var(--translate);
-        }
-      }
-    }
+  > * {
+    transform: translate(-50%, -60%) !important;
   }
 }
+
 
 
 .Crack {
   @include polygonal(5, 168px);
   min-height: 360px;
+
+  @media screen and (max-width: 999px) {
+    min-height: 300px;
+  }
 
   --icon-size: 60px;
 
@@ -139,7 +95,7 @@ $guild-icon-size: 60px;
   }
 
   > .RoundIcon:nth-child(6) {
-    --icon-size: 145px;
+    --icon-size: 140px;
   }
   
 }

@@ -7,6 +7,7 @@ import { PerfectGuild, SetGuild } from "../feats/slices/guildSlice"
 import { RootState } from '../feats/store'
 import { LabeledNumberInput } from "./widgets/Forms"
 import { SimpleBaseAttrView } from './widgets/AttrsView'
+import { perfectGuildStat } from '../feats/slices/initState'
 
 
 const GuildLayout = styled.div`
@@ -18,10 +19,6 @@ const GuildLayout = styled.div`
   gap: 2px;
 
   @media screen and (max-width: 999px) {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: stretch;
 
     .GuildPropOne {
       width: 100%;
@@ -78,13 +75,33 @@ interface GuildsInputProps {
   max?: number
 }
 
+function isPerfect({ StatLv, AtkLv, CritLv, ElLv, SpeedAtkLv, AccuLv }: GuildState) {
+  const {
+    StatLv: pStatLv, 
+    AtkLv: pAtkLv, 
+    CritLv: pCritLv, 
+    ElLv: pElLv, 
+    SpeedAtkLv: pSpeedAtkLv, 
+    AccuLv: pAccuLv, 
+  } = perfectGuildStat
+  return (
+    StatLv >= pStatLv &&
+    AtkLv >= pAtkLv &&
+    CritLv >= pCritLv &&
+    ElLv >= pElLv &&
+    SpeedAtkLv >= pSpeedAtkLv &&
+    AccuLv >= pAccuLv
+  )
+  
+}
+
 function GuildPropOne({ label, value, target, src, max, selector }: GuildsInputProps) {
   const dispatch = useAppDispatch()
   const attr = selector? useAppSelector(selector) : null
   return (
     <div className="GuildPropOne">
       <img src={src} alt={label} />
-      <LabeledNumberInput label={label + " Lv."} value={value} min={0} max={max} step={1}  onChange={v => dispatch(SetGuild([target, v]))} />
+      <LabeledNumberInput label={label + "Lv."} value={value} min={0} max={max} step={1}  onChange={v => dispatch(SetGuild([target, v]))} />
       <div className="AttrOut">
         <SimpleBaseAttrView attrs={attr} />
       </div>
@@ -93,10 +110,12 @@ function GuildPropOne({ label, value, target, src, max, selector }: GuildsInputP
 }
 
 export function Guilds() {
-  const { StatLv, AtkLv, CritLv, ElLv, SpeedAtkLv: SpeedAtkLv, AccuLv, PublicStatLv } =  useAppSelector(state => state.My.Guild)
-  const atype = useAppSelector(selectClassAtype)
-  const { Stat: keyStat, Atk: keyAtk, Crit: keyCrit, 스탯, 타입 } = AtypeAttrKey[atype]
   const dispatch = useAppDispatch()
+  const guildState = useAppSelector(state => state.My.Guild)
+  const atype = useAppSelector(selectClassAtype)
+  const { StatLv, AtkLv, CritLv, ElLv, SpeedAtkLv, AccuLv, PublicStatLv } = guildState
+  const { Stat: keyStat, Atk: keyAtk, Crit: keyCrit, 스탯, 타입 } = AtypeAttrKey[atype]
+  const perfect = isPerfect(guildState)
   return (
     <div id="Guilds">
       <h3>길드 버프</h3>
@@ -104,21 +123,22 @@ export function Guilds() {
         <GuildPropOne value={StatLv} max={30} target="StatLv" selector={selectGuildStat}
           label={스탯} src={`/img/guild/${keyStat}.png`} />
         <GuildPropOne value={AtkLv} max={30} target="AtkLv" selector={selectGuildAtk}
-          label={`${타입}공격력`} src={`/img/guild/${keyAtk}.png`} />
+          label={`${타입[0]}공`} src={`/img/guild/${keyAtk}.png`} />
         <GuildPropOne value={CritLv} max={30} target="CritLv" selector={selectGuildCrit}
-          label={`${타입}크리티컬`} src={`/img/guild/${keyCrit}.png`} />
+          label={`${타입[0]}크`} src={`/img/guild/${keyCrit}.png`} />
         <GuildPropOne value={ElLv} max={14} target="ElLv"
-          label="모든 속성 강화" src="/img/guild/el_all.png" />
+          label="속강" src="/img/guild/el_all.png" />
         <GuildPropOne value={AccuLv} max={30} target="AccuLv" selector={selectGuildAccu}
           label="적중"  src="/img/guild/Accu.png" />
         <GuildPropOne value={SpeedAtkLv} max={14} target="SpeedAtkLv" selector={selectGuildSpeedAtk}
-          label="공격속도" src="/img/guild/speed_atk.png" />
+          label="공속" src="/img/guild/speed_atk.png" />
         <GuildPropOne value={PublicStatLv} max={30} target="PublicStatLv" selector={selectGuildStatPublic}
-          label={`공용 ${스탯}`} src={`/img/guild/${keyStat}_public.png`} />
+          label={`공용${스탯}`} src={`/img/guild/${keyStat}_public.png`} />
       </GuildLayout>
+      {!perfect?
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center"}}>
         <button onClick={() => dispatch(PerfectGuild())}>개인 길드버프 최대로</button>
-      </div>
+      </div> : null}
     </div>
   )
 }

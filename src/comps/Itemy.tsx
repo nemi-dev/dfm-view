@@ -1,23 +1,27 @@
 import { useAppSelector, useAppDispatch } from "../feats/hooks"
-import { selectItem, selectCustomMaterial } from "../feats/selector/equipSelectors"
-import { EmblemIcon } from "./widgets/Icons"
-import { SetMaterial } from "../feats/slices/itemSlice"
+import { selectItem, selectCustomMaterial, selectEmblemSpecs, selectCard } from "../feats/selector/equipSelectors"
+import { EmblemIcon, ItemIcon } from "./widgets/Icons"
+import { DecreaseEmblemLevel, SetMaterial } from "../feats/slices/itemSlice"
+import { getMaxEmblemCount, isArmor, isCardable } from "../items"
+import { acceptEmblem } from "../emblem"
+import { useCallback, useContext } from "react"
+import { EmblemModal } from "./modals/EmblemModal"
+import { ModalContext } from "./modals/modalContext"
+import { CardModalFragment } from "./modals/CardModal"
 
-export interface EquipProps {
-  part: EquipPart
-  interactive?: boolean
-  showUpgarde?: boolean
+
+interface PartProps {
+  part: WholePart
 }
 
-interface ArmorPartProps {
-  part: ArmorPart
-}
-
-export function ArmorMaterialSelect({ part }: ArmorPartProps) {
+export function ArmorMaterialSelect({ part }: PartProps) {
+  if (!isArmor(part)) return null
+  const dispatch = useAppDispatch()
   const item = useAppSelector(selectItem[part])
   const material = useAppSelector(selectCustomMaterial[part])
-  const dispatch = useAppDispatch()
-  if (!item) return null
+
+  const materialFixed = item?.material
+  if (!item || materialFixed) return null
   return (
     <select className="ArmorMaterialSelector" value={material}
       onChange={ev => dispatch(SetMaterial([part, ev.target.value as ArmorMaterial]))}>
@@ -30,20 +34,37 @@ export function ArmorMaterialSelect({ part }: ArmorPartProps) {
   )
 }
 
-
-
-
-interface EmblemArrayProps {
-  emblems: EmblemSpec[]
-  accept: "Weapon" | "Red" | "Yellow" | "Blue" | "Green" | "Platinum"
-  onItemClick?: (n: number) => any
+export function CardSlot({ part }: PartProps) {
+  if (!isCardable(part)) return null
+  const { openModal } = useContext(ModalContext)
+  const card = useAppSelector(selectCard[part])
+  return (
+    <ItemIcon className="Card" item={card}
+        onClick={() => openModal(<CardModalFragment part={part} />)}
+      />
+  )
 }
 
-export function EmblemArray({ emblems = [], accept, onItemClick }: EmblemArrayProps) {
+
+export function EmblemArray({ part }: PartProps) {
+  if (!isCardable(part)) return null
+  const { openModal } = useContext(ModalContext)
+  const dispatch = useAppDispatch()
+  const item = useAppSelector(selectItem[part])
+  const emblems = useAppSelector(selectEmblemSpecs[part])
+  const onItemClick = useCallback((index: number) => {
+    if (part === "무기" || part === "보조장비" || part === "칭호")
+      openModal(<EmblemModal part={part} index={index} />)
+    else
+      dispatch(DecreaseEmblemLevel([part, index]))
+  }, [part])
+
+  const accept = acceptEmblem(part)
+  const maxEmblem = getMaxEmblemCount(item)
   return (
     <>
-    {emblems.map((spec, index) => (
-      <EmblemIcon key={index} spec={spec} accept={accept} onClick={() => onItemClick?.(index)} />
+    {emblems.slice(0, maxEmblem).map((spec, index) => (
+      <EmblemIcon key={index} spec={spec} accept={accept} onClick={() => onItemClick(index)} />
     ))}
     </>
   )

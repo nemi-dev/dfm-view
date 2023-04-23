@@ -1,10 +1,26 @@
 @import "./_Defs.scss";
 
-.Rarity_Common { color: #{$Common-color}; }
-.Rarity_Uncommon { color: #{$Uncommon-color}; }
-.Rarity_Rare { color: #{$Rare-color}; }
-.Rarity_Unique { color: #{$Unique-color}; }
-.Rarity_Epic { color: #{$Epic-color}; }
+.Rarity_Common {
+  color: #{$Common-color};
+  --color: #{$Common-color};
+  
+}
+.Rarity_Uncommon {
+  color: #{$Uncommon-color};
+  --color: #{$Uncommon-color};
+}
+.Rarity_Rare {
+  color: #{$Rare-color};
+  --color: #{$Rare-color};
+}
+.Rarity_Unique {
+  color: #{$Unique-color};
+  --color: #{$Unique-color};
+}
+.Rarity_Epic {
+  color: #{$Epic-color};
+  --color: #{$Epic-color};
+}
 
 .ItemName { align-self: center; }
 
@@ -27,6 +43,7 @@
   align-items: center;
   justify-content: space-evenly;
 
+  min-height: 20px;
   padding-block: 2px;
   padding-inline: 2px;
   background-color: rgba($color: #000000, $alpha: 0.3);

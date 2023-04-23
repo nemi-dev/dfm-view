@@ -9,7 +9,7 @@ import { Num } from "./widgets/NumberView"
 import { CheckboxGroup, DisposableInput, LabeledNumberInput, NumberInput, RadioGroup, LabeledSwitch } from "./widgets/Forms"
 
 import styled from 'styled-components'
-import { SetAchieveLevel, SetAtype, SetLevel, SetAtkFixed } from "../feats/slices/slice"
+import { SetAchieveLevel, SetLevel, SetAtkFixed } from "../feats/slices/slice"
 import { createContext, useContext, useState } from "react"
 import { PlusCircle } from 'react-feather'
 import { add } from "../utils"
@@ -158,7 +158,7 @@ export function MyStat() {
             labels={["물리", "마법"]}
             values={["Physc", "Magic"]}
             value={atype}
-            dispatcher={v => dispatch(SetAtype(v))}
+            dispatcher={() => {}}
           />
           <StatAtkCrit atype={atype} />
           <Gridy columns={2} colSize="1fr">

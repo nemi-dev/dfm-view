@@ -25,7 +25,7 @@ function EmblemSelect({ part, index, type, level }: { part: CardablePart, index:
   )
 }
 
-export function EmblemModalViolent({ part, index }: { part: CardablePart, index: number }) {
+export function EmblemModal({ part, index }: { part: CardablePart, index: number }) {
   const emblems = useAppSelector(selectEmblemSpecs[part])
   const currentSpec = emblems[index]
   const [newLevel, setNewLevel] = useState(currentSpec[1])

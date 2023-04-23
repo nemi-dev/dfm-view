@@ -1,9 +1,8 @@
 import { useAppDispatch, useAppSelector } from "../feats/hooks"
 import { SimpleBaseAttrView } from "./widgets/AttrsView"
 import { SetBranch, SetExclusive, SetGives } from "../feats/slices/choiceSlice"
-import { selectItem } from "../feats/selector/equipSelectors"
 import { LabeledSwitch, LabeledNumberInput, RadioGroup } from "./widgets/Forms"
-import { createExclusiveKey2, createCondyceKey2, equipParts, getActiveISets } from "../items"
+import { createExclusiveKey2, createCondyceKey2, getActiveISets } from "../items"
 import styled from "styled-components"
 import { ErrorBoundary } from "react-error-boundary"
 
@@ -15,16 +14,23 @@ interface LeafViewProps {
   Action: (typeof SetBranch | typeof SetGives)
 }
 function LeafView({ itemKey, node, what, Action }: LeafViewProps) {
+  const dispatch = useAppDispatch()
   const value = useAppSelector(state => state.My.Choice[what][itemKey] ?? 0)
   const maxValue = node.maxRepeat ?? 1
-  
-  const dispatch = useAppDispatch()
-  return ( maxValue == 1?
-    <LabeledSwitch checked={!!value}
+  const pick = node.pick
+  if (maxValue === 1) {
+    if (pick) 
+    return <LabeledSwitch checked={!!value}
       label={<>{node.pick}<SimpleBaseAttrView attrs={node.attrs} /></>}
       onChange={b => dispatch(Action([itemKey, b? 1: 0]))}
     />
-    :
+
+    else
+    return <span className="FormDF">
+      <SimpleBaseAttrView attrs={node.attrs} />
+    </span>
+  }
+  return (
     <LabeledNumberInput
       value={value}
       label={<>{node.pick}<SimpleBaseAttrView attrs={node.attrs} /></>}

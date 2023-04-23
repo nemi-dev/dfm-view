@@ -39,11 +39,14 @@ export const isArmor = (key: WholePart): key is ArmorPart => armorParts.includes
 /** `key`가 악세서리 부위인가? */
 export const isAccess = (key: WholePart): key is AccessPart => accessParts.includes(key as AccessPart)
 
+/** `p`가 주 장비 10부위인가? */
 export const isEquip = (p: WholePart): p is EquipPart => equipParts.includes(p as any)
 
 /** p가 카드/엠블렘 장착 가능 부위인가? */
 export const isCardable = (p: WholePart): p is CardablePart => cardableParts.includes(p as any)
 
+/** `p`가 마법봉인 있는 부위인가? */
+export const hasMagicProps = (p: WholePart): p is MagicPropsPart => magicPropsParts.includes(p as any)
 
 /** 주어진 부위의 "상위 종류"를 얻는다. (ex. "방어구", "악세서리", "무기", "봉인석") */
 export function getSupertype(part: EquipPart | "봉인석") {
@@ -268,8 +271,9 @@ export function createActiveNode(attrSourceName: string, nodes: ConditionalNode[
   if (nodes)
   for (const child of nodes) {
     /* branch/gives에 "pick"이 없다면 "던전 입장시"인 것으로 취급한다.
+       branch/gives의 "pick"이 문자열이 아니라면, 사용자가 직접 ON/OFF할 수 없는 것으로 취급한다.
       "던전 입장시"와 "최대 x중첩"이 같이 있는 옵션은 아직 없으므로 한번만 적용한다. */
-    if (!child.pick) {
+    if (!child.pick || (typeof child.pick != "string")) {
       d.push(createCondyceAttr(attrSourceName, child))
     } else {
       const activeKey = createCondyceKey2(attrSourceName, child)

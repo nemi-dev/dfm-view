@@ -46,7 +46,6 @@ const state: DFCharState = {
     "myName": "캐릭터 이름",
     "dfclass": "레인저(남)",
     "level": 65,
-    "atype": "Physc",
     "achieveLevel": 9,
     "atkFixed": 317
   },

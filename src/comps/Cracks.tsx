@@ -1,14 +1,12 @@
+import styled from 'styled-components'
+import { useContext } from 'react'
 import { useAppSelector } from '../feats/hooks'
 import { CrackIcon } from "./widgets/Icons"
 import { MagicProps } from './MagicProps'
-import React, { useContext } from 'react'
 import { ModalContext } from './modals/modalContext'
-import { selectCrackISet, selectSpells, selectCracks, selectBlessing } from "../feats/selector/cracksSelectors"
+import { selectSpells } from "../feats/selector/cracksSelectors"
 import { selectItem } from "../feats/selector/equipSelectors"
-import { SimpleBaseAttrView } from './widgets/AttrsView'
-import styled from 'styled-components'
 import { RuneModalFragment, SpellModalFragment } from './modals/CrackModal'
-import { combine } from '../attrs'
 
 
 
@@ -23,38 +21,58 @@ const MagicPropsLayout = styled.div`
   justify-content: center;
 `
 
-const AttrsLayout = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+const CrackWrapper = styled.div`
+  
+  position: relative;
+  scale: 0.8;
+
+  @media screen and (max-width: 999px) {
+    scale: 0.6;
+  }
+  
+`
+
+const CrackUnderlay = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+`
+
+const AbsCenterImg = styled.img`
+  position: absolute;
+  display: block;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`
+
+const SpellSocket = styled.img<{index: number}>`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  transform-origin: top left;
+  --translate: translate(-50%, calc(-100% - 50px));
+  --angle: 72deg;
+  --img_index: ${props => props.index};
+  transform: rotate(calc(var(--angle) * var(--img_index))) var(--translate);
 `
 
 export function Cracks() {
   const { openModal } = useContext(ModalContext)
   const rune = useAppSelector(selectItem["봉인석"])
   const spells = useAppSelector(selectSpells)
-  const blessing = useAppSelector(selectBlessing)
-  const isets = useAppSelector(selectCrackISet)
-
-  // 이게 왜 필요하냐면..... 봉인석 빼면 다 없어지거든...
-  const cracks = useAppSelector(selectCracks)
-
 
   return (
     <div className="Cracks">
-      <h3>성안의 봉인</h3>
-      <div className="CrackWrapper">
-        <div className="CrackUnderlay">
-          <img src="/img/crack.png" alt="" />
-          <img src="/img/CrackRune.png" alt="" />
-        </div>
-        <div className="CrackSpellSockets">
-          <img src="/img/CrackSpell.png" alt="" />
-          <img src="/img/CrackSpell.png" alt="" />
-          <img src="/img/CrackSpell.png" alt="" />
-          <img src="/img/CrackSpell.png" alt="" />
-          <img src="/img/CrackSpell.png" alt="" />
-        </div>
+      <CrackWrapper>
+        <CrackUnderlay>
+          <AbsCenterImg src="/img/crack.png" alt="" />
+          <AbsCenterImg src="/img/CrackRune.png" alt="" />
+          {spells.map((_,i) => <SpellSocket key={i} index={i} src="/img/CrackSpell.png" alt="" />)}
+        </CrackUnderlay>
         <div className="Crack">
           {spells.map((spell, i) => (
             <CrackIcon key={i} item={spell}
@@ -65,33 +83,10 @@ export function Cracks() {
             onClick={() => openModal(<RuneModalFragment />)}
           />
         </div>
-      </div>
-      {rune?
-      <MagicPropsLayout>
-      <MagicProps item={rune} part={"봉인석"} />
+      </CrackWrapper>
+      {rune? <MagicPropsLayout>
+        <MagicProps item={rune} part={"봉인석"} />
       </MagicPropsLayout>: null}
-      {blessing?
-        <div>
-          <h4>{blessing.name}</h4>
-          <AttrsLayout>
-            <SimpleBaseAttrView attrs={blessing.attrs}/>
-          </AttrsLayout>
-        </div>: null}
-      {isets.map((iii) => (
-          <React.Fragment key={iii.name}>
-          <h4>{iii.name}</h4>
-          <AttrsLayout>
-            <SimpleBaseAttrView attrs={iii.attrs}/>
-          </AttrsLayout>
-          </React.Fragment>
-      ))}
-      {rune?
-        <div>
-          <h3>성안의 봉인 효과</h3>
-          <AttrsLayout>
-          <SimpleBaseAttrView attrs={combine(...cracks.map(c => c?.attrs))}/>
-          </AttrsLayout>
-        </div>: null}
     </div>
   )
 }

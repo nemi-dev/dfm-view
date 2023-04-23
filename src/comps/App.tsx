@@ -22,6 +22,7 @@ import { InitChar } from '../feats/saveReducers'
 import store from '../feats/store'
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
 import { Detail } from './Detail'
+import { Gridy } from './widgets/CommonUI'
 
 
 function NavLink({ name, children }: React.PropsWithChildren<{ name: string }> ) {
@@ -47,6 +48,7 @@ function TabIsBroken({ name, error, resetErrorBoundary }: FallbackProps & { name
         <h4>{error.name}</h4>
         <div>
           <pre>{error.message}</pre>
+          <pre>{error.stack}</pre>
         </div>
       </div>
       <div>
@@ -73,11 +75,9 @@ function Navigator() {
   return (
     <nav className="Navigator">
       <NavLink name="장비">장비</NavLink>
-      <NavLink name="아바타">칭호/아바타</NavLink>
       <NavLink name="봉인석">봉인석</NavLink>
       <NavLink name="크리쳐">크리쳐</NavLink>
-      <NavLink name="길드">길드</NavLink>
-      <NavLink name="마력결정">마력결정</NavLink>
+      <NavLink name="기타">기타</NavLink>
       <NavLink name="자세히">자세히</NavLink>
     </nav>
   )
@@ -85,8 +85,8 @@ function Navigator() {
     <nav className="Navigator">
       <NavLink name="장비">장비</NavLink>
       <NavLink name="대장간">대장간</NavLink>
-      <NavLink name="아바타">칭호/아바타</NavLink>
       <NavLink name="봉인석">봉인석</NavLink>
+      <NavLink name="크리쳐">크리쳐</NavLink>
       <NavLink name="기타">기타</NavLink>
       <NavLink name="자세히">자세히</NavLink>
     </nav>
@@ -99,11 +99,15 @@ function Content() {
   return (
     <>
       <Tab name="장비"><Equips /></Tab>
-      <Tab name="아바타"><Avatars /></Tab>
       <Tab name="봉인석"><Cracks /></Tab>
       <Tab name="크리쳐"><Creatures /></Tab>
-      <Tab name="길드"><Guilds /></Tab>
-      <Tab name="마력결정"><Tonic /></Tab>
+      <Tab name="기타">
+        <Gridy columns={2} colSize='1fr'>
+          <Guilds />
+          <Tonic />
+          <Avatars />
+        </Gridy>
+      </Tab>
       <Tab name="자세히"><Detail /></Tab>
     </>
   )
@@ -112,12 +116,12 @@ function Content() {
     <>
       <Tab name="장비"><Equips /></Tab>
       <Tab name="대장간"><Forge /></Tab>
-      <Tab name="아바타"><Avatars /></Tab>
       <Tab name="봉인석"><Cracks /></Tab>
+      <Tab name="크리쳐"><Creatures /></Tab>
       <Tab name="기타">
         <Guilds />
         <Tonic />
-        <Creatures />
+        <Avatars />
       </Tab>
       <Tab name="자세히"><Detail /></Tab>
     </>

@@ -9,12 +9,6 @@ declare interface SelfState {
   /** 캐릭터 레벨 (최대 65) */
   level: number
 
-  /** 
-   * 공격타입
-   * @deprecated `selectMyDFClass` 또는 `whois`로 얻은 객체의 `Atype`을 쓸것
-   */
-  atype: Atype
-
   /** 업적 레벨 (최대 9) */
   achieveLevel: number
   

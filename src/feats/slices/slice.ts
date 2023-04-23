@@ -20,9 +20,6 @@ export const selfSlice = createSlice({
     SetAchieveLevel: (s, { payload }: PayloadAction<number>) => {
       s.achieveLevel = payload
     },
-    SetAtype: (s, { payload }: PayloadAction<Atype>) => {
-      s.atype = payload
-    },
     SetAtkFixed: (s, pay : PayloadAction<number>) => {
       s.atkFixed = pay.payload
     },
@@ -34,7 +31,6 @@ export const {
   SetDFClass,
   SetLevel,
   SetAchieveLevel,
-  SetAtype,
   SetAtkFixed,
 } = selfSlice.actions
 

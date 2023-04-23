@@ -161,7 +161,6 @@
       height: 60vh;
     }
 
-
     .ModalItemSelect {
       display: flex;
       .ItemNameResponsive {
@@ -176,5 +175,9 @@
     grid-auto-rows: auto;
     align-content: center;
     justify-content: center;
+  }
+
+  .ItemSelectArray, .ItemShotgunArray {
+    --item-size: 42px;
   }
 }

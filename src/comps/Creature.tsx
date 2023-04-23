@@ -55,9 +55,6 @@ export function Creatures() {
   const dispatch = useAppDispatch()
   return (
     <div>
-      <header>
-      <h3>크리쳐</h3>
-      </header>
       <IconsLayout>
         <CreatureOrArtifactView item={creature} part="크리쳐" />
         <CreatureOrArtifactView item={Red} part="아티팩트" color="Red"  />

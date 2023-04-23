@@ -9,10 +9,11 @@ import { PortraitMode } from "../responsiveContext"
 import { selectClassAtype } from "../feats/selector/selfSelectors"
 import { selectMagicPropNames } from "../feats/selector/equipSelectors"
 import { SetMagicProps } from "../feats/slices/itemSlice"
+import { hasMagicProps } from "../items"
 
 interface MagicPropsArrayProps {
   item: DFItem
-  part: MagicPropsPart
+  part: WholePart
 }
 
 const MagicPropOne = styled.div`
@@ -38,6 +39,9 @@ const MagicPropOne = styled.div`
 `
 
 export function MagicProps({ item, part }: MagicPropsArrayProps) {
+  // 사용자가 part를 강제로 바꿀 수 없기 때문에 hooks 앞에 이게 와도 괜찮음!
+  if (!hasMagicProps(part)) return null
+  
   const isPortrait = useContext(PortraitMode)
   const { level, rarity } = item
   const dispatch = useDispatch()

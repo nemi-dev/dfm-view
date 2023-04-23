@@ -35,6 +35,13 @@
       font-size: 0.75rem;
     }
   }
+  .ItemIcon {
+    --icon-size: var(--item-size, 52px) !important;
+  }
+  .Card {
+    --icon-size: var(--card-size, 30px) !important;
+  }
+  
 }
 
 
@@ -48,22 +55,6 @@
 
 
 
-.EquipsArrayLayout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: repeat(5, auto);
-  grid-auto-flow: column;
-  align-items: start;
-  gap: 4px;
-
-  @media screen and (max-width: 999px) {
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(2, auto);
-    grid-auto-flow: row;
-  }
-}
-
-
 .EquipSlot {
 
   .ItemIcon {
@@ -75,6 +66,9 @@
   }
 
   @media screen and (max-width: 999px) {
+    .ItemIcon {
+      --item-size: 52px;
+    }
     .SquareIcon.Card {
       --card-size: 21px;
     }
@@ -115,9 +109,6 @@
     flex-wrap: wrap;
   }
 
-  .AvatarAttrs {
-    grid-area: xt;
-  }
 }
 
 @media screen and (min-width: 1000px) {
@@ -127,7 +118,6 @@
     grid-template-areas: 
     "im nm mgp"
     "im xt mgp"
-    "op op op"
     ;
     grid-template-rows: auto auto auto;
     grid-template-columns: auto 1fr auto;
@@ -189,12 +179,14 @@
   font-weight: 700;
   color: $Epic-color;
   input {
-    width: 2.5rem !important;
+    width: 2rem !important;
     text-align: left;
-    font-size: 1rem;
+    font-size: 0.8rem;
+    font-weight: 900;
     background-color: transparent;
     color: inherit;
   }
+
 }
 
 

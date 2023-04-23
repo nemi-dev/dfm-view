@@ -61,9 +61,9 @@ export function Detail() {
         <h3>자세히 보기</h3>
       </header>
       <div>
-        <RadioGroup name="ViewType" groupName="그룹화"
+        <RadioGroup name="ViewType" groupName="그룹"
           values={["Part", "Attr"]} value={by} 
-          labels={["부위별로 그룹", "효과별로 그룹"]}
+          labels={["아이템", "효과"]}
           dispatcher={v => setBy(v)}
         />
         {by === "Part"? <SourceGroupView /> : null}
