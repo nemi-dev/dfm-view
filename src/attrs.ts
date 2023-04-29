@@ -87,32 +87,13 @@ export function createCondyceAttr(parentName: string, node: ConditionalNode, rep
 }
 
 
-const reduce_eltype = (p: Eltype | Eltype[], n: Eltype | Eltype[]) => {
-  if (p == null) return n
-  if (typeof p === "string") {
-    if (typeof n === "string") {
-      if (p === n) return p
-      else return [p, n]
-    } else {
-      if (n.includes(p)) return n
-      else return [...n, p]
-    }
-  } else {
-    if (typeof n === "string") {
-      if (p.includes(n)) return p
-      else return [...p, n]
-    } else {
-      const v = [...p]
-      for (const i of n) {
-        if (!p.includes(i)) v.push(i)
-      }
-      return v
-    }
+const reduce_eltype = (p: Eltype[], n: Eltype[]) => {
+  const v = [...p]
+  for (const i of n) {
+    if (!p.includes(i)) v.push(i)
   }
+  return v
 }
-
-
-const reducers: Partial<Record<keyof BaseAttrs, (p: any, n: any)=>any>> = {}
 
 
 export type AttrExpressionType = 
@@ -125,17 +106,13 @@ export interface AttrDef {
   expression: AttrExpressionType
 }
 
-export const attrDefs : { [k in keyof BaseAttrs]: AttrDef } & { array: AttrDef[] } = {
-  array: []
-}
+const _attrDefs: { [k in keyof BaseAttrs]: AttrDef } = {}
 
 function defineAttr(key: keyof BaseAttrs, name: string, reducer: (a: any, b: any) => any, expression: AttrExpressionType) {
   const _a = { key, name, reducer, expression }
-  attrDefs[key] = _a
-  reducers[key] = reducer
+  _attrDefs[key] = _a
   return _a
 }
-
 
 const attrDefsArray = [
   defineAttr("strn", "힘", add, "Flat"),
@@ -208,7 +185,10 @@ const attrDefsArray = [
   defineAttr("misc", "기타 관심없는 효과", combineArray, "Misc")
 ]
 
-attrDefs.array = attrDefsArray
+export const attrDefs = {
+  ..._attrDefs,
+  array: attrDefsArray
+}
 
 /** 
  * 두 개 이상의 옵션을 결합한다.  
@@ -220,17 +200,14 @@ export function combine(...attrsList: (BaseAttrs | null | undefined)[]) {
   for (const attrs of attrsList) {
     if (attrs == null) continue
     for (const key in attrs) {
-      if (key === "DualTrigger") {
-        prev[key] ||= attrs[key]
-        continue
-      }
-      if (!(key in reducers)) continue
+      const attrDef: AttrDef = attrDefs[key]
+      if (!attrDef) continue
       if (!(key in prev)) {
         // @ts-ignore
         prev[key] = attrs[key]
       } else {
         // @ts-ignore
-        prev[key] = reducers[key](prev[key], attrs[key])
+        prev[key] = attrDef.reducer(prev[key], attrs[key])
       }
     }
   }
