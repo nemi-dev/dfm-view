@@ -1,28 +1,53 @@
 @import "./_Defs.scss";
 
 .Rarity_Common {
-  color: #{$Common-color};
-  --color: #{$Common-color};
-  
+  color: var(--color-common);
+  --color: var(--color-common);
 }
 .Rarity_Uncommon {
-  color: #{$Uncommon-color};
-  --color: #{$Uncommon-color};
+  color: var(--color-uncommon);
+  --color: var(--color-uncommon);
 }
 .Rarity_Rare {
-  color: #{$Rare-color};
-  --color: #{$Rare-color};
+  color: var(--color-rare);
+  --color: var(--color-rare);
 }
 .Rarity_Unique {
-  color: #{$Unique-color};
-  --color: #{$Unique-color};
+  color: var(--color-unique);
+  --color: var(--color-unique);
 }
 .Rarity_Epic {
-  color: #{$Epic-color};
-  --color: #{$Epic-color};
+  color: var(--color-epic);
+  --color: var(--color-epic);
 }
 
 .ItemName { align-self: center; }
+
+.Hovering {
+  box-sizing: border-box;
+  border-width: 1px;
+  border-radius: 5px;
+  border-color: transparent;
+  border-style: solid;
+
+  transition-duration: 0.1s;
+  transition-timing-function: linear;
+  transition-property: background-color, border-color, color;
+
+  &:hover {
+    background-color: rgba($color: #ffae00, $alpha: 0.1);
+    border-color: rgba($color: #ffd67e, $alpha: 1.0);
+  }
+}
+
+
+.Bordered {
+  border: 1px solid rgba($color: #ffffff, $alpha: 0.5);
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+
 
 
 .Hovery, :is(input[type=text], input[type=number]).Hovery {
@@ -85,7 +110,7 @@
     display: none;
   }
 
-  .AttrOne {
+  .AttrItem {
     padding-block: 0!important;
   }
 
@@ -185,8 +210,4 @@
     border-radius: 50%;
   }
 
-}
-
-.SwitchNotification {
-  color: $Unique-color;
 }

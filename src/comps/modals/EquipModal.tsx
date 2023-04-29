@@ -13,6 +13,8 @@ import { FetchItems, SetItem } from "../../feats/slices/itemSlice"
 import { selectMyDFClass } from "../../feats/selector/selfSelectors"
 import { ModalItemSelect } from "./Select"
 import { CurrentPart } from "./CurrentPart"
+import { TabContext } from "../../responsiveContext"
+import { NavLink, Tab } from "../widgets/Tab"
 
 type EquipShotgun = Partial<Pick<ItemsState, EquipPart>>
 
@@ -44,6 +46,16 @@ function EquipShotgun({ name, itemChildren, useThisForPayload }: IsetCatalog) {
   )
 }
 
+function myItemSroter(myWeapons: WeaponType[], a: DFItem, b: DFItem) {
+  return myWeapons.indexOf(a.itype as WeaponType) - myWeapons.indexOf(b.itype as WeaponType)
+}
+
+function pickItems(items: DFItem[], part: WholePart, myWeapons: WeaponType[] | null | undefined) {
+  if (part !== "무기" || !myWeapons) return items
+  return items
+  .filter(item => myWeapons.includes(item.itype as WeaponType))
+  .sort(myItemSroter.bind(null, myWeapons))
+}
 
 function inflate(m: Record<string, string>) {
   return Object.keys(m).map(part => getItem(m[part]))
@@ -75,17 +87,14 @@ input[type=text]& {
   
 `
 
+const SelectType = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+`
 
-function myItemSroter(myWeapons: WeaponType[], a: DFItem, b: DFItem) {
-  return myWeapons.indexOf(a.itype as WeaponType) - myWeapons.indexOf(b.itype as WeaponType)
-}
 
-function pickItems(items: DFItem[], part: WholePart, myWeapons: WeaponType[] | null) {
-  if (part !== "무기" || !myWeapons) return items
-  return items
-  .filter(item => myWeapons.includes(item.itype as WeaponType))
-  .sort(myItemSroter.bind(null, myWeapons))
-}
 
 export function EquipModalFragment({ part }: { part: WholePart }) {
   const { closeModal } = useContext(ModalContext)
@@ -93,6 +102,9 @@ export function EquipModalFragment({ part }: { part: WholePart }) {
   const [query, setQuery] = useState("")
   const [showMyWeaponsOnly, setShowMyWeaponsOnly] = useState(true)
   const myDFclass = useAppSelector(selectMyDFClass)
+
+  const [activeTab, setActiveTab] = useState("단일")
+
   const myWeapons = myDFclass?.weapons ?? []
 
   const dispatch = useAppDispatch()
@@ -111,31 +123,35 @@ export function EquipModalFragment({ part }: { part: WholePart }) {
   const result = useMemo(() => query? fuse.search(query).map(s => s.item) : items, [...dependencies, query])
   const iresult = useMemo(() => query? fusei.search(query).map(s => s.item) : isets, [...dependencies, query])
   return (
-    <>
-    <CurrentPart part={part} />
-    <SearchField type="text" placeholder="아이템 이름으로 검색해보세요!!" value={query} onChange={ev => setQuery(ev.target.value)} />
-    {part === "무기"? <CheckieInline label="착용가능 무기만 표시하기" checked={showMyWeaponsOnly} onChange={setShowMyWeaponsOnly} /> : null}
-    <div className="ModalMenuScrollable">
-      {iresult.length > 0?
-        <>
-          <h4>세트 한번에 끼기</h4>
-          <div className="ItemShotgunArray">
-            {iresult.map(({name, itemChildren, useThisForPayload}) => {
-              return <EquipShotgun key={name} name={name} itemChildren={itemChildren} useThisForPayload={useThisForPayload} />
-            })}
-          </div>
-      </> : null}
-      {result.length > 0?
-      <>
-      <h4>단일 장비</h4>
-      <div className="ItemSelectArray">
-      {result.map((item) => (
-        <ModalItemSelect key={item.name} item={item} onClick={() => onClick(item)} />
-      ))}
-      </div></> : null
-      }
-    </div>
-    </>
+    <TabContext.Provider value={{ activeTab, setActiveTab }}>
+      <CurrentPart part={part} />
+      <SearchField type="text" placeholder="아이템 이름으로 검색해보세요!!" value={query} onChange={ev => setQuery(ev.target.value)} />
+      {part === "무기"? <CheckieInline label="착용가능 무기만 표시하기" checked={showMyWeaponsOnly} onChange={setShowMyWeaponsOnly} /> : null}
+      <SelectType>
+        <NavLink name="단일">단일</NavLink>
+        <NavLink name="세트">세트</NavLink>
+      </SelectType>
+      <div className="ModalMenuScrollable">
+        <Tab name="단일">
+        {result.length > 0?
+          <div className="ItemSelectArray">
+          {result.map((item) => (
+            <ModalItemSelect key={item.name} item={item} onClick={() => onClick(item)} />
+          ))}
+          </div> : null
+        }
+        </Tab>
+        <Tab name="세트">
+        {iresult.length > 0?
+            <div className="ItemShotgunArray">
+              {iresult.map(({name, itemChildren, useThisForPayload}) => {
+                return <EquipShotgun key={name} name={name} itemChildren={itemChildren} useThisForPayload={useThisForPayload} />
+              })}
+            </div>
+        :null}
+        </Tab>
+      </div>
+    </TabContext.Provider>
   )
 }
 

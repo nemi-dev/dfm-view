@@ -6,10 +6,7 @@ import { useCallback, useContext, useEffect, useState } from 'react'
 import { Equips } from './Equips'
 import { Forge } from './Forge'
 import { Creatures } from './Creature'
-import { Guilds } from "./Guilds"
 import { Cracks } from "./Cracks"
-import { Tonic } from "./Tonic"
-import { Avatars } from "./Avatar"
 import { PortraitMode, TabContext } from '../responsiveContext'
 import AppModal from './modals/index'
 import { ModalContext, ModalContextType } from "./modals/modalContext"
@@ -20,54 +17,10 @@ import { EnemyTarget } from './EnemyTarget'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { InitChar } from '../feats/saveReducers'
 import store from '../feats/store'
-import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
 import { Detail } from './Detail'
-import { Gridy } from './widgets/CommonUI'
+import { MiscScreen } from './Misc'
+import { NavLink, Tab } from './widgets/Tab'
 
-
-function NavLink({ name, children }: React.PropsWithChildren<{ name: string }> ) {
-  const { activeTab, setActiveTab } = useContext(TabContext)
-  const className = name === activeTab? "NavLink Active" : "NavLink"  
-
-  const onClick = useCallback(() => {
-    setActiveTab(name)
-  }, [name])
-  return (
-    <span className={className} onClick={onClick}>{children}</span>
-  )
-}
-
-function TabIsBroken({ name, error, resetErrorBoundary }: FallbackProps & { name: string }) {
-  return (
-    <div>
-      <header>
-        <h3>아구구!</h3>
-        <div>{name} 탭이 고장나버렸어요! 어서 개발자에게 알려주세요!</div>
-      </header>
-      <div>
-        <h4>{error.name}</h4>
-        <div>
-          <pre>{error.message}</pre>
-          <pre>{error.stack}</pre>
-        </div>
-      </div>
-      <div>
-        <button onClick={resetErrorBoundary}>다시 시도</button>
-      </div>
-    </div>
-  )
-}
-
-function Tab({ name, children }: React.PropsWithChildren<{ name: string }> ) {
-  const { activeTab } = useContext(TabContext)
-  if (name === activeTab) return (
-    <ErrorBoundary children={children} fallbackRender={
-      ({ error, resetErrorBoundary }) => 
-      <TabIsBroken name={name} error={error} resetErrorBoundary={resetErrorBoundary} />
-    } />
-  )
-  return null
-}
 
 function Navigator() {
   const portrait = useContext(PortraitMode)
@@ -101,13 +54,7 @@ function Content() {
       <Tab name="장비"><Equips /></Tab>
       <Tab name="봉인석"><Cracks /></Tab>
       <Tab name="크리쳐"><Creatures /></Tab>
-      <Tab name="기타">
-        <Gridy columns={2} colSize='1fr'>
-          <Guilds />
-          <Tonic />
-          <Avatars />
-        </Gridy>
-      </Tab>
+      <Tab name="기타"><MiscScreen /></Tab>
       <Tab name="자세히"><Detail /></Tab>
     </>
   )
@@ -118,11 +65,7 @@ function Content() {
       <Tab name="대장간"><Forge /></Tab>
       <Tab name="봉인석"><Cracks /></Tab>
       <Tab name="크리쳐"><Creatures /></Tab>
-      <Tab name="기타">
-        <Guilds />
-        <Tonic />
-        <Avatars />
-      </Tab>
+      <Tab name="기타"><MiscScreen /></Tab>
       <Tab name="자세히"><Detail /></Tab>
     </>
   )

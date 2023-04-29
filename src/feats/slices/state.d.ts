@@ -1,3 +1,5 @@
+declare type ItemIdentifier = string | null | undefined
+
 declare interface SelfState {
 
   /** 얘 이름 */
@@ -18,41 +20,41 @@ declare interface SelfState {
 }
 
 declare interface ItemsState {
-  무기: string
-  상의: string
-  하의: string
-  머리어깨: string
-  벨트: string
-  신발: string
-  팔찌: string
-  목걸이: string
-  반지: string
-  보조장비: string
-  칭호: string
-  오라: string
-  무기아바타: string
-  봉인석: string
-  정수: string[]
-  크리쳐: string
+  무기: ItemIdentifier
+  상의: ItemIdentifier
+  하의: ItemIdentifier
+  머리어깨: ItemIdentifier
+  벨트: ItemIdentifier
+  신발: ItemIdentifier
+  팔찌: ItemIdentifier
+  목걸이: ItemIdentifier
+  반지: ItemIdentifier
+  보조장비: ItemIdentifier
+  칭호: ItemIdentifier
+  오라: ItemIdentifier
+  무기아바타: ItemIdentifier
+  봉인석: ItemIdentifier
+  정수: ItemIdentifier[]
+  크리쳐: ItemIdentifier
   아티팩트: {
-    Red: string
-    Green: string
-    Blue: string
+    Red: ItemIdentifier
+    Green: ItemIdentifier
+    Blue: ItemIdentifier
   }
 }
 
 declare interface CardState {
-  무기: string | null
-  상의: string | null
-  하의: string | null
-  머리어깨: string | null
-  벨트: string | null
-  신발: string | null
-  팔찌: string | null
-  목걸이: string | null
-  반지: string | null
-  보조장비: string | null
-  칭호: string | null
+  무기: ItemIdentifier
+  상의: ItemIdentifier
+  하의: ItemIdentifier
+  머리어깨: ItemIdentifier
+  벨트: ItemIdentifier
+  신발: ItemIdentifier
+  팔찌: ItemIdentifier
+  목걸이: ItemIdentifier
+  반지: ItemIdentifier
+  보조장비: ItemIdentifier
+  칭호: ItemIdentifier
 }
 
 declare interface EmblemState {
@@ -150,16 +152,16 @@ declare interface GuildState {
 declare interface CreaturePropState {
 
   /** 크리쳐 레벨에 따라 크리쳐가 주는 모든스탯 보너스 */
-  CreatureStat: number
+  Creature: number
 
   /** 레드 아티팩트 옵션에서 "내 스탯" 증가량 총합 */
-  RedPropsValue: number
+  Red: number
 
   /** 블루 아티팩트 옵션에서 오는 "내 타입 공격력" 증가량 총합 */
-  BluePropsValue: number
+  Blue: number
 
   /** 그린 아티팩트 옵션에서 오는 "내 속성강화 + 모든 속성강화" 증가량 총합 */
-  GreenPropsEl: number
+  Green: number
 
 }
 
@@ -233,7 +235,7 @@ declare interface DFCharState {
   Material: MaterialState
   Avatar: AvatarRarityState
   Guild: GuildState
-  CreatureProp: CreaturePropState
+  CreatureValue: CreaturePropState
   Choice: Choices
   Calibrate: CalibrateState
 }

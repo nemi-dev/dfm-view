@@ -47,10 +47,10 @@ export function Creatures() {
     creature = useAppSelector(selectItem["크리쳐"])
   const
     { Red, Green, Blue } = useAppSelector(selectArtifacts),
-    stat = useAppSelector(state => state.My.CreatureProp.CreatureStat),
-    redValue = useAppSelector(state => state.My.CreatureProp.RedPropsValue),
-    greenValue = useAppSelector(state => state.My.CreatureProp.GreenPropsEl),
-    blueValue = useAppSelector(state => state.My.CreatureProp.BluePropsValue)
+    stat = useAppSelector(state => state.My.CreatureValue.Creature),
+    redValue = useAppSelector(state => state.My.CreatureValue.Red),
+    greenValue = useAppSelector(state => state.My.CreatureValue.Green),
+    blueValue = useAppSelector(state => state.My.CreatureValue.Blue)
   
   const dispatch = useAppDispatch()
   return (
@@ -69,9 +69,9 @@ export function Creatures() {
       <h5>(미지의 이빨 돌려서 맞추는 그거)</h5>
       </header>
       <div className="InputArea">
-        <LabeledNumberInput label="레드 아티팩트 옵션 (힘/지능)" value={redValue} onChange={value => dispatch(SetArtifactValue(["RedPropsValue", value]))} />
-        <LabeledNumberInput label="블루 아티팩트 옵션 (물리/마법공격력)" value={blueValue} onChange={value => dispatch(SetArtifactValue(["BluePropsValue", value]))} />
-        <LabeledNumberInput label="그린 아티팩트 옵션 (속성 강화)" value={greenValue} onChange={value => dispatch(SetArtifactValue(["GreenPropsEl", value]))} />
+        <LabeledNumberInput label="레드 아티팩트 옵션 (힘/지능)" value={redValue} onChange={value => dispatch(SetArtifactValue(["Red", value]))} />
+        <LabeledNumberInput label="블루 아티팩트 옵션 (물리/마법공격력)" value={blueValue} onChange={value => dispatch(SetArtifactValue(["Blue", value]))} />
+        <LabeledNumberInput label="그린 아티팩트 옵션 (속성 강화)" value={greenValue} onChange={value => dispatch(SetArtifactValue(["Green", value]))} />
       </div>
       <ClosedCondyceSet items={[creature, Red, Green, Blue]} />
     </div>

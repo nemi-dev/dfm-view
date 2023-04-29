@@ -40,7 +40,7 @@ function OneAttrTriplet({ className = "", name, aKey, percent = false, signed = 
   const value = useAppSelector(state => selectCalibrateOne(state, aKey))
   const dispatch = useAppDispatch()
   return (
-    <div className={"FormDF AttrOne " +  className}>
+    <div className={"FormDF AttrItem " +  className}>
       {name? <div className="KeyName">{name}</div>: null}
       <Num className="AttrValue" value={me[aKey]} signed={signed} percented={percent} />
       <NumberInput value={value} onChange={v => dispatch(SetBasicAttr([aKey, v]))} />
@@ -108,7 +108,7 @@ function SkillInc() {
   const sk_inc = useAppSelector(state => state.My.Calibrate.sk_inc)
   const dispatch = useAppDispatch()
   return (
-    <div className="SkillInc AttrOne FormDF">
+    <div className="SkillInc AttrItem FormDF">
       <span className="KeyName">
         스증(장비)
         <button onClick={() => dispatch(AddSkillInc())}>
@@ -137,10 +137,6 @@ export function MyStat() {
   const eltypeExpr = eltype.length? `${eltype.map(e => Elemental[e].속성).join("+")}` : "(속성없음)"
   const dispatch = useAppDispatch()
 
-  const
-    my_level = useAppSelector(state => state.My.Self.level),
-    AchieveLevel = useAppSelector(state => state.My.Self.achieveLevel),
-    atkFixed = useAppSelector(state => state.My.Self.atkFixed)
   return (
     <MyAttrsContext.Provider value={me} >
     <div className="MyStat">
@@ -149,17 +145,6 @@ export function MyStat() {
       </header>
       <div className="InputArea">
         <LabeledSwitch label="마을스탯 보기" checked={excludeCond} onChange={setExcludeCond} />
-        <GridyTwo>
-          <LabeledNumberInput label="캐릭터 레벨" value={my_level} onChange={v => dispatch(SetLevel(v))} />
-          <LabeledNumberInput label="업적 레벨" value={AchieveLevel} onChange={v => dispatch(SetAchieveLevel(v))} />
-          <LabeledNumberInput label="독립 공격력" value={atkFixed} onChange={v => dispatch(SetAtkFixed(v))} />
-        </GridyTwo>
-          <RadioGroup name="공격타입" className="AtypeSelector"
-            labels={["물리", "마법"]}
-            values={["Physc", "Magic"]}
-            value={atype}
-            dispatcher={() => {}}
-          />
           <StatAtkCrit atype={atype} />
           <Gridy columns={2} colSize="1fr">
           <OneAttrTriplet aKey="cdmg_inc" name="크뎀증" percent signed />

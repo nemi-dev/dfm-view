@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { accessParts, armorParts, getItem, oneEmblemParts } from "../../items"
+import { accessParts, armorParts, getItemById, oneEmblemParts } from "../../items"
 import initState from "./initState"
 
 const { Item, Card, Emblem, MagicProps, Upgrade, Material } = initState
@@ -9,17 +9,17 @@ export const itemSlice = createSlice({
   name: "Item",
   initialState: Item,
   reducers: {
-    SetItem: (s, { payload: [part, itemName] }: PayloadAction<[SingleItemPart, string]>) => {
-      s[part] = itemName
+    SetItem: (s, { payload: [part, id] }: PayloadAction<[SingleItemPart, ItemIdentifier]>) => {
+      s[part] = id
     },
-    SetSpell: (s, { payload: [index, itemName] }: PayloadAction<[number, string]>) => {
-      s["정수"][index] = itemName
+    SetSpell: (s, { payload: [index, id] }: PayloadAction<[number, ItemIdentifier]>) => {
+      s["정수"][index] = id
     },
-    SetSpellAll: (s, { payload: itemName }: PayloadAction<string>) => {
-      s["정수"].fill(itemName)
+    SetSpellAll: (s, { payload: id }: PayloadAction<ItemIdentifier>) => {
+      s["정수"].fill(id)
     },
-    SetArtifact: (s, { payload: [ color, name ] }: PayloadAction<["Red"|"Green"|"Blue", string]>) => {
-      s["아티팩트"][color] = name
+    SetArtifact: (s, { payload: [ color, id ] }: PayloadAction<["Red"|"Green"|"Blue", ItemIdentifier]>) => {
+      s["아티팩트"][color] = id
     },
     FetchItems: (s, { payload: items }: PayloadAction<Partial<ItemsState>>) => {
       Object.assign(s, items)
@@ -36,13 +36,13 @@ export const cardSlice = createSlice({
   name: "Card",
   initialState: Card,
   reducers: {
-    SetCard: (s, { payload: [part, cardName] }: PayloadAction<[CardablePart, string]>) => {
-      s[part] = cardName
+    SetCard: (s, { payload: [part, id] }: PayloadAction<[CardablePart, ItemIdentifier]>) => {
+      s[part] = id
     },
-    SetCardsAllPossible: (s, { payload: cardName }: PayloadAction<string>) => {
-      const card = getItem(cardName)
+    SetCardsAllPossible: (s, { payload: id }: PayloadAction<ItemIdentifier>) => {
+      const card = getItemById(id)
       const possible = card?.part ?? []
-      possible.forEach(part => s[part] = cardName)
+      possible.forEach(part => s[part] = id)
     },
     FetchCards: (s, { payload: cards }: PayloadAction<CardState>) => {
       Object.assign(s, cards)

@@ -1,5 +1,13 @@
 @import "./Defs";
 
+:root {
+  --color-epic: #ffd15b;
+  --color-unique: #ffa2f7;
+  --color-rare: #b993ff;
+  --color-uncommon: #6ad5ff;
+  --color-common: #ededed;
+}
+
 #root {
   box-sizing: border-box;
   --icon-size: 64px;
@@ -25,37 +33,6 @@ nav.Navigator {
 
   &::-webkit-scrollbar {
     display: none;
-  }
-
-  > span.NavLink {
-    color: white;
-    cursor: pointer;
-    font-weight: 800;
-    text-align: center;
-    height: 36px;
-    line-height: 36px;
-    flex-grow: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-top: 0px solid transparent;
-    border-bottom: 0px solid transparent;
-    transition-property: color, padding, border;
-    transition-duration: 0.2s;
-    transition-timing-function: linear;
-    box-sizing: border-box;
-
-    &:hover {
-      color: $Uncommon-color;
-      border-top: 2px solid transparent;
-      border-bottom: 2px solid $Uncommon-color;
-    }
-
-    &.Active {
-      color: $Epic-color;
-      border-top: 4px solid transparent;
-      border-bottom: 4px solid $Epic-color;
-    }
   }
 
 }

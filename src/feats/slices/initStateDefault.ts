@@ -157,11 +157,11 @@ const state: DFCharState = {
     "AccuLv": 30,
     "PublicStatLv": 5
   },
-  "CreatureProp": {
-    "CreatureStat": 156,
-    "RedPropsValue": 50,
-    "BluePropsValue": 50,
-    "GreenPropsEl": 10,
+  "CreatureValue": {
+    "Creature": 156,
+    "Red": 50,
+    "Blue": 50,
+    "Green": 10,
   },
   "Choice": {
     "branches": {},

@@ -1,5 +1,5 @@
 import type { ReactNode, HTMLProps, ChangeEvent, ChangeEventHandler, PropsWithChildren } from 'react'
-import { useCallback, useEffect, useId, useState, useRef } from 'react'
+import { useCallback, useEffect, useId, useRef } from 'react'
 import styled from 'styled-components'
 import { X } from 'react-feather'
 
@@ -146,7 +146,7 @@ const CheckieLabel = styled.label`
   input[type=checkbox]:checked ~ & {
     color: rgb(255, 217, 92);
   }
-  .AttrOne {
+  .AttrItem {
     padding-block: 0;
   }
 `

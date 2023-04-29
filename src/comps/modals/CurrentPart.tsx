@@ -46,7 +46,7 @@ export function CurrentPart({ part, index }: CurrentPartProps) {
           <ItemName item={mainitem} alt={`${part} 없음`} />
         </div>
         {(mainitem != null && isCardable(part)) ?
-          <div className="EquipAddons">
+          <div className="PartAddons">
             <ItemIcon className="Card" item={card} />
             {emblems.slice(0, maxEmblem).map((spec, ix) => <EmblemIcon key={ix} spec={spec} accept={accept} />
             )}

@@ -15,7 +15,7 @@ export const selectArtifact = memoizee(
 export function selectRedArtiProp(state: RootState): AttrSource {
   return {
     name: "레드 아티팩트 옵션",
-    attrs: atx("Stat", state.My.CreatureProp.RedPropsValue)
+    attrs: atx("Stat", state.My.CreatureValue.Red)
   }
 }
 
@@ -23,7 +23,7 @@ export function selectRedArtiProp(state: RootState): AttrSource {
 export function selectBlueArtiProp(state: RootState): AttrSource {
   return {
     name: "블루 아티팩트 옵션",
-    attrs: atx("Atk", state.My.CreatureProp.BluePropsValue)
+    attrs: atx("Atk", state.My.CreatureValue.Blue)
   }
 }
 
@@ -31,7 +31,7 @@ export function selectBlueArtiProp(state: RootState): AttrSource {
 export function selectGreenArtiProp(state: RootState): AttrSource {
   return {
     name: "그린 아티팩트 옵션",
-    attrs: atx("El", state.My.CreatureProp.GreenPropsEl)
+    attrs: atx("El", state.My.CreatureValue.Green)
   }
 }
 
@@ -45,7 +45,7 @@ export function selectArtifacts(state: RootState) {
 
 /** 크리쳐 스탯 효과를 선택한다. */
 export function selectCreatureStatAttr(state: RootState) {
-  const stat = state.My.CreatureProp.CreatureStat
+  const stat = state.My.CreatureValue.Creature
   return atx("StatAll", stat)
 }
 
@@ -70,9 +70,9 @@ export const selectCreature = createSelector(
 /** 크리쳐 스탯 효과 + 아티팩트 옵션 효과를 선택한다 (이들은 마을에서 적용된다) */
 export function selectCreaturePropsAttrs(state: RootState): AttrSource {
   const
-    stat_arti = state.My.CreatureProp.RedPropsValue,
-    atk = state.My.CreatureProp.BluePropsValue,
-    el_all = state.My.CreatureProp.GreenPropsEl
+    stat_arti = state.My.CreatureValue.Red,
+    atk = state.My.CreatureValue.Blue,
+    el_all = state.My.CreatureValue.Green
   return {
     name: "아티팩트 옵션(이빨)",
     attrs: {

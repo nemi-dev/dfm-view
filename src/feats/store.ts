@@ -13,6 +13,7 @@ import reduceReducers from "reduce-reducers"
 import { CreatorReducer, DeleteReducer, LoadReducer, NewReducer, SaveDF, SaveReducer } from "./saveReducers"
 import createMigrate from "redux-persist/es/createMigrate"
 import produce from "immer"
+import { itemNameToId } from "../items"
 
 
 const myStateReducer = 
@@ -27,7 +28,7 @@ combineReducers({
   Material: materialSlice.reducer,
   Avatar: avatarSlice.reducer,
   Guild: guildSlice.reducer,
-  CreatureProp: creatureSlice.reducer,
+  CreatureValue: creatureSlice.reducer,
   Choice: choiceSlice.reducer,
   Calibrate: calibrateSlice.reducer,
 })
@@ -54,12 +55,26 @@ const migration = {
       draft["CustomSkill"] = state.CustomSklill.cases
       delete draft.CustomSklill
     })
+  },
+  
+  4: (state: State_v3._RootState & PersistedState) => {
+    return produce(state, draft => {
+      const CreatureProp = state.My.CreatureProp
+      const CreatureValue: CreaturePropState = {
+        Creature: CreatureProp.CreatureStat,
+        Red: CreatureProp.RedPropsValue,
+        Green: CreatureProp.GreenPropsEl,
+        Blue: CreatureProp.BluePropsValue
+      }
+      draft.My["CreatureValue"] = CreatureValue
+      delete draft.My.CreatureProp
+    })
   }
 }
 
 const persistedReducer = persistReducer({
   key: "root",
-  version: 3, 
+  version: 4, 
   storage,
   migrate: createMigrate(migration, { debug: false })
 }, modelReducer)

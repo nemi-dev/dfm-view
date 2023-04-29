@@ -80,7 +80,7 @@ export const selectMe = createSelector(
 
 /** 
  * 마을에서 내 스탯을 선택한다.  
- * **듀얼트리거가 포함되었다면 여기서 적용된다.**
+ * **듀얼트리거/최대 속성강화 추가데미지가 포함되었다면 여기서 적용된다.**
 */
 export const selectMyAttrTown = createSelector(
   selectMe,
@@ -92,7 +92,7 @@ export const selectMyAttrTown = createSelector(
 
 /** 
  * 던전에서 내 스탯을 선택한다. (조건부옵션이 명시적으로 포함됨)  
- * **듀얼트리거가 포함되었다면 여기서 적용된다.**
+ * **듀얼트리거/최대 속성강화 추가데미지가 포함되었다면 여기서 적용된다.**
 */
 export const selectMyAttr = createSelector(
   selectMe,

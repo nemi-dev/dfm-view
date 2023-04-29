@@ -22,7 +22,7 @@ function CardSelect({ part, card, all }: { part: CardablePart, card: DFItem, all
     if (all)
       dispatch(SetCardsAllPossible(card.name))
     else
-      dispatch(SetCard([part as CardablePart, card.name]))
+      dispatch(SetCard([part, card.name]))
     closeModal()
   }, [part, card.name, all])
   return (

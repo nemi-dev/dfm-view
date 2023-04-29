@@ -46,10 +46,10 @@ export const currentIDSlice = createSlice({
 
 const creatureInit: CreaturePropState = 
 {
-  CreatureStat: 156,
-  RedPropsValue: 50,
-  BluePropsValue: 50,
-  GreenPropsEl: 10,
+  Creature: 156,
+  Red: 50,
+  Blue: 50,
+  Green: 10,
 }
 
 export const creatureSlice = createSlice({
@@ -57,9 +57,9 @@ export const creatureSlice = createSlice({
   initialState: creatureInit,
   reducers: {
     SetCreatureStat: (s, { payload }: PayloadAction<number>) => {
-      s.CreatureStat = payload
+      s.Creature = payload
     },
-    SetArtifactValue: (s, { payload: [attr_name, value] }: PayloadAction<["RedPropsValue"|"GreenPropsEl"|"BluePropsValue", number]>) => {
+    SetArtifactValue: (s, { payload: [attr_name, value] }: PayloadAction<["Red"|"Green"|"Blue", number]>) => {
       s[attr_name] = value
     }
   }

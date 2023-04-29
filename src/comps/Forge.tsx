@@ -111,7 +111,7 @@ const ForgeDiv = styled.div`
   .Emblem {
     --emblem-size: min(25px, 6vw);
   }
-  .EquipAddons {
+  .PartAddons {
     display: flex;
     flex-direction: column;
     align-items: center;
