@@ -9,7 +9,7 @@
     "atype": "Magic",
     "weapons": ["소검", "도", "둔기", "대검"],
     "attrs": {
-      "eltype": "Dark"
+      "eltype": ["Dark"]
     }
   },
   {
@@ -33,7 +33,7 @@
     "atype": "Magic",
     "weapons": ["너클", "통파", "클로", "건틀릿"],
     "attrs": {
-      "eltype": "Light"
+      "eltype": ["Light"]
     }
   },
 
@@ -55,7 +55,7 @@
     "atype": "Magic",
     "weapons": ["자동권총", "보우건", "머스켓", "리볼버", "핸드캐넌"],
     "attrs": {
-      "eltype": "Fire"
+      "eltype": ["Fire"]
     }
   },
   {
@@ -85,7 +85,7 @@
     "atype": "Magic",
     "weapons": ["소검", "도", "둔기", "대검"],
     "attrs": {
-      "eltype": "Dark"
+      "eltype": ["Dark"]
     }
   },
   {
@@ -104,7 +104,7 @@
     "atype": "Magic",
     "weapons": ["십자가", "염주", "낫", "토템", "배틀액스"],
     "attrs": {
-      "eltype": "Light"
+      "eltype": ["Light"]
     }
   },
   {
@@ -132,7 +132,7 @@
     "atype": "Magic",
     "weapons": ["십자가", "염주", "낫", "토템", "배틀액스"],
     "attrs": {
-      "eltype": "Light"
+      "eltype": ["Light"]
     }
   },
   {
