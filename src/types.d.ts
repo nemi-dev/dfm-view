@@ -292,7 +292,7 @@ declare interface DFItem {
   name: string
 
   /** 아이템 ID */
-  id?: number
+  id: number
 
   /** 아이템 아이콘 이름 */
   image?: string
