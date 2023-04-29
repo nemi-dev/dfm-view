@@ -96,11 +96,9 @@ function assignIset(item: DFItem, setOf: string | string[]): void {
 for (const item of items) {  
   _items_index_Name[item.name] = item
 
-  if (item.id != null) {
-    _items_index_ID[item.id] = item
-    _item_name_to_id[item.name] = item.id
-    _item_id_to_name[item.id] = item.name
-  }
+  _items_index_ID[item.id] = item
+  _item_name_to_id[item.name] = item.id
+  _item_id_to_name[item.id] = item.name
 
   const part = getCato(item.itype)
   if (part) _items_index_Part_or_Card[part].push(item)
@@ -135,6 +133,7 @@ export const getArmorBase = memoizee(
  * 엠블렘은 얻을 수 없다.
  */
 export const getItem = (name: string) => _items_index_Name[name]
+export const getItemById = (name: ItemIdentifier) => _items_index_ID[name]
 
 /** 부위별 아이템 모음을 얻는다. */
 export const getItemsByPart = (part: WholePart) => _items_index_Part_or_Card[part]
