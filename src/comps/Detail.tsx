@@ -29,22 +29,32 @@ const Row = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  box-sizing: border-box;
+  padding-inline: 2rem;
+  @media screen and (max-width: 999px) {
+    .RowName {
+      font-size: 0.8rem;
+    }
+  }
 `
 
 function SourceAttrSel({ attrDef, source }: { attrDef: AttrDef, source: AttrSource }) {
   const value = source.attrs?.[attrDef.key]
   if (!value) return null
   return <Row>
-    <span>{source.name}</span>
+    <span className="RowName">{source.name}</span>
     <span><AttrItem attrDef={attrDef} value={value} useName={false} /></span>
   </Row>
 }
+
+
 
 function SourcedAttrOne({ attrDef, value, sources }: { attrDef: AttrDef, value: any, sources: AttrSource[] }) {
   const values_t: any[] = sources.filter(s => s != null).map(s => s.attrs?.[attrDef.key]).filter(s => s != null)
   return(
     <details className="SourcedAttrOne">
-      <summary>
+      <summary className="Hovery">
         <AttrItem attrDef={attrDef} value={value} />
       </summary>
       {sources.map((source, index) => {
@@ -91,6 +101,21 @@ function SourceGroupView() {
   )
 }
 
+const AttrGroupStyle = styled.div`
+  details {
+    margin-block: 4px;
+  }
+  summary {
+    cursor: pointer;
+  }
+  summary .AttrItem {
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding-inline: 3rem;
+  }
+`
+
 function AttrGroupView() {
   const sources = useAppSelector(selectMe)
   const choice = useAppSelector(state => state.My.Choice)
@@ -98,11 +123,13 @@ function AttrGroupView() {
   const myAttr = CombineItems(sources, choice)
   return (
     <ErrorBoundary FallbackComponent={SourceGroupErrorView}>
-      {attrDefs.array.map(attrDef => {
-        const value = myAttr[attrDef.key]
-        if (!value) return null
-        return <SourcedAttrOne key={attrDef.key} value={value} attrDef={attrDef} sources={interpolated} />
-      })}
+      <AttrGroupStyle>
+        {attrDefs.array.map(attrDef => {
+          const value = myAttr[attrDef.key]
+          if (!value) return null
+          return <SourcedAttrOne key={attrDef.key} value={value} attrDef={attrDef} sources={interpolated} />
+        })}
+      </AttrGroupStyle>
     </ErrorBoundary>
   )
 }

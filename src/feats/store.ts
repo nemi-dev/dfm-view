@@ -14,6 +14,7 @@ import { CreatorReducer, DeleteReducer, LoadReducer, NewReducer, SaveDF, SaveRed
 import createMigrate from "redux-persist/es/createMigrate"
 import produce from "immer"
 import { itemNameToId } from "../items"
+import { migrate2to3, migrate3to4 } from "./migrate/migrate"
 
 
 const myStateReducer = 
@@ -50,26 +51,8 @@ const modelReducer = reduceReducers(NewReducer, SaveReducer, LoadReducer, Delete
 export type RootState = ReturnType<typeof combinedReducer>
 
 const migration = {
-  3: (state: State_v2._RootState & PersistedState) => {
-    return produce(state, draft => {
-      draft["CustomSkill"] = state.CustomSklill.cases
-      delete draft.CustomSklill
-    })
-  },
-  
-  4: (state: State_v3._RootState & PersistedState) => {
-    return produce(state, draft => {
-      const CreatureProp = state.My.CreatureProp
-      const CreatureValue: CreaturePropState = {
-        Creature: CreatureProp.CreatureStat,
-        Red: CreatureProp.RedPropsValue,
-        Green: CreatureProp.GreenPropsEl,
-        Blue: CreatureProp.BluePropsValue
-      }
-      draft.My["CreatureValue"] = CreatureValue
-      delete draft.My.CreatureProp
-    })
-  }
+  3: migrate2to3,
+  4: migrate3to4
 }
 
 const persistedReducer = persistReducer({

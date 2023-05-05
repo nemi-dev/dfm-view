@@ -1,12 +1,36 @@
 @import "./Defs";
 
-.Physc { --attr-value-color: rgb(255, 145, 0); }
-.Magic { --attr-value-color: rgb(92, 163, 255); }
+.Physc { 
+  --attr-value-color: rgb(255, 145, 0);
+  --color: rgb(255, 145, 0);
+  color: var(--color);
+}
+.Magic { 
+  --attr-value-color: rgb(92, 163, 255);
+  --color: rgb(92, 163, 255);
+  color: var(--color);
+}
 
-.Fire, .el_fire { --attr-value-color: rgb(253, 136, 113); }
-.Ice , .el_ice { --attr-value-color: rgb(84, 151, 252); }
-.Light, .el_lght { --attr-value-color: rgb(223, 246, 133); }
-.Dark, .el_dark  { --attr-value-color: rgb(209, 165, 238); }
+.Fire, .el_fire { 
+  --attr-value-color: rgb(253, 136, 113);
+  --color: rgb(253, 136, 113);
+  color: var(--color);
+}
+.Ice , .el_ice { 
+  --attr-value-color: rgb(84, 151, 252);
+  --color: rgb(84, 151, 252);
+  color: var(--color);
+}
+.Light, .el_lght { 
+  --attr-value-color: rgb(223, 246, 133);
+  --color: rgb(223, 246, 133);
+  color: var(--color);
+}
+.Dark, .el_dark  { 
+  --attr-value-color: rgb(209, 165, 238);
+  --color: rgb(209, 165, 238);
+  color: var(--color);
+}
 
 
 

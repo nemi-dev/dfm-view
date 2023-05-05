@@ -1,14 +1,15 @@
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import styled from "styled-components"
 import { Edit } from "react-feather"
 import { useAppSelector } from "../feats/hooks"
-import { selectMyDamage } from "../feats/selector/selectors"
-import { selectClassAtype, selectMyDFClass, selectMyName } from "../feats/selector/selfSelectors"
+import { selectMyDFClass, selectMyName } from "../feats/selector/selfSelectors"
 import { ModalContext } from "./modals/modalContext"
-import { Num } from "./widgets/NumberView"
 import { SavedCharsFragment } from "./modals/SavedCharsModal"
 import { DFClassModal } from "./modals/DFClassModal"
 import { DFClassIcon } from "./widgets/Icons"
+import { DamageOutput } from "./DamageOutput"
+import { SecondRow } from "./MyStatStick"
+import { PortraitMode } from "../responsiveContext"
 
 
 
@@ -17,19 +18,14 @@ const StickyNavStyle = styled.div`
   top: 0;
   left: 0;
   right: 0;
-  min-height: 41px;
   padding: 2px 8px;
   border-bottom: 1px solid rgba(127, 104, 72, 0.771);
   background-color: rgba(44, 36, 33, 0.75);
   backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  z-index: 2;
+  z-index: 5;
+  
 
-  img {
+  img.DFClassIcon {
     height: 36px;
   }
 
@@ -40,8 +36,27 @@ const StickyNavStyle = styled.div`
 
   svg {
     width: 18px;
-    padding: 6px;
+    padding-inline: 6px;
     cursor: pointer;
+  }
+
+  @media screen and (max-width: 999px) {
+    padding: 2px 4px;
+    img.DFClassIcon {
+      height: 30px;
+    }
+  }
+`
+
+const FirstRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: space-between;
+  min-height: 38px;
+
+  @media screen and (max-width: 999px) {
+    min-height: 32px;
   }
 `
 
@@ -52,11 +67,12 @@ const DFCharInfo = styled.div`
   justify-content: start;
 `
 
-const DamageCapture = styled.div`
+const OutputZoneStyle = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: start;
+  flex-wrap: wrap;
   gap: 4px;
   .DamageOne {
     display: flex;
@@ -64,42 +80,52 @@ const DamageCapture = styled.div`
     align-items: center;
     justify-content: center;
     gap: 4px;
+  }
+  .KeyName {
+    font-size: 0.8rem;
+  }
+  @media screen and (max-width: 999px) {
     .KeyName {
-      font-size: 0.7rem;
+      font-size: 0.6rem;
     }
   }
 `
 
 interface DamageOneProps {
   name: string
-  value: number
-  atype: Atype
 }
 
-function DamageOne({ name, value, atype }: DamageOneProps) {
+function DamageOne({ name, children }: React.PropsWithChildren<DamageOneProps>) {
   return <div className="DamageOne">
     <span className="KeyName">{name}</span>
-    <Num className={"AttrValue "+atype} value={value} />
+    {children}
   </div>
 }
 
+function OutputZone() {
+  return <OutputZoneStyle className="OutputZone">
+    <DamageOne name="평타"><DamageOutput crit="mean" /></DamageOne>
+    <DamageOne name="스킬"><DamageOutput crit="mean" sk /></DamageOne>
+  </OutputZoneStyle>
+}
+
 export function StickyNav() {
+  const portrait = useContext(PortraitMode)
   const { openModal } = useContext(ModalContext)
   const myName = useAppSelector(selectMyName)
   const dfclass = useAppSelector(selectMyDFClass)
-  const atype = useAppSelector(selectClassAtype)
-  const plainDamage = useAppSelector(selectMyDamage)
   
   return (
     <StickyNavStyle>
-      <DFCharInfo>
-        <DFClassIcon dfclassName={dfclass?.name} onClick={() => openModal(<SavedCharsFragment />)} />
-        <span>{myName}</span>
-        <Edit className="Rarity_Epic" onClick={() => openModal(<DFClassModal />)} />
-      </DFCharInfo>
-      <DamageCapture>
-        <DamageOne name="데미지" value={plainDamage} atype={atype} />
-      </DamageCapture>
+      <FirstRow>
+        <DFCharInfo>
+          <DFClassIcon dfclassName={dfclass?.name} onClick={() => openModal(<SavedCharsFragment />)} />
+          <span>{myName}</span>
+          <Edit className="Rarity_Epic" onClick={() => openModal(<DFClassModal />)} />
+        </DFCharInfo>
+        <OutputZone />
+      </FirstRow>
+      {portrait && <SecondRow />}
     </StickyNavStyle>
   )
 }

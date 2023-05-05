@@ -5,7 +5,6 @@ import '../style/Misc.scss'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { Equips } from './Equips'
 import { Forge } from './Forge'
-import { Creatures } from './Creature'
 import { Cracks } from "./Cracks"
 import { PortraitMode, TabContext } from '../responsiveContext'
 import AppModal from './modals/index'
@@ -27,46 +26,33 @@ function Navigator() {
   if (!portrait)
   return (
     <nav className="Navigator">
-      <NavLink name="장비">장비</NavLink>
+      <NavLink name="아이템">아이템</NavLink>
       <NavLink name="봉인석">봉인석</NavLink>
-      <NavLink name="크리쳐">크리쳐</NavLink>
       <NavLink name="기타">기타</NavLink>
       <NavLink name="자세히">자세히</NavLink>
     </nav>
   )
   else return (
     <nav className="Navigator">
-      <NavLink name="장비">장비</NavLink>
-      <NavLink name="대장간">대장간</NavLink>
+      <NavLink name="아이템">아이템</NavLink>
+      <NavLink name="강화">강화</NavLink>
       <NavLink name="봉인석">봉인석</NavLink>
-      <NavLink name="크리쳐">크리쳐</NavLink>
       <NavLink name="기타">기타</NavLink>
       <NavLink name="자세히">자세히</NavLink>
+      <NavLink name="스탯 조정">스탯 조정</NavLink>
     </nav>
   )
 }
 
 function Content() {
-  const portrait = useContext(PortraitMode)
-  if (!portrait)
   return (
     <>
-      <Tab name="장비"><Equips /></Tab>
+      <Tab name="아이템"><Equips /></Tab>
+      <Tab name="강화"><Forge /></Tab>
       <Tab name="봉인석"><Cracks /></Tab>
-      <Tab name="크리쳐"><Creatures /></Tab>
       <Tab name="기타"><MiscScreen /></Tab>
       <Tab name="자세히"><Detail /></Tab>
-    </>
-  )
-  else
-  return (
-    <>
-      <Tab name="장비"><Equips /></Tab>
-      <Tab name="대장간"><Forge /></Tab>
-      <Tab name="봉인석"><Cracks /></Tab>
-      <Tab name="크리쳐"><Creatures /></Tab>
-      <Tab name="기타"><MiscScreen /></Tab>
-      <Tab name="자세히"><Detail /></Tab>
+      <Tab name="스탯 조정"><MyStat /></Tab>
     </>
   )
 }
@@ -75,7 +61,7 @@ function App() {
 
   const dispatch = useAppDispatch()
   const [portrait, setPortrait] = useState(window.innerWidth < 1000)
-  const [activeTab, setActiveTab] = useState("장비")
+  const [activeTab, setActiveTab] = useState("아이템")
   const [isModalOpen, setOpen] = useState(false)
   const [modalFrag, setModalFrag] = useState<JSX.Element>()
   const lastIDs = useAppSelector(state => state.SavedChars.IDs)
@@ -122,7 +108,7 @@ function App() {
             <Content />
           </div>
           <div className="RightSide">
-            <MyStat />
+            {!portrait && <MyStat />}
           </div>
         </div>
         <EnemyTarget />

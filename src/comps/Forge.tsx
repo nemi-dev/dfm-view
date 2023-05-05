@@ -1,28 +1,16 @@
 import { useContext } from "react"
 import styled from "styled-components"
-import { useAppSelector, useAppDispatch } from "../feats/hooks"
-import { NumberInput } from "./widgets/Forms"
+import { useAppSelector } from "../feats/hooks"
 import { ItemIcon } from "./widgets/Icons"
 import { ModalContext } from "./modals/modalContext"
 import { EquipBatch } from "./EquipBatch"
 import { MagicProps } from "./MagicProps"
-import { selectCard, selectItem, selectUpgradeValue } from "../feats/selector/equipSelectors"
-import { ArmorMaterialSelect, EmblemArray } from "./Itemy"
-import { SetUpgradeValue } from "../feats/slices/itemSlice"
+import { selectCard, selectItem } from "../feats/selector/equipSelectors"
+import { ArmorMaterialSelect, ArtiUpgrade, EmblemArray, Upgrade, UpgradeFlex } from "./Itemy"
 import { hasMagicProps, isCardable, isEquip } from "../items"
 import { CardModalFragment } from "./modals/CardModal"
+import { selectArtifact } from "../feats/selector/creatureSelectors"
 
-
-function Upgrade({ part }: { part: EquipPart }) {
-  const dispatch = useAppDispatch()
-  const upgradeBonus = useAppSelector(selectUpgradeValue[part])
-  return (
-  <div className="EquipUpgradeValue">
-    +<NumberInput value={upgradeBonus}
-    onChange={v => dispatch(SetUpgradeValue([part, v]))} />
-  </div>
-  )
-}
 
 function CardSlot({ part }: { part: WholePart }) {
   if (!isCardable(part)) return null
@@ -79,13 +67,13 @@ const MagicPropsLayout = styled.div`
   
 `
 
-function Part({ part }: { part: EquipPart | "칭호" | "봉인석" }) {
+function Part({ part }: { part: EquipPart | "칭호" | "봉인석" | "크리쳐" }) {
   const item = useAppSelector(selectItem[part])
   return (
     <PartLayout className="Part Bordered">
       <PartHeading className={item? `Rarity_${item.rarity}`:""}>
         <ItemIcon item={item} />
-        {isEquip(part) ? <Upgrade part={part}/> : part}
+        {isEquip(part) || part=="크리쳐" ? <Upgrade part={part}/> : part}
       </PartHeading>
       <ArmorMaterialSelect part={part} />
       <AddonLayout>
@@ -95,6 +83,18 @@ function Part({ part }: { part: EquipPart | "칭호" | "봉인석" }) {
       {hasMagicProps(part)? <MagicPropsLayout>
         <MagicProps part={part} item={item} />
       </MagicPropsLayout> : null}
+    </PartLayout>
+  )
+}
+
+function ArtiPart({ color }: { color: "Red" | "Green" | "Blue" }) {
+  const item = useAppSelector(selectArtifact(color))
+  return (
+    <PartLayout className="Part Bordered">
+      <PartHeading className={item? `Rarity_${item.rarity}`:""}>
+        <ItemIcon item={item} />
+        <ArtiUpgrade color={color} />
+      </PartHeading>
     </PartLayout>
   )
 }
@@ -133,8 +133,12 @@ export function Forge() {
         <Part part="하의"/>
         <Part part="벨트"/>
         <Part part="신발"/>
-        <Part part="칭호"/>
         <Part part="봉인석"/>
+        <Part part="크리쳐"/>
+        <ArtiPart color="Red" />
+        <ArtiPart color="Green" />
+        <ArtiPart color="Blue" />
+        <Part part="칭호"/>
       </ForgeLayout>
       <EquipBatch />
     </ForgeDiv>

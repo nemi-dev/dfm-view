@@ -109,9 +109,15 @@ export const selectMyFinalEltype = createSelector(
   whatElType
 )
 
-
-
-
+/** 던전에서 스증도, 크증도 적용되지 않은 내 퍼센트 물/마공 데미지를 선택한다. */
+export const selectMyVanDamage = createSelector(
+  selectMyAttr,
+  selectClassAtype,
+  selectMyFinalEltype,
+  (attrs, atype, eltypes) => {
+    return getPlainDamage(atype, eltypes, attrs)
+  }
+)
 
 /** 던전에서 스증+크증이 모두 적용된 내 퍼센트 물/마공 데미지를 선택한다. */
 export const selectMyDamage = createSelector(

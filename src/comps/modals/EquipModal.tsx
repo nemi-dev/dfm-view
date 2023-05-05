@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import Fuse from "fuse.js"
-import { useCallback, useContext, useMemo, useState } from "react"
+import { MouseEventHandler, useCallback, useContext, useEffect, useMemo, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../feats/hooks"
 import { getItem, getItemsByPart, isAccess, isArmor } from "../../items"
 import { ItemIcon } from "../widgets/Icons"
@@ -15,11 +15,15 @@ import { ModalItemSelect } from "./Select"
 import { CurrentPart } from "./CurrentPart"
 import { TabContext } from "../../responsiveContext"
 import { NavLink, Tab } from "../widgets/Tab"
+import { ItemDetail } from "../widgets/ItemView"
+import { mainItemSelector } from "./CurrentPart"
 
-type EquipShotgun = Partial<Pick<ItemsState, EquipPart>>
+type EquipShotgunType = Partial<Pick<ItemsState, EquipPart>>
 
-const left = _left as Record<string, EquipShotgun>
-const right = _right as Record<string, EquipShotgun>
+const fuseOption = { keys:["name"], threshold: 0.3 }
+
+const left = _left as Record<string, EquipShotgunType>
+const right = _right as Record<string, EquipShotgunType>
 
 const CheckieInline = styled(LabeledSwitch)`
   display: inline-flex;
@@ -28,10 +32,12 @@ const CheckieInline = styled(LabeledSwitch)`
 interface IsetCatalog {
   name: string
   itemChildren: DFItem[]
-  useThisForPayload: EquipShotgun
+  useThisForPayload: EquipShotgunType
 }
 
-function EquipShotgun({ name, itemChildren, useThisForPayload }: IsetCatalog) {
+
+function EquipShotgun2({ item, onClick }: { item: IsetCatalog, onClick: MouseEventHandler<HTMLDivElement>}) {
+  const { name, itemChildren, useThisForPayload } = item
   const dispatch = useAppDispatch()
   const { closeModal } = useContext(ModalContext)
   return (
@@ -46,7 +52,7 @@ function EquipShotgun({ name, itemChildren, useThisForPayload }: IsetCatalog) {
   )
 }
 
-function myItemSroter(myWeapons: WeaponType[], a: DFItem, b: DFItem) {
+function myItemSorter(myWeapons: WeaponType[], a: DFItem, b: DFItem) {
   return myWeapons.indexOf(a.itype as WeaponType) - myWeapons.indexOf(b.itype as WeaponType)
 }
 
@@ -54,7 +60,7 @@ function pickItems(items: DFItem[], part: WholePart, myWeapons: WeaponType[] | n
   if (part !== "무기" || !myWeapons) return items
   return items
   .filter(item => myWeapons.includes(item.itype as WeaponType))
-  .sort(myItemSroter.bind(null, myWeapons))
+  .sort(myItemSorter.bind(null, myWeapons))
 }
 
 function inflate(m: Record<string, string>) {
@@ -62,7 +68,7 @@ function inflate(m: Record<string, string>) {
 }
 
 function loadShotgun(part: WholePart) {
-  let v: Record<string, EquipShotgun>
+  let v: Record<string, EquipShotgunType>
   if (isArmor(part)) v = left
   else if (isAccess(part)) v = right
   else return
@@ -78,6 +84,31 @@ function loadShotgun(part: WholePart) {
 
   return w
 }
+
+interface SearchListProps<IT extends DFItem | IsetCatalog> {
+  query: string
+  collection: IT[]
+  onItemClick: (item: IT) => unknown
+  ChildComponent: React.FC<{ item: IT, onClick: MouseEventHandler<HTMLDivElement> }>
+}
+
+function SearchList<IT extends DFItem | IsetCatalog>({ collection, query, onItemClick, ChildComponent }: SearchListProps<IT>) {
+  const fuse: Fuse<IT> = useMemo(() => new Fuse([], fuseOption), [])
+  const [result, setResult] = useState<IT[]>([])
+  useEffect(() => {
+    fuse.setCollection(collection)
+  }, [collection])
+  useEffect(() => {
+    setResult(query? fuse.search(query).map(s => s.item) : collection)
+  }, [collection, query])
+  return <>
+    {result.map(item => 
+      <ChildComponent key={item.name} item={item} onClick={() => onItemClick(item)} />
+    )}
+  </>
+  
+}
+
 
 const SearchField = styled.input`
 input[type=text]& {
@@ -100,6 +131,7 @@ export function EquipModalFragment({ part }: { part: WholePart }) {
   const { closeModal } = useContext(ModalContext)
   const isets = loadShotgun(part) ?? []
   const [query, setQuery] = useState("")
+  const mainitem = useAppSelector(mainItemSelector(part))
   const [showMyWeaponsOnly, setShowMyWeaponsOnly] = useState(true)
   const myDFclass = useAppSelector(selectMyDFClass)
 
@@ -113,42 +145,33 @@ export function EquipModalFragment({ part }: { part: WholePart }) {
     closeModal()
   }, [part])
   
-  const dependencies = [part, showMyWeaponsOnly, myDFclass?.name]
+  const dependencies = [part, showMyWeaponsOnly, myDFclass.name]
 
   const items = useMemo(() => pickItems(getItemsByPart(part), part, showMyWeaponsOnly? myWeapons : null), dependencies)
 
-  const fuse = useMemo(() => new Fuse(items, { keys:["name"], threshold: 0.3 }), dependencies)
-  const fusei = useMemo(() => new Fuse(isets, { keys:["name"], threshold: 0.3 }), dependencies)
-
-  const result = useMemo(() => query? fuse.search(query).map(s => s.item) : items, [...dependencies, query])
-  const iresult = useMemo(() => query? fusei.search(query).map(s => s.item) : isets, [...dependencies, query])
   return (
     <TabContext.Provider value={{ activeTab, setActiveTab }}>
       <CurrentPart part={part} />
       <SearchField type="text" placeholder="아이템 이름으로 검색해보세요!!" value={query} onChange={ev => setQuery(ev.target.value)} />
       {part === "무기"? <CheckieInline label="착용가능 무기만 표시하기" checked={showMyWeaponsOnly} onChange={setShowMyWeaponsOnly} /> : null}
       <SelectType>
+        <NavLink name="효과">효과 보기</NavLink>
         <NavLink name="단일">단일</NavLink>
         <NavLink name="세트">세트</NavLink>
       </SelectType>
       <div className="ModalMenuScrollable">
+        <Tab name="효과">
+          <ItemDetail item={mainitem} />
+        </Tab>
         <Tab name="단일">
-        {result.length > 0?
           <div className="ItemSelectArray">
-          {result.map((item) => (
-            <ModalItemSelect key={item.name} item={item} onClick={() => onClick(item)} />
-          ))}
-          </div> : null
-        }
+            <SearchList collection={items} query={query} onItemClick={onClick} ChildComponent={ModalItemSelect} />
+          </div>
         </Tab>
         <Tab name="세트">
-        {iresult.length > 0?
-            <div className="ItemShotgunArray">
-              {iresult.map(({name, itemChildren, useThisForPayload}) => {
-                return <EquipShotgun key={name} name={name} itemChildren={itemChildren} useThisForPayload={useThisForPayload} />
-              })}
-            </div>
-        :null}
+          <div className="ItemShotgunArray">
+            <SearchList collection={isets} query={query} onItemClick={() => {}} ChildComponent={EquipShotgun2} />
+          </div>
         </Tab>
       </div>
     </TabContext.Provider>

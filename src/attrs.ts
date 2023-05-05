@@ -1,51 +1,7 @@
 import memoizee from "memoizee"
-import { percent_inc_mul, add, combineArray, add_object, mul_object, anyOf } from "./utils"
+import { percent_inc_mul, add, add_object, mul_object, anyOf } from "./utils"
+import { Elemental } from "./constants"
 
-export const AtypeAttrKey = {
-  "Physc": {
-    "Stat": "strn",
-    "StatInc": "str_inc",
-    "Atk" : "atk_ph",
-    "AtkInc": "atk_ph_inc",
-    "Crit": "crit_ph",
-    "CritCh": "crit_ph_pct",
-    "스탯": "힘",
-    "타입": "물리",
-  },
-  "Magic": {
-    "Stat": "intl",
-    "StatInc": "int_inc",
-    "Atk" : "atk_mg",
-    "AtkInc": "atk_mg_inc",
-    "Crit": "crit_mg",
-    "CritCh": "crit_mg_pct",
-    "스탯": "지능",
-    "타입": "마법"
-  }
-} as const
-
-export const Elemental = {
-  "Fire" : {
-    "el": "el_fire",
-    "eldmg": "eldmg_fire",
-    "속성": "화"
-  },
-  "Ice": {
-    "el": "el_ice",
-    "eldmg": "eldmg_ice",
-    "속성": "수"
-  },
-  "Light": {
-    "el": "el_lght",
-    "eldmg": "eldmg_lght",
-    "속성": "명"
-  },
-  "Dark": {
-    "el": "el_dark",
-    "eldmg": "eldmg_dark",
-    "속성": "암"
-  }
-} as const
 
 
 /** 단 하나의 옵션을 가진 효과를 만든다. */
@@ -97,7 +53,7 @@ const reduce_eltype = (p: Eltype[], n: Eltype[]) => {
 
 
 export type AttrExpressionType = 
-"Flat" | "Percent" | "MapFlat" | "MapPercent" | "DearEltype" | "DualTrigger" | "Misc"
+"Flat" | "Percent" | "MapFlat" | "MapPercent" | "DearEltype" | "DualTrigger"
 
 export interface AttrDef {
   key: keyof BaseAttrs
@@ -182,7 +138,10 @@ const attrDefsArray = [
   defineAttr("res_lght", "명속성 저항", add, "Flat"),
   defineAttr("res_dark", "암속성 저항", add, "Flat"),
 
-  defineAttr("misc", "기타 관심없는 효과", combineArray, "Misc")
+  defineAttr("Evd", "회피", add, "Flat"),
+  defineAttr("EvPct", "회피 확률 증가", add, "Percent"),
+  defineAttr("Walk", "마을 이동속도 증가", add, "Percent")
+
 ]
 
 export const attrDefs = {

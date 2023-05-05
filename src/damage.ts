@@ -1,8 +1,8 @@
-import { AtypeAttrKey, Elemental } from "./attrs";
+import { AtypeAttrKey, Elemental } from "./constants";
 import { add } from "./utils";
 
 /** "스탯 증가"가 적용된 스탯 */
-export function StatOut(스탯: number, 스탯_퍼센트_증가: number = 0) {
+export function StatOut(스탯: number = 0, 스탯_퍼센트_증가: number = 0) {
   return 스탯 * (1 + 스탯_퍼센트_증가 / 100);
 }
 
@@ -27,7 +27,7 @@ function ElFact(속성강화: number) {
 }
 
 /** (어느 한 속성에 대해) 속성 추가 데미지 계수 */
-function EldmgFt(속성강화: number, 속성_추가데미지: number) {
+export function EldmgFt(속성강화: number = 0, 속성_추가데미지: number = 0) {
   return 속성_추가데미지 / 100 * ElFact(속성강화)
 }
 

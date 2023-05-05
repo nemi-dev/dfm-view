@@ -1,5 +1,13 @@
 @import "./Defs";
 
+details > summary {
+  list-style: none;
+}
+
+details summary::-webkit-details-marker {
+  display:none;
+}
+
 :root {
   --color-epic: #ffd15b;
   --color-unique: #ffa2f7;
@@ -11,10 +19,10 @@
 #root {
   box-sizing: border-box;
   --icon-size: 64px;
+  min-width: 360px;
 }
 
 .MainWrapper {
-  max-width: 99vw;
   margin-inline: auto;
 }
 

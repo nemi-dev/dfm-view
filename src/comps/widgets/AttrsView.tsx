@@ -1,7 +1,8 @@
 import '../../style/Attrs.scss'
 import { Num } from "./NumberView"
-import { attrDefs, AttrDef, Elemental } from '../../attrs'
+import { attrDefs, AttrDef } from '../../attrs'
 import { ErrorBoundary } from 'react-error-boundary'
+import { Elemental } from '../../constants'
 
 
 interface OneValueProps {
@@ -53,17 +54,6 @@ function SkillValue({ name, values = {}, percented = false }: SkillValueProps) {
   )
 }
 
-function Misc({ value = [] }: { value: string[] } ) {
-  return (
-    <>
-      {value.map((v, i) => 
-      <div key={`${i}=${v}`} className="AttrItem">
-        <span className="KeyName">{v}</span>
-      </div>
-      )}
-    </>
-  )
-}
 
 
 export function AttrItem({ attrDef, value, useName = true }: { attrDef: AttrDef, value: any, useName?: boolean }) {
@@ -76,7 +66,6 @@ export function AttrItem({ attrDef, value, useName = true }: { attrDef: AttrDef,
     case "Percent": return <OneValue name={name} percented value={value as number} useName={useName} />
     case "MapFlat": return <SkillValue name={name} values={value as Record<string, number>} />
     case "MapPercent": return <SkillValue name={name} percented values={value as Record<string, number>} />
-    case "Misc": return <Misc value={value as string[]} />
   }
 }
 
@@ -85,9 +74,8 @@ export function AttrItem({ attrDef, value, useName = true }: { attrDef: AttrDef,
 export function SimpleBaseAttrView({ attrs }: { attrs: BaseAttrs | undefined | null }) {
   if (!attrs) return null
   return <ErrorBoundary fallback={<>앗! 효과를 보다가 문제가 생겼어요!</>} >
-  {attrDefs.array.filter(attrDef => attrDef.key in attrs)
-    .map(attrDef =>
-    <AttrItem key={attrDef.key} attrDef={attrDef} value={attrs[attrDef.key]} />
+    {(Object.keys(attrs) as (keyof BaseAttrs)[]).map(attrKey => 
+      <AttrItem key={attrKey} attrDef={attrDefs[attrKey]} value={attrs[attrKey]} />
     )}
   </ErrorBoundary>
 }

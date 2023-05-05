@@ -1,33 +1,27 @@
 import '../style/Equips.scss'
 
-import { useContext, useState } from 'react'
+import { useCallback, useContext, useState } from 'react'
 import { ErrorBoundary, useErrorHandler } from 'react-error-boundary'
 import styled from 'styled-components'
 
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import {
-  selectItem, selectUpgradeValue
+  selectItem, 
 } from '../feats/selector/equipSelectors'
-import { SetUpgradeValue } from '../feats/slices/itemSlice'
-import { equipParts, isEquip } from '../items'
+import { equipParts } from '../items'
 import { PortraitMode } from '../responsiveContext'
 import { ClosedCondyceSet } from './Choices'
 import { EquipBatch } from './EquipBatch'
-import { ArmorMaterialSelect, CardSlot, EmblemArray } from './Itemy'
+import { ArmorMaterialSelect, ArtiUpgrade, CardSlot, EmblemArray, Upgrade } from './Itemy'
 import { MagicProps } from './MagicProps'
 import { EquipModalFragment } from './modals/EquipModal'
 import { ModalContext } from './modals/modalContext'
 import { SimpleBaseAttrView } from './widgets/AttrsView'
-import { NumberInput } from './widgets/Forms'
 import { ItemIcon } from './widgets/Icons'
 import { ItemName } from './widgets/ItemNameView'
-import { SetCreatureStat } from '../feats/slices/slice'
 import { selectArtifact } from '../feats/selector/creatureSelectors'
 import { ArtifactModalFragment } from './modals/CreatureModal'
-
-interface EquipProps {
-  part: EquipPart
-}
+import { EditEltype } from './MyStat'
 
 interface PartProps {
   part: EquipPart | "칭호" | "오라" | "무기아바타" | "크리쳐"
@@ -35,41 +29,6 @@ interface PartProps {
 
 interface ArtifactPartProps {
   color: "Red" | "Green" | "Blue"
-  value: number
-  setVaule: (v: number) => unknown
-}
-
-interface UpgradeFlexProps {
-  value: number
-  setValue?: (v: number) => unknown
-}
-function UpgradeFlex({ value, setValue }: UpgradeFlexProps) {
-  if (!setValue) return null
-  return (
-    <div className="EquipUpgradeValue">
-      +<NumberInput value={value} onChange={setValue} />
-    </div>
-  )
-}
-
-function UpgradeEquip({ part }: EquipProps) {
-  const dispatch = useAppDispatch()
-  const upgradeBonus = useAppSelector(selectUpgradeValue[part])
-  return <UpgradeFlex value={upgradeBonus} setValue={v => dispatch(SetUpgradeValue([part, v]))} />
-}
-
-function UpgradeCreature() {
-  const dispatch = useAppDispatch()
-  const value = useAppSelector(state => state.My.CreatureValue.Creature)
-  return <UpgradeFlex value={value} setValue={v => dispatch(SetCreatureStat(v))} />
-}
-
-function Upgrade({ part }: PartProps) {
-  if (isEquip(part)) {
-    return <UpgradeEquip part={part} />
-  } else if (part === "크리쳐") {
-    return <UpgradeCreature />
-  } else return null
 }
 
 
@@ -147,7 +106,7 @@ function PartCompact({ part }: PartProps) {
   )
 }
 
-function ArtiPartWide({ color, value, setVaule }: ArtifactPartProps) {
+function ArtiPartWide({ color }: ArtifactPartProps) {
   const { openModal } = useContext(ModalContext)
   const item = useAppSelector(selectArtifact(color))
   return (
@@ -156,9 +115,12 @@ function ArtiPartWide({ color, value, setVaule }: ArtifactPartProps) {
         <ItemIcon item={item}
           onClick={() => openModal(<ArtifactModalFragment artiColor={color} />)}
         />
+        <div className="SlotHeading">
+          <ItemName item={item} alt={`${color} 아티팩트 없음`} className="EquipName" />
+        </div>
         {item? 
           <div className="PartAddons">
-            <UpgradeFlex value={value} setValue={setVaule}/>
+            <ArtiUpgrade color={color} />
           </div> : null}
       </div>
     </div>
@@ -181,7 +143,12 @@ function ArtiPartCompact({ color }: ArtifactPartProps) {
 }
 
 export function CondsAttrsView() {
-  const items = ([...equipParts, "칭호", "오라", "무기아바타"] as const).map(part => useAppSelector(selectItem[part]))
+  const items = ([...equipParts, "칭호", "오라", "무기아바타", "크리쳐"] as const).map(part => useAppSelector(selectItem[part]))
+  items.push(
+    useAppSelector(selectArtifact("Red")),
+    useAppSelector(selectArtifact("Green")),
+    useAppSelector(selectArtifact("Blue")),
+  )
   return <ClosedCondyceSet items={items} />
 }
 
@@ -222,7 +189,7 @@ const ExtraEquipsLayout = styled.div`
 
 const CreatureLayout = styled.div`
   display: grid;
-  grid-template-columns: 2fr repeat(3, 1fr);
+  grid-template-columns: 3fr repeat(3, 2fr);
   align-items: start;
   gap: 4px;
   margin-top: 4px;
@@ -234,6 +201,7 @@ const CreatureLayout = styled.div`
 export function Equips() {
   const portrait = useContext(PortraitMode)
   const Part = portrait? PartCompact : PartWide
+  const ArtiPart = portrait? ArtiPartCompact : ArtiPartWide
   const order = portrait? compactOrder : wideOrder
   return (
     <div className="Equips">
@@ -247,7 +215,14 @@ export function Equips() {
       </ExtraEquipsLayout>
       <CreatureLayout>
         <Part part="크리쳐" />
+        <ArtiPart color="Red" />
+        <ArtiPart color="Green" />
+        <ArtiPart color="Blue" />
       </CreatureLayout>
+      {portrait && <div>
+        <div className="CondContainerName">속성부여</div>
+        <EditEltype />
+      </div>}
       <CondsAttrsView />
       {!portrait? <EquipBatch /> : null}
     </div>

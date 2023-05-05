@@ -51,12 +51,6 @@ const CondyceTypesStyle = styled.div`
   display: flex;
   flex-direction: column;
 
-  .CondContainerName {
-    text-align: center;
-    font-weight: 800;
-    color: white;
-    margin-block: 0.5rem;
-  }
 `
 
 function BranchOrGivesView({ name, nodes, what }: BrachViewProps) {

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { AtypeAttrKey } from '../attrs'
+import { AtypeAttrKey } from '../constants'
 import { selectGuildAccu, selectGuildAtk, selectGuildCrit, selectGuildSpeedAtk, selectGuildStat, selectGuildStatPublic } from '../feats/selector/guildSelectors'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { selectClassAtype } from "../feats/selector/selfSelectors"

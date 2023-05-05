@@ -10,7 +10,7 @@ import { RootState } from "../../feats/store";
 
 
 
-function mainItemSelector(part: WholePart, index?: number | "Red" | "Green" | "Blue") {
+export function mainItemSelector(part: WholePart, index?: number | "Red" | "Green" | "Blue") {
   if (part === "정수") return selectSpell(index as number)
   if (part === "아티팩트") return selectArtifact(index as "Red"|"Green"|"Blue")
   return selectItem[part]

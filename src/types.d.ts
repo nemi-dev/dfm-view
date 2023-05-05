@@ -224,11 +224,18 @@ declare interface BaseAttrs {
   /** 암속성 저항 */
   res_dark?: number
 
+  /** 회피 */
+  Evd?: number
+
+  /** 회피 확률 증가 [%] */
+  EvPct?: number
+
+  /** 마을 이동 속도 증가 [%] */
+  Walk?: number
+
   /** 최대 중첩 횟수 */
   maxRepeat?: number
 
-  /** 기타 관심없는 효과 */
-  misc?: string[]
 }
 
 type El_val = "el_fire" | "el_ice" | "el_lght" | "el_dark" 
@@ -256,8 +263,18 @@ declare interface ConditionalNode {
    */
   maxRepeat?: number
 
-  /** 적용되는 효과 */
+  /** 적용되는 효과 (1중첩 기준) */
   attrs: BaseAttrs
+
+  /** 조건이 맞았을 때, 이 효과가 적용될 확률 [%] */
+  mt_chance?: number
+
+  /** 조건을 만족해 적용된 이 효과가 지속되는 시간 [초] */
+  mt_dur?: number
+
+  /** 효과가 다시 적용 가능하기까지 쿨타임 [초] */
+  mt_cool?: number
+
 }
 
 /**
@@ -267,18 +284,6 @@ declare interface ExclusiveSet {
 
   /** 이 ExclusiveSet의 Key name(이름 또는 적용될 조건이 가능하다.) */
   pickSet?: string
-
-  /** 
-   * @deprecated `pickSet`을 쓰시오.
-   * 
-   * 이 ExclusiveSet이 발동될 조건 */
-  name: string
-
-  /**
-   * @deprecated `pickSet`을 쓰시오.
-   * 
-   * View에서 표시될 ExclusiveSet 이름 */
-  label?: string
 
   /** 이 ExclusiveSet의 조건이 만족되었을 때, 발동될 수 있는 효과 모음 */
   children: ConditionalNode[]
@@ -338,6 +343,10 @@ declare interface DFItem {
 
   /** 특정 조건을 만족할때 생길 수 있는 효과가 여러 개 중에서 하나일 때, 그 모음 */
   exclusive?: ExclusiveSet[]
+
+  /** 기타 관심없는 효과 */
+  misc?: string[]
+
 }
 
 /** 아이템 세트 */

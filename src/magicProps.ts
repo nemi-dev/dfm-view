@@ -1,6 +1,7 @@
 import _magicProps from "./magicProps.json"
 import { getSupertype } from "./items"
-import { at1, AtypeAttrKey } from "./attrs"
+import { at1 } from "./attrs"
+import { AtypeAttrKey } from "./constants"
 
 interface MagicPropsCatalog {
   [k: string]: [MagicPropsCareAbout, number][]

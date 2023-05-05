@@ -1,4 +1,5 @@
-import { at1, atx, AtypeAttrKey } from "./attrs";
+import { at1, atx } from "./attrs";
+import { AtypeAttrKey } from "./constants";
 
 /** 힘/지능 길드버프 레벨을 해당 효과로 바꾼다. */
 export const GuildStat = (level: number, atype: Atype) =>  at1(AtypeAttrKey[atype]["Stat"], level * 4)

@@ -4,7 +4,7 @@ import { selectClassAtype } from "../feats/selector/selfSelectors"
 import { critFt, critChance, getDamage } from '../damage'
 import { SetSkillFixValue, SetSkillInputName, SetSkillMaxHit, SetSkillUsesSkillInc, SetSkillValue } from '../feats/slices/customSkillSlice'
 import { LabeledSwitch, LabeledNumberInput } from "./widgets/Forms"
-import { AtypeAttrKey, Elemental } from '../attrs'
+import { AtypeAttrKey, Elemental } from '../constants'
 import styled from 'styled-components'
 import { Num } from './widgets/NumberView'
 

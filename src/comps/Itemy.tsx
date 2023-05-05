@@ -1,13 +1,62 @@
 import { useAppSelector, useAppDispatch } from "../feats/hooks"
-import { selectItem, selectCustomMaterial, selectEmblemSpecs, selectCard } from "../feats/selector/equipSelectors"
+import { selectItem, selectCustomMaterial, selectEmblemSpecs, selectCard, selectUpgradeValue } from "../feats/selector/equipSelectors"
 import { EmblemIcon, ItemIcon } from "./widgets/Icons"
-import { DecreaseEmblemLevel, SetMaterial } from "../feats/slices/itemSlice"
-import { getMaxEmblemCount, isArmor, isCardable } from "../items"
+import { DecreaseEmblemLevel, SetMaterial, SetUpgradeValue } from "../feats/slices/itemSlice"
+import { getMaxEmblemCount, isArmor, isCardable, isEquip } from "../items"
 import { acceptEmblem } from "../emblem"
 import { useCallback, useContext } from "react"
 import { EmblemModal } from "./modals/EmblemModal"
 import { ModalContext } from "./modals/modalContext"
 import { CardModalFragment } from "./modals/CardModal"
+import { SetArtifactValue, SetCreatureStat } from "../feats/slices/slice"
+import { NumberInput } from "./widgets/Forms"
+
+interface EquipProps {
+  part: EquipPart
+}
+
+
+interface UpgradeFlexProps {
+  value: number
+  setValue?: (v: number) => unknown
+}
+export function UpgradeFlex({ value, setValue }: UpgradeFlexProps) {
+  if (!setValue) return null
+  return (
+    <div className="EquipUpgradeValue">
+      +<NumberInput value={value} onChange={setValue} />
+    </div>
+  )
+}
+
+function UpgradeEquip({ part }: EquipProps) {
+  const dispatch = useAppDispatch()
+  const value = useAppSelector(selectUpgradeValue[part])
+  return <UpgradeFlex value={value} setValue={v => dispatch(SetUpgradeValue([part, v]))} />
+}
+
+function UpgradeCreature() {
+  const dispatch = useAppDispatch()
+  const value = useAppSelector(state => state.My.CreatureValue.Creature)
+  return <UpgradeFlex value={value} setValue={v => dispatch(SetCreatureStat(v))} />
+}
+
+export function Upgrade({ part }: PartProps) {
+  if (isEquip(part)) {
+    return <UpgradeEquip part={part} />
+  } else if (part === "크리쳐") {
+    return <UpgradeCreature />
+  } else return null
+}
+
+export function ArtiUpgrade({ color }: { color: "Red" | "Green" | "Blue" }) {
+  const dispatch = useAppDispatch()
+  const value = useAppSelector(state => state.My.CreatureValue[color])
+  const setValue = useCallback((v: number) => {
+    dispatch(SetArtifactValue([color, v]))
+  }, [color])
+  return <UpgradeFlex value={value} setValue={setValue}/>
+}
 
 
 interface PartProps {

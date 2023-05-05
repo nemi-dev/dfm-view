@@ -3,7 +3,8 @@ import _isets from "../data/itemsets.json"
 import _armorbases from "./armorbase.json"
 
 import memoizee from "memoizee"
-import { atx, AtypeAttrKey, combine, createCondyceAttr } from "./attrs"
+import { atx, combine, createCondyceAttr } from "./attrs"
+import { AtypeAttrKey } from "./constants"
 
 export const weaponType: readonly Itype[] = Object.freeze([
   "소검","도","둔기","대검","광검",
