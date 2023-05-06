@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { accessParts, armorParts, getItemById, oneEmblemParts } from "../../items"
+import { accessParts, armorParts, getItem, oneEmblemParts } from "../../items"
 import initState from "./initState"
 
 const { Item, Card, Emblem, MagicProps, Upgrade, Material } = initState
@@ -40,8 +40,9 @@ export const cardSlice = createSlice({
       s[part] = id
     },
     SetCardsAllPossible: (s, { payload: id }: PayloadAction<ItemIdentifier>) => {
-      const card = getItemById(id)
+      const card = getItem(id)
       const possible = card?.part ?? []
+      console.log(card)
       possible.forEach(part => s[part] = id)
     },
     FetchCards: (s, { payload: cards }: PayloadAction<CardState>) => {

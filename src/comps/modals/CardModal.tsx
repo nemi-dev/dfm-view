@@ -19,10 +19,8 @@ function CardSelect({ part, card, all }: { part: CardablePart, card: DFItem, all
   const { closeModal } = useContext(ModalContext)
   const dispatch = useAppDispatch()
   const onClick = useCallback(() => {
-    if (all)
-      dispatch(SetCardsAllPossible(card.name))
-    else
-      dispatch(SetCard([part, card.name]))
+    if (all) dispatch(SetCardsAllPossible(card.name))
+    else dispatch(SetCard([part, card.name]))
     closeModal()
   }, [part, card.name, all])
   return (
