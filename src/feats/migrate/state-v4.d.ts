@@ -1,6 +1,9 @@
-declare type ItemIdentifier = string | null | undefined
+declare namespace v4 {
 
-declare interface SelfState {
+
+type ItemIdentifier = string | null | undefined
+
+interface SelfState {
 
   /** 얘 이름 */
   myName: string
@@ -19,7 +22,7 @@ declare interface SelfState {
 
 }
 
-declare interface ItemsState {
+interface ItemsState {
   무기: ItemIdentifier
   상의: ItemIdentifier
   하의: ItemIdentifier
@@ -43,7 +46,7 @@ declare interface ItemsState {
   }
 }
 
-declare interface CardState {
+interface CardState {
   무기: ItemIdentifier
   상의: ItemIdentifier
   하의: ItemIdentifier
@@ -57,7 +60,7 @@ declare interface CardState {
   칭호: ItemIdentifier
 }
 
-declare interface EmblemState {
+interface EmblemState {
   무기: EmblemSpec[]
   상의: EmblemSpec[]
   하의: EmblemSpec[]
@@ -71,7 +74,7 @@ declare interface EmblemState {
   칭호: EmblemSpec[]
 }
 
-declare interface MagicPropsState {
+interface MagicPropsState {
   무기: MagicPropsCareAbout[]
   상의: MagicPropsCareAbout[]
   하의: MagicPropsCareAbout[]
@@ -85,7 +88,7 @@ declare interface MagicPropsState {
   봉인석: MagicPropsCareAbout[]
 }
 
-declare interface UpgradeOrKaledoState {
+interface UpgradeOrKaledoState {
   무기: number
   상의: number
   하의: number
@@ -98,7 +101,7 @@ declare interface UpgradeOrKaledoState {
   보조장비: number
 }
 
-declare interface MaterialState {
+interface MaterialState {
   상의: ArmorMaterial
   하의: ArmorMaterial
   머리어깨: ArmorMaterial
@@ -106,9 +109,9 @@ declare interface MaterialState {
   신발: ArmorMaterial
 }
 
-declare type AvatarRarityState = { [k in WearAvatarPart]: WearAvatarRarity }
+type AvatarRarityState = { [k in WearAvatarPart]: WearAvatarRarity }
 
-declare interface TonicState {
+interface TonicState {
   el_all: number
   hpmax: number
   mpmax: number
@@ -120,7 +123,7 @@ declare interface TonicState {
   Accu: number
 }
 
-declare interface GuildState {
+interface GuildState {
   /** 내 스탯 개인버프 레벨 */
   StatLv: number
 
@@ -149,7 +152,7 @@ declare interface GuildState {
   PublicStatLv: number
 }
 
-declare interface CreaturePropState {
+interface CreaturePropState {
 
   /** 크리쳐 레벨에 따라 크리쳐가 주는 모든스탯 보너스 */
   Creature: number
@@ -165,19 +168,19 @@ declare interface CreaturePropState {
 
 }
 
-declare type OptionalChoiceType = number
+type OptionalChoiceType = number
 
-declare interface Choices {
+interface Choices {
   branches: Record<string, OptionalChoiceType>
   gives: Record<string, OptionalChoiceType>
   exclusives: Record<string, string>
 }
 
-declare type NumberCalibrate = Omit<CalibrateState, "eltype" | "sk_inc">
+type NumberCalibrate = Omit<CalibrateState, "eltype" | "sk_inc">
 
 
 
-declare interface CalibrateState {
+interface CalibrateState {
   strn: number
   intl: number
   str_inc: number
@@ -220,12 +223,12 @@ declare interface CalibrateState {
 
 }
 
-declare interface CustomSkillState {
+interface CustomSkillState {
   cases: SkillOneAttackSpec[]
 }
 
 /** 여기까지가 "캐릭터 저장" 단위다  */
-declare interface DFCharState {
+interface DFCharState {
   Self: SelfState
   Item: ItemsState
   Card: CardState
@@ -240,7 +243,7 @@ declare interface DFCharState {
   Calibrate: CalibrateState
 }
 
-declare interface EnemyTargetState {
+interface EnemyTargetState {
   /** 적 방어력 (물리+마법 모두) */
   Defense: number
 
@@ -248,7 +251,7 @@ declare interface EnemyTargetState {
   ElRes: number
 }
 
-declare interface SavedChar {
+interface SavedChar {
   
   id: string
   TimeStamp: number
@@ -256,7 +259,7 @@ declare interface SavedChar {
   DamageGrab: number
 }
 
-declare interface EquipPreset {
+interface EquipPreset {
   id: string
   label?: string
   TimeStamp: number
@@ -265,30 +268,42 @@ declare interface EquipPreset {
   }
 }
 
-declare interface CustomSkillPreset {
+interface CustomSkillPreset {
   id: string
   label?: string
   TimeStamp: number
   Skills: CustomSkillState
 }
 
-declare interface SavedCharCollection {
+interface SavedCharCollection {
   byID: {
     [k: string]: SavedChar
   }
   IDs: string[]
 }
 
-declare interface EquipPresetCollection {
+interface EquipPresetCollection {
   byID: {
     [k: string]: EquipPreset
   }
   IDs: string[]
 }
 
-declare interface CustomSkillPresetCollection {
+interface CustomSkillPresetCollection {
   byID: {
     [k: string]: CustomSkillPreset
   }
   IDs: string[]
+}
+
+interface _RootState {
+  My: DFCharState
+  Tonic: TonicState
+  EnemyTarget: EnemyTargetState
+  SavedChars: SavedCharCollection
+  EquipPresets: EquipPresetCollection
+  CustomSkill: SkillOneAttackSpec[]
+  CustomSkillPresets: CustomSkillPresetCollection
+}
+
 }

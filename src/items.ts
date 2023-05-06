@@ -117,28 +117,29 @@ for (const iset of isets) if (iset.name) ISetsNameMap[iset.name] = iset
 
 /** "방어구 재질"을 얻는다. **얘는 AttrSource가 아니어야 한다** */
 export const getArmorBase = memoizee(
-  function getArmorBase(level: number, rarity: Rarity, material: ArmorMaterial, part: EquipPart): BaseAttrs {
-    const find = armorbases.find(attr => {
-      return attr.level == level
-      && attr.rarity == rarity
-      && attr.material == material
-      && attr.itype == part
-    })
-    if (!find) return {}
-    return find.attrs
-  },
-{ primitive: true })
+function getArmorBase(level: number, rarity: Rarity, material: ArmorMaterial, part: EquipPart): BaseAttrs {
+  const find = armorbases.find(attr => {
+    return attr.level == level
+    && attr.rarity == rarity
+    && attr.material == material
+    && attr.itype == part
+  })
+  if (!find) return {}
+  return find.attrs
+}
+,{ primitive: true })
 
 /**
- * 무기, 방어구, 악세서리, 보조장비, 카드, 칭호, 오라, 무기아바타, 봉인석, 정수 아이템을 얻는다.  
+ * 무기, 방어구, 악세서리, 보조장비, 카드, 칭호, 오라, 크리쳐, 아티팩트, 무기아바타, 봉인석, 정수 아이템을 얻는다.  
  * 엠블렘은 얻을 수 없다.
  */
-export const getItem = (name: string) => _items_index_Name[name]
-export const getItemById = (name: ItemIdentifier) => _items_index_ID[name]
+export const getItem = (key: number | string) => {
+  if (typeof key === "number") return _items_index_ID[key]
+  else if (typeof key === "string") return _items_index_Name[key]
+}
 
 /** 부위별 아이템 모음을 얻는다. */
 export const getItemsByPart = (part: WholePart) => _items_index_Part_or_Card[part]
-
 
 /** 아이템 이름을 ID로 바꾼다. */
 export const itemNameToId = (name: string) => _item_name_to_id[name] ?? 0

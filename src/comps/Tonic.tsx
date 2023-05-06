@@ -1,8 +1,9 @@
 import { useId } from 'react'
 import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
-import { perfectTonic, SetTonic, SetTonicPerfect } from "../feats/slices/tonicSlice"
+import { SetTonic, SetTonicPerfect } from "../feats/slices/tonicSlice"
 import { NumberInput } from "./widgets/Forms"
+import { perfectTonic } from '../constants'
 
 interface TonicInputProps {
   label: string

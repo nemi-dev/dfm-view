@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { perfectGuildStat } from "./initState"
+import { perfectGuild } from "../../constants"
 
 const hardCodedPublicStatLevel = 6
 
 export const guildSlice = createSlice({
   name: 'My',
   initialState: {
-    ...perfectGuildStat,
+    ...perfectGuild,
     PublicStatLv: hardCodedPublicStatLevel
   } as GuildState,
   reducers: {
@@ -14,7 +14,7 @@ export const guildSlice = createSlice({
       s[payload[0]] = payload[1]
     },
     PerfectGuild: (s) => {
-      Object.assign(s, perfectGuildStat)
+      Object.assign(s, perfectGuild)
     },
     FetchGuild: (s, { payload }: PayloadAction<GuildState>) => {
       Object.assign(s, payload)

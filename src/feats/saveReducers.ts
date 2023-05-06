@@ -1,6 +1,5 @@
-import { createAction, Reducer } from "@reduxjs/toolkit"
+import { createAction, createReducer } from "@reduxjs/toolkit"
 import { v4 as uuidv4, parse as parseUUID } from 'uuid'
-import { produce } from "immer"
 import { encode as encodeB64 } from "base64-arraybuffer"
 
 import { deepCopy } from "../utils"
@@ -59,79 +58,37 @@ function createNew(state: RootState, draft: RootState, src: DFCharState, doCommi
   }
 }
 
-// @ts-ignore
-export const NewReducer: Reducer<RootState,
-ReturnType<typeof CreateDF>> =
-function NewReducer(state, action) {
-  if (action.type != CreateDF.type) return state
-  return produce(state, draft => {
-    createNew(state, draft, initState, true)
+export const saveReducerV4 = createReducer({} as RootState, builder => {
+  builder
+  .addCase(CreateDF, (state) => {
+    createNew(state, state, initState, true)
   })
-}
-
-// @ts-ignore
-export const SaveReducer: Reducer<RootState, 
-ReturnType<typeof SaveDF>> = 
-function Saver(state, action) {
-  if (action.type != SaveDF.type) return state
-  return produce(state, draft => {
-    commit(state, draft)
+  .addCase(SaveDF, (state) => {
+    commit(state, state)
   })
-}
+  .addCase(LoadDF, (state, action) => {
+    const id = action.payload
+    if (id === state.currentID || !state.SavedChars.IDs.includes(id)) return
 
-// @ts-ignore
-export const LoadReducer: Reducer<RootState,
-ReturnType<typeof LoadDF>> =
-function Loader(state, action) {
-  if (action.type != LoadDF.type) return state
-  const id = action.payload
-
-  if (id === state.currentID || !state.SavedChars.IDs.includes(id)) return state
-  const saved = state.SavedChars.byID[id]
-  return produce(state, draft => {
-    commit(state, draft)
-    draft.My = deepCopy(saved.DFChar)
-    draft.currentID = id
+    const saved = state.SavedChars.byID[id]
+    commit(state, state)
+    state.My = deepCopy(saved.DFChar)
+    state.currentID = id
   })
-}
-
-// @ts-ignore
-export const DeleteReducer: Reducer<RootState,
-ReturnType<typeof DeleteDFChar>> =
-function Deleter(state, action) {
-  if (action.type != DeleteDFChar.type) return state
-  const id = action.payload
-  if (id === state.currentID || !state.SavedChars.IDs.includes(id)) return state
-  return produce(state, draft => {
-    delete draft.SavedChars.byID[id]
-    const index = draft.SavedChars.IDs.indexOf(id)
-    draft.SavedChars.IDs.splice(index, 1)
+  .addCase(DeleteDFChar, (state, action) => {
+    const id = action.payload
+    if (id === state.currentID || !state.SavedChars.IDs.includes(id)) return
+    delete state.SavedChars.byID[id]
+    const index = state.SavedChars.IDs.indexOf(id)
+    state.SavedChars.IDs.splice(index, 1)
   })
-}
-
-
-// @ts-ignore
-export const CreatorReducer: Reducer<RootState,
-ReturnType<typeof InitChar | typeof ImportDF | typeof CloneDF>
-> =
-function (state, action) {
-  switch (action.type) {
-    case InitChar.type:
-      if (state.currentID) return state
-      return produce(state, draft => {
-        createNew(state, draft, initState, false)
-      })
-
-    case ImportDF.type:
-      return produce(state, draft => {
-        createNew(state, draft, action.payload, true)
-      })
-    
-    case CloneDF.type:
-      return produce(state, draft => {
-        createNew(state, draft, state.My, true)
-      })
-    
-    default: return state
-  }
-}
+  .addCase(InitChar, (state) => {
+    createNew(state, state, initState, false)
+  })
+  .addCase(ImportDF, (state, action) => {
+    createNew(state, state, action.payload, true)
+  })
+  .addCase(CloneDF, (state) => {
+    createNew(state, state, state.My, true)
+  })
+})

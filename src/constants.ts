@@ -44,3 +44,26 @@ export const Elemental = {
   }
 } as const
 
+
+export const perfectTonic: TonicState = {
+  el_all: 25,
+  hpmax: 1240,
+  mpmax: 630,
+  strn_intl: 237,
+  vit_psi: 237,
+  def_ph: 2100,
+  def_mg: 1600,
+  Crit: 237,
+  Accu: 239,
+}
+
+export const perfectGuild = {
+  "StatLv": 30,
+  "AtkLv": 30,
+  "CritLv": 30,
+  "ElLv": 14,
+  "SpeedAtkLv": 14,
+  "SpeedCastLv": 14,
+  "SpeedMoveLv": 14,
+  "AccuLv": 30,
+} as const

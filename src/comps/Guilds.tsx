@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { AtypeAttrKey } from '../constants'
+import { AtypeAttrKey, perfectGuild } from '../constants'
 import { selectGuildAccu, selectGuildAtk, selectGuildCrit, selectGuildSpeedAtk, selectGuildStat, selectGuildStatPublic } from '../feats/selector/guildSelectors'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { selectClassAtype } from "../feats/selector/selfSelectors"
@@ -7,7 +7,6 @@ import { PerfectGuild, SetGuild } from "../feats/slices/guildSlice"
 import { RootState } from '../feats/store'
 import { LabeledNumberInput } from "./widgets/Forms"
 import { SimpleBaseAttrView } from './widgets/AttrsView'
-import { perfectGuildStat } from '../feats/slices/initState'
 
 
 const GuildLayout = styled.div`
@@ -83,7 +82,7 @@ function isPerfect({ StatLv, AtkLv, CritLv, ElLv, SpeedAtkLv, AccuLv }: GuildSta
     ElLv: pElLv, 
     SpeedAtkLv: pSpeedAtkLv, 
     AccuLv: pAccuLv, 
-  } = perfectGuildStat
+  } = perfectGuild
   return (
     StatLv >= pStatLv &&
     AtkLv >= pAtkLv &&

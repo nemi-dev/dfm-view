@@ -6,14 +6,12 @@ import { choiceSlice } from "./slices/choiceSlice"
 import { avatarSlice } from "./slices/avatarSlice"
 import { calibrateSlice } from "./slices/calibrateSlice"
 import { skillInputSlice } from "./slices/customSkillSlice"
-import { persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER, PersistedState } from "redux-persist"
+import { persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist"
 import storage from "redux-persist/lib/storage"
 import { cardSlice, emblemSlice, itemSlice, magicPropsSlice, materialSlice, upgradeSlice } from "./slices/itemSlice"
 import reduceReducers from "reduce-reducers"
-import { CreatorReducer, DeleteReducer, LoadReducer, NewReducer, SaveDF, SaveReducer } from "./saveReducers"
+import { SaveDF, saveReducerV4 } from "./saveReducers"
 import createMigrate from "redux-persist/es/createMigrate"
-import produce from "immer"
-import { itemNameToId } from "../items"
 import { migrate2to3, migrate3to4 } from "./migrate/migrate"
 
 
@@ -45,10 +43,9 @@ const combinedReducer = combineReducers({
   CustomSkill: skillInputSlice.reducer,
   CustomSkillPresets: skillPresetSlice.reducer
 })
-
-const modelReducer = reduceReducers(NewReducer, SaveReducer, LoadReducer, DeleteReducer, CreatorReducer, combinedReducer)
-
 export type RootState = ReturnType<typeof combinedReducer>
+
+const modelReducer = reduceReducers(saveReducerV4, combinedReducer)
 
 const migration = {
   3: migrate2to3,

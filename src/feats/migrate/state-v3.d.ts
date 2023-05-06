@@ -251,20 +251,7 @@ declare namespace State_v3 {
   }
   
   interface _RootState {
-    My: {
-      Self: SelfState
-      Item: ItemsState
-      Card: CardState
-      Emblem: EmblemState
-      MagicProps: MagicPropsState
-      Upgrade: UpgradeOrKaledoState
-      Material: MaterialState
-      Avatar: AvatarRarityState
-      Guild: GuildState
-      CreatureProp: CreaturePropState
-      Choice: Choices
-      Calibrate: CalibrateState
-    }
+    My: DFCharState
     Tonic: TonicState
     EnemyTarget: EnemyTargetState
     SavedChars: SavedCharCollection

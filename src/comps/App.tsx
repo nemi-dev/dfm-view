@@ -19,6 +19,7 @@ import store from '../feats/store'
 import { Detail } from './Detail'
 import { MiscScreen } from './Misc'
 import { NavLink, Tab } from './widgets/Tab'
+import { StyleSheetManager } from 'styled-components'
 
 
 function Navigator() {
@@ -99,6 +100,7 @@ function App() {
     <TabContext.Provider value={{ activeTab, setActiveTab }}>
     <ModalContext.Provider value={modalContextValue}>
     <PortraitMode.Provider value={portrait}>
+      <StyleSheetManager disableVendorPrefixes>
       {lastIDs.length > 0 && rehydrated? <div className="App">
         <AppModal isOpen={isModalOpen}/>
         <StickyNav />
@@ -114,6 +116,7 @@ function App() {
         <EnemyTarget />
         <SkillTestSet />
       </div>: null}
+      </StyleSheetManager>
     </PortraitMode.Provider>
     </ModalContext.Provider>
     </TabContext.Provider>

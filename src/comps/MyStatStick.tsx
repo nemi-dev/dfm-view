@@ -100,9 +100,6 @@ function ElAddDamage({ eltype }: { eltype: Eltype }) {
 
 
 const MyStatArea = styled.div`
-  display: flex;
-  align-content: center;
-  flex-direction: column;
   flex-wrap: wrap;
   gap: 3px;
 `
