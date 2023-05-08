@@ -100,7 +100,7 @@ function App() {
     <TabContext.Provider value={{ activeTab, setActiveTab }}>
     <ModalContext.Provider value={modalContextValue}>
     <PortraitMode.Provider value={portrait}>
-      <StyleSheetManager disableVendorPrefixes>
+      <StyleSheetManager disableVendorPrefixes={IS_DEV}>
       {lastIDs.length > 0 && rehydrated? <div className="App">
         <AppModal isOpen={isModalOpen}/>
         <StickyNav />

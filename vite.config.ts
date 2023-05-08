@@ -22,6 +22,7 @@ export default defineConfig({
     }
   },
   define: {
-    APP_VERSION: JSON.stringify(process.env.npm_package_version)
+    APP_VERSION: JSON.stringify(process.env.npm_package_version),
+    IS_DEV: process.env.NODE_ENV === 'development'
   }
 })

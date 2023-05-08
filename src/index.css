@@ -75,6 +75,7 @@ input[type=number] {
   -moz-appearance: textfield;
   appearance: textfield;
 }
+
 input::-webkit-inner-spin-button,
 input::-webkit-outer-spin-button {
   appearance: none;
@@ -88,6 +89,8 @@ input[type=text], input[type=number] {
   border-radius: 2px;
   padding: 0.2rem;
   font-size: 0.9rem;
+  /* color: rgba(247, 224, 195); */
+  color: inherit;
 }
 
 button {
