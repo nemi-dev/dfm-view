@@ -1,29 +1,12 @@
 import { useState } from "react"
 import { AttrDef, attrDefs } from "../attrs"
 import { useAppSelector } from "../feats/hooks"
-import { selectDFTitleTown } from "../feats/selector/avatarSelectors"
-import { selectSpells } from "../feats/selector/cracksSelectors"
-import { selectArtifacts } from "../feats/selector/creatureSelectors"
-import { selectItem, selectMagicProps, selectEquipPart } from "../feats/selector/equipSelectors"
-import { selectMe, selectMyAttr } from "../feats/selector/selectors"
-import { RootState } from "../feats/store"
-import { CombineItems, Interpolate, isEquip } from "../items"
+import { selectMe } from "../feats/selector/selectors"
+import { CombineItems, Interpolate } from "../items"
 import { AttrItem, SimpleBaseAttrView } from "./widgets/AttrsView"
 import { RadioGroup } from "./widgets/Forms"
 import { ErrorBoundary, FallbackProps } from "react-error-boundary"
 import styled from "styled-components"
-
-function selectPart(state: RootState, part: WholePart): AttrSource[] {
-  if (isEquip(part)) return selectEquipPart[part](state)
-  if (part === "칭호") return selectDFTitleTown(state)
-  if (part === "봉인석") return [selectItem["봉인석"](state), selectMagicProps["봉인석"](state)]
-  if (part === "정수") return selectSpells(state)
-  if (part === "아티팩트") {
-    const { Red, Blue, Green } = selectArtifacts(state)
-    return [ Red, Blue, Green ]
-  }
-  return [selectItem[part](state)]
-}
 
 const Row = styled.div`
   display: flex;
@@ -48,10 +31,7 @@ function SourceAttrSel({ attrDef, source }: { attrDef: AttrDef, source: AttrSour
   </Row>
 }
 
-
-
 function SourcedAttrOne({ attrDef, value, sources }: { attrDef: AttrDef, value: any, sources: AttrSource[] }) {
-  const values_t: any[] = sources.filter(s => s != null).map(s => s.attrs?.[attrDef.key]).filter(s => s != null)
   return(
     <details className="SourcedAttrOne">
       <summary className="Hovery">
@@ -135,14 +115,13 @@ function AttrGroupView() {
 }
 
 export function Detail() {
-  const attrs = useAppSelector(selectMyAttr)
-  const [by, setBy] = useState<"Part" | "Attr">("Part")
+  const [by, setBy] = useState<"Part" | "Attr">("Attr")
   return (
     <div id="Detail">
       <div>
         <RadioGroup name="ViewType" groupName="그룹"
-          values={["Part", "Attr"]} value={by} 
-          labels={["아이템", "효과"]}
+          values={["Attr", "Part"]} value={by} 
+          labels={["효과", "아이템"]}
           dispatcher={v => setBy(v)}
         />
         {by === "Part"? <SourceGroupView /> : null}

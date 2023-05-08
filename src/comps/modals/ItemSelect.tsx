@@ -127,7 +127,7 @@ const SelectType = styled.div`
 
 
 
-export function EquipModalFragment({ part }: { part: WholePart }) {
+export function ItemSelect({ part }: { part: WholePart }) {
   const { closeModal } = useContext(ModalContext)
   const isets = loadShotgun(part) ?? []
   const [query, setQuery] = useState("")

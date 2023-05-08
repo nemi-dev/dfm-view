@@ -14,7 +14,7 @@ import { ClosedCondyceSet } from './Choices'
 import { EquipBatch } from './EquipBatch'
 import { ArmorMaterialSelect, ArtiUpgrade, CardSlot, EmblemArray, Upgrade } from './Itemy'
 import { MagicProps } from './MagicProps'
-import { EquipModalFragment } from './modals/EquipModal'
+import { ItemSelect } from './modals/ItemSelect'
 import { ModalContext } from './modals/modalContext'
 import { SimpleBaseAttrView } from './widgets/AttrsView'
 import { ItemIcon } from './widgets/Icons'
@@ -71,7 +71,7 @@ function PartWide({ part }: PartWideProps) {
     <div className="EquipSlot Bordered Hovering">
       <div className="EquipPartLayout">
         <ItemIcon item={item}
-          onClick={() => openModal(<EquipModalFragment part={part} />)}
+          onClick={() => openModal(<ItemSelect part={part} />)}
         />
         <SlotHeading part={part} onItemNameClicked={() => setDetail(!detail)} />
         {item? 
@@ -99,7 +99,7 @@ function PartCompact({ part }: PartProps) {
     <div className="EquipSlot">
       <div className="EquipPartLayout">
         <ItemIcon item={item}
-          onClick={() => openModal(<EquipModalFragment part={part} />)}
+          onClick={() => openModal(<ItemSelect part={part} />)}
         />
       </div>
     </div>
