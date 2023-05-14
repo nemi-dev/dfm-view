@@ -10,9 +10,9 @@ import { RootState } from "../../feats/store";
 
 
 
-export function mainItemSelector(part: WholePart, index?: number | "Red" | "Green" | "Blue") {
+export function mainItemSelector(part: WholePart, index?: number | ArtifactColor) {
   if (part === "정수") return selectSpell(index as number)
-  if (part === "아티팩트") return selectArtifact(index as "Red"|"Green"|"Blue")
+  if (part === "아티팩트") return selectArtifact(index as ArtifactColor)
   return selectItem[part]
 }
 
@@ -30,7 +30,7 @@ function selectEmblemSpecsGenerous(state: RootState, part: WholePart) {
 
 interface CurrentPartProps {
   part: WholePart;
-  index?: number | "Red" | "Green" | "Blue";
+  index?: number | ArtifactColor;
 }
 export function CurrentPart({ part, index }: CurrentPartProps) {
   const mainitem = useAppSelector(mainItemSelector(part, index))

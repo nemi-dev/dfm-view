@@ -49,7 +49,7 @@ export function Upgrade({ part }: PartProps) {
   } else return null
 }
 
-export function ArtiUpgrade({ color }: { color: "Red" | "Green" | "Blue" }) {
+export function ArtiUpgrade({ color }: { color: ArtifactColor }) {
   const dispatch = useAppDispatch()
   const value = useAppSelector(state => state.My.CreatureValue[color])
   const setValue = useCallback((v: number) => {

@@ -8,7 +8,7 @@ import { selectItem } from "./equipSelectors"
 
 /** 아티팩트 하나를 선택한다 */
 export const selectArtifact = memoizee(
-  (color: "Red" | "Green" | "Blue") => (state: RootState) => getItem(state.My.Item["아티팩트"][color]),
+  (color: ArtifactColor) => (state: RootState) => getItem(state.My.Item["아티팩트"][color]),
 { primitive: true })
 
 /** 레드 아티팩트의 힘/지능 증가 효과를 선택한다. */

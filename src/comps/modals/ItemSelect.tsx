@@ -1,8 +1,8 @@
 import styled from "styled-components"
 import Fuse from "fuse.js"
-import { MouseEventHandler, useCallback, useContext, useEffect, useMemo, useState } from "react"
+import { Fragment, MouseEventHandler, useCallback, useContext, useEffect, useMemo, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../feats/hooks"
-import { equipParts, getCircus2Items, getItem, getItemsByPart, isAccess, isArmor, isWeapon, party } from "../../items"
+import { equipParts, getCircus2Items, getItem, getItemsByPart, isAccess, isArmor, isEquip, isWeapon, party } from "../../items"
 import { ItemIcon } from "../widgets/Icons"
 import { ModalContext } from "./modalContext"
 
@@ -17,6 +17,7 @@ import { NavLink, Tab } from "../widgets/Tab"
 import { ItemDetail } from "../widgets/ItemView"
 import { mainItemSelector } from "./CurrentPart"
 import produce from "immer"
+import { ItemSizeDefiner } from "./CommonModalComps"
 
 type EquipShotgun = Partial<Pick<ItemsState, EquipPart>>
 
@@ -39,46 +40,11 @@ input[type=text]& {
 }
 `
 
-const ItemSizeDefiner = styled.div`
-  --item-size: 50px;
-`
 
 interface IsetCatalog {
   name: string
   items: DFItem[]
   useThisForPayload: EquipShotgun
-}
-
-const EquipShotgunStyle = styled.div`
-  padding: 4px;
-
-  .IsetName {
-    margin-block: 0.1rem;
-    font-weight: 700;
-  }
-
-  .IsetIconArray {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-  }
-`
-
-function EquipShotgunTab({ item, onClick }: { item: IsetCatalog, onClick: MouseEventHandler<HTMLDivElement>}) {
-  const { closeModal } = useContext(ModalContext)
-  const { name, items, useThisForPayload } = item
-  const dispatch = useAppDispatch()
-  return (
-    <EquipShotgunStyle className="EquipShotgun" onClick={() => { dispatch(FetchItems(useThisForPayload)); closeModal() }}>
-      <div className="IsetName">{name}</div>
-      <div className="IsetIconArray">
-      {items.map((item) => (
-        <ItemIcon key={item.name} item={item} />
-        ))}
-      </div>
-    </EquipShotgunStyle>
-  )
 }
 
 function myItemSorter(myWeapons: WeaponType[], a: DFItem, b: DFItem) {
@@ -167,15 +133,6 @@ function SingleItemList({ part }: { part: WholePart }) {
   )
 }
 
-function Circus2OneSet({ isetname, items }: { isetname: string, items: DFItem[] }) {
-  return (
-    <>
-      <h4>{isetname.split(/\s+/)[1]}</h4>
-      {items.map(item => <ItemIcon key={item.name} item={item} onClick={() => {}} />)}
-    </>
-  )
-}
-
 const Circus2ListStyle = styled.div`
   button.Apply {
     position: sticky;
@@ -187,6 +144,8 @@ const Circus2ListInnerLayout = styled.div`
   display: grid;
   grid-template-columns: repeat(11, auto);
 
+  justify-content: space-evenly;
+
   .ItemIcon {
     opacity: 0.75;
     filter: grayscale(50%);
@@ -197,24 +156,45 @@ const Circus2ListInnerLayout = styled.div`
     }
   }
 
+  h4, h5 {
+    cursor: default;    
+  }
+
   @media screen and (max-width: 999px) {
     grid-template-rows: repeat(11, auto);
+    grid-auto-columns: auto;
     grid-template-columns: unset;
     grid-auto-flow: column;
+
   }
 `
 
 function Circus2List() {
+  const { closeModal } = useContext(ModalContext)
+  const dispatch = useAppDispatch()
   const myDFClass = useAppSelector(selectMyDFClass)
   const collection = getCircus2Items(myDFClass.name)
   const currentItems = equipParts.map(part => useAppSelector(state => state.My.Item[part])).map(name => getItem(name))
+
   const [shotgun, setShotgun] = useState<EquipShotgun>(currentItems.reduce((sh, item) => 
     (sh[party(item.itype)] = item.name, sh)
   , {}))
-  const onItemClick = useCallback((item: DFItem) => {
+
+  const loadOne = useCallback((item: DFItem) => {
     const part: EquipPart = party(item.itype) as EquipPart
     setShotgun(produce(shotgun, sh => { sh[part] = item.name }))
-  }, [])
+  }, [shotgun])
+
+  const loadAll = useCallback((items: DFItem[]) => {
+    const s: EquipShotgun = items.reduce((sh, item) => (sh[party(item.itype)] = item.name, sh), {} as EquipShotgun)
+    setShotgun(produce(shotgun, sh => { Object.assign(sh, s) }))
+  }, [shotgun])
+
+  const apply = useCallback(() => {
+    dispatch(FetchItems(shotgun))
+    closeModal()
+  }, [shotgun])
+
   return (
     <Circus2ListStyle>
       <div style={{ marginBlock: "1rem" }}>
@@ -222,17 +202,55 @@ function Circus2List() {
         세트 이름을 누르면 모든 세트 아이템을 장착합니다.<br />
       </div>
       <Circus2ListInnerLayout>
-        <h4>(착용중)</h4>
+        <h5 onClick={() => loadAll(currentItems)}>(착용중)</h5>
         {currentItems.map((item, index) =>
-          <ItemIcon key={item.name} item={item} className={shotgun[party(item.itype)] == item.name ? "Active" : ""} onClick={() => onItemClick(item)} />
+          <ItemIcon key={item.name} item={item} className={shotgun[party(item.itype)] == item.name ? "Active" : ""} onClick={() => loadOne(item)} />
         )}
-        {Object.keys(collection).map(isetName => 
-          <Circus2OneSet key={isetName} isetname={isetName} items={collection[isetName]}/>
+        {Object.keys(collection).map(isetName => {
+          const thisItems = collection[isetName]
+          return <Fragment key={isetName}>
+            <h4 onClick={() => loadAll(thisItems)}>{isetName.split(/\s+/)[1]}</h4>
+            {thisItems.map(item => <ItemIcon key={item.name} item={item} className={shotgun[party(item.itype)] == item.name ? "Active" : ""} onClick={() => loadOne(item)} />)}
+          </Fragment>
+        }
         )}
       </Circus2ListInnerLayout>
-      <button className="Apply">착용하기</button>
+      <button className="Apply" onClick={apply}>착용하기</button>
     </Circus2ListStyle>
     
+  )
+}
+
+
+const EquipShotgunStyle = styled.div`
+  padding: 4px;
+
+  .IsetName {
+    margin-block: 0.1rem;
+    font-weight: 700;
+  }
+
+  .IsetIconArray {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+`
+
+function EquipShotgunTab({ item, onClick }: { item: IsetCatalog, onClick: MouseEventHandler<HTMLDivElement>}) {
+  const { closeModal } = useContext(ModalContext)
+  const { name, items, useThisForPayload } = item
+  const dispatch = useAppDispatch()
+  return (
+    <EquipShotgunStyle className="EquipShotgun" onClick={() => { dispatch(FetchItems(useThisForPayload)); closeModal() }}>
+      <div className="IsetName">{name}</div>
+      <div className="IsetIconArray">
+      {items.map((item) => (
+        <ItemIcon key={item.name} item={item} />
+        ))}
+      </div>
+    </EquipShotgunStyle>
   )
 }
 
@@ -271,8 +289,8 @@ export function ItemSelect({ part }: { part: WholePart }) {
         <SelectType>
           <NavLink name="효과">효과 보기</NavLink>
           <NavLink name="일반">일반</NavLink>
-          <NavLink name="환영극단 2막">환영극단 2막</NavLink>
           <NavLink name="세트">세트</NavLink>
+          {isEquip(part) && <NavLink name="환영극단 2막">환영극단 2막</NavLink>}
         </SelectType>
         <div className="ModalMenuScrollable">
           <Tab name="효과">

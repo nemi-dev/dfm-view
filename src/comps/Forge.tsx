@@ -87,7 +87,7 @@ function Part({ part }: { part: EquipPart | "칭호" | "봉인석" | "크리쳐"
   )
 }
 
-function ArtiPart({ color }: { color: "Red" | "Green" | "Blue" }) {
+function ArtiPart({ color }: { color: ArtifactColor }) {
   const item = useAppSelector(selectArtifact(color))
   return (
     <PartLayout className="Part Bordered">

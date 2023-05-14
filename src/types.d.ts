@@ -55,6 +55,8 @@ declare type EmblemSpec = [EmblemType, number]
 
 declare type WearAvatarRarity = "Common" | "Uncommon" | "Rare"
 
+declare type ArtifactColor = "Red" | "Green" | "Blue"
+
 /** Base + (inc * 스킬렙)을 나타내는 오브젝트 */
 declare interface LinearValue {
   base: number
@@ -337,7 +339,7 @@ declare interface DFItem {
   material?: ArmorMaterial
 
   /** (아티팩트일 때만) 아티팩트 색깔 */
-  ArtiColor?: "Red" | "Green" | "Blue"
+  ArtiColor?: ArtifactColor
 
   /** 아이템 효과 */
   attrs: BaseAttrs

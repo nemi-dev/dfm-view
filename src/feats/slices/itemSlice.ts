@@ -18,7 +18,7 @@ export const itemSlice = createSlice({
     SetSpellAll: (s, { payload: id }: PayloadAction<ItemIdentifier>) => {
       s["정수"].fill(id)
     },
-    SetArtifact: (s, { payload: [ color, id ] }: PayloadAction<["Red"|"Green"|"Blue", ItemIdentifier]>) => {
+    SetArtifact: (s, { payload: [ color, id ] }: PayloadAction<[ArtifactColor, ItemIdentifier]>) => {
       s["아티팩트"][color] = id
     },
     FetchItems: (s, { payload: items }: PayloadAction<Partial<ItemsState>>) => {

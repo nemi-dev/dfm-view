@@ -8,6 +8,7 @@ import { SetCard, SetCardsAllPossible } from "../../feats/slices/itemSlice"
 import styled from "styled-components"
 import { LabeledSwitch } from "../widgets/Forms"
 import { CurrentPart } from "./CurrentPart"
+import { ItemSizeDefiner } from "./CommonModalComps"
 
 
 
@@ -43,11 +44,13 @@ export function CardModalFragment({ part }: { part: CardablePart }) {
       <header>
         <CheckieInline label="선택한 카드를 가능한 모든 부위에 바르기" checked={all} onChange={setAll} />
       </header>
+      <ItemSizeDefiner>
       <div className="ItemSelectArray">
         {items.map((card) => (
           <CardSelect key={card.name} part={part} card={card} all={all} />
         ))}
       </div>
+      </ItemSizeDefiner>
     </div>
     </>
   )

@@ -1,13 +1,10 @@
 import '../style/Equips.scss'
 
-import { useCallback, useContext, useState } from 'react'
-import { ErrorBoundary } from 'react-error-boundary'
+import { useContext, useState } from 'react'
 import styled from 'styled-components'
 
-import { useAppDispatch, useAppSelector } from '../feats/hooks'
-import {
-  selectItem, 
-} from '../feats/selector/equipSelectors'
+import { useAppSelector } from '../feats/hooks'
+import { selectItem } from '../feats/selector/equipSelectors'
 import { equipParts } from '../items'
 import { PortraitMode } from '../responsiveContext'
 import { ClosedCondyceSet } from './Choices'
@@ -20,7 +17,7 @@ import { SimpleBaseAttrView } from './widgets/AttrsView'
 import { ItemIcon } from './widgets/Icons'
 import { ItemName } from './widgets/ItemNameView'
 import { selectArtifact } from '../feats/selector/creatureSelectors'
-import { ArtifactModalFragment } from './modals/CreatureModal'
+import { ArtifactModalFragment } from './modals/ArtifactModal'
 import { EditEltype } from './MyStat'
 
 interface PartProps {
@@ -28,7 +25,7 @@ interface PartProps {
 }
 
 interface ArtifactPartProps {
-  color: "Red" | "Green" | "Blue"
+  color: ArtifactColor
 }
 
 

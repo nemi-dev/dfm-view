@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { perfectTonic } from "../../constants";
+import { customSkillInit2 } from "./customSkillInit";
 
 interface V5State {
   currentID: string
@@ -26,7 +27,7 @@ const initialState: V5State = {
     byID: {},
     IDs: []
   },
-  CustomSkill: [],
+  CustomSkill: customSkillInit2,
   CustomSkillPresets: {
     byID: {},
     IDs: []
