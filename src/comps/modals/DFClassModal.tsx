@@ -3,10 +3,12 @@ import { useAppDispatch, useAppSelector } from "../../feats/hooks"
 import { selectMyDFClass, selectMyName } from "../../feats/selector/selfSelectors"
 import { SetDFClass, SetMyName } from "../../feats/slices/slice"
 import { DFClassIcon } from "../widgets/Icons"
+import { useContext } from "react"
+import { PortraitMode } from "../../responsiveContext"
 
-const DFClassLayout = styled.div`
+const DFClassLayout = styled.div<{ columns: number }>`
   display: grid;
-  grid-template-columns: repeat(4, auto);
+  ${props => `grid-template-columns: repeat(${props.columns ?? 4}, auto)`}
 `
 
 const DFCharNameInput = styled.input`
@@ -32,6 +34,7 @@ export function DFClassModal() {
   const dispatch = useAppDispatch()
   const myClass = useAppSelector(selectMyDFClass)
   const myName = useAppSelector(selectMyName)
+  const portrait = useContext(PortraitMode)
   return (
     <div>
       <header>
@@ -42,7 +45,7 @@ export function DFClassModal() {
       </div>
       <DFCharNameInput type="text" maxLength={20} value={myName} onChange={ev => dispatch(SetMyName(ev.target.value))} />
       <div className="ModalMenuScrollable">
-      <DFClassLayout>
+      <DFClassLayout columns={portrait? 4 : 8}>
       {dfclassOrder.map((name) => 
         <DFClassIcon key={name} dfclassName={name} onClick={() => dispatch(SetDFClass(name))} />
       )}

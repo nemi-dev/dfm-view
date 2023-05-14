@@ -93,6 +93,10 @@ input[type=text], input[type=number] {
   color: inherit;
 }
 
+.FormDF :is(input[type=text], input[type=number]) {
+  color: white;
+}
+
 button {
   border-radius: 20px;
   border: none;

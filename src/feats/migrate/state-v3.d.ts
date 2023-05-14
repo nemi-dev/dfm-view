@@ -182,7 +182,7 @@ declare namespace State_v3 {
   }
   
   interface CustomSkillState {
-    cases: SkillOneAttackSpec[]
+    cases: CustomSkillOneAttackSpec[]
   }
   
   interface DFCharState {
@@ -256,7 +256,7 @@ declare namespace State_v3 {
     EnemyTarget: EnemyTargetState
     SavedChars: SavedCharCollection
     EquipPresets: EquipPresetCollection
-    CustomSkill: SkillOneAttackSpec[]
+    CustomSkill: CustomSkillOneAttackSpec[]
     CustomSkillPresets: CustomSkillPresetCollection
   }
 }

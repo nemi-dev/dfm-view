@@ -7,7 +7,7 @@ interface V5State {
   Tonic: TonicState
   EnemyTarget: EnemyTargetState
   EquipPresets: EquipPresetCollection
-  CustomSkill: SkillOneAttackSpec[]
+  CustomSkill: CustomSkillOneAttackSpec[]
   CustomSkillPresets: CustomSkillPresetCollection
 }
 

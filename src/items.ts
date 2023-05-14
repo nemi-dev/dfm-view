@@ -32,7 +32,7 @@ export const cardableParts: readonly CardablePart[] = Object.freeze([...equipPar
 export const magicPropsParts: readonly MagicPropsPart[] = Object.freeze([...equipParts, "봉인석"])
 
 /** 이 아이템 타입은 무기인가? */
-export const isWeapon = (itype: Itype | "무기") => (itype === "무기" || weaponType.includes(itype))
+export const isWeapon = (itype: Itype | "무기"): itype is WeaponType => (itype === "무기" || weaponType.includes(itype))
 
 /** `key`가 방어구 부위인가? */
 export const isArmor = (key: WholePart): key is ArmorPart => armorParts.includes(key as ArmorPart)
@@ -48,6 +48,12 @@ export const isCardable = (p: WholePart): p is CardablePart => cardableParts.inc
 
 /** `p`가 마법봉인 있는 부위인가? */
 export const hasMagicProps = (p: WholePart): p is MagicPropsPart => magicPropsParts.includes(p as any)
+
+/** itype을 Part로 바꾼다. */
+export function party(i: Itype) {
+  if (isWeapon(i)) return "무기"
+  return i
+}
 
 /** 주어진 부위의 "상위 종류"를 얻는다. (ex. "방어구", "악세서리", "무기", "봉인석") */
 export function getSupertype(part: EquipPart | "봉인석") {
@@ -147,6 +153,18 @@ export const itemNameToId = (name: string) => _item_name_to_id[name] ?? 0
 /** 아이템 ID를 이름으로 바꾼다. */
 export const itemIdToName = (id: number) => _item_id_to_name[id]
 
+/** 정해진 직업의 환영극단 2막 장비를 모두 얻는다. */
+export const getCircus2Items = memoizee(
+function getCircus2Items(dfclassName: DFClassName) {
+  const circus2items = items.filter(item => item.content?.includes("환영극단 2막") && item.who?.includes(dfclassName))
+  const [set0, set1, ..._] = circus2items.reduce((names, item) => names.includes(item.setOf[0]) ? names : [...names, item.setOf[0]], [] as string[])
+  const circus2sets = {
+    [set0]: circus2items.filter(item => item.setOf[0] == set0).sort((a, b) => equipParts.indexOf(a.itype as EquipPart) - equipParts.indexOf(b.itype as EquipPart)),
+    [set1]: circus2items.filter(item => item.setOf[0] == set1).sort((a, b) => equipParts.indexOf(a.itype as EquipPart) - equipParts.indexOf(b.itype as EquipPart)),
+  }
+  return circus2sets
+}
+)
 
 /** 
  * `name`이 방어구 아이템 이름인 것이 확실할 때, 실제 던파 방어구 아이템을 구현한다.  

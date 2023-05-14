@@ -10,7 +10,7 @@ import { PortraitMode, TabContext } from '../responsiveContext'
 import AppModal from './modals/index'
 import { ModalContext, ModalContextType } from "./modals/modalContext"
 import { MyStat } from './MyStat'
-import { SkillTestSet } from './CustomSkill'
+import { CustomSkillScreen } from './CustomSkill'
 import { StickyNav } from './StickyNav'
 import { EnemyTarget } from './EnemyTarget'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
@@ -20,6 +20,7 @@ import { Detail } from './Detail'
 import { MiscScreen } from './Misc'
 import { NavLink, Tab } from './widgets/Tab'
 import { StyleSheetManager } from 'styled-components'
+import { Skill } from './Skill'
 
 
 function Navigator() {
@@ -100,7 +101,7 @@ function App() {
     <TabContext.Provider value={{ activeTab, setActiveTab }}>
     <ModalContext.Provider value={modalContextValue}>
     <PortraitMode.Provider value={portrait}>
-      <StyleSheetManager disableVendorPrefixes={IS_DEV}>
+      {/* <StyleSheetManager disableVendorPrefixes={IS_DEV}> */}
       {lastIDs.length > 0 && rehydrated? <div className="App">
         <AppModal isOpen={isModalOpen}/>
         <StickyNav />
@@ -114,9 +115,10 @@ function App() {
           </div>
         </div>
         <EnemyTarget />
-        <SkillTestSet />
+        <Skill />
+        <CustomSkillScreen />
       </div>: null}
-      </StyleSheetManager>
+      {/* </StyleSheetManager> */}
     </PortraitMode.Provider>
     </ModalContext.Provider>
     </TabContext.Provider>

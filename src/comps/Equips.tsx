@@ -1,7 +1,7 @@
 import '../style/Equips.scss'
 
 import { useCallback, useContext, useState } from 'react'
-import { ErrorBoundary, useErrorHandler } from 'react-error-boundary'
+import { ErrorBoundary } from 'react-error-boundary'
 import styled from 'styled-components'
 
 import { useAppDispatch, useAppSelector } from '../feats/hooks'

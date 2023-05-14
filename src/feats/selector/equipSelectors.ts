@@ -21,7 +21,6 @@ export function Paw<T, P extends string>(func: ($p: P) => (s: RootState) => T, p
 export const selectItem = Paw(part => state => {
   if (isArmor(part)) return getArmor(state.My.Item[part], state.My.Material[part])
   else return getItem(state.My.Item[part])
-
 }, singleItemParts)
 
 /** 특정 부위의 아이템에 바른 카드를 선택한다 */
@@ -98,7 +97,6 @@ export const selectEquipPart = Paw(
     selectItem[part],
     selectMagicProps[part],
     selectCard[part],
-    // selectEmblemSpecs[part],
     selectEmblems[part],
     selectUpgrade[part],
     (item, magicProps, card, emblems, upgrade): AttrSource[] => {

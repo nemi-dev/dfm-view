@@ -152,26 +152,6 @@ img.AttrIcon {
 }
 
 
-.SkillTestSet {
-
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-
-  .Result {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 2px;
-    .AttrValue {
-      font-size: 1.5rem;
-    }
-  }
-
-}
-
-
 .SkillTestOne {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -205,14 +185,4 @@ img.AttrIcon {
     grid-column: 1 / 3;
   }
 
-}
-
-@media (max-width: 999px) {
-  .SkillTestSet .KeyName {
-    font-size: 0.7rem;
-  }
-  .SkillTestSet .Result .AttrValue {
-    font-size: 1rem;
-  }
-  
 }

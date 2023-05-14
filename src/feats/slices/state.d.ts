@@ -219,7 +219,7 @@ declare type CalibrateState = Pick<BaseAttrs,
 }
 
 declare interface CustomSkillState {
-  cases: SkillOneAttackSpec[]
+  cases: CustomSkillOneAttackSpec[]
 }
 
 /** 여기까지가 "캐릭터 저장" 단위다  */

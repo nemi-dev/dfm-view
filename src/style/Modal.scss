@@ -69,7 +69,6 @@
 }
 
 .ItemSelectArray {
-  --item-size: 50px;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
@@ -77,30 +76,12 @@
 }
 
 .ItemShotgunArray {
-  --item-size: 50px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-evenly;
   flex-wrap: wrap;
   gap: 0.1rem;
-
-  .EquipShotgun {
-    
-    padding: 4px;
-
-    .IsetName {
-      margin-block: 0.1rem;
-      font-weight: 700;
-    }
-
-    .IsetIconArray {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-    }
-  }
 }
 
 .ItemSelectArray, .ItemShotgunArray {
@@ -159,6 +140,7 @@
         top: 100%;
         white-space: nowrap;
         border-radius: 4px;
+        pointer-events: none;
       }
     }
   }

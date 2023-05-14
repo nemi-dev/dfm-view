@@ -16,3 +16,9 @@ export function ModalItemSelect({ item, onClick }: SelectProps) {
     </div>
   )
 }
+
+export function ChoiceItemSelect({ item, onClick, active = false }: SelectProps & { active?: boolean}) {
+  return (
+    <ItemIcon className={active? "Active" : ""} item={item} onClick={onClick} />
+  )
+}

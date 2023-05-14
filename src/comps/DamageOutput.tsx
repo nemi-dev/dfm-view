@@ -1,18 +1,24 @@
 import { useAppSelector } from "../feats/hooks"
 import { selectMyAttr, selectMyFinalEltype } from "../feats/selector/selectors"
 import { AtypeAttrKey } from "../constants"
-import { selectClassAtype } from "../feats/selector/selfSelectors"
+import { selectClassAtype, selectMyDFClass } from "../feats/selector/selfSelectors"
 import { Num } from "./widgets/NumberView"
-import { critChance, critFt, getPlainDamage } from "../damage"
+import { critChance, critFt, getElementalDamage, getPlainDamage } from "../damage"
 import { add } from "../utils"
 
 
 export function DamageOutput({ sk = false, crit = false }: { sk?: boolean, crit?: boolean | "mean" }) {
   const attrs = useAppSelector(selectMyAttr)
+  const dfclass = useAppSelector(selectMyDFClass)
   const atype = useAppSelector(selectClassAtype)
   const eltype = useAppSelector(selectMyFinalEltype)
+  let damage: number
 
-  let damage = getPlainDamage(atype, eltype, attrs)
+  if (sk && !(eltype?.length > 0) && (dfclass.name === "엘레멘탈마스터" || dfclass.name === "마도학자"))
+    damage = getElementalDamage(attrs)
+  else 
+    damage = getPlainDamage(atype, eltype, attrs)
+
   if (sk) {
     damage *= (1 + add(attrs["sk_inc"], attrs["sk_inc_sum"]) / 100)
   }

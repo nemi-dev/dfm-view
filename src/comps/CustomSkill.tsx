@@ -29,7 +29,7 @@ const SkillOneAttackLayout = styled.div`
 
 `
 
-interface SkillInputOneProps extends SkillOneAttackSpec {
+interface SkillInputOneProps extends CustomSkillOneAttackSpec {
   index: number
 }
 
@@ -51,9 +51,9 @@ function SkillOneAttack({ index, value, fixed, isSkill = false, maxHit = 1, name
 
 interface SkillOutputOneProps {
   index: number
-  SkillOneAttackSpec: SkillOneAttackSpec
+  SkillOneAttackSpec: CustomSkillOneAttackSpec
 }
-function SkillTestOne({ index, SkillOneAttackSpec }: SkillOutputOneProps) {
+function CustomSkillAttackOne({ index, SkillOneAttackSpec }: SkillOutputOneProps) {
 
   const atype = useAppSelector(selectClassAtype)
 
@@ -91,19 +91,47 @@ function SkillTestOne({ index, SkillOneAttackSpec }: SkillOutputOneProps) {
   )
 }
 
-export function SkillTestSet() {
+const CustonSkillStyle = styled.div`
+  
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  .Result {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    .AttrValue {
+      font-size: 1.5rem;
+    }
+  }
+
+  @media (max-width: 999px) {
+  .KeyName {
+    font-size: 0.7rem;
+  }
+  .Result .AttrValue {
+    font-size: 1rem;
+  }
+  
+}
+`
+
+export function CustomSkillScreen() {
   const cases = useAppSelector(state => state.CustomSkill)
   
   return (
     <div>
       <header>
-        <h3>스킬</h3>
+        <h3>스킬계수 직접 입력</h3>
       </header>
-      <div className="SkillTestSet">
+      <CustonSkillStyle>
       {cases.map((a, index) => (
-        <SkillTestOne key={index} index={index} SkillOneAttackSpec={a} />
+        <CustomSkillAttackOne key={index} index={index} SkillOneAttackSpec={a} />
       ))}
-      </div>
+      </CustonSkillStyle>
     </div>
     
   )

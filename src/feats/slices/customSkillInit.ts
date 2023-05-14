@@ -1,4 +1,4 @@
-export const customSkillInit2: SkillOneAttackSpec[] = [
+export const customSkillInit2: CustomSkillOneAttackSpec[] = [
   {
     name: "평타",
     value: 300,

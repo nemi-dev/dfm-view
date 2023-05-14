@@ -224,7 +224,7 @@ interface CalibrateState {
 }
 
 interface CustomSkillState {
-  cases: SkillOneAttackSpec[]
+  cases: CustomSkillOneAttackSpec[]
 }
 
 /** 여기까지가 "캐릭터 저장" 단위다  */
@@ -302,7 +302,7 @@ interface _RootState {
   EnemyTarget: EnemyTargetState
   SavedChars: SavedCharCollection
   EquipPresets: EquipPresetCollection
-  CustomSkill: SkillOneAttackSpec[]
+  CustomSkill: CustomSkillOneAttackSpec[]
   CustomSkillPresets: CustomSkillPresetCollection
 }
 

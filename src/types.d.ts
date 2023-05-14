@@ -55,7 +55,14 @@ declare type EmblemSpec = [EmblemType, number]
 
 declare type WearAvatarRarity = "Common" | "Uncommon" | "Rare"
 
+/** Base + (inc * 스킬렙)을 나타내는 오브젝트 */
+declare interface LinearValue {
+  base: number
+  inc: number
+}
 
+/** 스킬레벨이 정해지지 않았을 때 스킬 수치 (계수, 스탯증가 등) */
+declare type SkillValue = number | LinearValue
 
 /** 아이템/아이템 세트/버프 스킬/패시브 스킬 등의 (항상 적용되는) 효과 */
 declare interface BaseAttrs {
@@ -359,6 +366,8 @@ declare interface DFISet {
   [k: number]: ComplexAttrSource
 }
 
+
+
 /** 직업 */
 declare interface DFClass {
 
@@ -373,6 +382,12 @@ declare interface DFClass {
 
   /** 이 직업에게 항상 적용되는 효과 */
   attrs: BaseAttrs
+
+  /** 이 직업이 사용가능한 공격 스킬들 이름 */
+  skills: string[]
+
+  /** 이 직업이 사용가능한 패시브/버프 스킬 이름 */
+  selfSkills: string[]
 }
 
 /** 
@@ -396,6 +411,8 @@ declare interface AttrSource {
 
 }
 
+
+
 /** 효과를 내는 것 중에서 "조건부"가 있는 것들  
  * 아이템 및 세트효과만 이에 해당한다.
  */
@@ -412,35 +429,131 @@ declare interface ComplexAttrSource extends AttrSource {
   exclusive?: ExclusiveSet[]
 }
 
+
+
 /** 공격 스킬의 공격 하나하나를 나타낸다. */
-declare interface SkillOneAttackSpec {
-  /** 스킬 공격 세부 이름 */
+declare interface CustomSkillOneAttackSpec {
+  /** 
+   * 스킬 공격 세부 이름
+   */
   name: string
 
   /** 스킬 계수 */
   value: number
 
-  /** 스킬 고정값 */
-  fixed: number
+  /** 스킬 고정값 (없으면 value와 같은 것으로 간주) */
+  fixed?: number
 
-  /** 스증 적용 여부 */
+  /**
+   * 스증 적용 여부
+   */
   isSkill?: boolean
 
-  /** 타격 횟수 */
+  /** 타격 횟수 (없으면 1) */
   maxHit?: number
+
+  /** 이 공격에만 적용되는 공격속성 */
+  eltype?: Eltype[] | null | undefined
 }
 
-/** 우리가 쓰는 바로 그 스킬이다. */
-declare interface SkillSpec {
+
+
+/** 스킬 레벨이 아직 정해지지 않은 스킬 공격 */
+declare interface UnboundOneAttack {
+
+  /** 스킬 공격 이름 */
+  atName: string
+
+  /** 스킬 계수 [%] */
+  value: SkillValue
+
+  /** 스킬 고정값 (없으면 value와 같은 것으로 간주) */
+  fixed?: SkillValue
+
+  /** 타격 횟수 (없으면 1) */
+  maxHit?: number
+
+  /** 이 공격에만 적용되는 공격속성 (쓰일 가능성 낮음) */
+  eltype?: Eltype[] | null | undefined
+
+}
+
+/** 스킬레벨이 적용된 "찐" 스킬공격 */
+declare interface RealOneAttack {
+
+  /** 스킬 공격 이름 */
+  atName: string
+
+  /** 스킬 계수 [%] */
+  value: number
+
+  /** 스킬 고정값 (반드시 있다.) */
+  fixed: number
+
+  /** 실제로 지정한 타격 횟수 (반드시 있다.) */
+  hit: number
+
+  /** 이 공격에만 적용되는 공격속성 (쓰일 가능성 낮음) */
+  eltype?: Eltype[] | null | undefined
+}
+
+
+
+/** 공격스킬 */
+declare interface AttackSkill {
+  /** 스킬 ID */
+  id: number
+
   /** 스킬 이름 */
   name: string
 
-  /** 스증 적용 여부 */
-  isSkill: boolean
+  /** 이 스킬을 습득할 수 있는 레벨 */
+  level: number
 
-  /** 스킬 썼을때 공격 효과들 */
-  attacks: SkillOneAttackSpec[]
+  /** 스킬 레벨을 1 올리기 위해 필요한 SP */
+  point: number
+
+  /** 스킬 쿨타임 [초] */
+  cool: number
+
+  /** 
+   * 이 스킬에 달려있는 공격속성 (ex. 아수라, 엘마, 마도 등)  
+   * === false이면 직업의 공격속성을 무효화하고, 무속성이 된다. (ex. 메카닉)  
+   * == null 이면 각 직업의 공격속성을 따른다.  
+   */
+  eltype?: Eltype[] | false | null | undefined
+
+  attacks: UnboundOneAttack[]
 
 }
 
+
+/** 패시브/버프 스킬 */
+declare interface SelfSkill {
+
+  /** 스킬 ID */
+  id: number
+
+  /** 스킬 이름 */
+  name: string
+
+  /** 스킬 습득만으로 적용되는 효과 */
+  acquire?: UnboundBaseAttrs
+
+  /** 스킬 습득만으로 파티원 모두에게 적용되는 효과 */
+  acquireGives?: UnboundBaseAttrs
+
+  /** 스킬 습득만으로 던전에서 적용되는 효과 */
+  dungeon?: UnboundBaseAttrs
+
+  /** 스킬 사용 시 자신에게 적용되는 효과 */
+  buff?: UnboundBaseAttrs
+
+  /** 스킬 사용 시 파티원 모두에게 적용되는 효과 */
+  buffGives?: UnboundBaseAttrs
+
+  /** 수치로 표현하기 어려운 효과, 또는 관심없는 효과 */
+  misc?: string[]
+  
+}
 

@@ -127,12 +127,12 @@ export function critChance(crit: number = 0, crit_pct: number = 0) {
 
 /** 독립공격력을 제외한 내 예상 데미지 (옵션버전) */
 export function getPlainDamage(atype: Atype, eltypes: Eltype[] | null, attrs: BaseAttrs) {
-  let el: number = 0
-  if (eltypes && eltypes.length > 0) el = attrs[Elemental[eltypes[0]].el] ?? 0
+  const el = (eltypes?.length > 0)? (attrs[Elemental[eltypes[0]].el] ?? 0) : 0
   const { Stat, StatInc, Atk, AtkInc } = AtypeAttrKey[atype]
   const {
     [Stat]: stat = 0, [StatInc]: statInc = 0,
     [Atk]: atk = 0, [AtkInc]: atkInc = 0,
+    dmg_inc = 0, dmg_add = 0,
     el_fire = 0, eldmg_fire = 0,
     el_ice = 0,  eldmg_ice = 0,
     el_lght = 0, eldmg_lght = 0,
@@ -143,8 +143,32 @@ export function getPlainDamage(atype: Atype, eltypes: Eltype[] | null, attrs: Ba
     statInc,
     atk,
     atkInc,
-    attrs["dmg_inc"] ?? 0,
-    attrs["dmg_add"] ?? 0,
+    dmg_inc,
+    dmg_add,
+    el,
+    [el_fire, el_ice, el_lght, el_dark],
+    [eldmg_fire, eldmg_ice, eldmg_lght, eldmg_dark]
+  )
+}
+
+/** 내가 엘레멘탈마스터/마도학자일 때, 강제로 4속성의 평균을 적용한 예상 마법 데미지 */
+export function getElementalDamage(attrs: BaseAttrs) {
+  const {
+    intl = 0, int_inc = 0, atk_mg = 0, atk_mg_inc = 0,
+    dmg_inc = 0, dmg_add = 0,
+    el_fire = 0, eldmg_fire = 0,
+    el_ice = 0,  eldmg_ice = 0,
+    el_lght = 0, eldmg_lght = 0,
+    el_dark = 0, eldmg_dark = 0
+  } = attrs
+  const el = (el_fire + el_ice + el_lght + el_dark) / 4
+  return plainDmg(
+    intl,
+    int_inc,
+    atk_mg,
+    atk_mg_inc,
+    dmg_inc,
+    dmg_add,
     el,
     [el_fire, el_ice, el_lght, el_dark],
     [eldmg_fire, eldmg_ice, eldmg_lght, eldmg_dark]
@@ -158,7 +182,7 @@ export function getDamage(
   el: number,
   attrs: BaseAttrs,
   atkFix: number,
-  { value, fixed, isSkill = false, maxHit = 1 }: SkillOneAttackSpec) {
+  { value, fixed, isSkill = false, maxHit = 1 }: CustomSkillOneAttackSpec) {
   if (Number.isNaN(el) || (el == null)) el = 0
   const { Stat, StatInc, Atk, AtkInc } = AtypeAttrKey[atype]
   const {
