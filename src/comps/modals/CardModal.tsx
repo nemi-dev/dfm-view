@@ -1,16 +1,15 @@
-import { useCallback, useContext, useState } from "react"
-import { useAppDispatch } from "../../feats/hooks"
-import { getCardsForPart } from "../../items"
-import { ItemName } from "../widgets/ItemNameView"
-import { ItemIcon } from "../widgets/Icons"
-import { ModalContext } from "./modalContext"
-import { SetCard, SetCardsAllPossible } from "../../feats/slices/itemSlice"
-import styled from "styled-components"
-import { LabeledSwitch } from "../widgets/Forms"
-import { CurrentPart } from "./CurrentPart"
-import { ItemSizeDefiner } from "./CommonModalComps"
+import { useCallback, useContext, useState } from 'react'
+import styled from 'styled-components'
 
-
+import { useAppDispatch } from '../../feats/hooks'
+import { SetCard, SetCardsAllPossible } from '../../feats/slices/mycharSlice'
+import { getCardsForPart } from '../../items'
+import { LabeledSwitch } from '../widgets/Forms'
+import { ItemIcon } from '../widgets/Icons'
+import { ItemName } from '../widgets/ItemNameView'
+import { ItemSizeDefiner } from './CommonModalComps'
+import { CurrentPart } from './CurrentPart'
+import { ModalContext } from './modalContext'
 
 const CheckieInline = styled(LabeledSwitch)`
   display: inline-flex;

@@ -1,13 +1,18 @@
-import { createSelector } from "@reduxjs/toolkit"
-import { useCallback } from "react"
-import { useAppDispatch, useAppSelector } from "../feats/hooks"
-import { selectClassAtype } from "../feats/selector/selfSelectors"
-import { selectCustomMaterial, selectEmblemSpecs, selectUpgradeValue } from "../feats/selector/equipSelectors"
-import { SetPerfectMagicPropsStat, SetPerfectMagicPropsEl, SetColorEmblemLevelAll, SetMaterialAll, SetArmorUpgradeAll, SetAccessUpgradeAll } from "../feats/slices/itemSlice"
-import { accessParts, armorParts, oneEmblemParts } from "../items"
-import { LabeledNumberInput, RadioGroup, OneClickButtonGroup } from "./widgets/Forms"
+import { useCallback } from 'react'
 
+import { createSelector } from '@reduxjs/toolkit'
 
+import { useAppDispatch, useAppSelector } from '../feats/hooks'
+import {
+    selectCustomMaterial, selectEmblemSpecs, selectUpgradeValue
+} from '../feats/selector/equipSelectors'
+import { selectClassAtype } from '../feats/selector/selfSelectors'
+import {
+    SetAccessUpgradeAll, SetArmorUpgradeAll, SetColorEmblemLevelAll, SetMaterialAll,
+    SetPerfectMagicPropsEl, SetPerfectMagicPropsStat
+} from '../feats/slices/mycharSlice'
+import { accessParts, armorParts, oneEmblemParts } from '../items'
+import { LabeledNumberInput, OneClickButtonGroup, RadioGroup } from './widgets/Forms'
 
 const selectMaxArmorUpgradeValue = createSelector(
   armorParts.map(part => selectUpgradeValue[part]),

@@ -3,25 +3,24 @@ import '../style/App.scss'
 import '../style/Misc.scss'
 
 import { useCallback, useContext, useEffect, useState } from 'react'
-import { Equips } from './Equips'
-import { Forge } from './Forge'
-import { Cracks } from "./Cracks"
-import { PortraitMode, TabContext } from '../responsiveContext'
-import AppModal from './modals/index'
-import { ModalContext, ModalContextType } from "./modals/modalContext"
-import { MyStat } from './MyStat'
-import { CustomSkillScreen } from './CustomSkill'
-import { StickyNav } from './StickyNav'
-import { EnemyTarget } from './EnemyTarget'
+
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { InitChar } from '../feats/saveReducers'
 import store from '../feats/store'
+import { PortraitMode, TabContext } from '../responsiveContext'
+import { Cracks } from './Cracks'
+import { CustomSkillScreen } from './CustomSkill'
 import { Detail } from './Detail'
+import { EnemyTarget } from './EnemyTarget'
+import { Equips } from './Equips'
+import { Forge } from './Forge'
 import { MiscScreen } from './Misc'
-import { NavLink, Tab } from './widgets/Tab'
-import { StyleSheetManager } from 'styled-components'
+import AppModal from './modals/index'
+import { ModalContext, ModalContextType } from './modals/modalContext'
+import { MyStat } from './MyStat'
 import { Skill } from './Skill'
-
+import { StickyNav } from './StickyNav'
+import { NavLink, Tab } from './widgets/Tab'
 
 function Navigator() {
   const portrait = useContext(PortraitMode)
@@ -67,8 +66,8 @@ function App() {
   const [isModalOpen, setOpen] = useState(false)
   const [modalFrag, setModalFrag] = useState<JSX.Element>()
   const lastIDs = useAppSelector(state => state.SavedChars.IDs)
-  const rehydrated = store.getState()._persist.rehydrated
-
+  // const rehydrated = store.getState()._persist?.rehydrated ?? true
+  const rehydrated = true
 
   const closeModal = useCallback(() => {
     setOpen(false)
@@ -95,15 +94,12 @@ function App() {
     return () => window.removeEventListener('resize', onResize)
   }, [])
 
-  
-
   return (
     <TabContext.Provider value={{ activeTab, setActiveTab }}>
     <ModalContext.Provider value={modalContextValue}>
     <PortraitMode.Provider value={portrait}>
-      {/* <StyleSheetManager disableVendorPrefixes={IS_DEV}> */}
+      <AppModal isOpen={isModalOpen}/>
       {lastIDs.length > 0 && rehydrated? <div className="App">
-        <AppModal isOpen={isModalOpen}/>
         <StickyNav />
         <div className="MainWrapper">
           <div className="LeftSide">
@@ -118,7 +114,6 @@ function App() {
         <Skill />
         <CustomSkillScreen />
       </div>: null}
-      {/* </StyleSheetManager> */}
     </PortraitMode.Provider>
     </ModalContext.Provider>
     </TabContext.Provider>

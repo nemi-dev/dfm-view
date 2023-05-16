@@ -2,14 +2,10 @@ import { useCallback, useContext } from 'react'
 import styled from 'styled-components'
 
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
-import { SquareIcon } from "./widgets/Icons"
-import { getAvatarAttr } from '../avatar'
-import { SetAvatarRarity, SetAvatarTypeAll } from '../feats/slices/avatarSlice'
-import { SimpleBaseAttrView } from './widgets/AttrsView'
+import { selectRareAvatarCount, selectUncommonAvatarCount } from '../feats/selector/avatarSelectors'
+import { SetAvatarRarity, SetAvatarTypeAll } from '../feats/slices/mycharSlice'
 import { PortraitMode } from '../responsiveContext'
-import { selectRareAvatarCount } from "../feats/selector/avatarSelectors"
-import { selectUncommonAvatarCount } from '../feats/selector/avatarSelectors'
-
+import { SquareIcon } from './widgets/Icons'
 
 interface AvatarProps {
   part: WearAvatarPart

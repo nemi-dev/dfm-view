@@ -1,14 +1,14 @@
-import { useContext, useCallback, useState } from "react"
-import { useAppDispatch, useAppSelector } from "../../feats/hooks"
-import { acceptEmblem } from "../../emblem"
-import { NumberInput } from "../widgets/Forms"
-import { EmblemIcon } from "../widgets/Icons"
-import { ModalContext } from "./modalContext"
-import { selectEmblemSpecs } from "../../feats/selector/equipSelectors"
-import { SetEmblem } from "../../feats/slices/itemSlice"
-import { CurrentPart } from "./CurrentPart"
-import { getEmblemSocketType } from "../../items"
+import { useCallback, useContext, useState } from 'react'
 
+import { acceptEmblem } from '../../emblem'
+import { useAppDispatch, useAppSelector } from '../../feats/hooks'
+import { selectEmblemSpecs } from '../../feats/selector/equipSelectors'
+import { SetEmblem } from '../../feats/slices/mycharSlice'
+import { getEmblemSocketType } from '../../items'
+import { NumberInput } from '../widgets/Forms'
+import { EmblemIcon } from '../widgets/Icons'
+import { CurrentPart } from './CurrentPart'
+import { ModalContext } from './modalContext'
 
 function EmblemSelect({ part, index, type, level }: { part: CardablePart, index: number, type: EmblemType, level: number }) {
   const { closeModal } = useContext(ModalContext)

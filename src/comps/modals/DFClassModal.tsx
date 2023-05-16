@@ -1,10 +1,11 @@
-import styled from "styled-components"
-import { useAppDispatch, useAppSelector } from "../../feats/hooks"
-import { selectMyDFClass, selectMyName } from "../../feats/selector/selfSelectors"
-import { SetDFClass, SetMyName } from "../../feats/slices/slice"
-import { DFClassIcon } from "../widgets/Icons"
-import { useContext } from "react"
-import { PortraitMode } from "../../responsiveContext"
+import { useContext } from 'react'
+import styled from 'styled-components'
+
+import { useAppDispatch, useAppSelector } from '../../feats/hooks'
+import { selectMyDFClass, selectMyName } from '../../feats/selector/selfSelectors'
+import { SetDFClass, SetMyName } from '../../feats/slices/mycharSlice'
+import { PortraitMode } from '../../responsiveContext'
+import { DFClassIcon } from '../widgets/Icons'
 
 const DFClassLayout = styled.div<{ columns: number }>`
   display: grid;

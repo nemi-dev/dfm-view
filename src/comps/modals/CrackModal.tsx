@@ -1,13 +1,14 @@
-import styled from "styled-components"
-import { useCallback, useContext, useState } from "react"
-import { useAppDispatch, useAppSelector } from "../../feats/hooks"
-import { getCracksOnly } from "../../items"
-import { ModalContext } from "./modalContext"
-import { LabeledSwitch } from "../widgets/Forms"
-import { selectClassAtype } from "../../feats/selector/selfSelectors"
-import { SetItem, SetSpell, SetSpellAll } from "../../feats/slices/itemSlice"
-import { ModalItemSelect } from "./Select"
-import { CurrentPart } from "./CurrentPart"
+import { useCallback, useContext, useState } from 'react'
+import styled from 'styled-components'
+
+import { useAppDispatch, useAppSelector } from '../../feats/hooks'
+import { selectClassAtype } from '../../feats/selector/selfSelectors'
+import { SetItem, SetSpellAll } from '../../feats/slices/mycharSlice'
+import { getCracksOnly } from '../../items'
+import { LabeledSwitch } from '../widgets/Forms'
+import { CurrentPart } from './CurrentPart'
+import { ModalContext } from './modalContext'
+import { ModalItemSelect } from './Select'
 
 export function RuneModalFragment() {
   const { closeModal } = useContext(ModalContext)
@@ -45,7 +46,8 @@ export function SpellModalFragment({ index }: { index: number }) {
   const dispatch = useAppDispatch()
   const onClick = useCallback((name: string) => {
     if (all) dispatch(SetSpellAll(name))
-    else dispatch(SetSpell([index as number, name]))
+    // else dispatch(SetSpell([index as number, name]))
+    else dispatch(SetItem(['정수', index, name]))
     closeModal()
   }, [index, all])
   return (

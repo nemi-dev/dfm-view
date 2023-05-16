@@ -1,39 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { dfclassNames } from "../../dfclass"
-import initState from "./initState"
-const { Self } = initState
-
-
-export const selfSlice = createSlice({
-  name: 'Self',
-  initialState: Self,
-  reducers: {
-    SetMyName: (s, { payload }: PayloadAction<string>) => {
-      s.myName = payload
-    },
-    SetDFClass: (s, { payload }: PayloadAction<DFClassName>) => {
-      if (dfclassNames.includes(payload)) s.dfclass = payload
-    },
-    SetLevel: (s, { payload }: PayloadAction<number>) => {
-      s.level = payload
-    },
-    SetAchieveLevel: (s, { payload }: PayloadAction<number>) => {
-      s.achieveLevel = payload
-    },
-    SetAtkFixed: (s, pay : PayloadAction<number>) => {
-      s.atkFixed = pay.payload
-    },
-  }
-})
-
-export const {
-  SetMyName,
-  SetDFClass,
-  SetLevel,
-  SetAchieveLevel,
-  SetAtkFixed,
-} = selfSlice.actions
-
 
 
 export const currentIDSlice = createSlice({
@@ -41,37 +6,6 @@ export const currentIDSlice = createSlice({
   initialState: '' as string,
   reducers: { }
 })
-
-
-
-const creatureInit: CreaturePropState = 
-{
-  Creature: 156,
-  Red: 50,
-  Blue: 50,
-  Green: 10,
-}
-
-export const creatureSlice = createSlice({
-  name: 'CreatureProp',
-  initialState: creatureInit,
-  reducers: {
-    SetCreatureStat: (s, { payload }: PayloadAction<number>) => {
-      s.Creature = payload
-    },
-    SetArtifactValue: (s, { payload: [attr_name, value] }: PayloadAction<[ArtifactColor, number]>) => {
-      s[attr_name] = value
-    }
-  }
-})
-
-
-export const {
-  SetCreatureStat,
-  SetArtifactValue
-} = creatureSlice.actions
-
-
 
 
 const enemyTargetInit: EnemyTargetState = {

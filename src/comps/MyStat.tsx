@@ -8,10 +8,10 @@ import { AtkOut, critChance, StatOut } from '../damage'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { selectMyAttr, selectMyAttrTown, selectMyFinalEltype } from '../feats/selector/selectors'
 import { selectClassAtype } from '../feats/selector/selfSelectors'
+import { calibrateInit } from '../feats/slices/initStateDefault'
 import {
     AddSkillInc, RemoveSkillInc, SetBasicAttr, SetEltype, SetSkillInc
-} from '../feats/slices/calibrateSlice'
-import { calibrateInit } from '../feats/slices/initStateDefault'
+} from '../feats/slices/mycharSlice'
 import { RootState } from '../feats/store'
 import { add } from '../utils'
 import { Gridy } from './widgets/CommonUI'

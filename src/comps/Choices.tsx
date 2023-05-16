@@ -1,11 +1,11 @@
-import { useAppDispatch, useAppSelector } from "../feats/hooks"
-import { SimpleBaseAttrView } from "./widgets/AttrsView"
-import { SetBranch, SetExclusive, SetGives } from "../feats/slices/choiceSlice"
-import { LabeledSwitch, LabeledNumberInput, RadioGroup } from "./widgets/Forms"
-import { createExclusiveKey2, createCondyceKey2, getActiveISets } from "../items"
-import styled from "styled-components"
-import { ErrorBoundary } from "react-error-boundary"
+import { ErrorBoundary } from 'react-error-boundary'
+import styled from 'styled-components'
 
+import { useAppDispatch, useAppSelector } from '../feats/hooks'
+import { SetBranch, SetExclusive, SetGives } from '../feats/slices/mycharSlice'
+import { createCondyceKey2, createExclusiveKey2, getActiveISets } from '../items'
+import { SimpleBaseAttrView } from './widgets/AttrsView'
+import { LabeledNumberInput, LabeledSwitch, RadioGroup } from './widgets/Forms'
 
 interface LeafViewProps {
   itemKey: string

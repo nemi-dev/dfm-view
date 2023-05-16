@@ -1,15 +1,19 @@
-import { useAppSelector, useAppDispatch } from "../feats/hooks"
-import { selectItem, selectCustomMaterial, selectEmblemSpecs, selectCard, selectUpgradeValue } from "../feats/selector/equipSelectors"
-import { EmblemIcon, ItemIcon } from "./widgets/Icons"
-import { DecreaseEmblemLevel, SetMaterial, SetUpgradeValue } from "../feats/slices/itemSlice"
-import { getMaxEmblemCount, isArmor, isCardable, isEquip } from "../items"
-import { acceptEmblem } from "../emblem"
-import { useCallback, useContext } from "react"
-import { EmblemModal } from "./modals/EmblemModal"
-import { ModalContext } from "./modals/modalContext"
-import { CardModalFragment } from "./modals/CardModal"
-import { SetArtifactValue, SetCreatureStat } from "../feats/slices/slice"
-import { NumberInput } from "./widgets/Forms"
+import { useCallback, useContext } from 'react'
+
+import { acceptEmblem } from '../emblem'
+import { useAppDispatch, useAppSelector } from '../feats/hooks'
+import {
+    selectCard, selectCustomMaterial, selectEmblemSpecs, selectItem, selectUpgradeValue
+} from '../feats/selector/equipSelectors'
+import {
+    DecreaseEmblemLevel, SetArtifactValue, SetCreatureStat, SetMaterial, SetUpgradeValue
+} from '../feats/slices/mycharSlice'
+import { getMaxEmblemCount, isArmor, isCardable, isEquip } from '../items'
+import { CardModalFragment } from './modals/CardModal'
+import { EmblemModal } from './modals/EmblemModal'
+import { ModalContext } from './modals/modalContext'
+import { NumberInput } from './widgets/Forms'
+import { EmblemIcon, ItemIcon } from './widgets/Icons'
 
 interface EquipProps {
   part: EquipPart

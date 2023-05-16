@@ -1,15 +1,16 @@
-import styled from "styled-components"
-import { useDispatch } from "react-redux"
-import { useAppSelector } from "../feats/hooks"
-import { getOneMagicPropValue, getRealAttrKey, nextMagicProps } from "../magicProps"
-import { AttrIcon } from "./widgets/Icons"
-import { Num } from "./widgets/NumberView"
-import { useCallback, useContext } from "react"
-import { PortraitMode } from "../responsiveContext"
-import { selectClassAtype } from "../feats/selector/selfSelectors"
-import { selectMagicPropNames } from "../feats/selector/equipSelectors"
-import { SetMagicProps } from "../feats/slices/itemSlice"
-import { hasMagicProps } from "../items"
+import { useCallback, useContext } from 'react'
+import { useDispatch } from 'react-redux'
+import styled from 'styled-components'
+
+import { useAppSelector } from '../feats/hooks'
+import { selectMagicPropNames } from '../feats/selector/equipSelectors'
+import { selectClassAtype } from '../feats/selector/selfSelectors'
+import { SetMagicProps } from '../feats/slices/mycharSlice'
+import { hasMagicProps } from '../items'
+import { getOneMagicPropValue, getRealAttrKey, nextMagicProps } from '../magicProps'
+import { PortraitMode } from '../responsiveContext'
+import { AttrIcon } from './widgets/Icons'
+import { Num } from './widgets/NumberView'
 
 interface MagicPropsArrayProps {
   item: DFItem

@@ -1,13 +1,13 @@
-import styled from "styled-components"
-import { useAppDispatch, useAppSelector } from "../feats/hooks"
-import { SetLevel, SetAchieveLevel, SetAtkFixed } from "../feats/slices/slice"
-import { LabeledNumberInput } from "./widgets/Forms"
-import { Avatars } from "./Avatar"
-import { Guilds } from "./Guilds"
-import { Tonic } from "./Tonic"
-import React, { useContext } from "react"
-import { PortraitMode } from "../responsiveContext"
+import React, { useContext } from 'react'
+import styled from 'styled-components'
 
+import { useAppDispatch, useAppSelector } from '../feats/hooks'
+import { SetAchieveLevel, SetAtkFixed, SetLevel } from '../feats/slices/mycharSlice'
+import { PortraitMode } from '../responsiveContext'
+import { Avatars } from './Avatar'
+import { Guilds } from './Guilds'
+import { Tonic } from './Tonic'
+import { LabeledNumberInput } from './widgets/Forms'
 
 const GridyTwo = styled.div`
   display: grid;

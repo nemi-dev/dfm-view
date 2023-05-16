@@ -1,23 +1,26 @@
-import styled from "styled-components"
-import Fuse from "fuse.js"
-import { Fragment, MouseEventHandler, useCallback, useContext, useEffect, useMemo, useState } from "react"
-import { useAppDispatch, useAppSelector } from "../../feats/hooks"
-import { equipParts, getCircus2Items, getItem, getItemsByPart, isAccess, isArmor, isEquip, isWeapon, party } from "../../items"
-import { ItemIcon } from "../widgets/Icons"
-import { ModalContext } from "./modalContext"
+import Fuse from 'fuse.js'
+import produce from 'immer'
+import {
+    Fragment, MouseEventHandler, useCallback, useContext, useEffect, useMemo, useState
+} from 'react'
+import styled from 'styled-components'
 
-import _left from "../../../data/sets/left.json"
-import _right from "../../../data/sets/right.json"
-import { FetchItems, SetItem } from "../../feats/slices/itemSlice"
-import { selectMyDFClass } from "../../feats/selector/selfSelectors"
-import { ModalItemSelect } from "./Select"
-import { CurrentPart } from "./CurrentPart"
-import { TabContext } from "../../responsiveContext"
-import { NavLink, Tab } from "../widgets/Tab"
-import { ItemDetail } from "../widgets/ItemView"
-import { mainItemSelector } from "./CurrentPart"
-import produce from "immer"
-import { ItemSizeDefiner } from "./CommonModalComps"
+import _left from '../../../data/sets/left.json'
+import _right from '../../../data/sets/right.json'
+import { useAppDispatch, useAppSelector } from '../../feats/hooks'
+import { selectMyDFClass } from '../../feats/selector/selfSelectors'
+import { FetchItems, SetItem } from '../../feats/slices/mycharSlice'
+import {
+    equipParts, getCircus2Items, getItem, getItemsByPart, isAccess, isArmor, isEquip, party
+} from '../../items'
+import { TabContext } from '../../responsiveContext'
+import { ItemIcon } from '../widgets/Icons'
+import { ItemDetail } from '../widgets/ItemView'
+import { NavLink, Tab } from '../widgets/Tab'
+import { ItemSizeDefiner } from './CommonModalComps'
+import { CurrentPart, mainItemSelector } from './CurrentPart'
+import { ModalContext } from './modalContext'
+import { ModalItemSelect } from './Select'
 
 type EquipShotgun = Partial<Pick<ItemsState, EquipPart>>
 

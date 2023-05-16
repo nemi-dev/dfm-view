@@ -1,3 +1,4 @@
+import { perfectGuild } from "../../constants"
 
 export const calibrateInit: CalibrateState = {
   strn: 0,
@@ -147,14 +148,7 @@ const state: DFCharState = {
     "허리": "Uncommon"
   },
   "Guild": {
-    "StatLv": 30,
-    "AtkLv": 30,
-    "CritLv": 30,
-    "ElLv": 14,
-    "SpeedAtkLv": 14,
-    "SpeedCastLv": 14,
-    "SpeedMoveLv": 14,
-    "AccuLv": 30,
+    ...perfectGuild,
     "PublicStatLv": 5
   },
   "CreatureValue": {
