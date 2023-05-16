@@ -1,5 +1,5 @@
 import memoizee from "memoizee"
-import { percent_inc_mul, add, add_object, mul_object, anyOf } from "./utils"
+import { compound, add, add_object, mul_object, anyOf } from "./utils"
 import { Elemental } from "./constants"
 
 
@@ -103,7 +103,7 @@ const attrDefsArray = [
   defineAttr("AddMaxEldmg", "속성 추가 데미지 (내 최대속성)", add, "Percent"),
   defineAttr("DualTrigger", "듀얼 트리거", anyOf, "DualTrigger"),
 
-  defineAttr("sk_inc", "스킬 공격력 증가", percent_inc_mul, "Percent"),
+  defineAttr("sk_inc", "스킬 공격력 증가", compound, "Percent"),
   defineAttr("sk_inc_sum", "스킬 공격력 증가(단리합)", add, "Percent"),
   defineAttr("sk_val", "스킬 공격력 증가", mul_object, "MapPercent"),
   defineAttr("skb_add", "버프 수치 증가", add_object, "MapFlat"),
@@ -183,7 +183,7 @@ export function dualTrigger(attrs: BaseAttrs) {
 }
 
 /** 주어진 속성강화와 속성부여로부터, 최종적으로 적용되는 내 속성타입을 얻는다. */
-export function whatElType(el: El): Eltype[] {
+export function whatElType(el: ElementalAttrs): Eltype[] {
   const activeTypes = el.eltype
   if (activeTypes == null || activeTypes.length == 0) return []
   const maxValue = Math.max(...activeTypes.map(eltype => el[Elemental[eltype].el] ?? 0))
@@ -192,7 +192,7 @@ export function whatElType(el: El): Eltype[] {
 
 
 /** (속성부여에 상관없이) 속성강화가 가장 높은 속성에 대해, [속성강화 값, ...속성]을 얻는다. */
-export function maxEl(el: El): [number, ...Eltype[]] {
+export function maxEl(el: ElementalAttrs): [number, ...Eltype[]] {
   const eltypes: Eltype[] = ["Fire", "Ice", "Light", "Dark"]
   const maxValue = Math.max(...eltypes.map(eltype => el[Elemental[eltype].el] ?? 0))
   if (maxValue == 0) return [0]

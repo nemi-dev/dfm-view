@@ -23,10 +23,11 @@ export const selectClassAtype = createSelector(
 export const selectClassASkills = createSelector(
   selectMyDFClass,
   (dfclass) => {
-    return dfclass.skills.map(skname => getSkill(skname))
+    return dfclass.skills?.map(skname => getSkill(skname)) ?? []
   }
 )
 
+/** 내 직업의 패시브/버프 스킬을 모두 선택한다. */
 export const selectClassSelfSkills = createSelector(
   selectMyDFClass,
   (dfclass) => {

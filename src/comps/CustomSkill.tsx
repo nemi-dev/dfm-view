@@ -1,12 +1,66 @@
-import { useAppDispatch, useAppSelector } from '../feats/hooks'
-import { selectEnemyDefRate, selectEnemyElRes, selectMyAttr, selectMyFinalEltype } from '../feats/selector/selectors'
-import { selectClassAtype } from "../feats/selector/selfSelectors"
-import { critFt, critChance, getDamage } from '../damage'
-import { SetSkillFixValue, SetSkillInputName, SetSkillMaxHit, SetSkillUsesSkillInc, SetSkillValue } from '../feats/slices/customSkillSlice'
-import { LabeledSwitch, LabeledNumberInput } from "./widgets/Forms"
-import { AtypeAttrKey, Elemental } from '../constants'
 import styled from 'styled-components'
+
+import { AtypeAttrKey, Elemental } from '../constants'
+import { critFt, dmg } from '../damage'
+import { useAppDispatch, useAppSelector } from '../feats/hooks'
+import {
+    selectEnemyDefRate, selectEnemyElRes, selectMyAttr, selectMyCritChance,
+} from '../feats/selector/selectors'
+import { selectClassAtype } from '../feats/selector/selfSelectors'
+import {
+    SetSkillFixValue, SetSkillInputName, SetSkillMaxHit, SetSkillUsesSkillInc, SetSkillValue
+} from '../feats/slices/customSkillSlice'
+import { add } from '../utils'
+import { LabeledNumberInput, LabeledSwitch } from './widgets/Forms'
 import { Num } from './widgets/NumberView'
+import { whatElType } from '../attrs'
+
+/** (옵션버전) 스탯 + 스탯증가 + 공격력 + 공격력증가 + 데미지증가 + 추가데미지 + 속성강화 + 적 속성저항 + 속성추뎀 + 평타/스킬계수 + 스킬공격력 증가가 적용된 데미지  
+ * (크리티컬 빼고 모든게 적용됨)
+ * @param targetElRes **속성저항 감소가 적용된** 적의 모든 속성저항
+ * @param defRate **방어력감소가 적용된** 적의 방어율
+ * */
+function getCustomSkillDamage(
+  atype: Atype,
+  attrs: BaseAttrs,
+  atkFix: number,
+  { value, fixed, isSkill = false, maxHit = 1 }: CustomSkillOneAttackSpec,
+  targetElRes: number,
+  defRate: number
+) {
+  const eltype = whatElType(attrs)
+  const myEl = eltype.length > 0? (attrs[Elemental[eltype[0]].el] ?? 0) : 0
+  const el = Math.max(myEl - targetElRes, 0)
+
+  const { Stat, StatInc, Atk, AtkInc } = AtypeAttrKey[atype]
+  const {
+    [Stat]: stat = 0, [StatInc]: statInc = 0,
+    [Atk]: atk = 0, [AtkInc]: atkInc = 0,
+    el_fire = 0, eldmg_fire = 0,
+    el_ice = 0,  eldmg_ice = 0,
+    el_lght = 0, eldmg_lght = 0,
+    el_dark = 0, eldmg_dark = 0
+  } = attrs
+  let a = dmg(
+    value,
+    fixed,
+    stat,
+    statInc,
+    atk,
+    atkInc,
+    atkFix,
+    attrs["dmg_inc"] ?? 0,
+    attrs["dmg_add"] ?? 0,
+    el,
+    [el_fire, el_ice, el_lght, el_dark],
+    [eldmg_fire, eldmg_ice, eldmg_lght, eldmg_dark]
+  )
+  if (isSkill) {
+    a *= 1 + add(attrs["sk_inc"], attrs["sk_inc_sum"]) / 100
+  }
+  a *= maxHit * (1 - defRate)
+  return a
+}
 
 
 const SkillOneAttackHeader = styled.div`
@@ -56,20 +110,20 @@ interface SkillOutputOneProps {
 function CustomSkillAttackOne({ index, SkillOneAttackSpec }: SkillOutputOneProps) {
 
   const atype = useAppSelector(selectClassAtype)
-
   const attrs = useAppSelector(selectMyAttr)
   const atkFix = useAppSelector(state => state.My.Self.atkFixed)
-  const eltype = useAppSelector(selectMyFinalEltype)
-  const el = eltype.length > 0? (attrs[Elemental[eltype[0]].el] ?? 0) : 0
-  const targetElRes = useAppSelector(selectEnemyElRes)
+  const chance = useAppSelector(selectMyCritChance)
 
+  const targetElRes = useAppSelector(selectEnemyElRes)
   const defRate = useAppSelector(selectEnemyDefRate)
 
-  const dam = getDamage(atype, Math.max(el - targetElRes, 0), attrs, atkFix, SkillOneAttackSpec) * ( 1 - defRate )
-  const damCrit = dam * critFt(attrs["cdmg_inc"], attrs["catk_inc"])
-  const { Crit, CritCh } = AtypeAttrKey[atype]
-  const chance = critChance(attrs[Crit], attrs[CritCh])
-  const mean = chance * damCrit + (1 - chance) * dam
+  const damage = getCustomSkillDamage(
+    atype, attrs, atkFix, SkillOneAttackSpec, targetElRes, defRate
+  )
+
+  const criticalDamage = damage * critFt(attrs["cdmg_inc"], attrs["catk_inc"])
+
+  const mean = chance * criticalDamage + (1 - chance) * damage
 
   
   return (
@@ -77,7 +131,7 @@ function CustomSkillAttackOne({ index, SkillOneAttackSpec }: SkillOutputOneProps
       <SkillOneAttack index={index} {...SkillOneAttackSpec} />
       <div className={"Result " + atype}>
         <div className="KeyName">데미지</div>
-        <Num className="AttrValue" value={dam} separated />
+        <Num className="AttrValue" value={damage} separated />
       </div>
       <div className={"Result " + atype}>
         <div className="KeyName">평균 데미지</div>
@@ -85,7 +139,7 @@ function CustomSkillAttackOne({ index, SkillOneAttackSpec }: SkillOutputOneProps
       </div>
       <div className={"Result " + atype}>
         <div className="KeyName">크리티컬 데미지</div>
-        <Num className="AttrValue" value={damCrit} separated />
+        <Num className="AttrValue" value={criticalDamage} separated />
       </div>
     </div>
   )

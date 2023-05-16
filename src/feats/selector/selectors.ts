@@ -1,15 +1,16 @@
 import { createSelector } from "@reduxjs/toolkit"
-import { applyAddMaxEldmg, atx, combine, dualTrigger, whatElType } from "../../attrs"
+import { applyAddMaxEldmg, atx, dualTrigger, whatElType } from "../../attrs"
 import type { RootState } from "../store"
-import { add, percent_inc_mul } from "../../utils"
+import { add, compound } from "../../utils"
 import { selectGuilds } from "./guildSelectors"
 import { selectEquips } from "./equipSelectors"
 import { selectAchBonus, selectClassAtype, selectMyDFClass, selectMyLevel } from "./selfSelectors"
 import { selectCreatureAndArtis } from "./creatureSelectors"
 import { selectCracks } from "./cracksSelectors"
 import { selectAvatars } from "./avatarSelectors"
-import { critFt, defRate, getPlainDamage, getRealdef, } from "../../damage"
+import { critChance, critFt, defRate, getPlainDamage, getRealdef, } from "../../damage"
 import { CombineItems } from "../../items"
+import { AtypeAttrKey } from "../../constants"
 
 /** 마력결정 스탯보너스를 모두 얻는다. */
 export function selectTonics(state: RootState): AttrSource {
@@ -36,7 +37,7 @@ export function selectTonics(state: RootState): AttrSource {
 
 /** 스탯을 보정한 값만을 가져온다. */
 export function selectCalibrated(state: RootState): AttrSource {
-  const sk_inc = state.My.Calibrate.sk_inc.reduce(percent_inc_mul, 0)
+  const sk_inc = state.My.Calibrate.sk_inc.reduce(compound, 0)
   return {
     name: "스탯 조정값",
     attrs: {
@@ -100,6 +101,16 @@ export const selectMyAttr = createSelector(
   (sources, choice) => {
     const a = CombineItems(sources, choice)
     return applyAddMaxEldmg(dualTrigger(a))
+  }
+)
+
+/** 던전에서 내 크리티컬 확률을 선택한다. */
+export const selectMyCritChance = createSelector(
+  selectMyAttr,
+  selectClassAtype,
+  (attrs, atype) => {
+    const { Crit, CritCh } = AtypeAttrKey[atype]
+    return critChance(attrs[Crit], attrs[CritCh])
   }
 )
 

@@ -248,7 +248,7 @@ declare interface BaseAttrs {
 }
 
 type El_val = "el_fire" | "el_ice" | "el_lght" | "el_dark" 
-declare type El = Pick<BaseAttrs, El_val | "eltype">
+declare type ElementalAttrs = Pick<BaseAttrs, El_val | "eltype">
 
 
 /**
@@ -501,7 +501,7 @@ declare interface RealOneAttack {
 
 
 
-/** 공격스킬 */
+/** (스킬레벨이 할당되지 않은) 공격스킬 */
 declare interface AttackSkill {
   /** 스킬 ID */
   id: number
@@ -525,7 +525,25 @@ declare interface AttackSkill {
    */
   eltype?: Eltype[] | false | null | undefined
 
+  /** 이 스킬을 썼을 때 나갈 공격들 */
   attacks: UnboundOneAttack[]
+
+  /** 풀충전 또는 대성공 등 스칼라배할 값 */
+  chargeup?: number
+
+  /** 스킬 계수를 스칼라배하는 조건 (풀충전, 대성공 등) */
+  chargeupType?: string
+
+  /** 다른 거 */
+  variant?: {
+
+    /** 다른 공격이 나갈 조건 */
+    vaName: string
+
+    /** 다근 공격 */
+    attacks: UnboundOneAttack[]
+    
+  }[]
 
 }
 

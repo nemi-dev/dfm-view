@@ -49,7 +49,7 @@ function SourceGroupErrorView({ error, resetErrorBoundary }: FallbackProps) {
   return (
     <div>
       <header>
-        <h3>아구구!</h3>
+        <h3>아이템 보던 중 오류 생김!!</h3>
         <div>아이템 어딘가가 고장난 것 같아요! 어서 개발자에게 알려주세요!!</div>
       </header>
       <div>

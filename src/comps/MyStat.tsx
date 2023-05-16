@@ -1,23 +1,22 @@
-import { AtypeAttrKey, Elemental } from "../constants"
-import { AtkOut, StatOut, critChance } from "../damage"
-import { useAppDispatch, useAppSelector } from "../feats/hooks"
-import { AddSkillInc, RemoveSkillInc, SetBasicAttr, SetEltype, SetSkillInc } from "../feats/slices/calibrateSlice"
-import { selectMyAttr, selectMyAttrTown, selectMyFinalEltype } from "../feats/selector/selectors"
-import { selectClassAtype } from "../feats/selector/selfSelectors"
-import { Gridy } from "./widgets/CommonUI"
-import { Num } from "./widgets/NumberView"
-import { CheckboxGroup, DisposableInput, NumberInput, LabeledSwitch } from "./widgets/Forms"
-
-import styled from 'styled-components'
-import { createContext, useContext, useState } from "react"
+import { createContext, useContext, useState } from 'react'
+import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
 import { PlusCircle } from 'react-feather'
-import { add } from "../utils"
-import { calibrateInit } from "../feats/slices/initStateDefault"
-import { RootState } from "../feats/store"
-import { ErrorBoundary, ErrorBoundaryProps } from "react-error-boundary"
-import { FallbackProps } from "react-error-boundary"
+import styled from 'styled-components'
 
-
+import { AtypeAttrKey, Elemental } from '../constants'
+import { AtkOut, critChance, StatOut } from '../damage'
+import { useAppDispatch, useAppSelector } from '../feats/hooks'
+import { selectMyAttr, selectMyAttrTown, selectMyFinalEltype } from '../feats/selector/selectors'
+import { selectClassAtype } from '../feats/selector/selfSelectors'
+import {
+    AddSkillInc, RemoveSkillInc, SetBasicAttr, SetEltype, SetSkillInc
+} from '../feats/slices/calibrateSlice'
+import { calibrateInit } from '../feats/slices/initStateDefault'
+import { RootState } from '../feats/store'
+import { add } from '../utils'
+import { Gridy } from './widgets/CommonUI'
+import { CheckboxGroup, DisposableInput, LabeledSwitch, NumberInput } from './widgets/Forms'
+import { Num } from './widgets/NumberView'
 
 interface OneAttrTripletProps {
   numStyle?: string

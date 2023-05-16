@@ -15,7 +15,8 @@ interface V5State {
 const initialState: V5State = {
   currentID: '',
   SavedChars: {
-    byID: {},
+    byID: {
+    },
     IDs: []
   },
   Tonic: perfectTonic,
