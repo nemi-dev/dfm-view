@@ -435,9 +435,7 @@ declare interface ComplexAttrSource extends AttrSource {
 
 /** 공격 스킬의 공격 하나하나를 나타낸다. */
 declare interface CustomSkillOneAttackSpec {
-  /** 
-   * 스킬 공격 세부 이름
-   */
+  /** 스킬 공격 세부 이름 */
   name: string
 
   /** 스킬 계수 */
@@ -446,13 +444,11 @@ declare interface CustomSkillOneAttackSpec {
   /** 스킬 고정값 (없으면 value와 같은 것으로 간주) */
   fixed?: number
 
-  /**
-   * 스증 적용 여부
-   */
+  /** 스증 적용 여부 */
   isSkill?: boolean
 
   /** 타격 횟수 (없으면 1) */
-  maxHit?: number
+  hit?: number
 
   /** 이 공격에만 적용되는 공격속성 */
   eltype?: Eltype[] | null | undefined

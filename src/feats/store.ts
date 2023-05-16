@@ -7,10 +7,10 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit'
 
 // import { migrate2to3, migrate3to4 } from './migrate/migrate'
 import { SaveDF, saveReducerV4 } from './saveReducers'
-import { skillInputSlice } from './slices/customSkillSlice'
 
 import {
     currentIDSlice, enemyTargetSlice, equipPresetSlice, savedCharSlice, 
+    skillInputSlice, 
     skillPresetSlice
 } from './slices/slice'
 import { tonicSlice } from './slices/tonicSlice'

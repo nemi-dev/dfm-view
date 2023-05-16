@@ -8,9 +8,8 @@ import { AtkOut, critChance, StatOut } from '../damage'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { selectMyAttr, selectMyAttrTown, selectMyFinalEltype } from '../feats/selector/selectors'
 import { selectClassAtype } from '../feats/selector/selfSelectors'
-import { calibrateInit } from '../feats/slices/initStateDefault'
 import {
-    AddSkillInc, RemoveSkillInc, SetBasicAttr, SetEltype, SetSkillInc
+  AddSkillInc, RemoveSkillInc, SetBasicAttr, SetEltype, SetSkillInc
 } from '../feats/slices/mycharSlice'
 import { RootState } from '../feats/store'
 import { add } from '../utils'
@@ -32,16 +31,7 @@ const MyAttrsContext = createContext<BaseAttrs>({})
 
 /** 보정스탯에서 스탯 하나만을 가져온다. */
 function selectCalibrateOne(state: RootState, key: keyof NumberCalibrate) {
-  return state.My.Calibrate[key] ?? calibrateInit[key]
-}
-
-function OneAttrErrorRender({ aKey, error, resetErrorBoundary }: { aKey: string } & FallbackProps ) {
-  return (
-    <div className="FormDF AttrItem">
-      <div className="AttrValue">{aKey}</div>
-      <div className="keyName">옵션을 표시하는 중 오류 생김!!!</div>
-    </div>
-  )
+  return state.My.Calibrate[key] ?? 0
 }
 
 function OneAttrEditable({ numStyle = "", aKey, name, percent = false, signed = false }: OneAttrTripletProps) {
@@ -49,13 +39,11 @@ function OneAttrEditable({ numStyle = "", aKey, name, percent = false, signed = 
   const value = useAppSelector(state => selectCalibrateOne(state, aKey))
   const dispatch = useAppDispatch()
   return (
-    <ErrorBoundary fallbackRender={({ error, resetErrorBoundary }) => <OneAttrErrorRender aKey={aKey} error={error} resetErrorBoundary={resetErrorBoundary} />}>
-      <div className="FormDF AttrItem">
-        {name? <div className="KeyName">{name}</div>: null}
-        <Num className={"AttrValue " + numStyle} value={me[aKey]} signed={signed} percented={percent} />
-        <NumberInput value={value} onChange={v => dispatch(SetBasicAttr([aKey, v]))} />
-      </div>
-    </ErrorBoundary>
+    <div className="FormDF AttrItem">
+      {name? <div className="KeyName">{name}</div>: null}
+      <Num className={"AttrValue " + numStyle} value={me[aKey]} signed={signed} percented={percent} />
+      <NumberInput value={value} onChange={v => dispatch(SetBasicAttr([aKey, v]))} />
+    </div>
   )
 }
 

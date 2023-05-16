@@ -9,7 +9,7 @@ import {
 import { selectClassAtype } from '../feats/selector/selfSelectors'
 import {
     SetSkillFixValue, SetSkillInputName, SetSkillMaxHit, SetSkillUsesSkillInc, SetSkillValue
-} from '../feats/slices/customSkillSlice'
+} from '../feats/slices/slice'
 import { add } from '../utils'
 import { LabeledNumberInput, LabeledSwitch } from './widgets/Forms'
 import { Num } from './widgets/NumberView'
@@ -24,7 +24,7 @@ function getCustomSkillDamage(
   atype: Atype,
   attrs: BaseAttrs,
   atkFix: number,
-  { value, fixed, isSkill = false, maxHit = 1 }: CustomSkillOneAttackSpec,
+  { value, fixed, isSkill = false, hit: maxHit = 1 }: CustomSkillOneAttackSpec,
   targetElRes: number,
   defRate: number
 ) {
@@ -87,7 +87,7 @@ interface SkillInputOneProps extends CustomSkillOneAttackSpec {
   index: number
 }
 
-function SkillOneAttack({ index, value, fixed, isSkill = false, maxHit = 1, name }: SkillInputOneProps) {
+function SkillOneAttack({ index, value, fixed, isSkill = false, hit: maxHit = 1, name }: SkillInputOneProps) {
   const dispatch = useAppDispatch()
   return (
     <SkillOneAttackLayout className="SkillOneAttack">

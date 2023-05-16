@@ -1,9 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { perfectTonic } from "../../constants";
-import { customSkillInit2 } from "./customSkillInit";
+import myState, { customSkillInit } from "./initState";
 
 interface V5State {
   currentID: string
+
+  /** @deprecated */
+  My: DFCharState
+
   SavedChars: SavedCharCollection
   Tonic: TonicState
   EnemyTarget: EnemyTargetState
@@ -14,9 +18,9 @@ interface V5State {
 
 const initialState: V5State = {
   currentID: '',
+  My: myState,
   SavedChars: {
-    byID: {
-    },
+    byID: {},
     IDs: []
   },
   Tonic: perfectTonic,
@@ -28,7 +32,7 @@ const initialState: V5State = {
     byID: {},
     IDs: []
   },
-  CustomSkill: customSkillInit2,
+  CustomSkill: customSkillInit,
   CustomSkillPresets: {
     byID: {},
     IDs: []
@@ -42,3 +46,7 @@ export const bigFuckingSlice = createSlice({
 
   }
 })
+
+export const {
+
+} = bigFuckingSlice.caseReducers
