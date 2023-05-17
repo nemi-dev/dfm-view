@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect } from "react"
+import { useCallback, useContext } from "react"
 import styled from "styled-components"
 import { useAppDispatch, useAppSelector } from "../../feats/hooks"
 import { CloneDF, CreateDF, DeleteDFChar, LoadDF } from "../../feats/slices/slicev5"
@@ -8,6 +8,7 @@ import { ModalContext } from "./modalContext"
 import { DFClassIcon, ItemIcon } from "../widgets/Icons"
 import { PlusCircle, Copy, Trash2, Download, ChevronUp, ChevronDown } from "react-feather"
 import { MoveDFCharDown, MoveDFCharUp } from "../../feats/slices/slicev5"
+import { DamageOutput } from "../DamageOutput"
 
 
 function selectSavedChars(state: RootState) {
@@ -122,7 +123,7 @@ function CharSelect({ saved, onClick }: CharSelectProps) {
             <div className="DFCharName">{saved.DFChar.Self.myName}</div>
             <div>
               <Smaller>데미지</Smaller>
-              {/* <Num className="DamageGrab" value={saved.DamageGrab} /> */}
+              <DamageOutput crit="mean" sk />
             </div>
           </div>
           <SavedCharEquips className="SavedCharEquips">

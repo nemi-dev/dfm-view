@@ -20,7 +20,6 @@ export function Paw<T, P extends string>(func: ($p: P) => (s: RootState, id?: st
   return _o
 }
 
-
 /** 특정 부위에 장착중인 아이템을 선택한다. */
 export const selectItem = Paw(part => 
   createSelector(

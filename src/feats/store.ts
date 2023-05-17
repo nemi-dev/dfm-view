@@ -4,7 +4,7 @@
 
 import { configureStore } from '@reduxjs/toolkit'
 
-// import { migrate2to3, migrate3to4 } from './migrate/migrate'
+// import { migrate3to4 } from './migrate/migrate'
 
 import { dfSlice } from './slices/slicev5'
 
@@ -49,7 +49,6 @@ export type RootState = ReturnType<typeof v5reducer>
 
 
 // const migration = {
-//   3: migrate2to3,
 //   4: migrate3to4
 // }
 
