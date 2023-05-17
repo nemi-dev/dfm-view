@@ -19,8 +19,9 @@ import store from '../feats/store'
 import { Detail } from './Detail'
 import { MiscScreen } from './Misc'
 import { NavLink, Tab } from './widgets/Tab'
-import { StyleSheetManager } from 'styled-components'
 import { Skill } from './Skill'
+import { ErrorBoundary } from 'react-error-boundary'
+import { CommonFallbackComponent } from './CommonFallbackComponent'
 
 
 function Navigator() {
@@ -101,7 +102,7 @@ function App() {
     <TabContext.Provider value={{ activeTab, setActiveTab }}>
     <ModalContext.Provider value={modalContextValue}>
     <PortraitMode.Provider value={portrait}>
-      {/* <StyleSheetManager disableVendorPrefixes={IS_DEV}> */}
+      <ErrorBoundary FallbackComponent={CommonFallbackComponent}>
       {lastIDs.length > 0 && rehydrated? <div className="App">
         <AppModal isOpen={isModalOpen}/>
         <StickyNav />
@@ -118,7 +119,8 @@ function App() {
         <Skill />
         <CustomSkillScreen />
       </div>: null}
-      {/* </StyleSheetManager> */}
+      {/* <Runner /> */}
+      </ErrorBoundary>
     </PortraitMode.Provider>
     </ModalContext.Provider>
     </TabContext.Provider>
