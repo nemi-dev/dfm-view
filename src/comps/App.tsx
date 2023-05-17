@@ -6,6 +6,7 @@ import { useCallback, useContext, useEffect, useState } from 'react'
 
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { InitChar } from '../feats/slices/slicev5'
+import store from '../feats/store'
 import { PortraitMode, TabContext } from '../responsiveContext'
 import { Cracks } from './Cracks'
 import { CustomSkillScreen } from './CustomSkill'
@@ -65,8 +66,8 @@ function App() {
   const [isModalOpen, setOpen] = useState(false)
   const [modalFrag, setModalFrag] = useState<JSX.Element>()
   const lastIDs = useAppSelector(state => state.SavedChars.IDs)
-  // const rehydrated = store.getState()._persist?.rehydrated ?? true
-  const rehydrated = true
+  const rehydrated = store.getState()._persist?.rehydrated ?? true
+  // const rehydrated = true
 
   const closeModal = useCallback(() => {
     setOpen(false)

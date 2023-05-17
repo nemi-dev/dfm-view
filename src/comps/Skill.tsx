@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
 import styled from 'styled-components'
 
@@ -233,6 +233,8 @@ function AttackSkillChargeupCase({ skill }: SkillOneProps) {
   const myLevel = useAppSelector(selectMyLevel)
   const myAttrs = useAppSelector(selectMyAttr)
 
+  if (skill.chargeup <= 1) return null
+
   /** @todo 스킬레벨을 사용자가 입력하도록 하시오. */
   const baseSkLv = getMaxSkillLevelAt(skill, myLevel, true)
   const attacks = bindSkill(skill, baseSkLv, myAttrs, { chargeup: skill.chargeup })
@@ -247,21 +249,22 @@ function AttackSkillChargeupCase({ skill }: SkillOneProps) {
   )
 }
 
-/** 공격스킬과 그에 딸린 바리에이션, 풀충전시 데미지 수치를 렌더한다. */
-function AttackSkill({ skill }: SkillOneProps) {
-  return (<>
-    <AttackSkillPureCase skill={skill} />
-    {skill.variant?.length > 0?
-    skill.variant.map(va => 
-      <AttackSkillVariantCase key={va.vaName} skill={skill} variant={va.vaName} />
-    ): null}
-    {skill.chargeup > 1?
-    <AttackSkillChargeupCase skill={skill} />
-    : null}
-  </>
-  )
-}
+function SkillListContent() {
+  const skills = useAppSelector(selectClassASkills)
+  if (!(skills?.length > 0)) return <SkillNotImplemented />
 
+  return <>
+    {skills.map(skill => 
+    <Fragment key={skill.name}>
+      <AttackSkillPureCase skill={skill} />
+      {skill.variant?.map(va => 
+      <AttackSkillVariantCase key={va.vaName} skill={skill} variant={va.vaName} />
+      )}
+      <AttackSkillChargeupCase skill={skill} />
+    </Fragment>
+    )}
+  </>
+}
 
 function SkillNotImplemented() {
   return <div style={{ textAlign: "center" }}>
@@ -277,7 +280,6 @@ const AttackSkillListStyle = styled.div`
 `
 
 export function Skill() {
-  const skills = useAppSelector(selectClassASkills)
   return (
     <ErrorBoundary FallbackComponent={SkillError}>
       <div id="Skill">
@@ -285,9 +287,7 @@ export function Skill() {
           <h3>스킬</h3>
         </header>
         <AttackSkillListStyle className="SkillList">
-          {skills?.length > 0? skills.map(sk => (
-            <AttackSkill key={sk.name} skill={sk} />
-          )): <SkillNotImplemented />}
+          <SkillListContent />
         </AttackSkillListStyle>
       </div>
     </ErrorBoundary>
