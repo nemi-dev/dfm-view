@@ -49,7 +49,7 @@ export const initCustomSkill: CustomSkillOneAttackSpec[] = [
 ]
 
 
-const initCharState: DFCharState = {
+export const initCharState: DFCharState = {
   "Self": {
     "myName": "캐릭터 이름",
     "dfclass": "레인저(남)",
@@ -172,7 +172,9 @@ const initCharState: DFCharState = {
   "Calibrate": {
     eltype: [],
     sk_inc: [0],
-  }
+  },
+  SkillLevelMap: {},
+  SkillTPMap: {},
+  SkillUsageCountMap: {},
 }
 
-export default initCharState

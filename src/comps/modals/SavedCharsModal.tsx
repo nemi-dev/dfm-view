@@ -9,6 +9,8 @@ import { DFClassIcon, ItemIcon } from "../widgets/Icons"
 import { PlusCircle, Copy, Trash2, Download, ChevronUp, ChevronDown } from "react-feather"
 import { MoveDFCharDown, MoveDFCharUp } from "../../feats/slices/slicev5"
 import { DamageOutput } from "../DamageOutput"
+import { selectExpressionDamage } from "../../feats/selector/selectors"
+import { Num } from "../widgets/NumberView"
 
 
 function selectSavedChars(state: RootState) {
@@ -80,6 +82,7 @@ interface CharSelectProps {
 function CharSelect({ saved, onClick }: CharSelectProps) {
   const currentID = useAppSelector(state => state.currentID)
   const dispatch = useAppDispatch()
+  const expressDamage = useAppSelector(state => selectExpressionDamage(state, saved.id))
 
   const askDelete = useCallback(() => {
     if (currentID === saved.id) {
@@ -123,7 +126,7 @@ function CharSelect({ saved, onClick }: CharSelectProps) {
             <div className="DFCharName">{saved.DFChar.Self.myName}</div>
             <div>
               <Smaller>데미지</Smaller>
-              <DamageOutput crit="mean" sk />
+              <Num className="DamageGrab" value={expressDamage} />
             </div>
           </div>
           <SavedCharEquips className="SavedCharEquips">

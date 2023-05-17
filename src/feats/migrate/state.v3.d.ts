@@ -174,6 +174,7 @@ declare namespace V3 {
   }
   
   interface _RootState {
+    currentID: string,
     My: DFCharState
     Tonic: {
       el_all: number

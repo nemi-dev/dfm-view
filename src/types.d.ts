@@ -447,6 +447,9 @@ declare interface CustomSkillOneAttackSpec {
   /** 스증 적용 여부 */
   isSkill?: boolean
 
+  /** @deprecated `hit`로 옮겼다. */
+  maxHit?: never
+
   /** 타격 횟수 (없으면 1) */
   hit?: number
 

@@ -181,37 +181,29 @@ declare type CalibrateState = Pick<BaseAttrs,
 | "intl" 
 | "str_inc" 
 | "int_inc" 
-
 | "atk_ph" 
 | "atk_mg" 
 | "atk_ph_inc" 
 | "atk_mg_inc" 
-
 | "crit_ph" 
 | "crit_mg" 
 | "crit_ph_pct" 
 | "crit_mg_pct" 
-
 | "dmg_inc" 
 | "cdmg_inc" 
 | "catk_inc" 
 | "dmg_add" 
-
 | "el_fire" 
 | "el_ice" 
 | "el_lght" 
 | "el_dark" 
-
 | "eldmg_fire" 
 | "eldmg_ice" 
 | "eldmg_lght" 
 | "eldmg_dark" 
-  
 | "sk_inc_sum" 
-
 | "target_def" 
 | "target_res" 
-
 | "DefBreak" 
 > & {
   eltype: Eltype[]
@@ -236,15 +228,18 @@ declare interface DFCharState {
   CreatureValue: CreaturePropState
   Choice: Choices
   Calibrate: CalibrateState
+  SkillLevelMap: {
+    [skillName: string]: number
+  }
+  SkillTPMap: {
+    [skillName: string]: number
+  }
+  SkillUsageCountMap: {
+    [skillName: string]: number
+  }
 }
 
-declare interface EnemyTargetState {
-  /** 적 방어력 (물리+마법 모두) */
-  Defense: number
 
-  /** 적 속성저항 (4속성 모두) */
-  ElRes: number
-}
 
 declare interface SavedChar {
   id: string
@@ -268,23 +263,35 @@ declare interface CustomSkillPreset {
   Skills: CustomSkillState
 }
 
-declare interface SavedCharCollection {
-  byID: {
-    [k: string]: SavedChar
-  }
-  IDs: string[]
-}
+declare interface V5State {
+  currentID: string
 
-declare interface EquipPresetCollection {
-  byID: {
-    [k: string]: EquipPreset
-  }
-  IDs: string[]
-}
+  /** @deprecated 이제 SavedChars에 바로 접근한다. */
+  My?: never
 
-declare interface CustomSkillPresetCollection {
-  byID: {
-    [k: string]: CustomSkillPreset
+  SavedChars: {
+    byID: { [k: string]: SavedChar }
+    IDs: string[]
   }
-  IDs: string[]
+
+  Tonic: TonicState
+  EnemyTarget: {
+    /** 적 방어력 (물리+마법 모두) */
+    Defense: number
+  
+    /** 적 속성저항 (4속성 모두) */
+    ElRes: number
+  }
+
+  CustomSkill: CustomSkillOneAttackSpec[]
+
+  EquipPresets: {
+    byID: { [k: string]: EquipPreset }
+    IDs: string[]
+  }
+
+  CustomSkillPresets: {
+    byID: { [k: string]: CustomSkillPreset }
+    IDs: string[]
+  }
 }

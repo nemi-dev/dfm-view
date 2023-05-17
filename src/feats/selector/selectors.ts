@@ -2,7 +2,7 @@ import { createSelector } from '@reduxjs/toolkit'
 
 import { applyAddMaxEldmg, atx, dualTrigger, whatElType } from '../../attrs'
 import { AtypeAttrKey } from '../../constants'
-import { critChance, critFt, defRate, getPlainDamage, getRealdef } from '../../damage'
+import { critChance, critFt, defRate, getElementalDamage, getPlainDamage, getRealdef } from '../../damage'
 import { CombineItems } from '../../items'
 import { add, compound } from '../../utils'
 import {
@@ -185,6 +185,26 @@ export const selectMyDamage = createSelector(
   }
 )
 
+/** 캐릭터 선택창에서 보일 데미지를 선택한다. */
+export const selectExpressionDamage = createSelector(
+  selectClassAtype,
+  selectMyDFClass,
+  selectMyAttr,
+  selectMyFinalEltype,
+  (atype, dfcl, attrs, eltypes) => {
+    const {
+      Crit: critKey, CritCh: critChKey,
+    } = AtypeAttrKey[atype]
+    const chance = critChance(attrs[critKey], attrs[critChKey])
+    let damage = (dfcl.name == "엘레멘탈마스터" || dfcl.name == "마도학자")?
+    getElementalDamage(attrs) : getPlainDamage(atype, eltypes, attrs)
+
+    damage *= (1 + add(attrs["sk_inc"], attrs["sk_inc_sum"]) / 100)
+    const cdamage = damage * critFt(attrs["cdmg_inc"], attrs["catk_inc"])
+
+    return ((1 - chance) * damage) + (chance * cdamage)
+  }
+)
 
 
 /** 내가 입력한 적 방어력을 선택한다. */

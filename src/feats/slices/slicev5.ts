@@ -8,7 +8,7 @@ import { perfectGuild, perfectTonic } from '../../constants'
 import { dfclassNames } from '../../dfclass'
 import { accessParts, armorParts, getItem, oneEmblemParts } from '../../items'
 import { deepCopy } from '../../utils'
-import initCharState, { initCustomSkill } from './initState'
+import { initCharState, initCustomSkill } from './initState'
 
 
 type SetAttrAction = PayloadAction<[keyof NumberCalibrate, number]>
@@ -26,7 +26,7 @@ function newID() {
   return id
 }
 
-function createNew(state: V5State, draft: V5State, src: DFCharState) {
+function createNew(draft: V5State, src: DFCharState) {
   const id = newID()
   draft.currentID = id
   draft.SavedChars.IDs.unshift(id)
@@ -42,27 +42,10 @@ function selectMe(state: V5State) {
 }
 
 
-
-interface V5State {
-  currentID: string
-
-  /** @deprecated */
-  My: DFCharState
-
-  SavedChars: SavedCharCollection
-  Tonic: TonicState
-  EnemyTarget: EnemyTargetState
-  EquipPresets: EquipPresetCollection
-  CustomSkill: CustomSkillOneAttackSpec[]
-  CustomSkillPresets: CustomSkillPresetCollection
-}
-
 export const initV5: V5State = {
   currentID: '',
-  My: initCharState,
   SavedChars: {
-    byID: {},
-    IDs: []
+    byID: {}, IDs: []
   },
   Tonic: perfectTonic,
   EnemyTarget: {
@@ -70,13 +53,11 @@ export const initV5: V5State = {
     ElRes: 0
   },
   EquipPresets: {
-    byID: {},
-    IDs: []
+    byID: {}, IDs: []
   },
   CustomSkill: initCustomSkill,
   CustomSkillPresets: {
-    byID: {},
-    IDs: []
+    byID: {}, IDs: []
   }
 }
 
@@ -86,7 +67,7 @@ export const dfSlice = createSlice({
   reducers: {
     //#region SaveReducer
     CreateDF: (state) => {
-      createNew(state, state, initCharState)
+      createNew(state, initCharState)
     },
     LoadDF: (state, { payload: id }: PayloadAction<string>) => {
       if (id === state.currentID || !state.SavedChars.IDs.includes(id)) return
@@ -99,13 +80,13 @@ export const dfSlice = createSlice({
       state.SavedChars.IDs.splice(index, 1)
     },
     InitChar: (state) => {
-      createNew(state, state, initCharState)
+      if (!state.currentID) createNew(state, initCharState)
     },
     ImportDF: (state, { payload }: PayloadAction<DFCharState>) => {
-      createNew(state, state, payload)
+      createNew(state, payload)
     },
     CloneDF: (state) => {
-      createNew(state, state, state.SavedChars.byID[state.currentID].DFChar)
+      createNew(state, state.SavedChars.byID[state.currentID].DFChar)
     },
     MoveDFCharUp: (state, { payload: id }: PayloadAction<string>) => {
       const index = state.SavedChars.IDs.indexOf(id)
