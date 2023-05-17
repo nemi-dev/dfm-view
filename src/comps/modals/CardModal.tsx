@@ -2,7 +2,7 @@ import { useCallback, useContext, useState } from 'react'
 import styled from 'styled-components'
 
 import { useAppDispatch } from '../../feats/hooks'
-import { SetCard, SetCardsAllPossible } from '../../feats/slices/mycharSlice'
+import { SetMyCard, SetMyCardsAllPossible } from '../../feats/slices/mycharSlice'
 import { getCardsForPart } from '../../items'
 import { LabeledSwitch } from '../widgets/Forms'
 import { ItemIcon } from '../widgets/Icons'
@@ -19,8 +19,8 @@ function CardSelect({ part, card, all }: { part: CardablePart, card: DFItem, all
   const { closeModal } = useContext(ModalContext)
   const dispatch = useAppDispatch()
   const onClick = useCallback(() => {
-    if (all) dispatch(SetCardsAllPossible(card.name))
-    else dispatch(SetCard([part, card.name]))
+    if (all) dispatch(SetMyCardsAllPossible(card.name))
+    else dispatch(SetMyCard([part, card.name]))
     closeModal()
   }, [part, card.name, all])
   return (

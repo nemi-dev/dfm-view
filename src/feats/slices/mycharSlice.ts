@@ -19,177 +19,177 @@ export const dfcharSlice = createSlice({
   initialState,
   reducers: {
     // #region Self
-    SetMyName: (my, { payload }: PayloadAction<string>) => {
-      my.Self.myName = payload
+    SetMyName: (state, { payload }: PayloadAction<string>) => {
+      state.Self.myName = payload
     },
-    SetDFClass: (my, { payload }: PayloadAction<DFClassName>) => {
-      if (dfclassNames.includes(payload)) my.Self.dfclass = payload
+    SetMyDFClass: (state, { payload }: PayloadAction<DFClassName>) => {
+      if (dfclassNames.includes(payload)) state.Self.dfclass = payload
     },
-    SetLevel: (my, { payload }: PayloadAction<number>) => {
-      my.Self.level = payload
+    SetMyLevel: (state, { payload }: PayloadAction<number>) => {
+      state.Self.level = payload
     },
-    SetAchieveLevel: (my, { payload }: PayloadAction<number>) => {
-      my.Self.achieveLevel = payload
+    SetMyAchieveLevel: (state, { payload }: PayloadAction<number>) => {
+      state.Self.achieveLevel = payload
     },
-    SetAtkFixed: (my, pay : PayloadAction<number>) => {
-      my.Self.atkFixed = pay.payload
+    SetMyAtkFixed: (state, pay : PayloadAction<number>) => {
+      state.Self.atkFixed = pay.payload
     },
     // #endregion
 
     // #region Item
-    SetItem: (my, { payload }: PayloadAction<ItemPartSetter>) => {
+    SetMyItem: (state, { payload }: PayloadAction<ItemPartSetter>) => {
       if ( payload[0] == "정수" || payload[0] == "아티팩트" ) {
-        my.Item[payload[0]][payload[1]] = payload[2]
+        state.Item[payload[0]][payload[1]] = payload[2]
       } else {
-        my.Item[payload[0]] = payload[1]
+        state.Item[payload[0]] = payload[1]
       }
     },
-    SetSpellAll: (my, { payload: id }: PayloadAction<ItemIdentifier>) => {
-      my.Item["정수"].fill(id)
+    SetMySpellAll: (state, { payload: id }: PayloadAction<ItemIdentifier>) => {
+      state.Item["정수"].fill(id)
     },
-    FetchItems: (my, { payload: items }: PayloadAction<Partial<ItemsState>>) => {
-      Object.assign(my.Item, items)
+    FetchMyItems: (state, { payload: items }: PayloadAction<Partial<ItemsState>>) => {
+      Object.assign(state.Item, items)
     },
     // #endregion
 
     // #region Card
-    SetCard: (my, { payload: [part, id] }: PayloadAction<[CardablePart, ItemIdentifier]>) => {
-      my.Card[part] = id
+    SetMyCard: (state, { payload: [part, id] }: PayloadAction<[CardablePart, ItemIdentifier]>) => {
+      state.Card[part] = id
     },
-    SetCardsAllPossible: (my, { payload: id }: PayloadAction<ItemIdentifier>) => {
+    SetMyCardsAllPossible: (state, { payload: id }: PayloadAction<ItemIdentifier>) => {
       const card = getItem(id)
       const possible = card?.part ?? []
       console.log(card)
-      possible.forEach(part => my.Card[part] = id)
+      possible.forEach(part => state.Card[part] = id)
     },
-    FetchCards: (my, { payload: cards }: PayloadAction<Partial<CardState>>) => {
-      Object.assign(my.Card, cards)
+    FetchCards: (state, { payload: cards }: PayloadAction<Partial<CardState>>) => {
+      Object.assign(state.Card, cards)
     },
     // #endregion
 
     // #region Emblem
-    SetEmblem: (my, { payload: [part, index, emblemType, emblemLevel] }: PayloadAction<[CardablePart, number, EmblemType, number]>) => {
-      my.Emblem[part][index] = [emblemType, emblemLevel]
+    SetMyEmblem: (state, { payload: [part, index, emblemType, emblemLevel] }: PayloadAction<[CardablePart, number, EmblemType, number]>) => {
+      state.Emblem[part][index] = [emblemType, emblemLevel]
     },
-    DecreaseEmblemLevel: (my, { payload: [part, index] }: PayloadAction<[Exclude<CardablePart, "무기"|"보조장비"|"칭호">, number]>) => {
-      const level = my.Emblem[part][index][1]
+    DecreaseMyEmblemLevel: (state, { payload: [part, index] }: PayloadAction<[Exclude<CardablePart, "무기"|"보조장비"|"칭호">, number]>) => {
+      const level = state.Emblem[part][index][1]
       let nextLevel = level - 1
       if (nextLevel < 3) nextLevel = 10
-      my.Emblem[part][index][1] = nextLevel
+      state.Emblem[part][index][1] = nextLevel
     },
-    SetColorEmblemLevelAll: (my, { payload: level }: PayloadAction<number>) => {
-      oneEmblemParts.forEach(part => my.Emblem[part].forEach(sp => sp[1] = level))
+    SetMyEmblemLevelAll: (state, { payload: level }: PayloadAction<number>) => {
+      oneEmblemParts.forEach(part => state.Emblem[part].forEach(sp => sp[1] = level))
     },
-    FetchEmblems: (my, { payload: emblems }: PayloadAction<EmblemState>) => {
-      Object.assign(my.Emblem, emblems)
+    FetchMyEmblems: (state, { payload: emblems }: PayloadAction<EmblemState>) => {
+      Object.assign(state.Emblem, emblems)
     },
     // #endregion
 
     //#region MagicProps
-    SetMagicProps: (my, { payload: [part, index, magicProps]}: PayloadAction<[MagicPropsPart, number, MagicPropsCareAbout]>) => {
-      my.MagicProps[part][index] = magicProps
+    SetMyMagicProps: (state, { payload: [part, index, magicProps]}: PayloadAction<[MagicPropsPart, number, MagicPropsCareAbout]>) => {
+      state.MagicProps[part][index] = magicProps
     },
-    SetPerfectMagicPropsStat: (my)=> {
-      armorParts.forEach(part => my.MagicProps[part] = ["Stat", "Stat", "Stat"])
-      my.MagicProps["무기"][0] = "dmg_inc"
-      my.MagicProps["무기"].fill("Stat", 1, 3)
+    PerfectMyMagicProps: (state)=> {
+      armorParts.forEach(part => state.MagicProps[part] = ["Stat", "Stat", "Stat"])
+      state.MagicProps["무기"][0] = "dmg_inc"
+      state.MagicProps["무기"].fill("Stat", 1, 3)
     },
-    SetPerfectMagicPropsEl: (my, { payload: p }: PayloadAction<"el_fire" | "el_ice" | "el_lght" | "el_dark"> ) => {
-      accessParts.forEach(part => my.MagicProps[part] = [p, p, p])
+    PerfectMyMagicPropsEl: (state, { payload: p }: PayloadAction<"el_fire" | "el_ice" | "el_lght" | "el_dark"> ) => {
+      accessParts.forEach(part => state.MagicProps[part] = [p, p, p])
     },
-    FetchMagicProps: (my, { payload }: PayloadAction<MagicPropsState>) => {
-      Object.assign(my.MagicProps, payload)
+    FetchMyMagicProps: (state, { payload }: PayloadAction<MagicPropsState>) => {
+      Object.assign(state.MagicProps, payload)
     },
     // #endregion
 
     //#region Upgrade
-    SetUpgradeValue: (my, { payload: [part, value] }: PayloadAction<[EquipPart, number]>) => {
-      my.Upgrade[part] = value
+    SetMyUpgradeValue: (state, { payload: [part, value] }: PayloadAction<[EquipPart, number]>) => {
+      state.Upgrade[part] = value
     },
-    SetArmorUpgradeAll: (my, { payload }: PayloadAction<number>) => {
-      armorParts.forEach(part => my.Upgrade[part] = payload)
+    SetMyArmorUpgradeAll: (state, { payload }: PayloadAction<number>) => {
+      armorParts.forEach(part => state.Upgrade[part] = payload)
     },
-    SetAccessUpgradeAll: (my, { payload }: PayloadAction<number>) => {
-      accessParts.forEach(part => my.Upgrade[part] = payload)
+    SetMyAccessUpgradeAll: (state, { payload }: PayloadAction<number>) => {
+      accessParts.forEach(part => state.Upgrade[part] = payload)
     },
-    FetchUpgrades: (my, { payload }: PayloadAction<UpgradeOrKaledoState>) => {
-      Object.assign(my.Upgrade, payload)
+    FetchMyUpgrades: (state, { payload }: PayloadAction<UpgradeOrKaledoState>) => {
+      Object.assign(state.Upgrade, payload)
     },
     // #endregion
 
     //#region Material
-    SetMaterial: (s, { payload: [part, value] }: PayloadAction<[ArmorPart, ArmorMaterial]>) => {
-      s.Material[part] = value
+    SetMyMaterial: (state, { payload: [part, value] }: PayloadAction<[ArmorPart, ArmorMaterial]>) => {
+      state.Material[part] = value
     },
-    SetMaterialAll: (s, { payload }: PayloadAction<ArmorMaterial>) => {
-      armorParts.forEach(part => s.Material[part] = payload)
+    SetMyMaterialAll: (state, { payload }: PayloadAction<ArmorMaterial>) => {
+      armorParts.forEach(part => state.Material[part] = payload)
     },
-    FetchMaterials: (s, { payload }: PayloadAction<MaterialState>) => {
-      Object.assign(s.Material, payload)
+    FetchMyMaterials: (state, { payload }: PayloadAction<MaterialState>) => {
+      Object.assign(state.Material, payload)
     },
     //#endregion
 
     //#region Avatar
-    SetAvatarRarity: (s, { payload: [part, rarity] }: PayloadAction<[WearAvatarPart, "Uncommon" | "Rare"]>) => {
-      s.Avatar[part] = rarity
+    SetMyAvatarRarity: (state, { payload: [part, rarity] }: PayloadAction<[WearAvatarPart, "Uncommon" | "Rare"]>) => {
+      state.Avatar[part] = rarity
     },
-    SetAvatarTypeAll: (s, { payload }: PayloadAction<"Uncommon" | "Rare">) => {
-      avatarParts.forEach(part => s.Avatar[part] = payload)
+    SetMyAvatarRarityAll: (state, { payload }: PayloadAction<"Uncommon" | "Rare">) => {
+      avatarParts.forEach(part => state.Avatar[part] = payload)
     },
     //#endregion
   
     //#region Guild
-    SetGuild: (s, { payload }: PayloadAction<[keyof GuildState, number]>) => {
-      s.Guild[payload[0]] = payload[1]
+    SetMyGuildBuffLevel: (state, { payload }: PayloadAction<[keyof GuildState, number]>) => {
+      state.Guild[payload[0]] = payload[1]
     },
-    PerfectGuild: (s) => {
-      Object.assign(s.Guild, perfectGuild)
+    PerfectMyGuild: (state) => {
+      Object.assign(state.Guild, perfectGuild)
     },
-    FetchGuild: (s, { payload }: PayloadAction<GuildState>) => {
-      Object.assign(s.Guild, payload)
+    FetchMyGuild: (state, { payload }: PayloadAction<GuildState>) => {
+      Object.assign(state.Guild, payload)
     },
     //#endregion
 
     //#region CreatureValue
-    SetCreatureStat: (s, { payload }: PayloadAction<number>) => {
-      s.CreatureValue.Creature = payload
+    SetMyCreatureStat: (state, { payload }: PayloadAction<number>) => {
+      state.CreatureValue.Creature = payload
     },
-    SetArtifactValue: (s, { payload: [attr_name, value] }: PayloadAction<[ArtifactColor, number]>) => {
-      s.CreatureValue[attr_name] = value
+    SetMyArtifactValue: (state, { payload: [attr_name, value] }: PayloadAction<[ArtifactColor, number]>) => {
+      state.CreatureValue[attr_name] = value
     },
     //#endregion
 
     //#region Choice
-    SetBranch: (s, { payload: [key, value] }: PayloadAction<[string, OptionalChoiceType]>) => {
-      s.Choice.branches[key] = value;
+    SetMyChoiceOfBranch: (state, { payload: [key, value] }: PayloadAction<[string, OptionalChoiceType]>) => {
+      state.Choice.branches[key] = value;
     },
-    SetGives: (s, { payload: [key, value] }: PayloadAction<[string, OptionalChoiceType]>) => {
-      s.Choice.gives[key] = value;
+    SetMyChoiceOfGives: (state, { payload: [key, value] }: PayloadAction<[string, OptionalChoiceType]>) => {
+      state.Choice.gives[key] = value;
     },
-    SetExclusive: (s, { payload: [key, value] }: PayloadAction<[string, string]>) => {
-      s.Choice.exclusives[key] = value;
+    SetMyChoiceOfExclusive: (state, { payload: [key, value] }: PayloadAction<[string, string]>) => {
+      state.Choice.exclusives[key] = value;
     },
-    DeleteChoice: (s, { payload: [type, key] }: PayloadAction<["branches" | "gives" | "exclusives", string]>) => {
-      delete s[type][key]
+    DeleteMyChoice: (state, { payload: [type, key] }: PayloadAction<["branches" | "gives" | "exclusives", string]>) => {
+      delete state.Choice[type][key]
     },
     //#endregion
 
     //#region Calibrate
-    SetBasicAttr: (s, { payload: [key, value] }: SetAttrAction) => {
-      value? s.Calibrate[key] = value : delete s.Calibrate[key]
+    SetMyCaliSingleAttr: (state, { payload: [key, value] }: SetAttrAction) => {
+      value? state.Calibrate[key] = value : delete state.Calibrate[key]
     },
-    SetSkillInc: (s, { payload: [index, value] }: SkillIncPayloadType) => {
-      s.Calibrate.sk_inc[index] = value
+    SetMyCaliSkillInc: (state, { payload: [index, value] }: SkillIncPayloadType) => {
+      state.Calibrate.sk_inc[index] = value
     },
-    AddSkillInc: (s) => {
-      s.Calibrate.sk_inc.push(0)
+    AddMyCaliSkillInc: (state) => {
+      state.Calibrate.sk_inc.push(0)
     },
-    RemoveSkillInc: (s, { payload }: PayloadAction<number>) => {
-      if (s.Calibrate.sk_inc.length > 1) s.Calibrate.sk_inc.splice(payload, 1)
+    DeleteMyCaliSkillInc: (state, { payload }: PayloadAction<number>) => {
+      if (state.Calibrate.sk_inc.length > 1) state.Calibrate.sk_inc.splice(payload, 1)
     },
-    SetEltype: (s, { payload: [ el, on ] }: PayloadAction<[Eltype, boolean]>) => {
-      if (on && !s.Calibrate.eltype.includes(el)) s.Calibrate.eltype.push(el)
-      else if (!on && s.Calibrate.eltype.includes(el)) s.Calibrate.eltype.splice(s.Calibrate.eltype.indexOf(el), 1)
+    SetMyCaliEltype: (state, { payload: [ el, on ] }: PayloadAction<[Eltype, boolean]>) => {
+      if (on && !state.Calibrate.eltype.includes(el)) state.Calibrate.eltype.push(el)
+      else if (!on && state.Calibrate.eltype.includes(el)) state.Calibrate.eltype.splice(state.Calibrate.eltype.indexOf(el), 1)
     }
     //#endregion
   }
@@ -200,56 +200,56 @@ export const dfcharSlice = createSlice({
 
 export const {
   SetMyName,
-  SetDFClass,
-  SetLevel,
-  SetAchieveLevel,
-  SetAtkFixed,
+  SetMyDFClass,
+  SetMyLevel,
+  SetMyAchieveLevel,
+  SetMyAtkFixed,
 
-  SetItem,
-  SetSpellAll,
-  FetchItems,
+  SetMyItem,
+  SetMySpellAll,
+  FetchMyItems,
 
-  SetCard, 
-  SetCardsAllPossible, 
+  SetMyCard, 
+  SetMyCardsAllPossible, 
   FetchCards,
 
-  SetEmblem,
-  DecreaseEmblemLevel,
-  SetColorEmblemLevelAll,
-  FetchEmblems,
+  SetMyEmblem,
+  DecreaseMyEmblemLevel,
+  SetMyEmblemLevelAll,
+  FetchMyEmblems,
 
-  SetMagicProps,
-  SetPerfectMagicPropsStat,
-  SetPerfectMagicPropsEl,
-  FetchMagicProps,
+  SetMyMagicProps,
+  PerfectMyMagicProps,
+  PerfectMyMagicPropsEl,
+  FetchMyMagicProps,
 
-  SetUpgradeValue,
-  SetArmorUpgradeAll,
-  SetAccessUpgradeAll,
-  FetchUpgrades,
+  SetMyUpgradeValue,
+  SetMyArmorUpgradeAll,
+  SetMyAccessUpgradeAll,
+  FetchMyUpgrades,
 
-  SetMaterial,
-  SetMaterialAll,
-  FetchMaterials,
+  SetMyMaterial,
+  SetMyMaterialAll,
+  FetchMyMaterials,
 
-  SetAvatarRarity,
-  SetAvatarTypeAll,
+  SetMyAvatarRarity,
+  SetMyAvatarRarityAll,
 
-  SetGuild,
-  PerfectGuild,
-  FetchGuild,
+  SetMyGuildBuffLevel,
+  PerfectMyGuild,
+  FetchMyGuild,
 
-  SetCreatureStat,
-  SetArtifactValue,
+  SetMyCreatureStat,
+  SetMyArtifactValue,
 
-  SetBranch,
-  SetGives,
-  SetExclusive,
-  DeleteChoice,
+  SetMyChoiceOfBranch,
+  SetMyChoiceOfGives,
+  SetMyChoiceOfExclusive,
+  DeleteMyChoice,
 
-  SetBasicAttr,
-  SetSkillInc,
-  AddSkillInc,
-  RemoveSkillInc,
-  SetEltype,
+  SetMyCaliSingleAttr,
+  SetMyCaliSkillInc,
+  AddMyCaliSkillInc,
+  DeleteMyCaliSkillInc,
+  SetMyCaliEltype,
 } = dfcharSlice.actions

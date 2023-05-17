@@ -1,7 +1,7 @@
 import { useCallback, useContext, useMemo } from 'react'
 
 import { useAppDispatch } from '../../feats/hooks'
-import { SetItem } from '../../feats/slices/mycharSlice'
+import { SetMyItem } from '../../feats/slices/mycharSlice'
 import { getItemsByPart } from '../../items'
 import { ItemSizeDefiner } from './CommonModalComps'
 import { CurrentPart } from './CurrentPart'
@@ -15,7 +15,7 @@ export function ArtifactModalFragment({ artiColor }: { artiColor: ArtifactColor 
   const dispatch = useAppDispatch()
   const onClick = useCallback((name: string) => {
     // dispatch(SetArtifact([artiColor as ArtifactColor, name]))
-    dispatch(SetItem(['아티팩트', artiColor, name]))
+    dispatch(SetMyItem(['아티팩트', artiColor, name]))
     closeModal()
   }, [artiColor])
   return (

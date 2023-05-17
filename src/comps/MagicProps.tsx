@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { useAppSelector } from '../feats/hooks'
 import { selectMagicPropNames } from '../feats/selector/equipSelectors'
 import { selectClassAtype } from '../feats/selector/selfSelectors'
-import { SetMagicProps } from '../feats/slices/mycharSlice'
+import { SetMyMagicProps } from '../feats/slices/mycharSlice'
 import { hasMagicProps } from '../items'
 import { getOneMagicPropValue, getRealAttrKey, nextMagicProps } from '../magicProps'
 import { PortraitMode } from '../responsiveContext'
@@ -50,7 +50,7 @@ export function MagicProps({ item, part }: MagicPropsArrayProps) {
   const atype = useAppSelector(selectClassAtype)
   const clickHandler = useCallback((index: number) => {
     const next = nextMagicProps(part, array[index], level, rarity, index === 0)
-    dispatch(SetMagicProps([part, index, next]))
+    dispatch(SetMyMagicProps([part, index, next]))
   }, [item?.name, part, array])
   if (!item) return null
   return (

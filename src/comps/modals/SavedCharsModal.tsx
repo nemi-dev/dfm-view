@@ -123,7 +123,7 @@ function CharSelect({ saved, onClick }: CharSelectProps) {
             <div className="DFCharName">{saved.DFChar.Self.myName}</div>
             <div>
               <Smaller>데미지</Smaller>
-              <Num className="DamageGrab" value={saved.DamageGrab} />
+              {/* <Num className="DamageGrab" value={saved.DamageGrab} /> */}
             </div>
           </div>
           <SavedCharEquips className="SavedCharEquips">

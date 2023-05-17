@@ -7,7 +7,7 @@ import { critChance, critFt, getElementalDamage, getPlainDamage } from "../damag
 import { add } from "../utils"
 
 
-export function DamageOutput({ sk = false, crit = false }: { sk?: boolean, crit?: boolean | "mean" }) {
+export function DamageOutput({ sk = false, crit = false, id = null }: { sk?: boolean, crit?: boolean | "mean", id?: string }) {
   const attrs = useAppSelector(selectMyAttr)
   const dfclass = useAppSelector(selectMyDFClass)
   const atype = useAppSelector(selectClassAtype)

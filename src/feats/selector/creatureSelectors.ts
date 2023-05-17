@@ -1,53 +1,53 @@
-import { createSelector } from "@reduxjs/toolkit"
-import { atx, combine } from "../../attrs"
-import { RootState } from "../store"
-import { getActiveISets, getItem } from "../../items"
-import memoizee from "memoizee"
-import { selectItem } from "./equipSelectors"
+import memoizee from 'memoizee'
 
+import { createSelector } from '@reduxjs/toolkit'
+
+import { atx, combine } from '../../attrs'
+import { getActiveISets, getItem } from '../../items'
+import { RootState } from '../store'
+import { selectItem } from './equipSelectors'
+import { selectDFChar } from './selectors'
 
 /** 아티팩트 하나를 선택한다 */
 export const selectArtifact = memoizee(
-  (color: ArtifactColor) => (state: RootState) => getItem(state.My.Item["아티팩트"][color]),
+  (color: ArtifactColor) => createSelector(selectDFChar, dfchar => getItem(dfchar.Item.아티팩트[color])),
 { primitive: true })
 
 /** 레드 아티팩트의 힘/지능 증가 효과를 선택한다. */
-export function selectRedArtiProp(state: RootState): AttrSource {
-  return {
+export const selectRedArtiProp = createSelector(
+  selectDFChar,
+  (dfchar): AttrSource => ({
     name: "레드 아티팩트 옵션",
-    attrs: atx("Stat", state.My.CreatureValue.Red)
-  }
-}
+    attrs: atx("Stat", dfchar.CreatureValue.Red)
+  })
+)
 
 /** 블루 아티팩트의 공격력 증가 효과를 선택한다. */
-export function selectBlueArtiProp(state: RootState): AttrSource {
-  return {
+export const selectBlueArtiProp = createSelector(
+  selectDFChar,
+  (dfchar): AttrSource => ({
     name: "블루 아티팩트 옵션",
-    attrs: atx("Atk", state.My.CreatureValue.Blue)
-  }
-}
+    attrs: atx("Atk", dfchar.CreatureValue.Blue)
+  })
+)
 
 /** 그린 아티팩트의 속성강화 효과를 선택한다. */
-export function selectGreenArtiProp(state: RootState): AttrSource {
-  return {
+export const selectGreenArtiProp = createSelector(
+  selectDFChar,
+  (dfchar): AttrSource => ({
     name: "그린 아티팩트 옵션",
-    attrs: atx("El", state.My.CreatureValue.Green)
-  }
-}
-
-/** 지금 장착 중인 아티팩트를 모두 선택한다 */
-export function selectArtifacts(state: RootState) {
-  const { Red: redName, Green: greenName, Blue: blueName } = state.My.Item["아티팩트"]
-  return {
-    Red: getItem(redName), Green: getItem(greenName), Blue: getItem(blueName)
-  }
-}
+    attrs: atx("El", dfchar.CreatureValue.Green)
+  })
+)
 
 /** 크리쳐 스탯 효과를 선택한다. */
-export function selectCreatureStatAttr(state: RootState) {
-  const stat = state.My.CreatureValue.Creature
-  return atx("StatAll", stat)
-}
+export const selectCreatureStatAttr = createSelector(
+  selectDFChar,
+  (dfchar) => {
+    const stat = dfchar.CreatureValue.Creature
+    return atx("StatAll", stat)
+  }
+)
 
 /** 
  * 크리쳐를 선택한다. (?!)  
@@ -67,28 +67,15 @@ export const selectCreature = createSelector(
   }
 )
 
-/** 크리쳐 스탯 효과 + 아티팩트 옵션 효과를 선택한다 (이들은 마을에서 적용된다) */
-export function selectCreaturePropsAttrs(state: RootState): AttrSource {
-  const
-    stat_arti = state.My.CreatureValue.Red,
-    atk = state.My.CreatureValue.Blue,
-    el_all = state.My.CreatureValue.Green
-  return {
-    name: "아티팩트 옵션(이빨)",
-    attrs: {
-      strn: stat_arti,
-      intl: stat_arti,
-      ...atx("Atk", atk),
-      ...atx("El", el_all)
-    }
-  }
-}
+
 
 /** 크리쳐+아티팩트로 활성화되는 세트를 모두 선택한다. */
 export const selectCreatureSets = createSelector(
   selectItem["크리쳐"],
-  selectArtifacts,
-  (creature, { Red, Green, Blue }) => {
+  selectArtifact("Red"),
+  selectArtifact("Green"),
+  selectArtifact("Blue"),
+  (creature, Red, Green, Blue) => {
     const isets = getActiveISets(creature, Red, Green, Blue)
     return isets
   }
@@ -102,18 +89,24 @@ export const selectCreatureSets = createSelector(
  */
 export const selectCreatureAndArtis = createSelector(
   selectCreature,
-  selectArtifacts,
+  selectArtifact("Red"),
+  selectArtifact("Green"),
+  selectArtifact("Blue"),
+  selectRedArtiProp,
+  selectGreenArtiProp,
+  selectBlueArtiProp,
   selectCreatureSets,
-  selectCreaturePropsAttrs,
-  (creature, { Red, Green, Blue }, sets, propAttrs) => {
+  (creature, Red, Green, Blue, redProp, greenProp, blueProp, sets) => {
     if (!creature) return []
     return [
       creature,
       Red,
       Green,
       Blue,
+      redProp,
+      greenProp,
+      blueProp,
       ...sets,
-      propAttrs
     ]
   }
 )

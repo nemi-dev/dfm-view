@@ -5,7 +5,6 @@ import { encode as encodeB64 } from "base64-arraybuffer"
 import { deepCopy } from "../utils"
 import { RootState } from "./store"
 import initState from "./slices/initState"
-import { selectMyDamage } from "./selector/selectors"
 
 function newID() {
   const uuid = uuidv4()
@@ -37,42 +36,27 @@ export const ImportSkill = createAction("DFM/ImportSkill", fuckyou<CustomSkillSt
 
 
 
-
-function commit(state: RootState, draft: RootState) {
-  const currentID = state.currentID
-  draft.SavedChars.byID[currentID].DFChar = deepCopy(state.My)
-  draft.SavedChars.byID[currentID].DamageGrab = selectMyDamage(state)
-}
-
-function createNew(state: RootState, draft: RootState, src: DFCharState, doCommit: boolean) {
-  if (doCommit) commit(state, draft)
+function createNew(state: RootState, draft: RootState, src: DFCharState) {
   const id = newID()
-  draft.My = deepCopy(src)
   draft.currentID = id
   draft.SavedChars.IDs.unshift(id)
   draft.SavedChars.byID[id] = {
     id,
     TimeStamp: Date.now(),
     DFChar: deepCopy(src),
-    DamageGrab: 0,
   }
 }
 
 export const saveReducerV4 = createReducer({} as RootState, builder => {
   builder
   .addCase(CreateDF, (state) => {
-    createNew(state, state, initState, true)
+    createNew(state, state, initState)
   })
   .addCase(SaveDF, (state) => {
-    commit(state, state)
   })
   .addCase(LoadDF, (state, action) => {
     const id = action.payload
     if (id === state.currentID || !state.SavedChars.IDs.includes(id)) return
-
-    const saved = state.SavedChars.byID[id]
-    commit(state, state)
-    state.My = deepCopy(saved.DFChar)
     state.currentID = id
   })
   .addCase(DeleteDFChar, (state, action) => {
@@ -83,12 +67,12 @@ export const saveReducerV4 = createReducer({} as RootState, builder => {
     state.SavedChars.IDs.splice(index, 1)
   })
   .addCase(InitChar, (state) => {
-    createNew(state, state, initState, false)
+    createNew(state, state, initState)
   })
   .addCase(ImportDF, (state, action) => {
-    createNew(state, state, action.payload, true)
+    createNew(state, state, action.payload)
   })
   .addCase(CloneDF, (state) => {
-    createNew(state, state, state.My, true)
+    createNew(state, state, state.SavedChars.byID[state.currentID].DFChar)
   })
 })

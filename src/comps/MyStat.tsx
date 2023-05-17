@@ -6,12 +6,11 @@ import styled from 'styled-components'
 import { AtypeAttrKey, Elemental } from '../constants'
 import { AtkOut, critChance, StatOut } from '../damage'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
-import { selectMyAttr, selectMyAttrTown, selectMyFinalEltype } from '../feats/selector/selectors'
+import { selectCalibrate, selectMyAttr, selectMyAttrTown, selectMyFinalEltype } from '../feats/selector/selectors'
 import { selectClassAtype } from '../feats/selector/selfSelectors'
 import {
-  AddSkillInc, RemoveSkillInc, SetBasicAttr, SetEltype, SetSkillInc
+  AddMyCaliSkillInc, DeleteMyCaliSkillInc, SetMyCaliSingleAttr, SetMyCaliEltype, SetMyCaliSkillInc
 } from '../feats/slices/mycharSlice'
-import { RootState } from '../feats/store'
 import { add } from '../utils'
 import { Gridy } from './widgets/CommonUI'
 import { CheckboxGroup, DisposableInput, LabeledSwitch, NumberInput } from './widgets/Forms'
@@ -28,21 +27,15 @@ interface OneAttrTripletProps {
 const MyAttrsContext = createContext<BaseAttrs>({})
 
 
-
-/** 보정스탯에서 스탯 하나만을 가져온다. */
-function selectCalibrateOne(state: RootState, key: keyof NumberCalibrate) {
-  return state.My.Calibrate[key] ?? 0
-}
-
 function OneAttrEditable({ numStyle = "", aKey, name, percent = false, signed = false }: OneAttrTripletProps) {
   const me = useContext(MyAttrsContext)
-  const value = useAppSelector(state => selectCalibrateOne(state, aKey))
+  const { [aKey]: value } = useAppSelector(selectCalibrate)
   const dispatch = useAppDispatch()
   return (
     <div className="FormDF AttrItem">
       {name? <div className="KeyName">{name}</div>: null}
       <Num className={"AttrValue " + numStyle} value={me[aKey]} signed={signed} percented={percent} />
-      <NumberInput value={value} onChange={v => dispatch(SetBasicAttr([aKey, v]))} />
+      <NumberInput value={value} onChange={v => dispatch(SetMyCaliSingleAttr([aKey, v]))} />
     </div>
   )
 }
@@ -100,21 +93,21 @@ const SkillIncValues = styled.div`
 `
 
 function SkillInc() {
-  const sk_inc = useAppSelector(state => state.My.Calibrate.sk_inc)
+  const { sk_inc } = useAppSelector(selectCalibrate)
   const dispatch = useAppDispatch()
   return (
     <div className="SkillInc AttrItem FormDF">
       <span className="KeyName">
         스증(장비)
-        <button onClick={() => dispatch(AddSkillInc())}>
+        <button onClick={() => dispatch(AddMyCaliSkillInc())}>
           <PlusCircle width={16} height={16} />
         </button>
       </span>
       <SkillIncValues>
         {sk_inc.map((v, i) => {
           return <DisposableInput key={i} index={i} value={v}
-            update={nv => dispatch(SetSkillInc([i, nv]))}
-            del={() => dispatch(RemoveSkillInc(i))}
+            update={nv => dispatch(SetMyCaliSkillInc([i, nv]))}
+            del={() => dispatch(DeleteMyCaliSkillInc(i))}
           />
         })}
       </SkillIncValues>
@@ -124,12 +117,12 @@ function SkillInc() {
 
 export function EditEltype() {
   const dispatch = useAppDispatch()
-  const calibrateEltypes = useAppSelector(state => state.My.Calibrate.eltype)
+  const { eltype: calibrateEltypes } = useAppSelector(selectCalibrate)
   return  (
   <CheckboxGroup name="공격속성" 
     labels={["화", "수", "명", "암"]}
     values={["Fire", "Ice", "Light", "Dark"]}
-    value={calibrateEltypes} dispatcher={(el, on) => dispatch(SetEltype([el, on]))}
+    value={calibrateEltypes} dispatcher={(el, on) => dispatch(SetMyCaliEltype([el, on]))}
   />
   )
 }

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { useAppDispatch, useAppSelector } from '../../feats/hooks'
 import { selectMyDFClass, selectMyName } from '../../feats/selector/selfSelectors'
-import { SetDFClass, SetMyName } from '../../feats/slices/mycharSlice'
+import { SetMyDFClass, SetMyName } from '../../feats/slices/mycharSlice'
 import { PortraitMode } from '../../responsiveContext'
 import { DFClassIcon } from '../widgets/Icons'
 
@@ -48,7 +48,7 @@ export function DFClassModal() {
       <div className="ModalMenuScrollable">
       <DFClassLayout columns={portrait? 4 : 8}>
       {dfclassOrder.map((name) => 
-        <DFClassIcon key={name} dfclassName={name} onClick={() => dispatch(SetDFClass(name))} />
+        <DFClassIcon key={name} dfclassName={name} onClick={() => dispatch(SetMyDFClass(name))} />
       )}
       </DFClassLayout>
       </div>

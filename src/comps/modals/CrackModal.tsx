@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { useAppDispatch, useAppSelector } from '../../feats/hooks'
 import { selectClassAtype } from '../../feats/selector/selfSelectors'
-import { SetItem, SetSpellAll } from '../../feats/slices/mycharSlice'
+import { SetMyItem, SetMySpellAll } from '../../feats/slices/mycharSlice'
 import { getCracksOnly } from '../../items'
 import { LabeledSwitch } from '../widgets/Forms'
 import { CurrentPart } from './CurrentPart'
@@ -16,7 +16,7 @@ export function RuneModalFragment() {
   const items = getCracksOnly("봉인석", atype)
   const dispatch = useAppDispatch()
   const onClick = useCallback((name: string) => {
-    dispatch(SetItem(["봉인석", name]))
+    dispatch(SetMyItem(["봉인석", name]))
     closeModal()
   }, [])
   return (
@@ -45,9 +45,9 @@ export function SpellModalFragment({ index }: { index: number }) {
   const items = getCracksOnly("정수", atype)
   const dispatch = useAppDispatch()
   const onClick = useCallback((name: string) => {
-    if (all) dispatch(SetSpellAll(name))
+    if (all) dispatch(SetMySpellAll(name))
     // else dispatch(SetSpell([index as number, name]))
-    else dispatch(SetItem(['정수', index, name]))
+    else dispatch(SetMyItem(['정수', index, name]))
     closeModal()
   }, [index, all])
   return (

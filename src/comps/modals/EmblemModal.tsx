@@ -3,7 +3,7 @@ import { useCallback, useContext, useState } from 'react'
 import { acceptEmblem } from '../../emblem'
 import { useAppDispatch, useAppSelector } from '../../feats/hooks'
 import { selectEmblemSpecs } from '../../feats/selector/equipSelectors'
-import { SetEmblem } from '../../feats/slices/mycharSlice'
+import { SetMyEmblem } from '../../feats/slices/mycharSlice'
 import { getEmblemSocketType } from '../../items'
 import { NumberInput } from '../widgets/Forms'
 import { EmblemIcon } from '../widgets/Icons'
@@ -15,7 +15,7 @@ function EmblemSelect({ part, index, type, level }: { part: CardablePart, index:
   const accept = acceptEmblem(part)
   const dispatch = useAppDispatch()
   const onClick = useCallback(() => {
-    dispatch(SetEmblem([part, index, type, level]))
+    dispatch(SetMyEmblem([part, index, type, level]))
     closeModal()
   }, [part, index, type, level])
   return (

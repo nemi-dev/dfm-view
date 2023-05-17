@@ -9,7 +9,7 @@ import _left from '../../../data/sets/left.json'
 import _right from '../../../data/sets/right.json'
 import { useAppDispatch, useAppSelector } from '../../feats/hooks'
 import { selectMyDFClass } from '../../feats/selector/selfSelectors'
-import { FetchItems, SetItem } from '../../feats/slices/mycharSlice'
+import { FetchMyItems, SetMyItem } from '../../feats/slices/mycharSlice'
 import {
     equipParts, getCircus2Items, getItem, getItemsByPart, isAccess, isArmor, isEquip, party
 } from '../../items'
@@ -21,6 +21,9 @@ import { ItemSizeDefiner } from './CommonModalComps'
 import { CurrentPart, mainItemSelector } from './CurrentPart'
 import { ModalContext } from './modalContext'
 import { ModalItemSelect } from './Select'
+import { selectDFChar } from '../../feats/selector/selectors'
+import { RootState } from '../../feats/store'
+import { createSelector } from '@reduxjs/toolkit'
 
 type EquipShotgun = Partial<Pick<ItemsState, EquipPart>>
 
@@ -119,7 +122,7 @@ function SingleItemList({ part }: { part: WholePart }) {
   const myDFclass = useAppSelector(selectMyDFClass)
 
   const onClick = useCallback((item: DFItem) => {
-    dispatch(SetItem([part as EquipPart | "칭호" | "오라" | "무기아바타", item.name]))
+    dispatch(SetMyItem([part as EquipPart | "칭호" | "오라" | "무기아바타", item.name]))
     closeModal()
   }, [part])
 
@@ -172,12 +175,17 @@ const Circus2ListInnerLayout = styled.div`
   }
 `
 
+const selectEquipMainItems = createSelector(
+  selectDFChar,
+  (dfchar) =>  equipParts.map(part => getItem(dfchar.Item[part]))
+)
+
 function Circus2List() {
   const { closeModal } = useContext(ModalContext)
   const dispatch = useAppDispatch()
   const myDFClass = useAppSelector(selectMyDFClass)
   const collection = getCircus2Items(myDFClass.name)
-  const currentItems = equipParts.map(part => useAppSelector(state => state.My.Item[part])).map(name => getItem(name))
+  const currentItems = useAppSelector(selectEquipMainItems)
 
   const [shotgun, setShotgun] = useState<EquipShotgun>(currentItems.reduce((sh, item) => 
     (sh[party(item.itype)] = item.name, sh)
@@ -194,7 +202,7 @@ function Circus2List() {
   }, [shotgun])
 
   const apply = useCallback(() => {
-    dispatch(FetchItems(shotgun))
+    dispatch(FetchMyItems(shotgun))
     closeModal()
   }, [shotgun])
 
@@ -246,7 +254,7 @@ function EquipShotgunTab({ item, onClick }: { item: IsetCatalog, onClick: MouseE
   const { name, items, useThisForPayload } = item
   const dispatch = useAppDispatch()
   return (
-    <EquipShotgunStyle className="EquipShotgun" onClick={() => { dispatch(FetchItems(useThisForPayload)); closeModal() }}>
+    <EquipShotgunStyle className="EquipShotgun" onClick={() => { dispatch(FetchMyItems(useThisForPayload)); closeModal() }}>
       <div className="IsetName">{name}</div>
       <div className="IsetIconArray">
       {items.map((item) => (

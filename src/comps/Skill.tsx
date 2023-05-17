@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import { useAppSelector } from "../feats/hooks"
-import { selectClassASkills, selectClassAtype, selectMyLevel } from "../feats/selector/selfSelectors"
+import { selectClassASkills, selectClassAtype, selectMyAtkFixed, selectMyLevel } from "../feats/selector/selfSelectors"
 import { bindSkill, getMaxSkillLevelAt } from "../skills"
 import { selectEnemyDefRate, selectEnemyElRes, selectMyAttr, selectMyCritChance } from "../feats/selector/selectors"
 import { Num } from "./widgets/NumberView"
@@ -59,7 +59,7 @@ function SkillDamage({ skill, attacks }: { skill: AttackSkill, attacks: RealOneA
 
   const atype = useAppSelector(selectClassAtype)
   const attrs = useAppSelector(selectMyAttr)
-  const atkFix = useAppSelector(state => state.My.Self.atkFixed)
+  const atkFix = useAppSelector(selectMyAtkFixed)
   const chance = useAppSelector(selectMyCritChance)
 
   /** 일단 나한테 달려있는 모든 속성부여들 (가장 높은 속성강화 그런거 아직 적용안함) */

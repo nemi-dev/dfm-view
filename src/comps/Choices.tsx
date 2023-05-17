@@ -2,20 +2,21 @@ import { ErrorBoundary } from 'react-error-boundary'
 import styled from 'styled-components'
 
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
-import { SetBranch, SetExclusive, SetGives } from '../feats/slices/mycharSlice'
+import { SetMyChoiceOfBranch, SetMyChoiceOfExclusive, SetMyChoiceOfGives } from '../feats/slices/mycharSlice'
 import { createCondyceKey2, createExclusiveKey2, getActiveISets } from '../items'
 import { SimpleBaseAttrView } from './widgets/AttrsView'
 import { LabeledNumberInput, LabeledSwitch, RadioGroup } from './widgets/Forms'
+import { selectMyChoice } from '../feats/selector/selectors'
 
 interface LeafViewProps {
   itemKey: string
   node: ConditionalNode
   what: "branches" | "gives"
-  Action: (typeof SetBranch | typeof SetGives)
+  Action: (typeof SetMyChoiceOfBranch | typeof SetMyChoiceOfGives)
 }
 function LeafView({ itemKey, node, what, Action }: LeafViewProps) {
   const dispatch = useAppDispatch()
-  const value = useAppSelector(state => state.My.Choice[what][itemKey] ?? 0)
+  const value = useAppSelector(state => selectMyChoice(state)[what][itemKey] ?? 0)
   const maxValue = node.maxRepeat ?? 1
   const pick = node.pick
   if (maxValue === 1) {
@@ -55,7 +56,7 @@ const CondyceTypesStyle = styled.div`
 
 function BranchOrGivesView({ name, nodes, what }: BrachViewProps) {
   if (!nodes) return null
-  const Action = what === "branches" ? SetBranch : SetGives
+  const Action = what === "branches" ? SetMyChoiceOfBranch : SetMyChoiceOfGives
   return (
     <ErrorBoundary fallback={<>이런! 이 조건부 옵션에 문제가 있나봐요. 개발자에게 알려주세요!</>}>
       <CondyceTypesStyle>
@@ -71,10 +72,10 @@ function BranchOrGivesView({ name, nodes, what }: BrachViewProps) {
 
 function ExclusiveNodeView({ prefix, node }: { prefix: string, node: ExclusiveSet }) {
   const dispatch = useAppDispatch()
-  const value = useAppSelector(state => state.My.Choice.exclusives[prefix])
+  const value = useAppSelector(state => selectMyChoice(state).exclusives[prefix])
   const values = node.children.map(n => n.pick)
   return <RadioGroup groupName={node.pickSet} name={prefix} values={values} value={value}
-    dispatcher={val => dispatch(SetExclusive([prefix, val]))}
+    dispatcher={val => dispatch(SetMyChoiceOfExclusive([prefix, val]))}
   />
 }
 

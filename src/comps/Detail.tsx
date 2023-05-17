@@ -1,12 +1,14 @@
-import { useState } from "react"
-import { AttrDef, attrDefs } from "../attrs"
-import { useAppSelector } from "../feats/hooks"
-import { selectMe } from "../feats/selector/selectors"
-import { CombineItems, Interpolate } from "../items"
-import { AttrItem, SimpleBaseAttrView } from "./widgets/AttrsView"
-import { RadioGroup } from "./widgets/Forms"
-import { ErrorBoundary, FallbackProps } from "react-error-boundary"
-import styled from "styled-components"
+import { useState } from 'react'
+import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
+import styled from 'styled-components'
+
+import { AttrDef, attrDefs } from '../attrs'
+import { useAppSelector } from '../feats/hooks'
+import { selectMyChoice, selectMySource } from '../feats/selector/selectors'
+import { CombineItems, Interpolate } from '../items'
+import { AttrItem, SimpleBaseAttrView } from './widgets/AttrsView'
+import { RadioGroup } from './widgets/Forms'
+
 
 const Row = styled.div`
   display: flex;
@@ -67,7 +69,7 @@ function SourceGroupErrorView({ error, resetErrorBoundary }: FallbackProps) {
 }
 
 function SourceGroupView() {
-  const sources = useAppSelector(selectMe)
+  const sources = useAppSelector(selectMySource)
   return (
     <ErrorBoundary FallbackComponent={SourceGroupErrorView}>
       {sources.map((source, index) => {
@@ -97,8 +99,8 @@ const AttrGroupStyle = styled.div`
 `
 
 function AttrGroupView() {
-  const sources = useAppSelector(selectMe)
-  const choice = useAppSelector(state => state.My.Choice)
+  const sources = useAppSelector(selectMySource)
+  const choice = useAppSelector(selectMyChoice)
   const interpolated = Interpolate(sources, choice)
   const myAttr = CombineItems(sources, choice)
   return (

@@ -4,10 +4,11 @@ import { AtypeAttrKey, perfectGuild } from '../constants'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import {
     selectGuildAccu, selectGuildAtk, selectGuildCrit, selectGuildSpeedAtk, selectGuildStat,
-    selectGuildStatPublic
+    selectGuildStatPublic,
+    selectGuildState
 } from '../feats/selector/guildSelectors'
 import { selectClassAtype } from '../feats/selector/selfSelectors'
-import { PerfectGuild, SetGuild } from '../feats/slices/mycharSlice'
+import { PerfectMyGuild, SetMyGuildBuffLevel } from '../feats/slices/mycharSlice'
 import { RootState } from '../feats/store'
 import { SimpleBaseAttrView } from './widgets/AttrsView'
 import { LabeledNumberInput } from './widgets/Forms'
@@ -103,7 +104,7 @@ function GuildPropOne({ label, value, target, src, max, selector }: GuildsInputP
   return (
     <div className="GuildPropOne">
       <img src={src} alt={label} />
-      <LabeledNumberInput label={label + "Lv."} value={value} min={0} max={max} step={1}  onChange={v => dispatch(SetGuild([target, v]))} />
+      <LabeledNumberInput label={label + "Lv."} value={value} min={0} max={max} step={1}  onChange={v => dispatch(SetMyGuildBuffLevel([target, v]))} />
       <div className="AttrOut">
         <SimpleBaseAttrView attrs={attr} />
       </div>
@@ -113,7 +114,7 @@ function GuildPropOne({ label, value, target, src, max, selector }: GuildsInputP
 
 export function Guilds() {
   const dispatch = useAppDispatch()
-  const guildState = useAppSelector(state => state.My.Guild)
+  const guildState = useAppSelector(selectGuildState)
   const atype = useAppSelector(selectClassAtype)
   const { StatLv, AtkLv, CritLv, ElLv, SpeedAtkLv, AccuLv, PublicStatLv } = guildState
   const { Stat: keyStat, Atk: keyAtk, Crit: keyCrit, 스탯, 타입 } = AtypeAttrKey[atype]
@@ -139,7 +140,7 @@ export function Guilds() {
       </GuildLayout>
       {!perfect?
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center"}}>
-        <button onClick={() => dispatch(PerfectGuild())}>개인 길드버프 최대로</button>
+        <button onClick={() => dispatch(PerfectMyGuild())}>개인 길드버프 최대로</button>
       </div> : null}
     </div>
   )

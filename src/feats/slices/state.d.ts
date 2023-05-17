@@ -247,11 +247,9 @@ declare interface EnemyTargetState {
 }
 
 declare interface SavedChar {
-  
   id: string
   TimeStamp: number
   DFChar: DFCharState
-  DamageGrab: number
 }
 
 declare interface EquipPreset {
