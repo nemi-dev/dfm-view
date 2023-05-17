@@ -1,14 +1,19 @@
-import styled from "styled-components"
-import { useAppSelector } from "../feats/hooks"
-import { selectClassASkills, selectClassAtype, selectMyAtkFixed, selectMyLevel } from "../feats/selector/selfSelectors"
-import { bindSkill, getMaxSkillLevelAt } from "../skills"
-import { selectEnemyDefRate, selectEnemyElRes, selectMyAttr, selectMyCritChance } from "../feats/selector/selectors"
-import { Num } from "./widgets/NumberView"
-import { critFt, getSkillDamage } from "../damage"
-import { whatElType } from "../attrs"
-import { add } from "../utils"
-import { useState } from "react"
-import { ErrorBoundary, FallbackProps } from "react-error-boundary"
+import { useState } from 'react'
+import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
+import styled from 'styled-components'
+
+import { whatElType } from '../attrs'
+import { critFt, getSkillDamage } from '../damage'
+import { useAppSelector } from '../feats/hooks'
+import {
+  selectClassASkills, selectClassAtype, selectMyAtkFixed, selectMyLevel
+} from '../feats/selector/baseSelectors'
+import {
+  selectEnemyDefRate, selectEnemyElRes, selectMyAttr, selectMyCritChance
+} from '../feats/selector/selectors'
+import { bindSkill, getMaxSkillLevelAt } from '../skills'
+import { add } from '../utils'
+import { Num } from './widgets/NumberView'
 
 function union<T>(a: T[], b: T[]) {
   return [...a, ...b].reduce((v, i) => {

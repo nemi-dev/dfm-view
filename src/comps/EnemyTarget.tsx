@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useAppSelector, useAppDispatch } from "../feats/hooks";
 import { selectBaseEnemyDefense, selectBaseEnemyElRes, selectEnemyDefense, selectEnemyElRes } from "../feats/selector/selectors";
-import { SetEnemyDefense, SetEnemyResist } from "../feats/slices/slice";
+import { SetEnemyDefense, SetEnemyResist } from "../feats/slices/slicev5";
 import { Gridy } from "./widgets/CommonUI";
 import { LabeledNumberInput } from "./widgets/Forms";
 import { Num } from "./widgets/NumberView";

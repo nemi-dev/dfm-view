@@ -1,7 +1,7 @@
 import { perfectGuild } from "../../constants"
 
 
-export const customSkillInit: CustomSkillOneAttackSpec[] = [
+export const initCustomSkill: CustomSkillOneAttackSpec[] = [
   {
     name: "평타",
     value: 300,
@@ -49,7 +49,7 @@ export const customSkillInit: CustomSkillOneAttackSpec[] = [
 ]
 
 
-const state: DFCharState = {
+const initCharState: DFCharState = {
   "Self": {
     "myName": "캐릭터 이름",
     "dfclass": "레인저(남)",
@@ -175,4 +175,4 @@ const state: DFCharState = {
   }
 }
 
-export default state
+export default initCharState

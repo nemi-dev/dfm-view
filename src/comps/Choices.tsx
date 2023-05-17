@@ -2,11 +2,11 @@ import { ErrorBoundary } from 'react-error-boundary'
 import styled from 'styled-components'
 
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
-import { SetMyChoiceOfBranch, SetMyChoiceOfExclusive, SetMyChoiceOfGives } from '../feats/slices/mycharSlice'
+import { SetMyChoiceOfBranch, SetMyChoiceOfExclusive, SetMyChoiceOfGives } from '../feats/slices/slicev5'
 import { createCondyceKey2, createExclusiveKey2, getActiveISets } from '../items'
 import { SimpleBaseAttrView } from './widgets/AttrsView'
 import { LabeledNumberInput, LabeledSwitch, RadioGroup } from './widgets/Forms'
-import { selectMyChoice } from '../feats/selector/selectors'
+import { selectMyChoice } from '../feats/selector/baseSelectors'
 
 interface LeafViewProps {
   itemKey: string

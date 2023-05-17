@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { selectRareAvatarCount, selectUncommonAvatarCount } from '../feats/selector/avatarSelectors'
-import { SetMyAvatarRarity, SetMyAvatarRarityAll } from '../feats/slices/mycharSlice'
+import { SetMyAvatarRarity, SetMyAvatarRarityAll } from '../feats/slices/slicev5'
 import { PortraitMode } from '../responsiveContext'
 import { SquareIcon } from './widgets/Icons'
 import { RootState } from '../feats/store'

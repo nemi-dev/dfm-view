@@ -1,7 +1,7 @@
 import { useCallback, useContext, useMemo } from 'react'
 
 import { useAppDispatch } from '../../feats/hooks'
-import { SetMyItem } from '../../feats/slices/mycharSlice'
+import { SetMyItem } from '../../feats/slices/slicev5'
 import { getItemsByPart } from '../../items'
 import { ItemSizeDefiner } from './CommonModalComps'
 import { CurrentPart } from './CurrentPart'

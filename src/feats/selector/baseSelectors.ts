@@ -1,8 +1,27 @@
 import { createSelector } from "@reduxjs/toolkit"
+import { RootState } from "../store"
 import { atx } from "../../attrs"
 import { whois } from "../../dfclass"
-import { getSelfSkill, getSkill } from "../../skills"
-import { selectDFChar } from "./selectors"
+import { getSkill, getSelfSkill } from "../../skills"
+
+/** 
+ * 두 번째 것이 유효하다면 두 번째 것을 그대로 리턴한다.
+ * 그렇지 않다면 현재 열린 캐릭터의 ID를 얻는다.
+ */
+export function forwardID(state: RootState, id = state.currentID) {
+  return id || state.currentID
+}
+
+/** 저장된 캐릭터를 선택한다. */
+export function selectDFChar(state: RootState, id = state.currentID) {
+  return state.SavedChars.byID[id].DFChar
+}
+
+/** 내가 활성화한 조건부를 모두 선택한다. */
+export const selectMyChoice = createSelector(
+  selectDFChar, dfchar => dfchar.Choice
+)
+
 
 /** 캐릭터 이름을 선택한다. */
 export const selectMyName = createSelector(selectDFChar, dfchar => dfchar.Self.myName)

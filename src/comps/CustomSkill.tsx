@@ -1,19 +1,19 @@
 import styled from 'styled-components'
 
+import { whatElType } from '../attrs'
 import { AtypeAttrKey, Elemental } from '../constants'
 import { critFt, dmg } from '../damage'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
+import { selectClassAtype } from '../feats/selector/baseSelectors'
 import {
-    selectEnemyDefRate, selectEnemyElRes, selectMyAttr, selectMyCritChance,
+    selectEnemyDefRate, selectEnemyElRes, selectMyAttr, selectMyCritChance
 } from '../feats/selector/selectors'
-import { selectClassAtype } from '../feats/selector/selfSelectors'
 import {
     SetSkillFixValue, SetSkillInputName, SetSkillMaxHit, SetSkillUsesSkillInc, SetSkillValue
-} from '../feats/slices/slice'
+} from '../feats/slices/slicev5'
 import { add } from '../utils'
 import { LabeledNumberInput, LabeledSwitch } from './widgets/Forms'
 import { Num } from './widgets/NumberView'
-import { whatElType } from '../attrs'
 
 /** (옵션버전) 스탯 + 스탯증가 + 공격력 + 공격력증가 + 데미지증가 + 추가데미지 + 속성강화 + 적 속성저항 + 속성추뎀 + 평타/스킬계수 + 스킬공격력 증가가 적용된 데미지  
  * (크리티컬 빼고 모든게 적용됨)

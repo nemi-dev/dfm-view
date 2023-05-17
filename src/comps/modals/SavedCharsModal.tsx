@@ -1,14 +1,13 @@
 import { useCallback, useContext, useEffect } from "react"
 import styled from "styled-components"
 import { useAppDispatch, useAppSelector } from "../../feats/hooks"
-import { CloneDF, CreateDF, DeleteDFChar, LoadDF, SaveDF } from "../../feats/saveReducers"
+import { CloneDF, CreateDF, DeleteDFChar, LoadDF } from "../../feats/slices/slicev5"
 import { RootState } from "../../feats/store"
 import { equipParts, getItem } from "../../items"
 import { ModalContext } from "./modalContext"
 import { DFClassIcon, ItemIcon } from "../widgets/Icons"
-import { Num } from "../widgets/NumberView"
 import { PlusCircle, Copy, Trash2, Download, ChevronUp, ChevronDown } from "react-feather"
-import { MoveDFCharDown, MoveDFCharUp } from "../../feats/slices/slice"
+import { MoveDFCharDown, MoveDFCharUp } from "../../feats/slices/slicev5"
 
 
 function selectSavedChars(state: RootState) {
@@ -190,9 +189,6 @@ export function SavedCharsFragment () {
   const dupCharClick = useCallback(() => {
     dispatch(CloneDF())
     closeModal()
-  }, [])
-  useEffect(() => {
-    dispatch(SaveDF())
   }, [])
   return (
     <SavedCharsFragmentLayout>

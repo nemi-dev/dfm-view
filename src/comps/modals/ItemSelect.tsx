@@ -5,11 +5,13 @@ import {
 } from 'react'
 import styled from 'styled-components'
 
+import { createSelector } from '@reduxjs/toolkit'
+
 import _left from '../../../data/sets/left.json'
 import _right from '../../../data/sets/right.json'
 import { useAppDispatch, useAppSelector } from '../../feats/hooks'
-import { selectMyDFClass } from '../../feats/selector/selfSelectors'
-import { FetchMyItems, SetMyItem } from '../../feats/slices/mycharSlice'
+import { selectDFChar, selectMyDFClass } from '../../feats/selector/baseSelectors'
+import { FetchMyItems, SetMyItem } from '../../feats/slices/slicev5'
 import {
     equipParts, getCircus2Items, getItem, getItemsByPart, isAccess, isArmor, isEquip, party
 } from '../../items'
@@ -21,9 +23,6 @@ import { ItemSizeDefiner } from './CommonModalComps'
 import { CurrentPart, mainItemSelector } from './CurrentPart'
 import { ModalContext } from './modalContext'
 import { ModalItemSelect } from './Select'
-import { selectDFChar } from '../../feats/selector/selectors'
-import { RootState } from '../../feats/store'
-import { createSelector } from '@reduxjs/toolkit'
 
 type EquipShotgun = Partial<Pick<ItemsState, EquipPart>>
 

@@ -2,13 +2,13 @@ import React, { useContext } from 'react'
 import styled from 'styled-components'
 
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
-import { SetMyAchieveLevel, SetMyAtkFixed, SetMyLevel } from '../feats/slices/mycharSlice'
+import { SetMyAchieveLevel, SetMyAtkFixed, SetMyLevel } from '../feats/slices/slicev5'
 import { PortraitMode } from '../responsiveContext'
 import { Avatars } from './Avatar'
 import { Guilds } from './Guilds'
 import { Tonic } from './Tonic'
 import { LabeledNumberInput } from './widgets/Forms'
-import { selectMyAchievementLevel, selectMyAtkFixed, selectMyLevel } from '../feats/selector/selfSelectors'
+import { selectMyAchievementLevel, selectMyAtkFixed, selectMyLevel } from '../feats/selector/baseSelectors'
 
 const GridyTwo = styled.div`
   display: grid;

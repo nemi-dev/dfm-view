@@ -7,8 +7,8 @@ import {
     selectGuildStatPublic,
     selectGuildState
 } from '../feats/selector/guildSelectors'
-import { selectClassAtype } from '../feats/selector/selfSelectors'
-import { PerfectMyGuild, SetMyGuildBuffLevel } from '../feats/slices/mycharSlice'
+import { selectClassAtype } from '../feats/selector/baseSelectors'
+import { PerfectMyGuild, SetMyGuildBuffLevel } from '../feats/slices/slicev5'
 import { RootState } from '../feats/store'
 import { SimpleBaseAttrView } from './widgets/AttrsView'
 import { LabeledNumberInput } from './widgets/Forms'

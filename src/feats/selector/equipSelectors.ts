@@ -3,14 +3,13 @@ import { createSelector } from '@reduxjs/toolkit'
 import { atx, combine } from '../../attrs'
 import { getEmblem } from '../../emblem'
 import {
-  armorParts, cardableParts, equipParts, getActiveISets, getArmor, getItem, getMaxEmblemCount,
-  isArmor, magicPropsParts, singleItemParts
+    armorParts, cardableParts, equipParts, getActiveISets, getArmor, getItem, getMaxEmblemCount,
+    isArmor, magicPropsParts, singleItemParts
 } from '../../items'
 import { getMagicPropsAttrs } from '../../magicProps'
-import { selectClassAtype } from './selfSelectors'
+import { selectClassAtype, selectDFChar } from './baseSelectors'
 
 import type { RootState } from "../store"
-import { selectDFChar } from './selectors'
 
 /** Redux Selector를 무진장 찍어낸다 */
 export function Paw<T, P extends string>(func: ($p: P) => (s: RootState, id?: string) => T, parts: (P[] | readonly P[])): {

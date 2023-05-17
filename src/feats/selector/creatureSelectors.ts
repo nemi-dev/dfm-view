@@ -4,9 +4,8 @@ import { createSelector } from '@reduxjs/toolkit'
 
 import { atx, combine } from '../../attrs'
 import { getActiveISets, getItem } from '../../items'
-import { RootState } from '../store'
+import { selectDFChar } from './baseSelectors'
 import { selectItem } from './equipSelectors'
-import { selectDFChar } from './selectors'
 
 /** 아티팩트 하나를 선택한다 */
 export const selectArtifact = memoizee(

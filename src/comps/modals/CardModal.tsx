@@ -2,7 +2,7 @@ import { useCallback, useContext, useState } from 'react'
 import styled from 'styled-components'
 
 import { useAppDispatch } from '../../feats/hooks'
-import { SetMyCard, SetMyCardsAllPossible } from '../../feats/slices/mycharSlice'
+import { SetMyCard, SetMyCardsAllPossible } from '../../feats/slices/slicev5'
 import { getCardsForPart } from '../../items'
 import { LabeledSwitch } from '../widgets/Forms'
 import { ItemIcon } from '../widgets/Icons'

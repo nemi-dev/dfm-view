@@ -6,11 +6,11 @@ import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import {
     selectCustomMaterial, selectEmblemSpecs, selectUpgradeValue
 } from '../feats/selector/equipSelectors'
-import { selectClassAtype } from '../feats/selector/selfSelectors'
+import { selectClassAtype } from '../feats/selector/baseSelectors'
 import {
     SetMyAccessUpgradeAll, SetMyArmorUpgradeAll, SetMyEmblemLevelAll, SetMyMaterialAll,
     PerfectMyMagicPropsEl, PerfectMyMagicProps
-} from '../feats/slices/mycharSlice'
+} from '../feats/slices/slicev5'
 import { accessParts, armorParts, oneEmblemParts } from '../items'
 import { LabeledNumberInput, OneClickButtonGroup, RadioGroup } from './widgets/Forms'
 

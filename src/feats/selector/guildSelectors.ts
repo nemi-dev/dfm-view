@@ -2,8 +2,7 @@ import { createSelector } from "@reduxjs/toolkit"
 import { combine } from "../../attrs"
 import { RootState } from "../store"
 import { GuildAccu, GuildAtk, GuildCrit, GuildEl, GuildSpeedAtk, GuildStat, GuildStatPublic } from "../../guild"
-import { selectClassAtype } from "./selfSelectors"
-import { selectDFChar } from "./selectors"
+import { selectDFChar, selectClassAtype } from "./baseSelectors"
 
 export const selectGuildState = createSelector(
   selectDFChar, dfchar => dfchar.Guild

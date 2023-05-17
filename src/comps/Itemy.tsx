@@ -4,13 +4,13 @@ import { createSelector } from '@reduxjs/toolkit'
 
 import { acceptEmblem } from '../emblem'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
+import { selectDFChar } from '../feats/selector/baseSelectors'
 import {
     selectCard, selectCustomMaterial, selectEmblemSpecs, selectItem, selectUpgradeValue
 } from '../feats/selector/equipSelectors'
-import { selectDFChar } from '../feats/selector/selectors'
 import {
     DecreaseMyEmblemLevel, SetMyArtifactValue, SetMyCreatureStat, SetMyMaterial, SetMyUpgradeValue
-} from '../feats/slices/mycharSlice'
+} from '../feats/slices/slicev5'
 import { getMaxEmblemCount, isArmor, isCardable, isEquip } from '../items'
 import { CardModalFragment } from './modals/CardModal'
 import { EmblemModal } from './modals/EmblemModal'

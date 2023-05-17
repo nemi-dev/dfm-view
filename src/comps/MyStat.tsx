@@ -7,10 +7,10 @@ import { AtypeAttrKey, Elemental } from '../constants'
 import { AtkOut, critChance, StatOut } from '../damage'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { selectCalibrate, selectMyAttr, selectMyAttrTown, selectMyFinalEltype } from '../feats/selector/selectors'
-import { selectClassAtype } from '../feats/selector/selfSelectors'
+import { selectClassAtype } from '../feats/selector/baseSelectors'
 import {
   AddMyCaliSkillInc, DeleteMyCaliSkillInc, SetMyCaliSingleAttr, SetMyCaliEltype, SetMyCaliSkillInc
-} from '../feats/slices/mycharSlice'
+} from '../feats/slices/slicev5'
 import { add } from '../utils'
 import { Gridy } from './widgets/CommonUI'
 import { CheckboxGroup, DisposableInput, LabeledSwitch, NumberInput } from './widgets/Forms'

@@ -5,33 +5,18 @@ import { AtypeAttrKey } from '../../constants'
 import { critChance, critFt, defRate, getPlainDamage, getRealdef } from '../../damage'
 import { CombineItems } from '../../items'
 import { add, compound } from '../../utils'
-import { selectAvatars } from './avatarSelectors'
+import {
+  selectRareAvatarSetActive, selectUncommonAvatarSetActive, selectWearAvatarsCombined
+} from './avatarSelectors'
+import {
+  selectAchBonus, selectClassAtype, selectDFChar, selectMyChoice, selectMyDFClass, selectMyLevel
+} from './baseSelectors'
 import { selectCracks } from './cracksSelectors'
 import { selectCreatureAndArtis } from './creatureSelectors'
-import { selectEquips } from './equipSelectors'
+import { selectCard, selectEmblems, selectEquips, selectItem } from './equipSelectors'
 import { selectGuilds } from './guildSelectors'
-import { selectAchBonus, selectClassAtype, selectMyDFClass, selectMyLevel } from './selfSelectors'
 
 import type { RootState } from "../store"
-
-/** 
- * 두 번째 것이 유효하다면 두 번째 것을 그대로 리턴한다.
- * 그렇지 않다면 현재 열린 캐릭터의 ID를 얻는다.
- */
-export function forwardID(state: RootState, id = state.currentID) {
-  return id || state.currentID
-}
-
-/** 저장된 캐릭터를 선택한다. */
-export function selectDFChar(state: RootState, id = state.currentID) {
-  return state.SavedChars.byID[id].DFChar
-}
-
-/** 내가 활성화한 조건부를 모두 선택한다. */
-export const selectMyChoice = createSelector(
-  selectDFChar, dfchar => dfchar.Choice
-)
-
 /** 마력결정 스탯보너스를 모두 얻는다. */
 export function selectTonics(state: RootState): AttrSource {
   const { el_all, hpmax, mpmax, strn_intl, vit_psi, def_ph, def_mg, Crit, Accu } = state.Tonic
@@ -69,6 +54,39 @@ export const selectCaliSource = createSelector(
       }
     }
   }
+)
+
+
+
+/** 칭호를 장착 중일 때, 그 칭호 + 칭호에 박은 보주 + 엠블렘을 선택한다. */
+export const selectDFTitleTown = createSelector(
+  selectItem["칭호"],
+  selectCard["칭호"],
+  selectEmblems["칭호"],
+  (dftitle, card, emblem): AttrSource[] => {
+    if (!dftitle) return []
+    return [dftitle, card, ...emblem]
+  }
+)
+
+
+/** 칭호+오라+무기아바타+다른 아바타 효과+아바타 세트효과를 모두 선택한다. */
+export const selectAvatars = createSelector(
+  selectDFTitleTown,
+  selectWearAvatarsCombined,
+  selectRareAvatarSetActive,
+  selectUncommonAvatarSetActive,
+  selectItem["무기아바타"],
+  selectItem["오라"],
+  (dftitle, wears, asetRare, asetUnco, weaponAvatar, aura) => 
+  [
+    ...dftitle,
+    aura,
+    weaponAvatar,
+    wears,
+    asetRare,
+    asetUnco
+  ]
 )
 
 

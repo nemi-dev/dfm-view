@@ -4,10 +4,11 @@ import styled from 'styled-components'
 
 import { AttrDef, attrDefs } from '../attrs'
 import { useAppSelector } from '../feats/hooks'
-import { selectMyChoice, selectMySource } from '../feats/selector/selectors'
+import { selectMySource } from '../feats/selector/selectors'
 import { CombineItems, Interpolate } from '../items'
 import { AttrItem, SimpleBaseAttrView } from './widgets/AttrsView'
 import { RadioGroup } from './widgets/Forms'
+import { selectMyChoice } from '../feats/selector/baseSelectors'
 
 
 const Row = styled.div`

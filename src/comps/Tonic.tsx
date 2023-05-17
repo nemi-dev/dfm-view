@@ -1,7 +1,7 @@
 import { useId } from 'react'
 import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
-import { SetTonic, SetTonicPerfect } from "../feats/slices/tonicSlice"
+import { SetTonic, PerfectifyTonic } from "../feats/slices/slicev5"
 import { NumberInput } from "./widgets/Forms"
 import { perfectTonic } from '../constants'
 
@@ -50,7 +50,7 @@ export function Tonic() {
         <TonicGem label="모든 속성 강화" target="el_all" image="Center" />
       </div>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <button onClick={() => dispatch(SetTonicPerfect())}>마력결정 최대로</button>
+        <button onClick={() => dispatch(PerfectifyTonic())}>마력결정 최대로</button>
       </div>
     </TonicStyle>
   )

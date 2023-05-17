@@ -2,8 +2,8 @@ import { useContext } from 'react'
 import styled from 'styled-components'
 
 import { useAppDispatch, useAppSelector } from '../../feats/hooks'
-import { selectMyDFClass, selectMyName } from '../../feats/selector/selfSelectors'
-import { SetMyDFClass, SetMyName } from '../../feats/slices/mycharSlice'
+import { selectMyDFClass, selectMyName } from '../../feats/selector/baseSelectors'
+import { SetMyDFClass, SetMyName } from '../../feats/slices/slicev5'
 import { PortraitMode } from '../../responsiveContext'
 import { DFClassIcon } from '../widgets/Icons'
 

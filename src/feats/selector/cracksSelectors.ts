@@ -4,7 +4,7 @@ import { createSelector } from '@reduxjs/toolkit'
 
 import { getActiveISets, getBlessing, getItem } from '../../items'
 import { selectItem, selectMagicProps } from './equipSelectors'
-import { selectDFChar } from './selectors'
+import { selectDFChar } from './baseSelectors'
 
 /** 특정 정수를 선택한다. */
 export const selectSpell = memoizee(
