@@ -24,7 +24,7 @@ function getCustomSkillDamage(
   atype: Atype,
   attrs: BaseAttrs,
   atkFix: number,
-  { value, fixed, isSkill = false, maxHit = 1 }: CustomSkillOneAttackSpec,
+  { value, fixed = value, isSkill = false, maxHit = 1 }: CustomSkillOneAttackSpec,
   targetElRes: number,
   defRate: number
 ) {
@@ -85,9 +85,10 @@ const SkillOneAttackLayout = styled.div`
 
 interface SkillInputOneProps extends CustomSkillOneAttackSpec {
   index: number
+  fixed?: number
 }
 
-function SkillOneAttack({ index, value, fixed, isSkill = false, maxHit = 1, name }: SkillInputOneProps) {
+function SkillOneAttack({ index, value, fixed = value, isSkill = false, maxHit = 1, name }: SkillInputOneProps) {
   const dispatch = useAppDispatch()
   return (
     <SkillOneAttackLayout className="SkillOneAttack">

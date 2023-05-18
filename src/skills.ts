@@ -79,5 +79,5 @@ export function bindSkill(
   const { sk_lv = {} } = attrs
   const sklvBonus = (sk_lv[sk.name] ?? 0)
 
-  return attacks?.map(at => bindSkillAttack(sk.name, at, baseSkLv + sklvBonus, chargeup, variant, attrs))
+  return attacks?.map(at => bindSkillAttack(sk.name, at, baseSkLv + sklvBonus, chargeup, variant, attrs)) ?? []
 }

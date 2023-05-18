@@ -136,7 +136,7 @@ interface SkillHeadingProps {
 }
 
 /** 공격스킬 헤드 부분 */
-function SkillHeading({ skName, baseSkLv, sklvBonus }: SkillHeadingProps) {
+function SkillHeading({ skName, baseSkLv, sklvBonus = 0 }: SkillHeadingProps) {
   return (
   <SkillHeadingStyle>
     <SkillName>{skName}</SkillName>
@@ -246,11 +246,11 @@ function AttackSkillChargeupCase({ skill }: SkillOneProps) {
 function AttackSkill({ skill }: SkillOneProps) {
   return (<>
     <AttackSkillPureCase skill={skill} />
-    {skill.variant?.length > 0?
-    skill.variant.map(va => 
+    {skill.variant?.length ?? 0 > 0?
+    skill.variant?.map(va => 
       <AttackSkillVariantCase key={va.vaName} skill={skill} variant={va.vaName} />
     ): null}
-    {skill.chargeup > 1?
+    {skill.chargeup ?? 1 > 1?
     <AttackSkillChargeupCase skill={skill} />
     : null}
   </>

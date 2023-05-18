@@ -23,7 +23,7 @@ export const selectClassAtype = createSelector(
 export const selectClassASkills = createSelector(
   selectMyDFClass,
   (dfclass) => {
-    return dfclass.skills?.map(skname => getSkill(skname)) ?? []
+    return dfclass.skills.map(skname => getSkill(skname)).filter(s => s != null) as AttackSkill[]
   }
 )
 
