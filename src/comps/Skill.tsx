@@ -141,7 +141,7 @@ interface SkillHeadingProps {
 }
 
 /** 공격스킬 헤드 부분 */
-function SkillHeading({ skName, baseSkLv, sklvBonus }: SkillHeadingProps) {
+function SkillHeading({ skName, baseSkLv, sklvBonus = 0 }: SkillHeadingProps) {
   return (
   <SkillHeadingStyle>
     <SkillName>{skName}</SkillName>
@@ -248,11 +248,10 @@ function AttackSkillChargeupCase({ skill }: SkillOneProps) {
     </AttackSkillStyle>
   )
 }
-
+/** 공격스킬과 그에 딸린 바리에이션, 풀충전시 데미지 수치를 렌더한다. */
 function SkillListContent() {
   const skills = useAppSelector(selectClassASkills)
   if (!(skills?.length > 0)) return <SkillNotImplemented />
-
   return <>
     {skills.map(skill => 
     <Fragment key={skill.name}>

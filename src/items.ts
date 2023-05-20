@@ -139,7 +139,7 @@ function getArmorBase(level: number, rarity: Rarity, material: ArmorMaterial, pa
  * 무기, 방어구, 악세서리, 보조장비, 카드, 칭호, 오라, 크리쳐, 아티팩트, 무기아바타, 봉인석, 정수 아이템을 얻는다.  
  * 엠블렘은 얻을 수 없다.
  */
-export const getItem = (key: number | string) => {
+export const getItem = (key: number | string | null | undefined) => {
   if (typeof key === "number") return _items_index_ID[key]
   else if (typeof key === "string") return _items_index_Name[key]
 }
@@ -171,9 +171,9 @@ function getCircus2Items(dfclassName: DFClassName) {
  * 
  * @param mat "내가 설정한" 방어구 재질. (환영극단 2막, 루프트하펜 등 재질이 고정된 방어구는 이 재질을 씹는다.)
  */
-export const getArmor: (name: string, mat: ArmorMaterial) => DFItem | undefined
+export const getArmor: (name: string | null | undefined, mat: ArmorMaterial) => DFItem | undefined
 = memoizee(
-  function getArmor(name: string, myMaterial: ArmorMaterial) {
+  function getArmor(name: string | null | undefined, myMaterial: ArmorMaterial) {
     const item = getItem(name)
     if (!item) return item
     const part = item.itype as ArmorPart

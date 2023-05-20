@@ -18,9 +18,12 @@ import { MiscScreen } from './Misc'
 import AppModal from './modals/index'
 import { ModalContext, ModalContextType } from './modals/modalContext'
 import { MyStat } from './MyStat'
-import { Skill } from './Skill'
 import { StickyNav } from './StickyNav'
 import { NavLink, Tab } from './widgets/Tab'
+import { Skill } from './Skill'
+import { ErrorBoundary } from 'react-error-boundary'
+import { CommonFallbackComponent } from './CommonFallbackComponent'
+
 
 function Navigator() {
   const portrait = useContext(PortraitMode)
@@ -99,6 +102,7 @@ function App() {
     <ModalContext.Provider value={modalContextValue}>
     <PortraitMode.Provider value={portrait}>
       <AppModal isOpen={isModalOpen}/>
+      <ErrorBoundary FallbackComponent={CommonFallbackComponent}>
       {lastIDs.length > 0 && rehydrated? <div className="App">
         <StickyNav />
         <div className="MainWrapper">
@@ -114,6 +118,8 @@ function App() {
         <Skill />
         <CustomSkillScreen />
       </div>: null}
+      {/* <Runner /> */}
+      </ErrorBoundary>
     </PortraitMode.Provider>
     </ModalContext.Provider>
     </TabContext.Provider>

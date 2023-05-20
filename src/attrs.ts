@@ -38,6 +38,11 @@ export function scalarProduct(attr: BaseAttrs, k: number) {
 export function createCondyceAttr(parentName: string, node: ConditionalNode, repeat: number = 1): AttrSource {
   if (node?.maxRepeat == null || repeat === 1) return {
     name: `${parentName}::${node.pick ?? "던전에서"}`,
+    attrs: { ...node.attrs }
+  }
+  repeat = Math.min(node.maxRepeat, repeat)
+  return {
+    name: `${parentName}::${node.pick ?? "던전에서"}`,
     attrs: scalarProduct(node.attrs, repeat)
   }
 }
@@ -159,6 +164,7 @@ export function combine(...attrsList: (BaseAttrs | null | undefined)[]) {
   for (const attrs of attrsList) {
     if (attrs == null) continue
     for (const key in attrs) {
+      // @ts-ignore
       const attrDef: AttrDef = attrDefs[key]
       if (!attrDef) continue
       if (!(key in prev)) {
