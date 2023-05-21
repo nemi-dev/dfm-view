@@ -30,12 +30,19 @@ export function applyLevel(s: SkillValue, level: number) {
   return s.base + s.inc * level
 }
 
+/** 스킬이 충전공격 되는지 확인한다. */
+export function isChargable(sk: AttackSkill) {
+  return (sk.chargeup && sk.chargeup > 1)
+   || (sk.attacks.find(a => a.chargeup && a.chargeup > 1))
+}
+
 /** 스킬 공격 하나에 레벨을 지정하여 실제값을 얻는다. */
 function bindSkillAttack(
   skillName: string,
   attack: UnboundOneAttack,
   skLv: number,
-  chargeup: number,
+  skChargeup: number,
+  charged: boolean,
   variantKey: string | null | undefined,
   attrs: BaseAttrs = {}): RealOneAttack {
 
@@ -44,17 +51,20 @@ function bindSkillAttack(
     sk_hit = {}
   } = attrs
 
-  const skKeyLookup = [skillName, `${skillName}[${attack.atName}]`]
+  const { atName, maxHit = 1, eltype, chargeup: atChargeUp } = attack
+  
+  const chargeup = charged? ( atChargeUp ?? skChargeup) : 1
+
+  const skKeyLookup = [skillName, `${skillName}[${atName}]`]
   if (variantKey) skKeyLookup.push(
     `${skillName}(${variantKey})`,
-    `${skillName}(${variantKey})[${attack.atName}]`
+    `${skillName}(${variantKey})[${atName}]`
   )
   const skval_bonus = skKeyLookup.map(k => sk_val?.[k] ?? 0).reduce(compound, 0)
   const skval1 = 1 + skval_bonus / 100
 
   const skhit_bonus = skKeyLookup.map(k => sk_hit?.[k] ?? 0).reduce(add, 0)
 
-  const { atName, maxHit = 1, eltype } = attack
   const value = applyLevel(attack.value, skLv) * chargeup * skval1
   const fixed = applyLevel(attack.fixed ?? attack.value, skLv) * chargeup * skval1
   const hit = maxHit + skhit_bonus
@@ -64,6 +74,7 @@ function bindSkillAttack(
 interface BindSkillOption {
   chargeup?: number
   variant?: string
+  charged?: boolean
 }
 
 /** 공격스킬로부터 실제 공격들을 만들어낸다. */
@@ -71,7 +82,7 @@ export function bindSkill(
   sk: AttackSkill,
   baseSkLv: number,
   attrs: BaseAttrs = {},
-  { chargeup = 1, variant }: BindSkillOption = {}
+  { variant, charged = false }: BindSkillOption = {}
   ) {
   const attacks = variant?
     sk.variant?.find(v => v.vaName == variant)?.attacks
@@ -79,5 +90,7 @@ export function bindSkill(
   const { sk_lv = {} } = attrs
   const sklvBonus = (sk_lv[sk.name] ?? 0)
 
-  return attacks?.map(at => bindSkillAttack(sk.name, at, baseSkLv + sklvBonus, chargeup, variant, attrs)) ?? []
+  const skChargeup = charged? sk.chargeup ?? 1 : 1
+
+  return attacks?.map(at => bindSkillAttack(sk.name, at, baseSkLv + sklvBonus, skChargeup, charged, variant, attrs)) ?? []
 }

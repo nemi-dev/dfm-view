@@ -29,7 +29,7 @@ const MyAttrsContext = createContext<BaseAttrs>({})
 
 function OneAttrEditable({ numStyle = "", aKey, name, percent = false, signed = false }: OneAttrTripletProps) {
   const me = useContext(MyAttrsContext)
-  const { [aKey]: value } = useAppSelector(selectCalibrate)
+  const { [aKey]: value = 0 } = useAppSelector(selectCalibrate)
   const dispatch = useAppDispatch()
   return (
     <div className="FormDF AttrItem">

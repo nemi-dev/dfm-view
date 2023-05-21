@@ -1,5 +1,6 @@
 declare type ItemIdentifier = string | null | undefined
 
+/** @deprecated 이제 DFChar에 직접 들어간다. */
 declare interface SelfState {
 
   /** 얘 이름 */
@@ -216,7 +217,18 @@ declare interface CustomSkillState {
 
 /** 여기까지가 "캐릭터 저장" 단위다  */
 declare interface DFCharState {
-  Self: SelfState
+  /** @deprecated  이제 캐릭터에 직접 들어간다 */
+  Self?: never
+
+  id: string
+  TimeStamp: number
+
+  name: string
+  level: number
+  dfclass: DFClassName
+  achieveLevel: number
+  atkFixed: number
+
   Item: ItemsState
   Card: CardState
   Emblem: EmblemState
@@ -237,15 +249,11 @@ declare interface DFCharState {
   SkillUsageCountMap: {
     [skillName: string]: number
   }
+  SkillChargeupMap: {
+    [skillName: string]: boolean
+  }
 }
 
-
-
-declare interface SavedChar {
-  id: string
-  TimeStamp: number
-  DFChar: DFCharState
-}
 
 declare interface EquipPreset {
   id: string
@@ -266,11 +274,11 @@ declare interface CustomSkillPreset {
 declare interface V5State {
   currentID: string
 
-  /** @deprecated 이제 SavedChars에 바로 접근한다. */
+  /** @deprecated 이제 Chars에 바로 접근한다. */
   My?: never
 
   SavedChars: {
-    byID: { [k: string]: SavedChar }
+    byID: { [k: string]: DFCharState }
     IDs: string[]
   }
 

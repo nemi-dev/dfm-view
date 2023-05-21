@@ -11,7 +11,7 @@ import _left from '../../../data/sets/left.json'
 import _right from '../../../data/sets/right.json'
 import { useAppDispatch, useAppSelector } from '../../feats/hooks'
 import { selectDFChar, selectMyDFClass } from '../../feats/selector/baseSelectors'
-import { FetchMyItems, SetMyItem } from '../../feats/slices/slicev5'
+import { SetItems, SetItem } from '../../feats/slices/slicev5'
 import {
     equipParts, getCircus2Items, getItem, getItemsByPart, isAccess, isArmor, isEquip, party
 } from '../../items'
@@ -121,7 +121,7 @@ function SingleItemList({ part }: { part: WholePart }) {
   const myDFclass = useAppSelector(selectMyDFClass)
 
   const onClick = useCallback((item: DFItem) => {
-    dispatch(SetMyItem([part as EquipPart | "칭호" | "오라" | "무기아바타", item.name]))
+    dispatch(SetItem([undefined, part as EquipPart | "칭호" | "오라" | "무기아바타", item.name]))
     closeModal()
   }, [part])
 
@@ -201,7 +201,7 @@ function Circus2List() {
   }, [shotgun])
 
   const apply = useCallback(() => {
-    dispatch(FetchMyItems(shotgun))
+    dispatch(SetItems({ items: shotgun }))
     closeModal()
   }, [shotgun])
 
@@ -253,7 +253,8 @@ function EquipShotgunTab({ item, onClick }: { item: IsetCatalog, onClick: MouseE
   const { name, items, useThisForPayload } = item
   const dispatch = useAppDispatch()
   return (
-    <EquipShotgunStyle className="EquipShotgun" onClick={() => { dispatch(FetchMyItems(useThisForPayload)); closeModal() }}>
+    <EquipShotgunStyle className="EquipShotgun" 
+      onClick={() => { dispatch(SetItems({ items: useThisForPayload })); closeModal() }}>
       <div className="IsetName">{name}</div>
       <div className="IsetIconArray">
       {items.map((item) => (

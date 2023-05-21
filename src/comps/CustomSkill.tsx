@@ -112,7 +112,7 @@ function CustomSkillAttackOne({ index, SkillOneAttackSpec }: SkillOutputOneProps
 
   const atype = useAppSelector(selectClassAtype)
   const attrs = useAppSelector(selectMyAttr)
-  const atkFix = useAppSelector(state => state.SavedChars.byID[state.currentID].DFChar.Self.atkFixed)
+  const atkFix = useAppSelector(state => state.SavedChars.byID[state.currentID].atkFixed)
   const chance = useAppSelector(selectMyCritChance)
 
   const targetElRes = useAppSelector(selectEnemyElRes)

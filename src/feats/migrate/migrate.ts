@@ -16,7 +16,9 @@ export function m3to4(state: V3._RootState & PersistedState) {
   })
 }
 
+
 export function m4to5(state: V4._RootState & PersistedState) {
+
   return produce<V4._RootState, V5State>(state, draft => {
     // My를 없애기
     delete draft.My
@@ -27,13 +29,32 @@ export function m4to5(state: V4._RootState & PersistedState) {
       delete sk.maxHit
     })
 
-    // 직업별 스킬에 추가 상태들 넣기
-    Object.values(draft.SavedChars.byID)
-    .forEach(dfc => {
-      dfc.DFChar.SkillLevelMap ??= {}
-      dfc.DFChar.SkillTPMap    ??= {}
-      dfc.DFChar.SkillUsageCountMap ??= {}
+    // 저장된 모든 캐릭터 업데이트
+    Object.entries(state.SavedChars.byID)
+    .forEach(([id, saved]) => {
+
+      const { Self: { myName: name, level, dfclass, achieveLevel, atkFixed }, ...dfcOldRest } = saved.DFChar
+      
+      const dfc: DFCharState = {
+        id,
+        TimeStamp: saved.TimeStamp,
+        name, level, dfclass, achieveLevel, atkFixed,
+        ...dfcOldRest,
+        SkillLevelMap: {},
+        SkillTPMap: {},
+        SkillChargeupMap: {},
+        SkillUsageCountMap: {}
+      }
+
+      for (const key in dfc.Calibrate) {
+        if (dfc.Calibrate[key] === 0) delete dfc.Calibrate[key]
+      }
+
+      draft.SavedChars.byID[id] = dfc
+      
     })
+
+    
 
   }) as any
 }

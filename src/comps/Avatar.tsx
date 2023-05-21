@@ -33,7 +33,7 @@ const AvatarPartLayout = styled.div`
 `
 
 function selectMyAvatar(state: RootState, part: WearAvatarPart) {
-  return state.SavedChars.byID[state.currentID].DFChar.Avatar[part]
+  return state.SavedChars.byID[state.currentID].Avatar[part]
 }
 
 function WearAvatarPart({ part }: AvatarProps) {

@@ -4,17 +4,14 @@ import { atx } from "../../attrs"
 import { whois } from "../../dfclass"
 import { getSkill, getSelfSkill } from "../../skills"
 
-/** 
- * 두 번째 것이 유효하다면 두 번째 것을 그대로 리턴한다.
- * 그렇지 않다면 현재 열린 캐릭터의 ID를 얻는다.
- */
-export function forwardID(state: RootState, id = state.currentID) {
-  return id || state.currentID
+/** 현재 열린 캐릭터의 ID를 얻는다. */
+export function selectCurrentID(state: RootState) {
+  return state.currentID
 }
 
 /** 저장된 캐릭터를 선택한다. */
 export function selectDFChar(state: RootState, id = state.currentID) {
-  return state.SavedChars.byID[id].DFChar
+  return state.SavedChars.byID[id]
 }
 
 /** 내가 활성화한 조건부를 모두 선택한다. */
@@ -24,25 +21,25 @@ export const selectMyChoice = createSelector(
 
 
 /** 캐릭터 이름을 선택한다. */
-export const selectMyName = createSelector(selectDFChar, dfchar => dfchar.Self.myName)
+export const selectMyName = createSelector(selectDFChar, dfchar => dfchar.name)
 
 /** 캐릭터 이름을 선택한다. */
-export const selectName = createSelector(selectDFChar, dfchar => dfchar.Self.myName)
+export const selectName = createSelector(selectDFChar, dfchar => dfchar.name)
 
 /** 캐릭터 레벨을 선택한다. */
-export const selectMyLevel = createSelector(selectDFChar, dfchar => dfchar.Self.level)
+export const selectMyLevel = createSelector(selectDFChar, dfchar => dfchar.level)
 
 /** 캐릭터 레벨을 선택한다. */
-export const selectLevel = createSelector(selectDFChar, dfchar => dfchar.Self.level)
+export const selectLevel = createSelector(selectDFChar, dfchar => dfchar.level)
 
 /** 업적 레벨을 선택한다. */
-export const selectMyAchievementLevel = createSelector(selectDFChar, dfchar => dfchar.Self.achieveLevel)
+export const selectMyAchievementLevel = createSelector(selectDFChar, dfchar => dfchar.achieveLevel)
 
 /** 캐릭터 직업을 선택한다 */
-export const selectMyDFClass = createSelector(selectDFChar, dfchar => whois(dfchar.Self.dfclass))
+export const selectMyDFClass = createSelector(selectDFChar, dfchar => whois(dfchar.dfclass))
 
 /** 캐릭터의 독립공격력을 선택한다. */
-export const selectMyAtkFixed = createSelector(selectDFChar, dfchar => dfchar.Self.atkFixed)
+export const selectMyAtkFixed = createSelector(selectDFChar, dfchar => dfchar.atkFixed)
 
 /** 캐릭터 직업의 공격타입을 선택한다. */
 export const selectClassAtype = createSelector(

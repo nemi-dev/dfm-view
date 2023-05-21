@@ -118,7 +118,6 @@ function App() {
         <Skill />
         <CustomSkillScreen />
       </div>: null}
-      {/* <Runner /> */}
       </ErrorBoundary>
     </PortraitMode.Provider>
     </ModalContext.Provider>

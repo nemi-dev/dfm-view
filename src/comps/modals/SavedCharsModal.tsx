@@ -76,7 +76,8 @@ const CharControlStyle = styled.div`
 `
 
 interface CharSelectProps {
-  saved: SavedChar
+  // saved: SavedChar
+  saved: DFCharState
   onClick: React.MouseEventHandler<HTMLDivElement>
 }
 function CharSelect({ saved, onClick }: CharSelectProps) {
@@ -96,8 +97,8 @@ function CharSelect({ saved, onClick }: CharSelectProps) {
   }, [saved.id])
 
   const askExport = useCallback(() => {
-    const fname = `${saved.DFChar.Self.myName.trim().replace(/\\\/\:\*\?"\<\>\|/g, '')} - ${saved.DFChar.Self.dfclass}.json`
-    const content = JSON.stringify(saved.DFChar, null, 2)
+    const fname = `${saved.name.trim().replace(/\\\/\:\*\?"\<\>\|/g, '')} - ${saved.dfclass}.json`
+    const content = JSON.stringify(saved, null, 2)
     const blob = new Blob([content], { type: "application/json" })
 
     const a = document.createElement('a')
@@ -120,17 +121,17 @@ function CharSelect({ saved, onClick }: CharSelectProps) {
           <ChevronUp onClick={moveUp} />
           <ChevronDown onClick={moveDown} />
         </CharControlStyle>
-        <DFClassIcon dfclassName={saved.DFChar.Self.dfclass} />
+        <DFClassIcon dfclassName={saved.dfclass} />
         <div className="DFCharDescribe">
           <div className="DFCharDescribeHeader">
-            <div className="DFCharName">{saved.DFChar.Self.myName}</div>
+            <div className="DFCharName">{saved.name}</div>
             <div>
               <Smaller>데미지</Smaller>
               <Num className="DamageGrab" value={expressDamage} />
             </div>
           </div>
           <SavedCharEquips className="SavedCharEquips">
-            {equipParts.map(part => <ItemIcon key={part} item={getItem(saved.DFChar.Item[part])} />)}
+            {equipParts.map(part => <ItemIcon key={part} item={getItem(saved.Item[part])} />)}
           </SavedCharEquips>
         </div>
       </CharSelectInner>

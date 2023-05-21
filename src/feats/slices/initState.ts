@@ -50,13 +50,13 @@ export const initCustomSkill: CustomSkillOneAttackSpec[] = [
 
 
 export const initCharState: DFCharState = {
-  "Self": {
-    "myName": "캐릭터 이름",
-    "dfclass": "레인저(남)",
-    "level": 65,
-    "achieveLevel": 9,
-    "atkFixed": 317
-  },
+  id: "InitID",
+  TimeStamp: Date.now(),
+  "name": "캐릭터 이름",
+  "dfclass": "레인저(남)",
+  "level": 65,
+  "achieveLevel": 9,
+  "atkFixed": 317,
   "Item": {
     "무기": "키리의 미완성 넨건",
     "상의": "암살자의 서슬 자켓",
@@ -176,5 +176,6 @@ export const initCharState: DFCharState = {
   SkillLevelMap: {},
   SkillTPMap: {},
   SkillUsageCountMap: {},
+  SkillChargeupMap: {},
 }
 

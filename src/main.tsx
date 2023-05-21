@@ -32,3 +32,5 @@ ReactDOM.createRoot(root).render(
 const github = document.getElementById('github') as HTMLElement
 
 github.innerHTML = feather.icons.github.toSvg()
+
+window["purge"] = () => persistor.purge()
