@@ -16,7 +16,7 @@ export function selectDFChar(state: RootState, id = state.currentID) {
 
 /** 내가 활성화한 조건부를 모두 선택한다. */
 export const selectMyChoice = createSelector(
-  selectDFChar, dfchar => dfchar.Choice
+  selectDFChar, dfchar => dfchar.choices
 )
 
 

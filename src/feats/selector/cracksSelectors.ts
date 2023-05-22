@@ -8,14 +8,14 @@ import { selectDFChar } from './baseSelectors'
 
 /** 특정 정수를 선택한다. */
 export const selectSpell = memoizee(
-  (index: number) => createSelector(selectDFChar, dfchar => getItem(dfchar.Item.정수[index])),
+  (index: number) => createSelector(selectDFChar, dfchar => getItem(dfchar.items.정수[index])),
   { primitive: true }
 )
 
 /** 현재 장착 중인 모든 정수를 선택한다. */
 export const selectSpells = createSelector(
   selectDFChar,
-  (dfchar) => dfchar.Item.정수.map(getItem)
+  (dfchar) => dfchar.items.정수.map(getItem)
 )
 
 /** 현재 착용한 봉인석+정수로부터 활성화되는 모든 세트를 얻는다. */

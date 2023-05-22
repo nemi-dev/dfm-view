@@ -9,7 +9,7 @@ import { selectItem } from './equipSelectors'
 
 /** 아티팩트 하나를 선택한다 */
 export const selectArtifact = memoizee(
-  (color: ArtifactColor) => createSelector(selectDFChar, dfchar => getItem(dfchar.Item.아티팩트[color])),
+  (color: ArtifactColor) => createSelector(selectDFChar, dfchar => getItem(dfchar.items.아티팩트[color])),
 { primitive: true })
 
 /** 레드 아티팩트의 힘/지능 증가 효과를 선택한다. */
@@ -17,7 +17,7 @@ export const selectRedArtiProp = createSelector(
   selectDFChar,
   (dfchar): AttrSource => ({
     name: "레드 아티팩트 옵션",
-    attrs: atx("Stat", dfchar.CreatureValue.Red)
+    attrs: atx("Stat", dfchar.creatureValues.Red)
   })
 )
 
@@ -26,7 +26,7 @@ export const selectBlueArtiProp = createSelector(
   selectDFChar,
   (dfchar): AttrSource => ({
     name: "블루 아티팩트 옵션",
-    attrs: atx("Atk", dfchar.CreatureValue.Blue)
+    attrs: atx("Atk", dfchar.creatureValues.Blue)
   })
 )
 
@@ -35,7 +35,7 @@ export const selectGreenArtiProp = createSelector(
   selectDFChar,
   (dfchar): AttrSource => ({
     name: "그린 아티팩트 옵션",
-    attrs: atx("El", dfchar.CreatureValue.Green)
+    attrs: atx("El", dfchar.creatureValues.Green)
   })
 )
 
@@ -43,7 +43,7 @@ export const selectGreenArtiProp = createSelector(
 export const selectCreatureStatAttr = createSelector(
   selectDFChar,
   (dfchar) => {
-    const stat = dfchar.CreatureValue.Creature
+    const stat = dfchar.creatureValues.Creature
     return atx("StatAll", stat)
   }
 )

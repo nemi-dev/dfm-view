@@ -33,21 +33,43 @@ export function m4to5(state: V4._RootState & PersistedState) {
     Object.entries(state.SavedChars.byID)
     .forEach(([id, saved]) => {
 
-      const { Self: { myName: name, level, dfclass, achieveLevel, atkFixed }, ...dfcOldRest } = saved.DFChar
+      const { Self: { myName: name, level, dfclass, achieveLevel, atkFixed }, 
+        Item,
+        Card,
+        Emblem,
+        MagicProps,
+        Upgrade,
+        Material,
+        Avatar,
+        Guild,
+        CreatureValue,
+        Choice,
+        Calibrate,
+        } = saved.DFChar
       
       const dfc: DFCharState = {
         id,
         TimeStamp: saved.TimeStamp,
         name, level, dfclass, achieveLevel, atkFixed,
-        ...dfcOldRest,
-        SkillLevelMap: {},
-        SkillTPMap: {},
-        SkillChargeupMap: {},
-        SkillUsageCountMap: {}
+        items: Item,
+        cards: Card,
+        emblems: Emblem,
+        magicProps: MagicProps,
+        upgradeValues: Upgrade,
+        materials: Material,
+        avatars: Avatar,
+        guild: Guild,
+        creatureValues: CreatureValue,
+        choices: Choice,
+        calibrate: Calibrate,
+        skillLevelMap: {},
+        skillTPMap: {},
+        skillChargeupMap: {},
+        skillUseCountMap: {}
       }
 
-      for (const key in dfc.Calibrate) {
-        if (dfc.Calibrate[key] === 0) delete dfc.Calibrate[key]
+      for (const key in dfc.calibrate) {
+        if (dfc.calibrate[key] === 0) delete dfc.calibrate[key]
       }
 
       draft.SavedChars.byID[id] = dfc

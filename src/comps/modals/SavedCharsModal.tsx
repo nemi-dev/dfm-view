@@ -131,7 +131,7 @@ function CharSelect({ saved, onClick }: CharSelectProps) {
             </div>
           </div>
           <SavedCharEquips className="SavedCharEquips">
-            {equipParts.map(part => <ItemIcon key={part} item={getItem(saved.Item[part])} />)}
+            {equipParts.map(part => <ItemIcon key={part} item={getItem(saved.items[part])} />)}
           </SavedCharEquips>
         </div>
       </CharSelectInner>

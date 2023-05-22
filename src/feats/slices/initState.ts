@@ -57,7 +57,7 @@ export const initCharState: DFCharState = {
   "level": 65,
   "achieveLevel": 9,
   "atkFixed": 317,
-  "Item": {
+  "items": {
     "무기": "키리의 미완성 넨건",
     "상의": "암살자의 서슬 자켓",
     "하의": "암살자의 서슬 팬츠",
@@ -86,7 +86,7 @@ export const initCharState: DFCharState = {
       "Blue": "레어 아티팩트-블루"
     }
   },
-  "Card": {
+  "cards": {
     "무기": "스페셜 데미지 보주",
     "상의": "적진주 켈라이노 카드",
     "하의": "적진주 켈라이노 카드",
@@ -99,7 +99,7 @@ export const initCharState: DFCharState = {
     "보조장비": "불의 사념체 카드",
     "칭호": null
   },
-  "Emblem": {
+  "emblems": {
     "무기": [["Red", 7], ["Red", 7]],
     "상의": [["Red", 7], ["Red", 7]],
     "하의": [["Red", 7], ["Red", 7]],
@@ -112,7 +112,7 @@ export const initCharState: DFCharState = {
     "보조장비": [["Stren", 5]],
     "칭호": [["Stren", 5]]
   },
-  "MagicProps": {
+  "magicProps": {
     "무기": ["dmg_inc", "Stat", "Stat"],
     "상의": ["Stat", "Stat", "Stat"],
     "하의": ["Stat", "Stat", "Stat"],
@@ -125,7 +125,7 @@ export const initCharState: DFCharState = {
     "보조장비": ["Crit", "Crit", "Crit"],
     "봉인석": ["Accu", "Accu", "Accu"]
   },
-  "Upgrade": {
+  "upgradeValues": {
     "무기": 549,
     "상의": 31,
     "하의": 31,
@@ -137,14 +137,14 @@ export const initCharState: DFCharState = {
     "반지": 41,
     "보조장비": 46
   },
-  "Material": {
+  "materials": {
     "상의": "가죽",
     "하의": "가죽",
     "머리어깨": "가죽",
     "벨트": "가죽",
     "신발": "가죽"
   },
-  "Avatar": {
+  "avatars": {
     "모자": "Uncommon",
     "얼굴": "Uncommon",
     "상의": "Uncommon",
@@ -154,28 +154,28 @@ export const initCharState: DFCharState = {
     "하의": "Uncommon",
     "허리": "Uncommon"
   },
-  "Guild": {
+  "guild": {
     ...perfectGuild,
     "PublicStatLv": 5
   },
-  "CreatureValue": {
+  "creatureValues": {
     "Creature": 156,
     "Red": 50,
     "Blue": 50,
     "Green": 10,
   },
-  "Choice": {
+  "choices": {
     "branches": {},
     "gives": {},
     "exclusives": {}
   },
-  "Calibrate": {
+  "calibrate": {
     eltype: [],
     sk_inc: [0],
   },
-  SkillLevelMap: {},
-  SkillTPMap: {},
-  SkillUsageCountMap: {},
-  SkillChargeupMap: {},
+  skillLevelMap: {},
+  skillTPMap: {},
+  skillUseCountMap: {},
+  skillChargeupMap: {},
 }
 

@@ -8,7 +8,7 @@ import { selectDFChar } from './baseSelectors'
 export const selectRareAvatarCount = createSelector(
   selectDFChar,
   (dfchar) => avatarParts
-    .map(part => dfchar.Avatar[part])
+    .map(part => dfchar.avatars[part])
     .reduce((n, rarity) => rarity === "Rare" ? n + 1 : n, 0)
 )
 
@@ -16,7 +16,7 @@ export const selectRareAvatarCount = createSelector(
 export const selectUncommonAvatarCount = createSelector(
   selectDFChar,
   (dfchar) => avatarParts
-    .map(part => dfchar.Avatar[part])
+    .map(part => dfchar.avatars[part])
     .reduce((n, rarity) => rarity === "Uncommon" ? n + 1 : n, 0)
 )
 
@@ -38,7 +38,7 @@ export const selectWearAvatarsCombined = createSelector(
   selectDFChar,
   (dfchar) => ({
     name: "아바타 (모든부위 효과)",
-    attrs: combine(...avatarParts.map(p => getAvatarAttr(p, dfchar.Avatar[p])))
+    attrs: combine(...avatarParts.map(p => getAvatarAttr(p, dfchar.avatars[p])))
   })
 )
 

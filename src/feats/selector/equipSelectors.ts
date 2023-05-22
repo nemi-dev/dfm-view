@@ -25,32 +25,32 @@ export const selectItem = Paw(part =>
   createSelector(
     selectDFChar,
     (dfchar) => {
-      if (isArmor(part)) return getArmor(dfchar.Item[part], dfchar.Material[part])
-      else return getItem(dfchar.Item[part])
+      if (isArmor(part)) return getArmor(dfchar.items[part], dfchar.materials[part])
+      else return getItem(dfchar.items[part])
     }
   ),
 singleItemParts)
 
 /** 특정 부위의 아이템에 바른 카드를 선택한다 */
-export const selectCard = Paw(part => createSelector(selectDFChar, dfchar => getItem(dfchar.Card[part])), cardableParts)
+export const selectCard = Paw(part => createSelector(selectDFChar, dfchar => getItem(dfchar.cards[part])), cardableParts)
 
 /** 특정 부위의 아이템에 박은 엠블렘 스펙을 모두 선택한다 */
-export const selectEmblemSpecs = Paw(part => createSelector(selectDFChar, dfchar => dfchar.Emblem[part] ?? []), cardableParts)
+export const selectEmblemSpecs = Paw(part => createSelector(selectDFChar, dfchar => dfchar.emblems[part] ?? []), cardableParts)
 
 /** 특정 부위 아이템의 마법봉인 이름을 선택한다. (장착 아이템 여부에 상관없이 3개 풀로 선택함) */
 export const selectMagicPropNames = Paw(
-  part => createSelector(selectDFChar, dfchar => dfchar.MagicProps[part]),
+  part => createSelector(selectDFChar, dfchar => dfchar.magicProps[part]),
   magicPropsParts
 )
 
 /** 특정 부위의 "내가 선택한" 방어구 재질을 선택한다 (해당 방어구재질이 고정되어있는지 여부는 고려하지 않는다.) */
 export const selectCustomMaterial = Paw(
-  part => createSelector(selectDFChar, dfchar => dfchar.Material[part]),
+  part => createSelector(selectDFChar, dfchar => dfchar.materials[part]),
   armorParts
 )
 
 /** 특정 부위의 강화보너스 수치(무기는 물/마공, 다른장비는 스탯)를 선택한다 */
-export const selectUpgradeValue = Paw(part => createSelector(selectDFChar, dfchar => dfchar.Upgrade[part]), equipParts)
+export const selectUpgradeValue = Paw(part => createSelector(selectDFChar, dfchar => dfchar.upgradeValues[part]), equipParts)
 
 /** 특정 부위의 강화 효과를 선택한다. */
 const selectUpgrade = Paw(part => createSelector(

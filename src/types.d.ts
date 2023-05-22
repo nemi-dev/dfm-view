@@ -190,6 +190,9 @@ declare interface BaseAttrs {
   /** 특정 스킬 쿨타임 증가/감소 (%) */
   sk_cool?: { [k: string]: number }
 
+  /** 특정 스킬의 충전시 공격력 배율 증가 (%) */
+  sk_chargeup_add?: { [k: string]: number }
+
   /** 적 방어력 변화 (내가 공격한 적 + 방어 감소 오라 모두 포함) */
   target_def?: number
 

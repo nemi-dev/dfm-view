@@ -116,6 +116,7 @@ const attrDefsArray = [
   defineAttr("sk_lv", "스킬 레벨 증가", add_object, "MapFlat"),
   defineAttr("sk_dur", "스킬 지속시간 증가", add_object, "MapFlat"),
   defineAttr("sk_cool", "스킬 쿨타임 감소", add_object, "MapPercent"),
+  defineAttr("sk_chargeup_add", "스킬 충전시 배율 추가", add_object, "MapPercent"),
 
   defineAttr("target_def", "적 방어력", add, "Flat"),
   defineAttr("target_res", "적 모든속성 저항", add, "Flat"),

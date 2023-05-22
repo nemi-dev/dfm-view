@@ -19,7 +19,7 @@ import { NumberInput } from './widgets/Forms'
 import { EmblemIcon, ItemIcon } from './widgets/Icons'
 
 const selectCreatureValue = createSelector(
-  selectDFChar, my => my.CreatureValue
+  selectDFChar, my => my.creatureValues
 )
 
 interface EquipProps {

@@ -5,7 +5,7 @@ import { GuildAccu, GuildAtk, GuildCrit, GuildEl, GuildSpeedAtk, GuildStat, Guil
 import { selectDFChar, selectClassAtype } from "./baseSelectors"
 
 export const selectGuildState = createSelector(
-  selectDFChar, dfchar => dfchar.Guild
+  selectDFChar, dfchar => dfchar.guild
 )
 
 /** 길드버프: 내 공격타입 스탯 증가 효과를 선택한다. */
@@ -35,19 +35,19 @@ export const selectGuildCrit = createSelector(
 /** 길드버프: 모든속성 강화 효과를 선택한다. */
 export const selectGuildEl = createSelector(
   selectDFChar,
-  dfchar => GuildEl(dfchar.Guild.ElLv)
+  dfchar => GuildEl(dfchar.guild.ElLv)
 )
 
 /** 길드버프: 공격속도 증가 효과를 선택한다. */
 export const selectGuildSpeedAtk = createSelector(
   selectDFChar,
-  dfchar => GuildSpeedAtk(dfchar.Guild.SpeedAtkLv)
+  dfchar => GuildSpeedAtk(dfchar.guild.SpeedAtkLv)
 )
 
 /** 길드버프: 적중 증가 효과를 선택한다. */
 export const selectGuildAccu = createSelector (
   selectDFChar,
-  dfchar => GuildAccu(dfchar.Guild.AccuLv)
+  dfchar => GuildAccu(dfchar.guild.AccuLv)
 )
 
 

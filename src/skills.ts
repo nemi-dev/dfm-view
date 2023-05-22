@@ -48,25 +48,29 @@ function bindSkillAttack(
 
   const {
     sk_val = {},
-    sk_hit = {}
+    sk_hit = {},
+    sk_chargeup_add = {}
   } = attrs
 
   const { atName, maxHit = 1, eltype, chargeup: atChargeUp } = attack
-  
-  const chargeup = charged? ( atChargeUp ?? skChargeup) : 1
 
   const skKeyLookup = [skillName, `${skillName}[${atName}]`]
   if (variantKey) skKeyLookup.push(
     `${skillName}(${variantKey})`,
     `${skillName}(${variantKey})[${atName}]`
   )
-  const skval_bonus = skKeyLookup.map(k => sk_val?.[k] ?? 0).reduce(compound, 0)
+  
+  const skval_bonus = skKeyLookup.map(k => sk_val[k] ?? 0).reduce(compound, 0)
   const skval1 = 1 + skval_bonus / 100
 
-  const skhit_bonus = skKeyLookup.map(k => sk_hit?.[k] ?? 0).reduce(add, 0)
+  const skhit_bonus = skKeyLookup.map(k => sk_hit[k] ?? 0).reduce(add, 0)
 
-  const value = applyLevel(attack.value, skLv) * chargeup * skval1
-  const fixed = applyLevel(attack.fixed ?? attack.value, skLv) * chargeup * skval1
+  const chargeup = charged?
+  (( atChargeUp ?? skChargeup ) + skKeyLookup.map(k => sk_chargeup_add[k] ?? 0).reduce(add, 0) / 100)
+   : 1
+
+  const value = applyLevel(attack.value, skLv) * skval1 * chargeup
+  const fixed = applyLevel(attack.fixed ?? attack.value, skLv) * skval1 * chargeup
   const hit = maxHit + skhit_bonus
   return { atName, value, fixed, hit, eltype }
 }

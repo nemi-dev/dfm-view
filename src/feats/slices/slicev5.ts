@@ -139,26 +139,26 @@ export const dfSlice = createSlice({
       const [charID, ...p] = payload
       const dfch = selectDFChar(state, charID)
       if ( p[0] == "정수" || p[0] == "아티팩트" ) {
-        dfch.Item[p[0]][p[1]] = p[2]
+        dfch.items[p[0]][p[1]] = p[2]
       } else {
-        dfch.Item[p[0]] = p[1]
+        dfch.items[p[0]] = p[1]
       }
     },
     SetSpellAll: (state, { payload: [currentID, itemID] }: PayloadAction<[string, ItemIdentifier]>) => {
       const dfch = selectDFChar(state, currentID)
-      dfch.Item["정수"].fill(itemID)
+      dfch.items["정수"].fill(itemID)
     },
     SetItems: (state, { payload: { id, items } }: PayloadAction<ItemFetcher>) => {
       const dfch = selectDFChar(state, id)
       if (items.정수) {
-        Object.assign(dfch.Item.정수, items.정수)
+        Object.assign(dfch.items.정수, items.정수)
         delete items.정수
       }
       if (items.아티팩트) {
-        Object.assign(dfch.Item.아티팩트, items.아티팩트)
+        Object.assign(dfch.items.아티팩트, items.아티팩트)
         delete items.아티팩트
       }
-      Object.assign(dfch.Item, items)
+      Object.assign(dfch.items, items)
     },
     // #endregion
 
@@ -167,17 +167,17 @@ export const dfSlice = createSlice({
     // #region Card
     SetMyCard: (state, { payload: [part, id] }: PayloadAction<[CardablePart, ItemIdentifier]>) => {
       const dfch = selectDFChar(state)
-      dfch.Card[part] = id
+      dfch.cards[part] = id
     },
     SetMyCardsAllPossible: (state, { payload: id }: PayloadAction<ItemIdentifier>) => {
       const dfch = selectDFChar(state)
       const card = getItem(id)
       const possible = card?.part ?? []
-      possible.forEach(part => dfch.Card[part] = id)
+      possible.forEach(part => dfch.cards[part] = id)
     },
     FetchCards: (state, { payload: cards }: PayloadAction<Partial<CardState>>) => {
       const dfch = selectDFChar(state)
-      Object.assign(dfch.Card, cards)
+      Object.assign(dfch.cards, cards)
     },
     // #endregion
 
@@ -186,22 +186,22 @@ export const dfSlice = createSlice({
     // #region Emblem
     SetMyEmblem: (state, { payload: [part, index, emblemType, emblemLevel] }: PayloadAction<[CardablePart, number, EmblemType, number]>) => {
       const dfch = selectDFChar(state)
-      dfch.Emblem[part][index] = [emblemType, emblemLevel]
+      dfch.emblems[part][index] = [emblemType, emblemLevel]
     },
     DecreaseMyEmblemLevel: (state, { payload: [part, index] }: PayloadAction<[Exclude<CardablePart, "무기"|"보조장비"|"칭호">, number]>) => {
       const dfch = selectDFChar(state)
-      const level = dfch.Emblem[part][index][1]
+      const level = dfch.emblems[part][index][1]
       let nextLevel = level - 1
       if (nextLevel < 3) nextLevel = 10
-      dfch.Emblem[part][index][1] = nextLevel
+      dfch.emblems[part][index][1] = nextLevel
     },
     SetMyEmblemLevelAll: (state, { payload: level }: PayloadAction<number>) => {
       const dfch = selectDFChar(state)
-      oneEmblemParts.forEach(part => dfch.Emblem[part].forEach(sp => sp[1] = level))
+      oneEmblemParts.forEach(part => dfch.emblems[part].forEach(sp => sp[1] = level))
     },
     FetchMyEmblems: (state, { payload: emblems }: PayloadAction<EmblemState>) => {
       const dfch = selectDFChar(state)
-      Object.assign(dfch.Emblem, emblems)
+      Object.assign(dfch.emblems, emblems)
     },
     // #endregion
 
@@ -210,21 +210,21 @@ export const dfSlice = createSlice({
     //#region MagicProps
     SetMyMagicProps: (state, { payload: [part, index, magicProps]}: PayloadAction<[MagicPropsPart, number, MagicPropsCareAbout]>) => {
       const dfch = selectDFChar(state)
-      dfch.MagicProps[part][index] = magicProps
+      dfch.magicProps[part][index] = magicProps
     },
     PerfectMyMagicProps: (state)=> {
       const dfch = selectDFChar(state)
-      armorParts.forEach(part => dfch.MagicProps[part] = ["Stat", "Stat", "Stat"])
-      dfch.MagicProps["무기"][0] = "dmg_inc"
-      dfch.MagicProps["무기"].fill("Stat", 1, 3)
+      armorParts.forEach(part => dfch.magicProps[part] = ["Stat", "Stat", "Stat"])
+      dfch.magicProps["무기"][0] = "dmg_inc"
+      dfch.magicProps["무기"].fill("Stat", 1, 3)
     },
     PerfectMyMagicPropsEl: (state, { payload: p }: PayloadAction<"el_fire" | "el_ice" | "el_lght" | "el_dark"> ) => {
       const dfch = selectDFChar(state)
-      accessParts.forEach(part => dfch.MagicProps[part] = [p, p, p])
+      accessParts.forEach(part => dfch.magicProps[part] = [p, p, p])
     },
     FetchMyMagicProps: (state, { payload }: PayloadAction<MagicPropsState>) => {
       const dfch = selectDFChar(state)
-      Object.assign(dfch.MagicProps, payload)
+      Object.assign(dfch.magicProps, payload)
     },
     // #endregion
 
@@ -233,19 +233,19 @@ export const dfSlice = createSlice({
     //#region Upgrade
     SetMyUpgradeValue: (state, { payload: [part, value] }: PayloadAction<[EquipPart, number]>) => {
       const dfch = selectDFChar(state)
-      dfch.Upgrade[part] = value
+      dfch.upgradeValues[part] = value
     },
     SetMyArmorUpgradeAll: (state, { payload }: PayloadAction<number>) => {
       const dfch = selectDFChar(state)
-      armorParts.forEach(part => dfch.Upgrade[part] = payload)
+      armorParts.forEach(part => dfch.upgradeValues[part] = payload)
     },
     SetMyAccessUpgradeAll: (state, { payload }: PayloadAction<number>) => {
       const dfch = selectDFChar(state)
-      accessParts.forEach(part => dfch.Upgrade[part] = payload)
+      accessParts.forEach(part => dfch.upgradeValues[part] = payload)
     },
     FetchMyUpgrades: (state, { payload }: PayloadAction<UpgradeOrKaledoState>) => {
       const dfch = selectDFChar(state)
-      Object.assign(dfch.Upgrade, payload)
+      Object.assign(dfch.upgradeValues, payload)
     },
     // #endregion
 
@@ -254,15 +254,15 @@ export const dfSlice = createSlice({
     //#region Material
     SetMyMaterial: (state, { payload: [part, value] }: PayloadAction<[ArmorPart, ArmorMaterial]>) => {
       const dfch = selectDFChar(state)
-      dfch.Material[part] = value
+      dfch.materials[part] = value
     },
     SetMyMaterialAll: (state, { payload }: PayloadAction<ArmorMaterial>) => {
       const dfch = selectDFChar(state)
-      armorParts.forEach(part => dfch.Material[part] = payload)
+      armorParts.forEach(part => dfch.materials[part] = payload)
     },
     FetchMyMaterials: (state, { payload }: PayloadAction<MaterialState>) => {
       const dfch = selectDFChar(state)
-      Object.assign(dfch.Material, payload)
+      Object.assign(dfch.materials, payload)
     },
     //#endregion
 
@@ -271,11 +271,11 @@ export const dfSlice = createSlice({
     //#region Avatar
     SetMyAvatarRarity: (state, { payload: [part, rarity] }: PayloadAction<[WearAvatarPart, "Uncommon" | "Rare"]>) => {
       const dfch = selectDFChar(state)
-      dfch.Avatar[part] = rarity
+      dfch.avatars[part] = rarity
     },
     SetMyAvatarRarityAll: (state, { payload }: PayloadAction<"Uncommon" | "Rare">) => {
       const dfch = selectDFChar(state)
-      avatarParts.forEach(part => dfch.Avatar[part] = payload)
+      avatarParts.forEach(part => dfch.avatars[part] = payload)
     },
     //#endregion
   
@@ -284,15 +284,15 @@ export const dfSlice = createSlice({
     //#region Guild
     SetMyGuildBuffLevel: (state, { payload }: PayloadAction<[keyof GuildState, number]>) => {
       const dfch = selectDFChar(state)
-      dfch.Guild[payload[0]] = payload[1]
+      dfch.guild[payload[0]] = payload[1]
     },
     PerfectMyGuild: (state) => {
       const dfch = selectDFChar(state)
-      Object.assign(dfch.Guild, perfectGuild)
+      Object.assign(dfch.guild, perfectGuild)
     },
     FetchMyGuild: (state, { payload }: PayloadAction<GuildState>) => {
       const dfch = selectDFChar(state)
-      Object.assign(dfch.Guild, payload)
+      Object.assign(dfch.guild, payload)
     },
     //#endregion
 
@@ -301,11 +301,11 @@ export const dfSlice = createSlice({
     //#region CreatureValue
     SetMyCreatureStat: (state, { payload }: PayloadAction<number>) => {
       const dfch = selectDFChar(state)
-      dfch.CreatureValue.Creature = payload
+      dfch.creatureValues.Creature = payload
     },
     SetMyArtifactValue: (state, { payload: [attr_name, value] }: PayloadAction<[ArtifactColor, number]>) => {
       const dfch = selectDFChar(state)
-      dfch.CreatureValue[attr_name] = value
+      dfch.creatureValues[attr_name] = value
     },
     //#endregion
 
@@ -314,19 +314,19 @@ export const dfSlice = createSlice({
     //#region Choice
     SetMyChoiceOfBranch: (state, { payload: [key, value] }: PayloadAction<[string, OptionalChoiceType]>) => {
       const dfch = selectDFChar(state)
-      dfch.Choice.branches[key] = value;
+      dfch.choices.branches[key] = value;
     },
     SetMyChoiceOfGives: (state, { payload: [key, value] }: PayloadAction<[string, OptionalChoiceType]>) => {
       const dfch = selectDFChar(state)
-      dfch.Choice.gives[key] = value;
+      dfch.choices.gives[key] = value;
     },
     SetMyChoiceOfExclusive: (state, { payload: [key, value] }: PayloadAction<[string, string]>) => {
       const dfch = selectDFChar(state)
-      dfch.Choice.exclusives[key] = value;
+      dfch.choices.exclusives[key] = value;
     },
     DeleteMyChoice: (state, { payload: [type, key] }: PayloadAction<["branches" | "gives" | "exclusives", string]>) => {
       const dfch = selectDFChar(state)
-      delete dfch.Choice[type][key]
+      delete dfch.choices[type][key]
     },
     //#endregion
 
@@ -335,24 +335,24 @@ export const dfSlice = createSlice({
     //#region Calibrate
     SetMyCaliSingleAttr: (state, { payload: [key, value] }: SetAttrAction) => {
       const dfch = selectDFChar(state)
-      value? dfch.Calibrate[key] = value : delete dfch.Calibrate[key]
+      value? dfch.calibrate[key] = value : delete dfch.calibrate[key]
     },
     SetMyCaliSkillInc: (state, { payload: [index, value] }: SkillIncPayloadType) => {
       const dfch = selectDFChar(state)
-      dfch.Calibrate.sk_inc[index] = value
+      dfch.calibrate.sk_inc[index] = value
     },
     AddMyCaliSkillInc: (state) => {
       const dfch = selectDFChar(state)
-      dfch.Calibrate.sk_inc.push(0)
+      dfch.calibrate.sk_inc.push(0)
     },
     DeleteMyCaliSkillInc: (state, { payload }: PayloadAction<number>) => {
       const dfch = selectDFChar(state)
-      if (dfch.Calibrate.sk_inc.length > 1) dfch.Calibrate.sk_inc.splice(payload, 1)
+      if (dfch.calibrate.sk_inc.length > 1) dfch.calibrate.sk_inc.splice(payload, 1)
     },
     SetMyCaliEltype: (state, { payload: [ el, on ] }: PayloadAction<[Eltype, boolean]>) => {
       const dfch = selectDFChar(state)
-      if (on && !dfch.Calibrate.eltype.includes(el)) dfch.Calibrate.eltype.push(el)
-      else if (!on && dfch.Calibrate.eltype.includes(el)) dfch.Calibrate.eltype.splice(dfch.Calibrate.eltype.indexOf(el), 1)
+      if (on && !dfch.calibrate.eltype.includes(el)) dfch.calibrate.eltype.push(el)
+      else if (!on && dfch.calibrate.eltype.includes(el)) dfch.calibrate.eltype.splice(dfch.calibrate.eltype.indexOf(el), 1)
     },
     //#endregion
 
@@ -403,23 +403,23 @@ export const dfSlice = createSlice({
     //#region Skill
     SetSkillLevel: (state, { payload: [skName, val]}: PayloadAction<[string, number]>) => {
       const dfch = selectDFChar(state)
-      dfch.SkillLevelMap[skName] = val
+      dfch.skillLevelMap[skName] = val
     },
 
     SetSkillUsageCount: (state, { payload: [skName, val]}: PayloadAction<[string, number]>) => {
       const dfch = selectDFChar(state)
-      dfch.SkillUsageCountMap[skName] = val
+      dfch.skillUseCountMap[skName] = val
     },
 
     SetSkillTP: (state, { payload: [skName, val]}: PayloadAction<[string, number]>) => {
       const dfch = selectDFChar(state)
-      dfch.SkillTPMap[skName] = val
+      dfch.skillTPMap[skName] = val
     },
 
     SetSkillChargeup: (state, { payload: [skName, val]}: PayloadAction<[string, boolean]>) => {
       const dfch = selectDFChar(state)
-      if (val) dfch.SkillChargeupMap[skName] = true
-      else delete dfch.SkillChargeupMap[skName]
+      if (val) dfch.skillChargeupMap[skName] = true
+      else delete dfch.skillChargeupMap[skName]
     },
     //#endregion
   

@@ -40,7 +40,7 @@ export function selectTonics(state: RootState): AttrSource {
 }
 
 /** 스탯 보정값을 선택한다. (복리스증이 배열로 되어있는 그시끼) */
-export const selectCalibrate = createSelector(selectDFChar, (ch) => ch.Calibrate)
+export const selectCalibrate = createSelector(selectDFChar, (ch) => ch.calibrate)
 
 /** 스탯보정 효과를 선택한다. */
 export const selectCaliSource = createSelector(

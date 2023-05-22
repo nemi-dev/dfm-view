@@ -176,7 +176,7 @@ const Circus2ListInnerLayout = styled.div`
 
 const selectEquipMainItems = createSelector(
   selectDFChar,
-  (dfchar) =>  equipParts.map(part => getItem(dfchar.Item[part]))
+  (dfchar) =>  equipParts.map(part => getItem(dfchar.items[part]))
 )
 
 function Circus2List() {

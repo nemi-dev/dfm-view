@@ -229,27 +229,27 @@ declare interface DFCharState {
   achieveLevel: number
   atkFixed: number
 
-  Item: ItemsState
-  Card: CardState
-  Emblem: EmblemState
-  MagicProps: MagicPropsState
-  Upgrade: UpgradeOrKaledoState
-  Material: MaterialState
-  Avatar: AvatarRarityState
-  Guild: GuildState
-  CreatureValue: CreaturePropState
-  Choice: Choices
-  Calibrate: CalibrateState
-  SkillLevelMap: {
+  items: ItemsState
+  cards: CardState
+  emblems: EmblemState
+  magicProps: MagicPropsState
+  upgradeValues: UpgradeOrKaledoState
+  materials: MaterialState
+  avatars: AvatarRarityState
+  guild: GuildState
+  creatureValues: CreaturePropState
+  choices: Choices
+  calibrate: CalibrateState
+  skillLevelMap: {
     [skillName: string]: number
   }
-  SkillTPMap: {
+  skillTPMap: {
     [skillName: string]: number
   }
-  SkillUsageCountMap: {
+  skillUseCountMap: {
     [skillName: string]: number
   }
-  SkillChargeupMap: {
+  skillChargeupMap: {
     [skillName: string]: boolean
   }
 }
