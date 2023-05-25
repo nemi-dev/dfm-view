@@ -1,15 +1,16 @@
-import styled from "styled-components"
-import { useDispatch } from "react-redux"
-import { useAppSelector } from "../feats/hooks"
-import { getOneMagicPropValue, getRealAttrKey, nextMagicProps } from "../magicProps"
-import { AttrIcon } from "./widgets/Icons"
-import { Num } from "./widgets/NumberView"
-import { useCallback, useContext } from "react"
-import { PortraitMode } from "../responsiveContext"
-import { selectClassAtype } from "../feats/selector/selfSelectors"
-import { selectMagicPropNames } from "../feats/selector/equipSelectors"
-import { SetMagicProps } from "../feats/slices/itemSlice"
-import { hasMagicProps } from "../items"
+import { useCallback, useContext } from 'react'
+import { useDispatch } from 'react-redux'
+import styled from 'styled-components'
+
+import { useAppSelector } from '../feats/hooks'
+import { selectMagicPropNames } from '../feats/selector/equipSelectors'
+import { selectClassAtype } from '../feats/selector/baseSelectors'
+import { SetMyMagicProps } from '../feats/slices/slicev5'
+import { hasMagicProps } from '../items'
+import { getOneMagicPropValue, getRealAttrKey, nextMagicProps } from '../magicProps'
+import { PortraitMode } from '../responsiveContext'
+import { AttrIcon } from './widgets/Icons'
+import { Num } from './widgets/NumberView'
 
 interface MagicPropsArrayProps {
   item: DFItem
@@ -49,7 +50,7 @@ export function MagicProps({ item, part }: MagicPropsArrayProps) {
   const atype = useAppSelector(selectClassAtype)
   const clickHandler = useCallback((index: number) => {
     const next = nextMagicProps(part, array[index], level, rarity, index === 0)
-    dispatch(SetMagicProps([part, index, next]))
+    dispatch(SetMyMagicProps([part, index, next]))
   }, [item?.name, part, array])
   if (!item) return null
   return (

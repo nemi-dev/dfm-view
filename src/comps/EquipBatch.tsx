@@ -1,13 +1,18 @@
-import { createSelector } from "@reduxjs/toolkit"
-import { useCallback } from "react"
-import { useAppDispatch, useAppSelector } from "../feats/hooks"
-import { selectClassAtype } from "../feats/selector/selfSelectors"
-import { selectCustomMaterial, selectEmblemSpecs, selectUpgradeValue } from "../feats/selector/equipSelectors"
-import { SetPerfectMagicPropsStat, SetPerfectMagicPropsEl, SetColorEmblemLevelAll, SetMaterialAll, SetArmorUpgradeAll, SetAccessUpgradeAll } from "../feats/slices/itemSlice"
-import { accessParts, armorParts, oneEmblemParts } from "../items"
-import { LabeledNumberInput, RadioGroup, OneClickButtonGroup } from "./widgets/Forms"
+import { useCallback } from 'react'
 
+import { createSelector } from '@reduxjs/toolkit'
 
+import { useAppDispatch, useAppSelector } from '../feats/hooks'
+import {
+    selectCustomMaterial, selectEmblemSpecs, selectUpgradeValue
+} from '../feats/selector/equipSelectors'
+import { selectClassAtype } from '../feats/selector/baseSelectors'
+import {
+    SetMyAccessUpgradeAll, SetMyArmorUpgradeAll, SetMyEmblemLevelAll, SetMyMaterialAll,
+    PerfectMyMagicPropsEl, PerfectMyMagicProps
+} from '../feats/slices/slicev5'
+import { accessParts, armorParts, oneEmblemParts } from '../items'
+import { LabeledNumberInput, OneClickButtonGroup, RadioGroup } from './widgets/Forms'
 
 const selectMaxArmorUpgradeValue = createSelector(
   armorParts.map(part => selectUpgradeValue[part]),
@@ -43,11 +48,11 @@ export function EquipBatch() {
   const onButtonClick = useCallback((v: string) => {
     switch (v) {
       case "magicPropLeft":
-        return dispatch(SetPerfectMagicPropsStat())
-      case "magicPropFire": return dispatch(SetPerfectMagicPropsEl("el_fire"))
-      case "magicPropIce":  return dispatch(SetPerfectMagicPropsEl("el_ice"))
-      case "magicPropLight":return dispatch(SetPerfectMagicPropsEl("el_lght"))
-      case "magicPropDark": return dispatch(SetPerfectMagicPropsEl("el_dark"))
+        return dispatch(PerfectMyMagicProps())
+      case "magicPropFire": return dispatch(PerfectMyMagicPropsEl("el_fire"))
+      case "magicPropIce":  return dispatch(PerfectMyMagicPropsEl("el_ice"))
+      case "magicPropLight":return dispatch(PerfectMyMagicPropsEl("el_lght"))
+      case "magicPropDark": return dispatch(PerfectMyMagicPropsEl("el_dark"))
 
     }
   }, [myAtype])
@@ -56,18 +61,18 @@ export function EquipBatch() {
       <h4>장비 모두 설정</h4>
       <div className="EquipBatchLayout">
         <LabeledNumberInput label="방어구 강화보너스" value={armorUpgradeValue} onChange={v => {
-          dispatch(SetArmorUpgradeAll(v))
+          dispatch(SetMyArmorUpgradeAll(v))
         }} />
         <LabeledNumberInput label="악세서리 강화보너스" value={accessUpgradeValue} onChange={v => {
-          dispatch(SetAccessUpgradeAll(v))
+          dispatch(SetMyAccessUpgradeAll(v))
         }} />
         <LabeledNumberInput label="고정엠블렘 레벨" value={colorEmblemLevel}
           min={5} max={10} step={1}
           onChange={v => {
-          dispatch(SetColorEmblemLevelAll(v))
+          dispatch(SetMyEmblemLevelAll(v))
         }} />
         <RadioGroup name="방어구 재질" values={["천", "가죽", "경갑", "중갑", "판금"]} value={mat}
-          dispatcher={v => dispatch(SetMaterialAll(v))}
+          dispatcher={v => dispatch(SetMyMaterialAll(v))}
         />
         <OneClickButtonGroup name="완벽한 마봉작" dispatcher={onButtonClick}
           values={["magicPropLeft", "magicPropFire", "magicPropIce", "magicPropLight", "magicPropDark"]}

@@ -1,11 +1,12 @@
-import styled from "styled-components"
-import { useAppSelector } from "../feats/hooks"
-import { selectMyAttr, selectMyFinalEltype } from "../feats/selector/selectors"
-import { AtypeAttrKey, Elemental } from "../constants"
-import { selectClassAtype } from "../feats/selector/selfSelectors"
-import { Num } from "./widgets/NumberView"
-import { AtkOut, EldmgFt, StatOut, critChance, critFt } from "../damage"
-import { add } from "../utils"
+import styled from 'styled-components'
+
+import { AtypeAttrKey, Elemental } from '../constants'
+import { AtkOut, critChance, critFt, EldmgFt, StatOut } from '../damage'
+import { useAppSelector } from '../feats/hooks'
+import { selectClassAtype } from '../feats/selector/baseSelectors'
+import { selectMyAttr, selectMyFinalEltype } from '../feats/selector/selectors'
+import { add } from '../utils'
+import { Num } from './widgets/NumberView'
 
 interface ResultOneProps {
   numStyle?: string

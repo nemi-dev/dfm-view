@@ -1,6 +1,8 @@
 import _skills from '../data/skills.json'
 import _selfSkills from '../data/selfskills.json'
 import { add, compound } from './utils'
+import { whois } from './dfclass'
+import memoizee from 'memoizee'
 
 export const skills = _skills as unknown as AttackSkill[]
 export const selfSkills = _selfSkills as unknown as SelfSkill[]
@@ -30,33 +32,47 @@ export function applyLevel(s: SkillValue, level: number) {
   return s.base + s.inc * level
 }
 
+/** 스킬이 충전공격 되는지 확인한다. */
+export function isChargable(sk: AttackSkill) {
+  return (sk.chargeup && sk.chargeup > 1)
+   || (sk.attacks?.find(a => a.chargeup && a.chargeup > 1))
+}
+
 /** 스킬 공격 하나에 레벨을 지정하여 실제값을 얻는다. */
 function bindSkillAttack(
   skillName: string,
   attack: UnboundOneAttack,
   skLv: number,
-  chargeup: number,
+  skChargeup: number,
+  charged: boolean,
   variantKey: string | null | undefined,
   attrs: BaseAttrs = {}): RealOneAttack {
 
   const {
     sk_val = {},
-    sk_hit = {}
+    sk_hit = {},
+    sk_chargeup_add = {}
   } = attrs
 
-  const skKeyLookup = [skillName, `${skillName}[${attack.atName}]`]
+  const { atName, maxHit = 1, eltype, chargeup: atChargeUp } = attack
+
+  const skKeyLookup = [skillName, `${skillName}[${atName}]`]
   if (variantKey) skKeyLookup.push(
     `${skillName}(${variantKey})`,
-    `${skillName}(${variantKey})[${attack.atName}]`
+    `${skillName}(${variantKey})[${atName}]`
   )
-  const skval_bonus = skKeyLookup.map(k => sk_val?.[k] ?? 0).reduce(compound, 0)
+  
+  const skval_bonus = skKeyLookup.map(k => sk_val[k] ?? 0).reduce(compound, 0)
   const skval1 = 1 + skval_bonus / 100
 
-  const skhit_bonus = skKeyLookup.map(k => sk_hit?.[k] ?? 0).reduce(add, 0)
+  const skhit_bonus = skKeyLookup.map(k => sk_hit[k] ?? 0).reduce(add, 0)
 
-  const { atName, maxHit = 1, eltype } = attack
-  const value = applyLevel(attack.value, skLv) * chargeup * skval1
-  const fixed = applyLevel(attack.fixed ?? attack.value, skLv) * chargeup * skval1
+  const chargeup = charged?
+  (( atChargeUp ?? skChargeup ) + skKeyLookup.map(k => sk_chargeup_add[k] ?? 0).reduce(add, 0) / 100)
+   : 1
+
+  const value = applyLevel(attack.value, skLv) * skval1 * chargeup
+  const fixed = applyLevel(attack.fixed ?? attack.value, skLv) * skval1 * chargeup
   const hit = maxHit + skhit_bonus
   return { atName, value, fixed, hit, eltype }
 }
@@ -64,6 +80,7 @@ function bindSkillAttack(
 interface BindSkillOption {
   chargeup?: number
   variant?: string
+  charged?: boolean
 }
 
 /** 공격스킬로부터 실제 공격들을 만들어낸다. */
@@ -71,13 +88,39 @@ export function bindSkill(
   sk: AttackSkill,
   baseSkLv: number,
   attrs: BaseAttrs = {},
-  { chargeup = 1, variant }: BindSkillOption = {}
+  { variant, charged = false }: BindSkillOption = {}
   ) {
   const attacks = variant?
     sk.variant?.find(v => v.vaName == variant)?.attacks
-    : sk.attacks
+    : (sk.attacks ?? [])
   const { sk_lv = {} } = attrs
   const sklvBonus = (sk_lv[sk.name] ?? 0)
 
-  return attacks?.map(at => bindSkillAttack(sk.name, at, baseSkLv + sklvBonus, chargeup, variant, attrs)) ?? []
+  const skChargeup = charged? sk.chargeup ?? 1 : 1
+
+  return attacks?.map(at => bindSkillAttack(sk.name, at, baseSkLv + sklvBonus, skChargeup, charged, variant, attrs)) ?? []
 }
+
+
+/** 스킬 이름이 "@" 로 시작하는 것들은 모두 query이다. */
+export const querySkill = memoizee(function querySkill(query: string) {
+  const match = /^@((?<dfclass>Mage):)?Lv(?<aqLv>\d+)(-(?<aqLvMax>\d+))?$/.exec(query)
+  if (!match) return []
+
+  const { dfclass, aqLv, aqLvMax } = match.groups
+
+  let heap: AttackSkill[]
+  if (dfclass === "Mage") {
+    heap = (["엘레멘탈마스터", "마도학자"] as const).map(dfc => whois(dfc).skills).flatMap(sk => sk.map(getSkill)) /*whois("엘레멘탈마스터").skills.map(getSkill)*/
+  } else {
+    heap = skills
+  }
+
+  if (aqLvMax == null) {
+    return heap.filter(sk => sk.level == parseInt(aqLv))
+  } else {
+    console.log(query)
+    return heap.filter(sk => sk.level >= parseInt(aqLv) && sk.level <= parseInt(aqLvMax))
+  }
+
+}, { primitive: true })

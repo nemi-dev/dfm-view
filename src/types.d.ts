@@ -1,10 +1,11 @@
-declare type NumberZ = number | ""
+declare type DFClassName = "버서커" | "소울브링어" | "웨펀마스터" | "아수라" | "레인저(남)" | "런처(남)" | "메카닉" | "스핏파이어" | "스트라이커" | "넨마스터" | "엘레멘탈마스터" | "마도학자" | "크루세이더(여)" | "미스트리스" | "이단심판관" | "무녀" | "소드마스터" | "베가본드" | "다크템플러" | "데몬슬레이어" | "크루세이더(남)" | "인파이터" | "와일드베인" | "윈드시어" | "레인저(여)" | "런처(여)"
 
-declare type Atype = "Physc" | "Magic"
 declare type Rarity = "Common" | "Uncommon" | "Rare" | "Unique" | "Epic"
+declare type Atype = "Physc" | "Magic"
 declare type Eltype = "Fire" | "Ice" | "Light" | "Dark"
 
-declare type DFClassName = "버서커" | "소울브링어" | "웨펀마스터" | "아수라" | "레인저(남)" | "런처(남)" | "메카닉" | "스핏파이어" | "스트라이커" | "넨마스터" | "엘레멘탈마스터" | "마도학자" | "크루세이더(여)" | "미스트리스" | "이단심판관" | "무녀" | "소드마스터" | "베가본드" | "다크템플러" | "데몬슬레이어" | "크루세이더(남)" | "인파이터" | "와일드베인" | "윈드시어" | "레인저(여)" | "런처(여)"
+declare type Itype = WeaponType
+|"상의"|"하의"|"머리어깨"|"벨트"|"신발"|"목걸이"|"팔찌"|"반지"|"보조장비"|"카드"|"칭호"|"봉인석"|"정수"|"오라"|"무기아바타"|"크리쳐"
 
 declare type WeaponType = 
 "소검"|"도"|"둔기"|"대검"|"광검"
@@ -14,8 +15,6 @@ declare type WeaponType =
 |"십자가"|"염주"|"토템"|"낫"|"배틀액스"
 |"락소드"|"윙블레이드"
 
-declare type Itype = WeaponType
-|"상의"|"하의"|"머리어깨"|"벨트"|"신발"|"목걸이"|"팔찌"|"반지"|"보조장비"|"카드"|"칭호"|"봉인석"|"정수"|"오라"|"무기아바타"|"크리쳐"
 
 /** 
  * - 인벤토리의 [장비] 탭에 나오는 아이템을 끼는 부위  
@@ -61,6 +60,24 @@ declare type ArtifactColor = "Red" | "Green" | "Blue"
 declare interface LinearValue {
   base: number
   inc: number
+}
+
+/** 특정 아이템을 선택하고 설정하기 위한 타입 */
+declare type ItemPositionDescriptor = {
+  charID: number | undefined
+  part: Exclude<WholePart, "정수" | "아티팩트">
+} | {
+  charID: number | undefined
+  part: "정수"
+  index: number
+} | {
+  charID: number | undefined
+  part: "아티팩트"
+  index: ArtifactColor
+}
+
+declare type ItemSetDescriptor = ItemPositionDescriptor & {
+  value: ItemIdentifier
 }
 
 /** 스킬레벨이 정해지지 않았을 때 스킬 수치 (계수, 스탯증가 등) */
@@ -172,6 +189,9 @@ declare interface BaseAttrs {
 
   /** 특정 스킬 쿨타임 증가/감소 (%) */
   sk_cool?: { [k: string]: number }
+
+  /** 특정 스킬의 충전시 공격력 배율 증가 (%) */
+  sk_chargeup_add?: { [k: string]: number }
 
   /** 적 방어력 변화 (내가 공격한 적 + 방어 감소 오라 모두 포함) */
   target_def?: number
@@ -386,10 +406,10 @@ declare interface DFClass {
   attrs: BaseAttrs
 
   /** 이 직업이 사용가능한 공격 스킬들 이름 */
-  skills: string[]
+  skills: number[]
 
   /** 이 직업이 사용가능한 패시브/버프 스킬 이름 */
-  selfSkills: string[]
+  selfSkills: number[]
 }
 
 /** 
@@ -435,9 +455,7 @@ declare interface ComplexAttrSource extends AttrSource {
 
 /** 공격 스킬의 공격 하나하나를 나타낸다. */
 declare interface CustomSkillOneAttackSpec {
-  /** 
-   * 스킬 공격 세부 이름
-   */
+  /** 스킬 공격 세부 이름 */
   name: string
 
   /** 스킬 계수 */
@@ -446,13 +464,14 @@ declare interface CustomSkillOneAttackSpec {
   /** 스킬 고정값 (없으면 value와 같은 것으로 간주) */
   fixed?: number
 
-  /**
-   * 스증 적용 여부
-   */
+  /** 스증 적용 여부 */
   isSkill?: boolean
 
+  /** @deprecated `hit`로 옮겼다. */
+  maxHit?: never
+
   /** 타격 횟수 (없으면 1) */
-  maxHit?: number
+  hit?: number
 
   /** 이 공격에만 적용되는 공격속성 */
   eltype?: Eltype[] | null | undefined
@@ -477,6 +496,9 @@ declare interface UnboundOneAttack {
 
   /** 이 공격에만 적용되는 공격속성 (쓰일 가능성 낮음) */
   eltype?: Eltype[] | null | undefined
+
+  /** 이게 유횻값이면 스킬의 `chargeup`을 무시하고 이것을 적용한다. */
+  chargeup?: number | null | undefined
 
 }
 
@@ -526,7 +548,7 @@ declare interface AttackSkill {
   eltype?: Eltype[] | false | null | undefined
 
   /** 이 스킬을 썼을 때 나갈 공격들 */
-  attacks: UnboundOneAttack[]
+  attacks?: UnboundOneAttack[]
 
   /** 풀충전 또는 대성공 등 스칼라배할 값 */
   chargeup?: number

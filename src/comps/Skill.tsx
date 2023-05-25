@@ -1,14 +1,22 @@
-import styled from "styled-components"
-import { useAppSelector } from "../feats/hooks"
-import { selectClassASkills, selectClassAtype, selectMyLevel } from "../feats/selector/selfSelectors"
-import { bindSkill, getMaxSkillLevelAt } from "../skills"
-import { selectEnemyDefRate, selectEnemyElRes, selectMyAttr, selectMyCritChance } from "../feats/selector/selectors"
-import { Num } from "./widgets/NumberView"
-import { critFt, getSkillDamage } from "../damage"
-import { whatElType } from "../attrs"
-import { add } from "../utils"
-import { useState } from "react"
-import { ErrorBoundary, FallbackProps } from "react-error-boundary"
+import { Fragment, useState } from 'react'
+import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
+import styled from 'styled-components'
+
+import { whatElType } from '../attrs'
+import { critFt, getSkillDamage } from '../damage'
+import { useAppDispatch, useAppSelector } from '../feats/hooks'
+import {
+  selectClassASkills, selectClassAtype, selectMyAtkFixed, selectMyLevel
+} from '../feats/selector/baseSelectors'
+import {
+  selectEnemyDefRate, selectEnemyElRes, selectMyAttr, selectMyCritChance
+} from '../feats/selector/selectors'
+import { bindSkill, getMaxSkillLevelAt, isChargable } from '../skills'
+import { add } from '../utils'
+import { Num } from './widgets/NumberView'
+import { selectSkillLevel, selectSkillLevelBonus } from '../feats/selector/skillSelectors'
+import { NumberInput } from './widgets/Forms'
+import { SetSkillLevel } from '../feats/slices/slicev5'
 
 function union<T>(a: T[], b: T[]) {
   return [...a, ...b].reduce((v, i) => {
@@ -30,6 +38,7 @@ interface OneAttackProps {
 
 interface SkillOneProps {
   skill: AttackSkill
+  charged?: boolean
 }
 
 
@@ -59,7 +68,7 @@ function SkillDamage({ skill, attacks }: { skill: AttackSkill, attacks: RealOneA
 
   const atype = useAppSelector(selectClassAtype)
   const attrs = useAppSelector(selectMyAttr)
-  const atkFix = useAppSelector(state => state.My.Self.atkFixed)
+  const atkFix = useAppSelector(selectMyAtkFixed)
   const chance = useAppSelector(selectMyCritChance)
 
   /** 일단 나한테 달려있는 모든 속성부여들 (가장 높은 속성강화 그런거 아직 적용안함) */
@@ -81,12 +90,8 @@ function SkillDamage({ skill, attacks }: { skill: AttackSkill, attacks: RealOneA
 
   return (
     <>
-      <div>
-        평균 {<Num className={"AttrValue "+atype} value={mean} separated/>}
-      </div>
-      <div>
-        크리 {<Num className={"AttrValue "+atype} value={criticalDamage} separated/>}
-      </div>
+      <Num className={"AttrValue "+atype} value={mean} separated/>
+      <Num className={"AttrValue "+atype} value={criticalDamage} separated/>
     </>
   )
 }
@@ -94,9 +99,6 @@ function SkillDamage({ skill, attacks }: { skill: AttackSkill, attacks: RealOneA
 const AttackSkillStyle = styled.div`
   padding: 0.5rem;
   box-sizing: border-box;
-
-  display: flex;
-  flex-direction: column;
 
   @media screen and (max-width: 999px) {
     padding: 0.25rem;
@@ -107,21 +109,19 @@ const SkillHeadingStyle = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: space-between;
   gap: 4px;
   margin: 0;
 `
 
 const SkillName = styled.div`
   font-weight: 900;
+  white-space: nowrap;
   color: white;
 `
 
-const SkillLevel = styled.div`
-  color: var(--color-epic);
-`
-
-const SkillLevelBonus = styled.div`
+const SkillLevelBonus = styled.span`
   color: var(--color-green);
 `
 
@@ -130,25 +130,24 @@ const SkillSuffix = styled.div`
 `
 
 interface SkillHeadingProps {
-  skName: string
+  skill: AttackSkill
   baseSkLv: number
   sklvBonus?: number
-}
-
-/** 공격스킬 헤드 부분 */
-function SkillHeading({ skName, baseSkLv, sklvBonus = 0 }: SkillHeadingProps) {
-  return (
-  <SkillHeadingStyle>
-    <SkillName>{skName}</SkillName>
-    <SkillLevel>Lv.{baseSkLv + sklvBonus}</SkillLevel>
-    {sklvBonus? <SkillLevelBonus>(+{sklvBonus})</SkillLevelBonus> : null}
-  </SkillHeadingStyle>
-  )
 }
 
 interface ExtraIndexProps {
   skillName: string
   suffix: string
+}
+
+/** 공격스킬 헤드 부분 */
+function SkillHeading({ skill, baseSkLv, sklvBonus = 0 }: SkillHeadingProps) {
+  return (
+  <SkillHeadingStyle>
+    <SkillName>{skill.name}</SkillName>
+    <SkillLevelConfig skill={skill} skLv={baseSkLv} skLvBonus={sklvBonus} />
+  </SkillHeadingStyle>
+  )
 }
 
 /** 바리에이션 또는 풀충전이 적용된 공격스킬 행 헤딩 */
@@ -162,35 +161,80 @@ function AttackSkillExtraIndex({ skillName, suffix }: ExtraIndexProps) {
 }
 
 
-const SkillMainView = styled.div`
+const BaseRow = styled.div`
   display: grid;
   grid-template-columns: 1fr 2fr 2fr;
   align-items: center;
   align-content: center;
-  justify-items: center;
+  justify-items: end;
+`
 
+const SkillRow = styled(BaseRow)`
   > :first-child {
-    justify-self: start;
+    justify-self: stretch;
   }
 `
 
-/** 바리에이션도, 풀충전도 아닌 스킬 사용 */
-function AttackSkillPureCase({ skill }: SkillOneProps) {
+interface SkConfigProps {
+  skill: AttackSkill
+  skLv: number
+  skLvBonus? : number
+}
+
+const SkillLevelLabel = styled.span`
+  color: var(--color-epic);
+`
+
+const SkillLevelInput = styled(NumberInput)`
+  input[type='number']& {
+    width: 2rem;
+    color: var(--color-epic);
+    background-color: transparent!important;
+    text-align: left;
+    font-size: inherit;
+  }
+`
+
+const SkillConfigStyle = styled.div`
+`
+
+function SkillLevelConfig({ skill, skLv, skLvBonus }: SkConfigProps) {
+  const dispatch = useAppDispatch()
+
+  return (
+    <SkillConfigStyle>
+      <SkillLevelLabel>Lv.</SkillLevelLabel>
+      <SkillLevelInput value={skLv}
+      onChange={value => dispatch(SetSkillLevel({ skID: skill.id, value }))}
+      onClick={ev => ev.stopPropagation()}
+      />
+      {skLvBonus? <SkillLevelBonus>(+{skLvBonus})</SkillLevelBonus> : null}
+    </SkillConfigStyle>
+  )
+}
+
+/** 그냥 사용 or 풀충전 스킬 사용 */
+function AttackSkillDefault({ skill, charged = false }: SkillOneProps) {
   const [showDetail, setShowDetail] = useState(false)
   const myLevel = useAppSelector(selectMyLevel)
   const myAttrs = useAppSelector(selectMyAttr)
+  const skLvBonus = useAppSelector(state => selectSkillLevelBonus(state, undefined, skill))
 
-  /** @todo 스킬레벨을 사용자가 입력하도록 하시오. */
-  const baseSkLv = getMaxSkillLevelAt(skill, myLevel, true)
-  const attacks = bindSkill(skill, baseSkLv, myAttrs)
-  const { sk_lv = {} } = myAttrs
-  const sklvBonus = (sk_lv[skill.name] ?? 0)
+  const skLvInput = useAppSelector(state => selectSkillLevel(state, undefined, skill.id ))
+
+  const maxSkLv = getMaxSkillLevelAt(skill, myLevel, true)
+  const baseSkLv = skLvInput != null? Math.max(Math.min(skLvInput, maxSkLv), 0) : maxSkLv
+  const attacks = bindSkill(skill, baseSkLv, myAttrs, { charged })
+
   return (
     <AttackSkillStyle className="AttackSkill Bordered">
-      <SkillMainView onClick={() => setShowDetail(!showDetail)}>
-        <SkillHeading skName={skill.name} baseSkLv={baseSkLv} sklvBonus={sklvBonus} />
+      <SkillRow onClick={() => setShowDetail(!showDetail)}>
+        {charged?
+          <AttackSkillExtraIndex skillName={skill.name} suffix={skill.chargeupType ?? "충전"} />
+          :<SkillHeading skill={skill} baseSkLv={baseSkLv} sklvBonus={skLvBonus} />
+        }
         <SkillDamage skill={skill} attacks={attacks}/>
-      </SkillMainView>
+      </SkillRow>
       {showDetail && <SkillDetailView attacks={attacks} />}
     </AttackSkillStyle>
   )
@@ -201,8 +245,8 @@ interface AttackSkillVariantProps {
   variant: string
 }
 
-/** 바리에이션만 적용된 스킬 */
-function AttackSkillVariantCase({ skill, variant }: AttackSkillVariantProps) {
+/** 바리에이션이 적용된 스킬 */
+function AttackSkillVariant({ skill, variant }: AttackSkillVariantProps) {
   const [showDetail, setShowDetail] = useState(false)
   const myLevel = useAppSelector(selectMyLevel)
   const myAttrs = useAppSelector(selectMyAttr)
@@ -213,50 +257,31 @@ function AttackSkillVariantCase({ skill, variant }: AttackSkillVariantProps) {
 
   return (
     <AttackSkillStyle className="AttackSkill Bordered">
-      <SkillMainView onClick={() => setShowDetail(!showDetail)}>
+      <SkillRow onClick={() => setShowDetail(!showDetail)}>
         <AttackSkillExtraIndex skillName={skill.name} suffix={variant} />
         <SkillDamage skill={skill} attacks={attacks}/>
-      </SkillMainView>
-      {showDetail && <SkillDetailView attacks={attacks} />}
-    </AttackSkillStyle>
-  )
-}
-
-/** 풀충전만 적용된 스킬 */
-function AttackSkillChargeupCase({ skill }: SkillOneProps) {
-  const [showDetail, setShowDetail] = useState(false)
-  const myLevel = useAppSelector(selectMyLevel)
-  const myAttrs = useAppSelector(selectMyAttr)
-
-  /** @todo 스킬레벨을 사용자가 입력하도록 하시오. */
-  const baseSkLv = getMaxSkillLevelAt(skill, myLevel, true)
-  const attacks = bindSkill(skill, baseSkLv, myAttrs, { chargeup: skill.chargeup })
-  return (
-    <AttackSkillStyle className="AttackSkill Bordered">
-      <SkillMainView onClick={() => setShowDetail(!showDetail)}>
-        <AttackSkillExtraIndex skillName={skill.name} suffix={skill.chargeupType ?? "충전"} />
-        <SkillDamage skill={skill} attacks={attacks}/>
-      </SkillMainView>
+      </SkillRow>
       {showDetail && <SkillDetailView attacks={attacks} />}
     </AttackSkillStyle>
   )
 }
 
 /** 공격스킬과 그에 딸린 바리에이션, 풀충전시 데미지 수치를 렌더한다. */
-function AttackSkill({ skill }: SkillOneProps) {
-  return (<>
-    <AttackSkillPureCase skill={skill} />
-    {skill.variant?.length ?? 0 > 0?
-    skill.variant?.map(va => 
-      <AttackSkillVariantCase key={va.vaName} skill={skill} variant={va.vaName} />
-    ): null}
-    {skill.chargeup ?? 1 > 1?
-    <AttackSkillChargeupCase skill={skill} />
-    : null}
+function SkillListContent() {
+  const skills = useAppSelector(selectClassASkills)
+  if (!(skills?.length > 0)) return <SkillNotImplemented />
+  return <>
+    {skills.map(skill => 
+    <Fragment key={skill.name}>
+      <AttackSkillDefault skill={skill} />
+      {isChargable(skill) && <AttackSkillDefault skill={skill} charged />}
+      {skill.variant?.map(va => 
+      <AttackSkillVariant key={va.vaName} skill={skill} variant={va.vaName} />
+      )}
+    </Fragment>
+    )}
   </>
-  )
 }
-
 
 function SkillNotImplemented() {
   return <div style={{ textAlign: "center" }}>
@@ -271,8 +296,13 @@ const AttackSkillListStyle = styled.div`
   flex-wrap: wrap;
 `
 
+const SkillHeadingRow = styled(BaseRow)`
+  > * {
+    text-align: center;
+  }
+`
+
 export function Skill() {
-  const skills = useAppSelector(selectClassASkills)
   return (
     <ErrorBoundary FallbackComponent={SkillError}>
       <div id="Skill">
@@ -280,9 +310,12 @@ export function Skill() {
           <h3>스킬</h3>
         </header>
         <AttackSkillListStyle className="SkillList">
-          {skills?.length > 0? skills.map(sk => (
-            <AttackSkill key={sk.name} skill={sk} />
-          )): <SkillNotImplemented />}
+          <SkillHeadingRow className="Bordered">
+            <div>스킬</div>
+            <div>평균데미지<br /><small>(크리확률+배율 적용)</small></div>
+            <div>크리티컬 데미지<br /><small>(크리배율 적용)</small></div>
+          </SkillHeadingRow>
+          <SkillListContent />
         </AttackSkillListStyle>
       </div>
     </ErrorBoundary>

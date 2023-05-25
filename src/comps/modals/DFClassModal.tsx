@@ -1,10 +1,11 @@
-import styled from "styled-components"
-import { useAppDispatch, useAppSelector } from "../../feats/hooks"
-import { selectMyDFClass, selectMyName } from "../../feats/selector/selfSelectors"
-import { SetDFClass, SetMyName } from "../../feats/slices/slice"
-import { DFClassIcon } from "../widgets/Icons"
-import { useContext } from "react"
-import { PortraitMode } from "../../responsiveContext"
+import { useContext } from 'react'
+import styled from 'styled-components'
+
+import { useAppDispatch, useAppSelector } from '../../feats/hooks'
+import { selectMyDFClass, selectName } from '../../feats/selector/baseSelectors'
+import { SetMyDFClass, SetMyName } from '../../feats/slices/slicev5'
+import { PortraitMode } from '../../responsiveContext'
+import { DFClassIcon } from '../widgets/Icons'
 
 const DFClassLayout = styled.div<{ columns: number }>`
   display: grid;
@@ -33,7 +34,7 @@ const dfclassOrder: DFClassName[] = [
 export function DFClassModal() {
   const dispatch = useAppDispatch()
   const myClass = useAppSelector(selectMyDFClass)
-  const myName = useAppSelector(selectMyName)
+  const myName = useAppSelector(selectName)
   const portrait = useContext(PortraitMode)
   return (
     <div>
@@ -47,7 +48,7 @@ export function DFClassModal() {
       <div className="ModalMenuScrollable">
       <DFClassLayout columns={portrait? 4 : 8}>
       {dfclassOrder.map((name) => 
-        <DFClassIcon key={name} dfclassName={name} onClick={() => dispatch(SetDFClass(name))} />
+        <DFClassIcon key={name} dfclassName={name} onClick={() => dispatch(SetMyDFClass(name))} />
       )}
       </DFClassLayout>
       </div>

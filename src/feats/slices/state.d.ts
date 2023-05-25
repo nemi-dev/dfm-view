@@ -1,5 +1,6 @@
 declare type ItemIdentifier = string | null | undefined
 
+/** @deprecated 이제 DFChar에 직접 들어간다. */
 declare interface SelfState {
 
   /** 얘 이름 */
@@ -181,37 +182,29 @@ declare type CalibrateState = Pick<BaseAttrs,
 | "intl" 
 | "str_inc" 
 | "int_inc" 
-
 | "atk_ph" 
 | "atk_mg" 
 | "atk_ph_inc" 
 | "atk_mg_inc" 
-
 | "crit_ph" 
 | "crit_mg" 
 | "crit_ph_pct" 
 | "crit_mg_pct" 
-
 | "dmg_inc" 
 | "cdmg_inc" 
 | "catk_inc" 
 | "dmg_add" 
-
 | "el_fire" 
 | "el_ice" 
 | "el_lght" 
 | "el_dark" 
-
 | "eldmg_fire" 
 | "eldmg_ice" 
 | "eldmg_lght" 
 | "eldmg_dark" 
-  
 | "sk_inc_sum" 
-
 | "target_def" 
 | "target_res" 
-
 | "DefBreak" 
 > & {
   eltype: Eltype[]
@@ -224,35 +217,43 @@ declare interface CustomSkillState {
 
 /** 여기까지가 "캐릭터 저장" 단위다  */
 declare interface DFCharState {
-  Self: SelfState
-  Item: ItemsState
-  Card: CardState
-  Emblem: EmblemState
-  MagicProps: MagicPropsState
-  Upgrade: UpgradeOrKaledoState
-  Material: MaterialState
-  Avatar: AvatarRarityState
-  Guild: GuildState
-  CreatureValue: CreaturePropState
-  Choice: Choices
-  Calibrate: CalibrateState
-}
+  /** @deprecated  이제 캐릭터에 직접 들어간다 */
+  Self?: never
 
-declare interface EnemyTargetState {
-  /** 적 방어력 (물리+마법 모두) */
-  Defense: number
-
-  /** 적 속성저항 (4속성 모두) */
-  ElRes: number
-}
-
-declare interface SavedChar {
-  
   id: string
   TimeStamp: number
-  DFChar: DFCharState
-  DamageGrab: number
+
+  name: string
+  level: number
+  dfclass: DFClassName
+  achieveLevel: number
+  atkFixed: number
+
+  items: ItemsState
+  cards: CardState
+  emblems: EmblemState
+  magicProps: MagicPropsState
+  upgradeValues: UpgradeOrKaledoState
+  materials: MaterialState
+  avatars: AvatarRarityState
+  guild: GuildState
+  creatureValues: CreaturePropState
+  choices: Choices
+  calibrate: CalibrateState
+  skillLevelMap: {
+    [skillID: number]: number
+  }
+  skillTPMap: {
+    [skillID: number]: number
+  }
+  skillUseCountMap: {
+    [skillID: number]: number
+  }
+  skillChargeupMap: {
+    [skillID: number]: boolean
+  }
 }
+
 
 declare interface EquipPreset {
   id: string
@@ -270,23 +271,35 @@ declare interface CustomSkillPreset {
   Skills: CustomSkillState
 }
 
-declare interface SavedCharCollection {
-  byID: {
-    [k: string]: SavedChar
-  }
-  IDs: string[]
-}
+declare interface V5State {
+  currentID: string
 
-declare interface EquipPresetCollection {
-  byID: {
-    [k: string]: EquipPreset
-  }
-  IDs: string[]
-}
+  /** @deprecated 이제 Chars에 바로 접근한다. */
+  My?: never
 
-declare interface CustomSkillPresetCollection {
-  byID: {
-    [k: string]: CustomSkillPreset
+  SavedChars: {
+    byID: { [k: string]: DFCharState }
+    IDs: string[]
   }
-  IDs: string[]
+
+  Tonic: TonicState
+  EnemyTarget: {
+    /** 적 방어력 (물리+마법 모두) */
+    Defense: number
+  
+    /** 적 속성저항 (4속성 모두) */
+    ElRes: number
+  }
+
+  CustomSkill: CustomSkillOneAttackSpec[]
+
+  EquipPresets: {
+    byID: { [k: string]: EquipPreset }
+    IDs: string[]
+  }
+
+  CustomSkillPresets: {
+    byID: { [k: string]: CustomSkillPreset }
+    IDs: string[]
+  }
 }

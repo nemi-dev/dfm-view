@@ -1,13 +1,12 @@
-import { useAppSelector } from "../feats/hooks"
-import { selectMyAttr, selectMyFinalEltype } from "../feats/selector/selectors"
-import { AtypeAttrKey } from "../constants"
-import { selectClassAtype, selectMyDFClass } from "../feats/selector/selfSelectors"
-import { Num } from "./widgets/NumberView"
-import { critChance, critFt, getElementalDamage, getPlainDamage } from "../damage"
-import { add } from "../utils"
+import { AtypeAttrKey } from '../constants'
+import { critChance, critFt, getElementalDamage, getPlainDamage } from '../damage'
+import { useAppSelector } from '../feats/hooks'
+import { selectClassAtype, selectMyDFClass } from '../feats/selector/baseSelectors'
+import { selectMyAttr, selectMyFinalEltype } from '../feats/selector/selectors'
+import { add } from '../utils'
+import { Num } from './widgets/NumberView'
 
-
-export function DamageOutput({ sk = false, crit = false }: { sk?: boolean, crit?: boolean | "mean" }) {
+export function DamageOutput({ sk = false, crit = false, id = null }: { sk?: boolean, crit?: boolean | "mean", id?: string }) {
   const attrs = useAppSelector(selectMyAttr)
   const dfclass = useAppSelector(selectMyDFClass)
   const atype = useAppSelector(selectClassAtype)

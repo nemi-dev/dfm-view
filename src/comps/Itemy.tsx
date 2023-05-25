@@ -1,15 +1,26 @@
-import { useAppSelector, useAppDispatch } from "../feats/hooks"
-import { selectItem, selectCustomMaterial, selectEmblemSpecs, selectCard, selectUpgradeValue } from "../feats/selector/equipSelectors"
-import { EmblemIcon, ItemIcon } from "./widgets/Icons"
-import { DecreaseEmblemLevel, SetMaterial, SetUpgradeValue } from "../feats/slices/itemSlice"
-import { getMaxEmblemCount, isArmor, isCardable, isEquip } from "../items"
-import { acceptEmblem } from "../emblem"
-import { useCallback, useContext } from "react"
-import { EmblemModal } from "./modals/EmblemModal"
-import { ModalContext } from "./modals/modalContext"
-import { CardModalFragment } from "./modals/CardModal"
-import { SetArtifactValue, SetCreatureStat } from "../feats/slices/slice"
-import { NumberInput } from "./widgets/Forms"
+import { useCallback, useContext } from 'react'
+
+import { createSelector } from '@reduxjs/toolkit'
+
+import { acceptEmblem } from '../emblem'
+import { useAppDispatch, useAppSelector } from '../feats/hooks'
+import { selectDFChar } from '../feats/selector/baseSelectors'
+import {
+    selectCard, selectCustomMaterial, selectEmblemSpecs, selectItem, selectUpgradeValue
+} from '../feats/selector/equipSelectors'
+import {
+    DecreaseMyEmblemLevel, SetMyArtifactValue, SetMyCreatureStat, SetMyMaterial, SetMyUpgradeValue
+} from '../feats/slices/slicev5'
+import { getMaxEmblemCount, isArmor, isCardable, isEquip } from '../items'
+import { CardModalFragment } from './modals/CardModal'
+import { EmblemModal } from './modals/EmblemModal'
+import { ModalContext } from './modals/modalContext'
+import { NumberInput } from './widgets/Forms'
+import { EmblemIcon, ItemIcon } from './widgets/Icons'
+
+const selectCreatureValue = createSelector(
+  selectDFChar, my => my.creatureValues
+)
 
 interface EquipProps {
   part: EquipPart
@@ -32,13 +43,13 @@ export function UpgradeFlex({ value, setValue }: UpgradeFlexProps) {
 function UpgradeEquip({ part }: EquipProps) {
   const dispatch = useAppDispatch()
   const value = useAppSelector(selectUpgradeValue[part])
-  return <UpgradeFlex value={value} setValue={v => dispatch(SetUpgradeValue([part, v]))} />
+  return <UpgradeFlex value={value} setValue={v => dispatch(SetMyUpgradeValue([part, v]))} />
 }
 
 function UpgradeCreature() {
   const dispatch = useAppDispatch()
-  const value = useAppSelector(state => state.My.CreatureValue.Creature)
-  return <UpgradeFlex value={value} setValue={v => dispatch(SetCreatureStat(v))} />
+  const value = useAppSelector(state => selectCreatureValue(state).Creature)
+  return <UpgradeFlex value={value} setValue={v => dispatch(SetMyCreatureStat(v))} />
 }
 
 export function Upgrade({ part }: PartProps) {
@@ -51,9 +62,9 @@ export function Upgrade({ part }: PartProps) {
 
 export function ArtiUpgrade({ color }: { color: ArtifactColor }) {
   const dispatch = useAppDispatch()
-  const value = useAppSelector(state => state.My.CreatureValue[color])
+  const value = useAppSelector(state => selectCreatureValue(state)[color])
   const setValue = useCallback((v: number) => {
-    dispatch(SetArtifactValue([color, v]))
+    dispatch(SetMyArtifactValue([color, v]))
   }, [color])
   return <UpgradeFlex value={value} setValue={setValue}/>
 }
@@ -73,7 +84,7 @@ export function ArmorMaterialSelect({ part }: PartProps) {
   if (!item || materialFixed) return null
   return (
     <select className="ArmorMaterialSelector" value={material}
-      onChange={ev => dispatch(SetMaterial([part, ev.target.value as ArmorMaterial]))}>
+      onChange={ev => dispatch(SetMyMaterial([part, ev.target.value as ArmorMaterial]))}>
       <option value="천">천</option>
       <option value="가죽">가죽</option>
       <option value="경갑">경갑</option>
@@ -105,7 +116,7 @@ export function EmblemArray({ part }: PartProps) {
     if (part === "무기" || part === "보조장비" || part === "칭호")
       openModal(<EmblemModal part={part} index={index} />)
     else
-      dispatch(DecreaseEmblemLevel([part, index]))
+      dispatch(DecreaseMyEmblemLevel([part, index]))
   }, [part])
 
   const accept = acceptEmblem(part)

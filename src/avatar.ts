@@ -1,4 +1,5 @@
 import memoizee from "memoizee"
+import { combine } from "./attrs"
 
 export const avatarParts = ["모자", "얼굴", "상의", "목가슴", "신발", "머리", "하의", "허리"] as WearAvatarPart[]
 
@@ -31,7 +32,6 @@ export const getAvatarAttr = memoizee(
 , { primitive: true })
 
 
-
 export const UncommonSet: Record<number, BaseAttrs> = {
   3: { strn: 20, intl: 20, vit: 10, psi: 10 },
   5: { hpmax: 100, mpmax: 100 },
@@ -47,4 +47,15 @@ export const rareSet: Record<number, BaseAttrs> = {
   }
 }
 
-
+export const makeAvatarSet = (catalog: Record<number, BaseAttrs>, name: string) => 
+(count: number): (AttrSource | undefined) => {
+  if (count > 0) {
+    const r = Object.keys(catalog).filter(i => (Number(i) <= count)).map(i => catalog[Number(i)])
+    if (r.length > 0) 
+    return {
+      name : `${name} [${count}]`,
+      attrs: combine(...r)
+    }
+  }
+  return undefined
+}

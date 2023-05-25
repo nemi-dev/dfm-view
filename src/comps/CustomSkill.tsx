@@ -1,19 +1,19 @@
 import styled from 'styled-components'
 
+import { whatElType } from '../attrs'
 import { AtypeAttrKey, Elemental } from '../constants'
 import { critFt, dmg } from '../damage'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
+import { selectClassAtype } from '../feats/selector/baseSelectors'
 import {
-    selectEnemyDefRate, selectEnemyElRes, selectMyAttr, selectMyCritChance,
+    selectEnemyDefRate, selectEnemyElRes, selectMyAttr, selectMyCritChance
 } from '../feats/selector/selectors'
-import { selectClassAtype } from '../feats/selector/selfSelectors'
 import {
     SetSkillFixValue, SetSkillInputName, SetSkillMaxHit, SetSkillUsesSkillInc, SetSkillValue
-} from '../feats/slices/customSkillSlice'
+} from '../feats/slices/slicev5'
 import { add } from '../utils'
 import { LabeledNumberInput, LabeledSwitch } from './widgets/Forms'
 import { Num } from './widgets/NumberView'
-import { whatElType } from '../attrs'
 
 /** (옵션버전) 스탯 + 스탯증가 + 공격력 + 공격력증가 + 데미지증가 + 추가데미지 + 속성강화 + 적 속성저항 + 속성추뎀 + 평타/스킬계수 + 스킬공격력 증가가 적용된 데미지  
  * (크리티컬 빼고 모든게 적용됨)
@@ -24,7 +24,7 @@ function getCustomSkillDamage(
   atype: Atype,
   attrs: BaseAttrs,
   atkFix: number,
-  { value, fixed = value, isSkill = false, maxHit = 1 }: CustomSkillOneAttackSpec,
+  { value, fixed = value, isSkill = false, hit: maxHit = 1 }: CustomSkillOneAttackSpec,
   targetElRes: number,
   defRate: number
 ) {
@@ -88,7 +88,7 @@ interface SkillInputOneProps extends CustomSkillOneAttackSpec {
   fixed?: number
 }
 
-function SkillOneAttack({ index, value, fixed = value, isSkill = false, maxHit = 1, name }: SkillInputOneProps) {
+function SkillOneAttack({ index, value, fixed = value, isSkill = false, hit: maxHit = 1, name }: SkillInputOneProps) {
   const dispatch = useAppDispatch()
   return (
     <SkillOneAttackLayout className="SkillOneAttack">
@@ -112,7 +112,7 @@ function CustomSkillAttackOne({ index, SkillOneAttackSpec }: SkillOutputOneProps
 
   const atype = useAppSelector(selectClassAtype)
   const attrs = useAppSelector(selectMyAttr)
-  const atkFix = useAppSelector(state => state.My.Self.atkFixed)
+  const atkFix = useAppSelector(state => state.SavedChars.byID[state.currentID].atkFixed)
   const chance = useAppSelector(selectMyCritChance)
 
   const targetElRes = useAppSelector(selectEnemyElRes)

@@ -2,51 +2,53 @@ import { createSelector } from "@reduxjs/toolkit"
 import { combine } from "../../attrs"
 import { RootState } from "../store"
 import { GuildAccu, GuildAtk, GuildCrit, GuildEl, GuildSpeedAtk, GuildStat, GuildStatPublic } from "../../guild"
-import { selectClassAtype } from "./selfSelectors"
+import { selectDFChar, selectClassAtype } from "./baseSelectors"
 
-function selectGuildState(state: RootState) {
-  return state.My.Guild
-}
+export const selectGuildState = createSelector(
+  selectDFChar, dfchar => dfchar.guild
+)
 
+/** 길드버프: 내 공격타입 스탯 증가 효과를 선택한다. */
 export const selectGuildStat = createSelector(
   selectGuildState, selectClassAtype,
-  (guild, atype) => {
-    return GuildStat(guild.StatLv, atype)
-  }
+  (guild, atype) => GuildStat(guild.StatLv, atype)
 )
 
+/** 길드 공용 버프: 내 공격타입 스탯 증가 효과를 선택한다. */
 export const selectGuildStatPublic = createSelector(
   selectGuildState, selectClassAtype,
-  (guild, atype) => {
-    return GuildStatPublic(guild.PublicStatLv, atype)
-  }
+  (guild, atype) => GuildStatPublic(guild.PublicStatLv, atype)
 )
 
+/** 길드버프: 내 공격타입 공격력 증가 효과를 선택한다. */
 export const selectGuildAtk = createSelector(
   selectGuildState, selectClassAtype,
-  (guild, atype) => {
-    return GuildAtk(guild.AtkLv, atype)
-  }
+  (guild, atype) => GuildAtk(guild.AtkLv, atype)
 )
 
+/** 길드버프: 내 공격타입 크리티컬 증가 효과를 선택한다. */
 export const selectGuildCrit = createSelector(
   selectGuildState, selectClassAtype,
-  (guild, atype) => {
-    return GuildCrit(guild.CritLv, atype)
-  }
+  (guild, atype) =>  GuildCrit(guild.CritLv, atype)
 )
 
-export function selectGuildEl({ My: { Guild: { ElLv }}}: RootState) {
-  return GuildEl(ElLv)
-}
+/** 길드버프: 모든속성 강화 효과를 선택한다. */
+export const selectGuildEl = createSelector(
+  selectDFChar,
+  dfchar => GuildEl(dfchar.guild.ElLv)
+)
 
-export function selectGuildSpeedAtk({ My: { Guild: { SpeedAtkLv }}}: RootState) {
-  return GuildSpeedAtk(SpeedAtkLv)
-}
+/** 길드버프: 공격속도 증가 효과를 선택한다. */
+export const selectGuildSpeedAtk = createSelector(
+  selectDFChar,
+  dfchar => GuildSpeedAtk(dfchar.guild.SpeedAtkLv)
+)
 
-export function selectGuildAccu({ My: { Guild: { AccuLv }}}: RootState) {
-  return GuildAccu(AccuLv)
-}
+/** 길드버프: 적중 증가 효과를 선택한다. */
+export const selectGuildAccu = createSelector (
+  selectDFChar,
+  dfchar => GuildAccu(dfchar.guild.AccuLv)
+)
 
 
 /** 길드 스탯 보너스를 얻는다. */

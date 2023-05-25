@@ -1,14 +1,16 @@
-import { useCallback, useContext, useEffect } from "react"
+import { useCallback, useContext } from "react"
 import styled from "styled-components"
 import { useAppDispatch, useAppSelector } from "../../feats/hooks"
-import { CloneDF, CreateDF, DeleteDFChar, LoadDF, SaveDF } from "../../feats/saveReducers"
+import { CloneDF, CreateDF, DeleteDFChar, LoadDF } from "../../feats/slices/slicev5"
 import { RootState } from "../../feats/store"
 import { equipParts, getItem } from "../../items"
 import { ModalContext } from "./modalContext"
 import { DFClassIcon, ItemIcon } from "../widgets/Icons"
-import { Num } from "../widgets/NumberView"
 import { PlusCircle, Copy, Trash2, Download, ChevronUp, ChevronDown } from "react-feather"
-import { MoveDFCharDown, MoveDFCharUp } from "../../feats/slices/slice"
+import { MoveDFCharDown, MoveDFCharUp } from "../../feats/slices/slicev5"
+import { DamageOutput } from "../DamageOutput"
+import { selectExpressionDamage } from "../../feats/selector/selectors"
+import { Num } from "../widgets/NumberView"
 
 
 function selectSavedChars(state: RootState) {
@@ -74,12 +76,14 @@ const CharControlStyle = styled.div`
 `
 
 interface CharSelectProps {
-  saved: SavedChar
+  // saved: SavedChar
+  saved: DFCharState
   onClick: React.MouseEventHandler<HTMLDivElement>
 }
 function CharSelect({ saved, onClick }: CharSelectProps) {
   const currentID = useAppSelector(state => state.currentID)
   const dispatch = useAppDispatch()
+  const expressDamage = useAppSelector(state => selectExpressionDamage(state, saved.id))
 
   const askDelete = useCallback(() => {
     if (currentID === saved.id) {
@@ -93,8 +97,8 @@ function CharSelect({ saved, onClick }: CharSelectProps) {
   }, [saved.id])
 
   const askExport = useCallback(() => {
-    const fname = `${saved.DFChar.Self.myName.trim().replace(/\\\/\:\*\?"\<\>\|/g, '')} - ${saved.DFChar.Self.dfclass}.json`
-    const content = JSON.stringify(saved.DFChar, null, 2)
+    const fname = `${saved.name.trim().replace(/\\\/\:\*\?"\<\>\|/g, '')} - ${saved.dfclass}.json`
+    const content = JSON.stringify(saved, null, 2)
     const blob = new Blob([content], { type: "application/json" })
 
     const a = document.createElement('a')
@@ -117,17 +121,17 @@ function CharSelect({ saved, onClick }: CharSelectProps) {
           <ChevronUp onClick={moveUp} />
           <ChevronDown onClick={moveDown} />
         </CharControlStyle>
-        <DFClassIcon dfclassName={saved.DFChar.Self.dfclass} />
+        <DFClassIcon dfclassName={saved.dfclass} />
         <div className="DFCharDescribe">
           <div className="DFCharDescribeHeader">
-            <div className="DFCharName">{saved.DFChar.Self.myName}</div>
+            <div className="DFCharName">{saved.name}</div>
             <div>
               <Smaller>데미지</Smaller>
-              <Num className="DamageGrab" value={saved.DamageGrab} />
+              <Num className="DamageGrab" value={expressDamage} />
             </div>
           </div>
           <SavedCharEquips className="SavedCharEquips">
-            {equipParts.map(part => <ItemIcon key={part} item={getItem(saved.DFChar.Item[part])} />)}
+            {equipParts.map(part => <ItemIcon key={part} item={getItem(saved.items[part])} />)}
           </SavedCharEquips>
         </div>
       </CharSelectInner>
@@ -190,9 +194,6 @@ export function SavedCharsFragment () {
   const dupCharClick = useCallback(() => {
     dispatch(CloneDF())
     closeModal()
-  }, [])
-  useEffect(() => {
-    dispatch(SaveDF())
   }, [])
   return (
     <SavedCharsFragmentLayout>

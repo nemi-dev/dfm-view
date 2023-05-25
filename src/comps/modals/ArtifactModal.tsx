@@ -1,20 +1,20 @@
-import { useContext, useCallback, useMemo } from "react"
-import { useAppDispatch } from "../../feats/hooks"
-import { SetArtifact } from "../../feats/slices/itemSlice"
-import { getItemsByPart } from "../../items"
-import { ModalContext } from "./modalContext"
-import { CurrentPart } from "./CurrentPart"
-import { ModalItemSelect } from "./Select"
-import { ItemSizeDefiner } from "./CommonModalComps"
+import { useCallback, useContext, useMemo } from 'react'
 
+import { useAppDispatch } from '../../feats/hooks'
+import { SetItem } from '../../feats/slices/slicev5'
+import { getItemsByPart } from '../../items'
+import { ItemSizeDefiner } from './CommonModalComps'
+import { CurrentPart } from './CurrentPart'
+import { ModalContext } from './modalContext'
+import { ModalItemSelect } from './Select'
 
 export function ArtifactModalFragment({ artiColor }: { artiColor: ArtifactColor }) {
   const { closeModal } = useContext(ModalContext)
   const items = useMemo(() => getItemsByPart("아티팩트")
-  .filter(item => item.ArtiColor === artiColor), [artiColor])
+    .filter(item => item.ArtiColor === artiColor), [artiColor])
   const dispatch = useAppDispatch()
   const onClick = useCallback((name: string) => {
-    dispatch(SetArtifact([artiColor as ArtifactColor, name]))
+    dispatch(SetItem([undefined, '아티팩트', artiColor, name]))
     closeModal()
   }, [artiColor])
   return (

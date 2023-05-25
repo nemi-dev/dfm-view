@@ -1,17 +1,22 @@
-import { createSelector } from "@reduxjs/toolkit"
-import { applyAddMaxEldmg, atx, dualTrigger, whatElType } from "../../attrs"
-import type { RootState } from "../store"
-import { add, compound } from "../../utils"
-import { selectGuilds } from "./guildSelectors"
-import { selectEquips } from "./equipSelectors"
-import { selectAchBonus, selectClassAtype, selectMyDFClass, selectMyLevel } from "./selfSelectors"
-import { selectCreatureAndArtis } from "./creatureSelectors"
-import { selectCracks } from "./cracksSelectors"
-import { selectAvatars } from "./avatarSelectors"
-import { critChance, critFt, defRate, getPlainDamage, getRealdef, } from "../../damage"
-import { CombineItems } from "../../items"
-import { AtypeAttrKey } from "../../constants"
+import { createSelector } from '@reduxjs/toolkit'
 
+import { applyAddMaxEldmg, atx, dualTrigger, whatElType } from '../../attrs'
+import { AtypeAttrKey } from '../../constants'
+import { critChance, critFt, defRate, getElementalDamage, getPlainDamage, getRealdef } from '../../damage'
+import { CombineItems } from '../../items'
+import { add, compound } from '../../utils'
+import {
+  selectRareAvatarSetActive, selectUncommonAvatarSetActive, selectWearAvatarsCombined
+} from './avatarSelectors'
+import {
+  selectAchBonus, selectClassAtype, selectDFChar, selectMyChoice, selectMyDFClass, selectMyLevel
+} from './baseSelectors'
+import { selectCracks } from './cracksSelectors'
+import { selectCreatureAndArtis } from './creatureSelectors'
+import { selectCard, selectEmblems, selectEquips, selectItem } from './equipSelectors'
+import { selectGuilds } from './guildSelectors'
+
+import type { RootState } from "../store"
 /** 마력결정 스탯보너스를 모두 얻는다. */
 export function selectTonics(state: RootState): AttrSource {
   const { el_all, hpmax, mpmax, strn_intl, vit_psi, def_ph, def_mg, Crit, Accu } = state.Tonic
@@ -34,18 +39,55 @@ export function selectTonics(state: RootState): AttrSource {
   }
 }
 
+/** 스탯 보정값을 선택한다. (복리스증이 배열로 되어있는 그시끼) */
+export const selectCalibrate = createSelector(selectDFChar, (ch) => ch.calibrate)
 
-/** 스탯을 보정한 값만을 가져온다. */
-export function selectCalibrated(state: RootState): AttrSource {
-  const sk_inc = state.My.Calibrate.sk_inc.reduce(compound, 0)
-  return {
-    name: "스탯 조정값",
-    attrs: {
-      ...state.My.Calibrate, sk_inc
+/** 스탯보정 효과를 선택한다. */
+export const selectCaliSource = createSelector(
+  selectCalibrate,
+  (cal) => {
+    const sk_inc = cal.sk_inc.reduce(compound, 0)
+    return {
+      name: "스탯 조정값",
+      attrs: {
+        ...cal, sk_inc
+      }
     }
   }
-}
+)
 
+
+
+/** 칭호를 장착 중일 때, 그 칭호 + 칭호에 박은 보주 + 엠블렘을 선택한다. */
+export const selectDFTitleTown = createSelector(
+  selectItem["칭호"],
+  selectCard["칭호"],
+  selectEmblems["칭호"],
+  (dftitle, card, emblem): AttrSource[] => {
+    if (!dftitle) return []
+    return [dftitle, card, ...emblem]
+  }
+)
+
+
+/** 칭호+오라+무기아바타+다른 아바타 효과+아바타 세트효과를 모두 선택한다. */
+export const selectAvatars = createSelector(
+  selectDFTitleTown,
+  selectWearAvatarsCombined,
+  selectRareAvatarSetActive,
+  selectUncommonAvatarSetActive,
+  selectItem["무기아바타"],
+  selectItem["오라"],
+  (dftitle, wears, asetRare, asetUnco, weaponAvatar, aura) => 
+  [
+    ...dftitle,
+    aura,
+    weaponAvatar,
+    wears,
+    asetRare,
+    asetUnco
+  ]
+)
 
 
 /** 
@@ -53,7 +95,7 @@ export function selectCalibrated(state: RootState): AttrSource {
  * 
  * 직업 + 장비 + 아바타 + 크리쳐 + 마력결정 + 성안의봉인 + 길드 + 업적보너스 + 보정값  
  */
-export const selectMe = createSelector(
+export const selectMySource = createSelector(
   selectMyDFClass,
   selectEquips,
   selectAvatars,
@@ -62,7 +104,7 @@ export const selectMe = createSelector(
   selectCracks,
   selectGuilds,
   selectAchBonus,
-  selectCalibrated,
+  selectCaliSource,
   (dfc, equips, avatars, creatures, tonic, cracks, guild, ach, cal) => {
     return [
       dfc,
@@ -84,7 +126,7 @@ export const selectMe = createSelector(
  * **듀얼트리거/최대 속성강화 추가데미지가 포함되었다면 여기서 적용된다.**
 */
 export const selectMyAttrTown = createSelector(
-  selectMe,
+  selectMySource,
   (sources) => {
     const a = CombineItems(sources)
     return applyAddMaxEldmg(dualTrigger(a))
@@ -96,8 +138,8 @@ export const selectMyAttrTown = createSelector(
  * **듀얼트리거/최대 속성강화 추가데미지가 포함되었다면 여기서 적용된다.**
 */
 export const selectMyAttr = createSelector(
-  selectMe,
-  (state: RootState) => state.My.Choice,
+  selectMySource,
+  selectMyChoice,
   (sources, choice) => {
     const a = CombineItems(sources, choice)
     return applyAddMaxEldmg(dualTrigger(a))
@@ -143,6 +185,26 @@ export const selectMyDamage = createSelector(
   }
 )
 
+/** 캐릭터 선택창에서 보일 데미지를 선택한다. */
+export const selectExpressionDamage = createSelector(
+  selectClassAtype,
+  selectMyDFClass,
+  selectMyAttr,
+  selectMyFinalEltype,
+  (atype, dfcl, attrs, eltypes) => {
+    const {
+      Crit: critKey, CritCh: critChKey,
+    } = AtypeAttrKey[atype]
+    const chance = critChance(attrs[critKey], attrs[critChKey])
+    let damage = (dfcl.name == "엘레멘탈마스터" || dfcl.name == "마도학자")?
+    getElementalDamage(attrs) : getPlainDamage(atype, eltypes, attrs)
+
+    damage *= (1 + add(attrs["sk_inc"], attrs["sk_inc_sum"]) / 100)
+    const cdamage = damage * critFt(attrs["cdmg_inc"], attrs["catk_inc"])
+
+    return ((1 - chance) * damage) + (chance * cdamage)
+  }
+)
 
 
 /** 내가 입력한 적 방어력을 선택한다. */

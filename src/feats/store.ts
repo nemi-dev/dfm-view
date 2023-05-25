@@ -1,63 +1,27 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit"
-import { creatureSlice, currentIDSlice, enemyTargetSlice, equipPresetSlice, savedCharSlice, selfSlice, skillPresetSlice } from "./slices/slice"
-import { tonicSlice } from "./slices/tonicSlice"
-import { guildSlice } from "./slices/guildSlice"
-import { choiceSlice } from "./slices/choiceSlice"
-import { avatarSlice } from "./slices/avatarSlice"
-import { calibrateSlice } from "./slices/calibrateSlice"
-import { skillInputSlice } from "./slices/customSkillSlice"
-import { persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist"
-import storage from "redux-persist/lib/storage"
-import { cardSlice, emblemSlice, itemSlice, magicPropsSlice, materialSlice, upgradeSlice } from "./slices/itemSlice"
-import reduceReducers from "reduce-reducers"
-import { SaveDF, saveReducerV4 } from "./saveReducers"
-import createMigrate from "redux-persist/es/createMigrate"
-import { migrate2to3, migrate3to4 } from "./migrate/migrate"
+import { FLUSH, PAUSE, PERSIST, persistReducer, PURGE, REGISTER, REHYDRATE } from 'redux-persist'
+import createMigrate from 'redux-persist/es/createMigrate'
+import storage from 'redux-persist/lib/storage'
 
+import { configureStore } from '@reduxjs/toolkit'
 
-const myStateReducer = 
+import { m3to4, m4to5 } from './migrate/migrate'
+import { dfSlice } from './slices/slicev5'
 
-combineReducers({
-  Self: selfSlice.reducer,
-  Item: itemSlice.reducer,
-  Card: cardSlice.reducer,
-  Emblem: emblemSlice.reducer,
-  MagicProps: magicPropsSlice.reducer,
-  Upgrade: upgradeSlice.reducer,
-  Material: materialSlice.reducer,
-  Avatar: avatarSlice.reducer,
-  Guild: guildSlice.reducer,
-  CreatureValue: creatureSlice.reducer,
-  Choice: choiceSlice.reducer,
-  Calibrate: calibrateSlice.reducer,
-})
+const v5reducer = dfSlice.reducer
+export type RootState = ReturnType<typeof v5reducer>
 
-
-const combinedReducer = combineReducers({
-  currentID: currentIDSlice.reducer,
-  My: myStateReducer,
-  Tonic: tonicSlice.reducer,
-  EnemyTarget: enemyTargetSlice.reducer,
-  SavedChars: savedCharSlice.reducer,
-  EquipPresets: equipPresetSlice.reducer,
-  CustomSkill: skillInputSlice.reducer,
-  CustomSkillPresets: skillPresetSlice.reducer
-})
-export type RootState = ReturnType<typeof combinedReducer>
-
-const modelReducer = reduceReducers(saveReducerV4, combinedReducer)
 
 const migration = {
-  3: migrate2to3,
-  4: migrate3to4
+  4: m3to4,
+  5: m4to5,
 }
 
 const persistedReducer = persistReducer({
   key: "root",
-  version: 4, 
+  version: 5, 
   storage,
   migrate: createMigrate(migration, { debug: false })
-}, modelReducer)
+}, v5reducer)
 
 
 export const store = configureStore({
@@ -69,6 +33,8 @@ export const store = configureStore({
       }
     })
   },
+
+  // reducer: v5reducer
 })
 
 export default store
@@ -77,7 +43,3 @@ export type AppDispatch = typeof store.dispatch
 
 
 
-
-window.addEventListener("beforeunload", () => {
-  store.dispatch(SaveDF())
-})

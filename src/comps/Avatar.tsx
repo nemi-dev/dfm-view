@@ -2,14 +2,11 @@ import { useCallback, useContext } from 'react'
 import styled from 'styled-components'
 
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
-import { SquareIcon } from "./widgets/Icons"
-import { getAvatarAttr } from '../avatar'
-import { SetAvatarRarity, SetAvatarTypeAll } from '../feats/slices/avatarSlice'
-import { SimpleBaseAttrView } from './widgets/AttrsView'
+import { selectRareAvatarCount, selectUncommonAvatarCount } from '../feats/selector/avatarSelectors'
+import { SetMyAvatarRarity, SetMyAvatarRarityAll } from '../feats/slices/slicev5'
 import { PortraitMode } from '../responsiveContext'
-import { selectRareAvatarCount } from "../feats/selector/avatarSelectors"
-import { selectUncommonAvatarCount } from '../feats/selector/avatarSelectors'
-
+import { SquareIcon } from './widgets/Icons'
+import { RootState } from '../feats/store'
 
 interface AvatarProps {
   part: WearAvatarPart
@@ -35,12 +32,16 @@ const AvatarPartLayout = styled.div`
 
 `
 
+function selectMyAvatar(state: RootState, part: WearAvatarPart) {
+  return state.SavedChars.byID[state.currentID].avatars[part]
+}
+
 function WearAvatarPart({ part }: AvatarProps) {
   const dispatch = useAppDispatch()
-  const rarity = useAppSelector(state => state.My.Avatar[part])
+  const rarity = useAppSelector(state => selectMyAvatar(state, part))
   const onClick = useCallback(() => {
     const newValue = rarity === "Rare" ? "Uncommon" : "Rare"
-    dispatch(SetAvatarRarity([part, newValue]))
+    dispatch(SetMyAvatarRarity([part, newValue]))
   }, [rarity])
   return (
     <AvatarPartLayout className="AvatarPart Hovering Bordered" onClick={onClick}>
@@ -52,11 +53,11 @@ function WearAvatarPart({ part }: AvatarProps) {
 
 
 function WearAvatarPartCompact({ part }: AvatarProps) {
-  const rarity = useAppSelector(state => state.My.Avatar[part])
+  const rarity = useAppSelector(state => selectMyAvatar(state, part))
   const dispatch = useAppDispatch()
   const onClick = useCallback(() => {
     const newValue = rarity === "Rare" ? "Uncommon" : "Rare"
-    dispatch(SetAvatarRarity([part, newValue]))
+    dispatch(SetMyAvatarRarity([part, newValue]))
   }, [rarity])
   return (
     <div onClick={onClick}>
@@ -91,7 +92,7 @@ export function Avatars() {
   const dispatch = useAppDispatch()
   const portrait = useContext(PortraitMode)
   const setAll = useCallback((rarity: "Uncommon" | "Rare") => {
-    dispatch(SetAvatarTypeAll(rarity))
+    dispatch(SetMyAvatarRarityAll(rarity))
   }, [rareCount])
   const AvatarPartComp = portrait? WearAvatarPartCompact : WearAvatarPart
   return (

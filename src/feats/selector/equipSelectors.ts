@@ -1,48 +1,56 @@
-import { createSelector } from "@reduxjs/toolkit"
-import { atx, combine } from "../../attrs"
-import { getActiveISets, getItem, equipParts, isArmor, magicPropsParts, cardableParts, singleItemParts, armorParts, getArmor, getMaxEmblemCount } from "../../items"
-import { getEmblem } from "../../emblem"
-import { getMagicPropsAttrs } from "../../magicProps"
-import { selectClassAtype } from "./selfSelectors"
+import { createSelector } from '@reduxjs/toolkit'
+
+import { atx, combine } from '../../attrs'
+import { getEmblem } from '../../emblem'
+import {
+    armorParts, cardableParts, equipParts, getActiveISets, getArmor, getItem, getMaxEmblemCount,
+    isArmor, magicPropsParts, singleItemParts
+} from '../../items'
+import { getMagicPropsAttrs } from '../../magicProps'
+import { selectClassAtype, selectDFChar } from './baseSelectors'
 
 import type { RootState } from "../store"
 
 /** Redux Selector를 무진장 찍어낸다 */
-export function Paw<T, P extends string>(func: ($p: P) => (s: RootState) => T, parts: (P[] | readonly P[])): {
-  [k in P]: (state: RootState) => T
+export function Paw<T, P extends string>(func: ($p: P) => (s: RootState, id?: string) => T, parts: (P[] | readonly P[])): {
+  [k in P]: (state: RootState, id?: string) => T
 } {
   const _o: any = {}
   parts.forEach(part => _o[part] = func(part))
   return _o
 }
 
-
 /** 특정 부위에 장착중인 아이템을 선택한다. */
-export const selectItem = Paw(part => state => {
-  if (isArmor(part)) return getArmor(state.My.Item[part], state.My.Material[part])
-  else return getItem(state.My.Item[part])
-}, singleItemParts)
+export const selectItem = Paw(part => 
+  createSelector(
+    selectDFChar,
+    (dfchar) => {
+      if (isArmor(part)) return getArmor(dfchar.items[part], dfchar.materials[part])
+      else return getItem(dfchar.items[part])
+    }
+  ),
+singleItemParts)
 
 /** 특정 부위의 아이템에 바른 카드를 선택한다 */
-export const selectCard = Paw(part => state => getItem(state.My.Card[part]), cardableParts)
+export const selectCard = Paw(part => createSelector(selectDFChar, dfchar => getItem(dfchar.cards[part])), cardableParts)
 
 /** 특정 부위의 아이템에 박은 엠블렘 스펙을 모두 선택한다 */
-export const selectEmblemSpecs = Paw(part => state => state.My.Emblem[part] ?? [], cardableParts)
+export const selectEmblemSpecs = Paw(part => createSelector(selectDFChar, dfchar => dfchar.emblems[part] ?? []), cardableParts)
 
 /** 특정 부위 아이템의 마법봉인 이름을 선택한다. (장착 아이템 여부에 상관없이 3개 풀로 선택함) */
 export const selectMagicPropNames = Paw(
-  part => state => state.My.MagicProps[part],
+  part => createSelector(selectDFChar, dfchar => dfchar.magicProps[part]),
   magicPropsParts
 )
 
 /** 특정 부위의 "내가 선택한" 방어구 재질을 선택한다 (해당 방어구재질이 고정되어있는지 여부는 고려하지 않는다.) */
 export const selectCustomMaterial = Paw(
-  part => state => state.My.Material[part],
+  part => createSelector(selectDFChar, dfchar => dfchar.materials[part]),
   armorParts
 )
 
 /** 특정 부위의 강화보너스 수치(무기는 물/마공, 다른장비는 스탯)를 선택한다 */
-export const selectUpgradeValue = Paw(part => state => state.My.Upgrade[part], equipParts)
+export const selectUpgradeValue = Paw(part => createSelector(selectDFChar, dfchar => dfchar.upgradeValues[part]), equipParts)
 
 /** 특정 부위의 강화 효과를 선택한다. */
 const selectUpgrade = Paw(part => createSelector(

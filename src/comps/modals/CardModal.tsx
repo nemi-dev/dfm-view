@@ -1,16 +1,15 @@
-import { useCallback, useContext, useState } from "react"
-import { useAppDispatch } from "../../feats/hooks"
-import { getCardsForPart } from "../../items"
-import { ItemName } from "../widgets/ItemNameView"
-import { ItemIcon } from "../widgets/Icons"
-import { ModalContext } from "./modalContext"
-import { SetCard, SetCardsAllPossible } from "../../feats/slices/itemSlice"
-import styled from "styled-components"
-import { LabeledSwitch } from "../widgets/Forms"
-import { CurrentPart } from "./CurrentPart"
-import { ItemSizeDefiner } from "./CommonModalComps"
+import { useCallback, useContext, useState } from 'react'
+import styled from 'styled-components'
 
-
+import { useAppDispatch } from '../../feats/hooks'
+import { SetMyCard, SetMyCardsAllPossible } from '../../feats/slices/slicev5'
+import { getCardsForPart } from '../../items'
+import { LabeledSwitch } from '../widgets/Forms'
+import { ItemIcon } from '../widgets/Icons'
+import { ItemName } from '../widgets/ItemNameView'
+import { ItemSizeDefiner } from './CommonModalComps'
+import { CurrentPart } from './CurrentPart'
+import { ModalContext } from './modalContext'
 
 const CheckieInline = styled(LabeledSwitch)`
   display: inline-flex;
@@ -20,8 +19,8 @@ function CardSelect({ part, card, all }: { part: CardablePart, card: DFItem, all
   const { closeModal } = useContext(ModalContext)
   const dispatch = useAppDispatch()
   const onClick = useCallback(() => {
-    if (all) dispatch(SetCardsAllPossible(card.name))
-    else dispatch(SetCard([part, card.name]))
+    if (all) dispatch(SetMyCardsAllPossible(card.name))
+    else dispatch(SetMyCard([part, card.name]))
     closeModal()
   }, [part, card.name, all])
   return (

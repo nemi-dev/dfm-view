@@ -1,13 +1,14 @@
-import styled from "styled-components"
-import { useAppDispatch, useAppSelector } from "../feats/hooks"
-import { SetLevel, SetAchieveLevel, SetAtkFixed } from "../feats/slices/slice"
-import { LabeledNumberInput } from "./widgets/Forms"
-import { Avatars } from "./Avatar"
-import { Guilds } from "./Guilds"
-import { Tonic } from "./Tonic"
-import React, { useContext } from "react"
-import { PortraitMode } from "../responsiveContext"
+import React, { useContext } from 'react'
+import styled from 'styled-components'
 
+import { useAppDispatch, useAppSelector } from '../feats/hooks'
+import { SetMyAchieveLevel, SetMyAtkFixed, SetMyLevel } from '../feats/slices/slicev5'
+import { PortraitMode } from '../responsiveContext'
+import { Avatars } from './Avatar'
+import { Guilds } from './Guilds'
+import { Tonic } from './Tonic'
+import { LabeledNumberInput } from './widgets/Forms'
+import { selectMyAchievementLevel, selectMyAtkFixed, selectMyLevel } from '../feats/selector/baseSelectors'
 
 const GridyTwo = styled.div`
   display: grid;
@@ -26,18 +27,18 @@ export function MiscScreen() {
   const dispatch = useAppDispatch()
   const Wrapper = portrait? React.Fragment: GridyTwo
   const
-    my_level = useAppSelector(state => state.My.Self.level),
-    AchieveLevel = useAppSelector(state => state.My.Self.achieveLevel),
-    atkFixed = useAppSelector(state => state.My.Self.atkFixed)
+    myLevel = useAppSelector(selectMyLevel),
+    AchieveLevel = useAppSelector(selectMyAchievementLevel),
+    atkFixed = useAppSelector(selectMyAtkFixed)
   return (
     <MiscStyle id="Misc">
       <header>
         <h3>캐릭터 기본정보</h3>
       </header>
       <GridyTwo>
-        <LabeledNumberInput label="캐릭터 레벨" value={my_level} onChange={v => dispatch(SetLevel(v))} />
-        <LabeledNumberInput label="업적 레벨" value={AchieveLevel} onChange={v => dispatch(SetAchieveLevel(v))} />
-        <LabeledNumberInput label="독립 공격력" value={atkFixed} onChange={v => dispatch(SetAtkFixed(v))} />
+        <LabeledNumberInput label="캐릭터 레벨" value={myLevel} onChange={v => dispatch(SetMyLevel(v))} />
+        <LabeledNumberInput label="업적 레벨" value={AchieveLevel} onChange={v => dispatch(SetMyAchieveLevel(v))} />
+        <LabeledNumberInput label="독립 공격력" value={atkFixed} onChange={v => dispatch(SetMyAtkFixed(v))} />
       </GridyTwo>
       <Wrapper>
         <Guilds />
