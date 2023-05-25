@@ -1,6 +1,8 @@
 import _skills from '../data/skills.json'
 import _selfSkills from '../data/selfskills.json'
 import { add, compound } from './utils'
+import { whois } from './dfclass'
+import memoizee from 'memoizee'
 
 export const skills = _skills as unknown as AttackSkill[]
 export const selfSkills = _selfSkills as unknown as SelfSkill[]
@@ -33,7 +35,7 @@ export function applyLevel(s: SkillValue, level: number) {
 /** 스킬이 충전공격 되는지 확인한다. */
 export function isChargable(sk: AttackSkill) {
   return (sk.chargeup && sk.chargeup > 1)
-   || (sk.attacks.find(a => a.chargeup && a.chargeup > 1))
+   || (sk.attacks?.find(a => a.chargeup && a.chargeup > 1))
 }
 
 /** 스킬 공격 하나에 레벨을 지정하여 실제값을 얻는다. */
@@ -90,7 +92,7 @@ export function bindSkill(
   ) {
   const attacks = variant?
     sk.variant?.find(v => v.vaName == variant)?.attacks
-    : sk.attacks
+    : (sk.attacks ?? [])
   const { sk_lv = {} } = attrs
   const sklvBonus = (sk_lv[sk.name] ?? 0)
 
@@ -98,3 +100,27 @@ export function bindSkill(
 
   return attacks?.map(at => bindSkillAttack(sk.name, at, baseSkLv + sklvBonus, skChargeup, charged, variant, attrs)) ?? []
 }
+
+
+/** 스킬 이름이 "@" 로 시작하는 것들은 모두 query이다. */
+export const querySkill = memoizee(function querySkill(query: string) {
+  const match = /^@((?<dfclass>Mage):)?Lv(?<aqLv>\d+)(-(?<aqLvMax>\d+))?$/.exec(query)
+  if (!match) return []
+
+  const { dfclass, aqLv, aqLvMax } = match.groups
+
+  let heap: AttackSkill[]
+  if (dfclass === "Mage") {
+    heap = (["엘레멘탈마스터", "마도학자"] as const).map(dfc => whois(dfc).skills).flatMap(sk => sk.map(getSkill)) /*whois("엘레멘탈마스터").skills.map(getSkill)*/
+  } else {
+    heap = skills
+  }
+
+  if (aqLvMax == null) {
+    return heap.filter(sk => sk.level == parseInt(aqLv))
+  } else {
+    console.log(query)
+    return heap.filter(sk => sk.level >= parseInt(aqLv) && sk.level <= parseInt(aqLvMax))
+  }
+
+}, { primitive: true })

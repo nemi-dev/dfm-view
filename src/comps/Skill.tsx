@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { whatElType } from '../attrs'
 import { critFt, getSkillDamage } from '../damage'
-import { useAppSelector } from '../feats/hooks'
+import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import {
   selectClassASkills, selectClassAtype, selectMyAtkFixed, selectMyLevel
 } from '../feats/selector/baseSelectors'
@@ -14,6 +14,9 @@ import {
 import { bindSkill, getMaxSkillLevelAt, isChargable } from '../skills'
 import { add } from '../utils'
 import { Num } from './widgets/NumberView'
+import { selectSkillLevel, selectSkillLevelBonus } from '../feats/selector/skillSelectors'
+import { NumberInput } from './widgets/Forms'
+import { SetSkillLevel } from '../feats/slices/slicev5'
 
 function union<T>(a: T[], b: T[]) {
   return [...a, ...b].reduce((v, i) => {
@@ -36,7 +39,6 @@ interface OneAttackProps {
 interface SkillOneProps {
   skill: AttackSkill
   charged?: boolean
-  skLvInput?: number
 }
 
 
@@ -98,9 +100,6 @@ const AttackSkillStyle = styled.div`
   padding: 0.5rem;
   box-sizing: border-box;
 
-  display: flex;
-  flex-direction: column;
-
   @media screen and (max-width: 999px) {
     padding: 0.25rem;
   }
@@ -110,21 +109,19 @@ const SkillHeadingStyle = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: space-between;
   gap: 4px;
   margin: 0;
 `
 
 const SkillName = styled.div`
   font-weight: 900;
+  white-space: nowrap;
   color: white;
 `
 
-const SkillLevel = styled.div`
-  color: var(--color-epic);
-`
-
-const SkillLevelBonus = styled.div`
+const SkillLevelBonus = styled.span`
   color: var(--color-green);
 `
 
@@ -133,25 +130,24 @@ const SkillSuffix = styled.div`
 `
 
 interface SkillHeadingProps {
-  skName: string
+  skill: AttackSkill
   baseSkLv: number
   sklvBonus?: number
-}
-
-/** 공격스킬 헤드 부분 */
-function SkillHeading({ skName, baseSkLv, sklvBonus = 0 }: SkillHeadingProps) {
-  return (
-  <SkillHeadingStyle>
-    <SkillName>{skName}</SkillName>
-    <SkillLevel>Lv.{baseSkLv + sklvBonus}</SkillLevel>
-    {sklvBonus? <SkillLevelBonus>(+{sklvBonus})</SkillLevelBonus> : null}
-  </SkillHeadingStyle>
-  )
 }
 
 interface ExtraIndexProps {
   skillName: string
   suffix: string
+}
+
+/** 공격스킬 헤드 부분 */
+function SkillHeading({ skill, baseSkLv, sklvBonus = 0 }: SkillHeadingProps) {
+  return (
+  <SkillHeadingStyle>
+    <SkillName>{skill.name}</SkillName>
+    <SkillLevelConfig skill={skill} skLv={baseSkLv} skLvBonus={sklvBonus} />
+  </SkillHeadingStyle>
+  )
 }
 
 /** 바리에이션 또는 풀충전이 적용된 공격스킬 행 헤딩 */
@@ -165,34 +161,78 @@ function AttackSkillExtraIndex({ skillName, suffix }: ExtraIndexProps) {
 }
 
 
-const SkillRow = styled.div`
+const BaseRow = styled.div`
   display: grid;
   grid-template-columns: 1fr 2fr 2fr;
   align-items: center;
   align-content: center;
-  justify-items: center;
+  justify-items: end;
+`
 
+const SkillRow = styled(BaseRow)`
   > :first-child {
-    justify-self: start;
+    justify-self: stretch;
   }
 `
 
+interface SkConfigProps {
+  skill: AttackSkill
+  skLv: number
+  skLvBonus? : number
+}
+
+const SkillLevelLabel = styled.span`
+  color: var(--color-epic);
+`
+
+const SkillLevelInput = styled(NumberInput)`
+  input[type='number']& {
+    width: 2rem;
+    color: var(--color-epic);
+    background-color: transparent!important;
+    text-align: left;
+    font-size: inherit;
+  }
+`
+
+const SkillConfigStyle = styled.div`
+`
+
+function SkillLevelConfig({ skill, skLv, skLvBonus }: SkConfigProps) {
+  const dispatch = useAppDispatch()
+
+  return (
+    <SkillConfigStyle>
+      <SkillLevelLabel>Lv.</SkillLevelLabel>
+      <SkillLevelInput value={skLv}
+      onChange={value => dispatch(SetSkillLevel({ skID: skill.id, value }))}
+      onClick={ev => ev.stopPropagation()}
+      />
+      {skLvBonus? <SkillLevelBonus>(+{skLvBonus})</SkillLevelBonus> : null}
+    </SkillConfigStyle>
+  )
+}
+
 /** 그냥 사용 or 풀충전 스킬 사용 */
-function AttackSkillDefault({ skill, charged = false, skLvInput }: SkillOneProps) {
+function AttackSkillDefault({ skill, charged = false }: SkillOneProps) {
   const [showDetail, setShowDetail] = useState(false)
   const myLevel = useAppSelector(selectMyLevel)
   const myAttrs = useAppSelector(selectMyAttr)
+  const skLvBonus = useAppSelector(state => selectSkillLevelBonus(state, undefined, skill))
+
+  const skLvInput = useAppSelector(state => selectSkillLevel(state, undefined, skill.id ))
 
   const maxSkLv = getMaxSkillLevelAt(skill, myLevel, true)
   const baseSkLv = skLvInput != null? Math.max(Math.min(skLvInput, maxSkLv), 0) : maxSkLv
   const attacks = bindSkill(skill, baseSkLv, myAttrs, { charged })
-  const { sk_lv = {} } = myAttrs
-  const sklvBonus = (sk_lv[skill.name] ?? 0)
 
   return (
     <AttackSkillStyle className="AttackSkill Bordered">
       <SkillRow onClick={() => setShowDetail(!showDetail)}>
-        <SkillHeading skName={skill.name} baseSkLv={baseSkLv} sklvBonus={sklvBonus} />
+        {charged?
+          <AttackSkillExtraIndex skillName={skill.name} suffix={skill.chargeupType ?? "충전"} />
+          :<SkillHeading skill={skill} baseSkLv={baseSkLv} sklvBonus={skLvBonus} />
+        }
         <SkillDamage skill={skill} attacks={attacks}/>
       </SkillRow>
       {showDetail && <SkillDetailView attacks={attacks} />}
@@ -256,6 +296,12 @@ const AttackSkillListStyle = styled.div`
   flex-wrap: wrap;
 `
 
+const SkillHeadingRow = styled(BaseRow)`
+  > * {
+    text-align: center;
+  }
+`
+
 export function Skill() {
   return (
     <ErrorBoundary FallbackComponent={SkillError}>
@@ -264,11 +310,11 @@ export function Skill() {
           <h3>스킬</h3>
         </header>
         <AttackSkillListStyle className="SkillList">
-          <SkillRow>
+          <SkillHeadingRow className="Bordered">
             <div>스킬</div>
             <div>평균데미지<br /><small>(크리확률+배율 적용)</small></div>
             <div>크리티컬 데미지<br /><small>(크리배율 적용)</small></div>
-          </SkillRow>
+          </SkillHeadingRow>
           <SkillListContent />
         </AttackSkillListStyle>
       </div>

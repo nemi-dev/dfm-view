@@ -401,25 +401,25 @@ export const dfSlice = createSlice({
 
 
     //#region Skill
-    SetSkillLevel: (state, { payload: [skName, val]}: PayloadAction<[string, number]>) => {
-      const dfch = selectDFChar(state)
-      dfch.skillLevelMap[skName] = val
+    SetSkillLevel: (state, { payload: { dfcharID, skID, value } }: PayloadAction<SetSkillValuePayload>) => {
+      const dfch = selectDFChar(state, dfcharID)
+      dfch.skillLevelMap[skID] = Math.max(value, 0)
     },
 
-    SetSkillUsageCount: (state, { payload: [skName, val]}: PayloadAction<[string, number]>) => {
-      const dfch = selectDFChar(state)
-      dfch.skillUseCountMap[skName] = val
+    SetSkillUsageCount: (state, { payload: { dfcharID, skID, value } }: PayloadAction<SetSkillValuePayload>) => {
+      const dfch = selectDFChar(state, dfcharID)
+      dfch.skillUseCountMap[skID] = Math.max(value, 0)
     },
 
-    SetSkillTP: (state, { payload: [skName, val]}: PayloadAction<[string, number]>) => {
-      const dfch = selectDFChar(state)
-      dfch.skillTPMap[skName] = val
+    SetSkillTP: (state, { payload: { dfcharID, skID, value } }: PayloadAction<SetSkillValuePayload>) => {
+      const dfch = selectDFChar(state, dfcharID)
+      dfch.skillTPMap[skID] = Math.max(value, 0)
     },
 
-    SetSkillChargeup: (state, { payload: [skName, val]}: PayloadAction<[string, boolean]>) => {
-      const dfch = selectDFChar(state)
-      if (val) dfch.skillChargeupMap[skName] = true
-      else delete dfch.skillChargeupMap[skName]
+    SetSkillChargeup: (state, { payload: { dfcharID, skID, value } }: PayloadAction<SetSkillValuePayload<boolean>>) => {
+      const dfch = selectDFChar(state, dfcharID)
+      if (value) dfch.skillChargeupMap[skID] = true
+      else delete dfch.skillChargeupMap[skID]
     },
     //#endregion
   
@@ -503,5 +503,10 @@ export const {
   SetSkillFixValue,
   SetSkillMaxHit,
   SetSkillUsesSkillInc,
+
+  SetSkillLevel,
+  SetSkillTP,
+  SetSkillChargeup,
+  SetSkillUsageCount
 
 } = dfSlice.actions

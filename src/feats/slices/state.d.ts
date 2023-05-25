@@ -241,16 +241,16 @@ declare interface DFCharState {
   choices: Choices
   calibrate: CalibrateState
   skillLevelMap: {
-    [skillName: string]: number
+    [skillID: number]: number
   }
   skillTPMap: {
-    [skillName: string]: number
+    [skillID: number]: number
   }
   skillUseCountMap: {
-    [skillName: string]: number
+    [skillID: number]: number
   }
   skillChargeupMap: {
-    [skillName: string]: boolean
+    [skillID: number]: boolean
   }
 }
 

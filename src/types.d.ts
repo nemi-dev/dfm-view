@@ -406,10 +406,10 @@ declare interface DFClass {
   attrs: BaseAttrs
 
   /** 이 직업이 사용가능한 공격 스킬들 이름 */
-  skills: string[]
+  skills: number[]
 
   /** 이 직업이 사용가능한 패시브/버프 스킬 이름 */
-  selfSkills: string[]
+  selfSkills: number[]
 }
 
 /** 
@@ -548,7 +548,7 @@ declare interface AttackSkill {
   eltype?: Eltype[] | false | null | undefined
 
   /** 이 스킬을 썼을 때 나갈 공격들 */
-  attacks: UnboundOneAttack[]
+  attacks?: UnboundOneAttack[]
 
   /** 풀충전 또는 대성공 등 스칼라배할 값 */
   chargeup?: number

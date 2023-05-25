@@ -1,17 +1,16 @@
-import { useContext, useState } from "react"
-import styled from "styled-components"
-import { Edit } from "react-feather"
-import { useAppSelector } from "../feats/hooks"
-import { selectMyDFClass, selectMyName } from "../feats/selector/baseSelectors"
-import { ModalContext } from "./modals/modalContext"
-import { SavedCharsFragment } from "./modals/SavedCharsModal"
-import { DFClassModal } from "./modals/DFClassModal"
-import { DFClassIcon } from "./widgets/Icons"
-import { DamageOutput } from "./DamageOutput"
-import { SecondRow } from "./MyStatStick"
-import { PortraitMode } from "../responsiveContext"
+import { useContext } from 'react'
+import { Edit } from 'react-feather'
+import styled from 'styled-components'
 
-
+import { useAppSelector } from '../feats/hooks'
+import { selectMyDFClass, selectName } from '../feats/selector/baseSelectors'
+import { PortraitMode } from '../responsiveContext'
+import { DamageOutput } from './DamageOutput'
+import { DFClassModal } from './modals/DFClassModal'
+import { ModalContext } from './modals/modalContext'
+import { SavedCharsFragment } from './modals/SavedCharsModal'
+import { SecondRow } from './MyStatStick'
+import { DFClassIcon } from './widgets/Icons'
 
 const StickyNavStyle = styled.div`
   position: sticky;
@@ -112,7 +111,7 @@ function OutputZone() {
 export function StickyNav() {
   const portrait = useContext(PortraitMode)
   const { openModal } = useContext(ModalContext)
-  const myName = useAppSelector(selectMyName)
+  const myName = useAppSelector(selectName)
   const dfclass = useAppSelector(selectMyDFClass)
   
   return (
