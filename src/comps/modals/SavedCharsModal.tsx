@@ -14,7 +14,9 @@ import { Num } from "../widgets/NumberView"
 
 
 function selectSavedChars(state: RootState) {
-  return state.SavedChars.IDs.map(id => state.SavedChars.byID[id])
+  //return state.SavedChars.IDs.map(id => state.SavedChars.byID[id])
+  // issue #2 이거 안되면 좀 죠때따데스
+  return Object.values(state.SavedChars.byID)
 }
 
 
