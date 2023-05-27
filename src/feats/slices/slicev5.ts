@@ -87,6 +87,11 @@ export const dfSlice = createSlice({
     InitChar: (state) => {
       if (!state.currentID) createNew(state, initCharState)
     },
+    SyncID: (state) => {
+      for (const [key, dfch] of Object.entries(state.SavedChars.byID)) {
+         dfch.id = key
+      }
+    },
     ImportDF: (state, { payload }: PayloadAction<DFCharState>) => {
       createNew(state, payload)
     },
@@ -436,6 +441,7 @@ export const {
   CloneDF,
   ImportDF,
   DeleteDFChar,
+  SyncID,
 
   MoveDFCharDown,
   MoveDFCharUp,
