@@ -37,9 +37,11 @@ function createNew(draft: V5State, src: DFCharState) {
   draft.currentID = id
   draft.SavedChars.IDs.unshift(id)
   draft.SavedChars.byID[id] = {
-    id,
+// issue #2
+    //id,
     TimeStamp: Date.now(),
     ...deepCopy(src),
+    id,
   }
 }
 
