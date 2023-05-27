@@ -5,7 +5,7 @@ import '../style/Misc.scss'
 import { useCallback, useContext, useEffect, useState } from 'react'
 
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
-import { InitChar } from '../feats/slices/slicev5'
+import { InitChar, SyncID } from '../feats/slices/slicev5'
 import store from '../feats/store'
 import { PortraitMode, TabContext } from '../responsiveContext'
 import { Cracks } from './Cracks'
@@ -92,6 +92,7 @@ function App() {
     if (lastIDs.length === 0) {
       dispatch(InitChar())
     }
+    dispatch(SyncID())
     
     window.addEventListener('resize', onResize)
     return () => window.removeEventListener('resize', onResize)
