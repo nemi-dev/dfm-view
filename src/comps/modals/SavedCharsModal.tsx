@@ -12,6 +12,8 @@ import { DamageOutput } from "../DamageOutput"
 import { selectExpressionDamage } from "../../feats/selector/selectors"
 import { Num } from "../widgets/NumberView"
 
+import { ErrorBoundary } from 'react-error-boundary'
+
 
 function selectSavedChars(state: RootState) {
   //return state.SavedChars.IDs.map(id => state.SavedChars.byID[id])
@@ -180,6 +182,18 @@ const CreatingSection = styled.div`
   }
 `
 
+
+
+function SavedCharsError() {
+  const savedCharsObject = useAppSelector(state => state.SavedChars)
+  return (<>
+    <h1>이런! 캐릭터 선택창이 고장났어요!</h1>
+    <div>지금 아이패드뿐이라 고치는데 걸림...ㅠㅠ</div>
+    <pre>{JSON.stringify(savedCharsObject, null, 2)}</pre>
+  </>
+  )
+}
+
 export function SavedCharsFragment () {
   const { closeModal } = useContext(ModalContext)
   const dispatch = useAppDispatch()
@@ -198,6 +212,7 @@ export function SavedCharsFragment () {
     closeModal()
   }, [])
   return (
+  <ErrorBoundary FallbackComponent={SavedCharsError}>
     <SavedCharsFragmentLayout>
       <header>
         <h3>캐릭터 선택</h3>
@@ -210,5 +225,6 @@ export function SavedCharsFragment () {
       <div onClick={dupCharClick}><Copy />현재 셋팅 복제</div>
       </CreatingSection>
     </SavedCharsFragmentLayout>
+  </ErrorBoundary>
   )
 }
