@@ -326,6 +326,68 @@ declare interface ExclusiveSet {
 }
 
 
+
+/** 직업 */
+declare interface DFClass {
+
+  /** 직업명 */
+  name: DFClassName
+
+  /** 공격타입 (물리("Physc")|마법("Magic")만 가능, 컨버전 등이 나오면 다른방법을 써야한다.) */
+  atype: Atype
+
+  /** 착용 가능한 무기 */
+  weapons: WeaponType[]
+
+  /** 이 직업에게 항상 적용되는 효과 */
+  attrs: BaseAttrs
+
+  /** 이 직업이 사용가능한 공격 스킬들 이름 */
+  skills: number[]
+
+  /** 이 직업이 사용가능한 패시브/버프 스킬 이름 */
+  selfSkills: number[]
+}
+
+/** 
+ * 효과를 내는 것 (아이템/세트효과/스킬효과/아바타/마력결정/길드버프 등 모조리 포함)  
+ * 이것은 "추적"이 가능하게 설계되었고, 그래서 `Source`란 이름이 붙었다.
+ * 
+ * 이 효과는 이미 "적용된 것"으로 간주되어 `branch`, `gives`, `exclusive` 등이 없다.
+ */
+declare interface AttrSource {
+
+  /**
+   * (장비/카드/칭호/오라/무기아바타/봉인석/정수 아이템일 때) 아이템 이름  
+   * (세트 효과일 때) "<세트 이름>[<세트 효과 발동에 필요한 갯수>]"  
+   * (패시브/버프일 때) 스킬 이름  
+   * (그 외) "길드"/"마력결정"/"아바타"  
+   */
+  name: string
+
+  /** 내가 받을 효과 */
+  attrs: BaseAttrs
+
+}
+
+
+
+/** 효과를 내는 것 중에서 "조건부"가 있는 것들  
+ * 아이템 및 세트효과만 이에 해당한다.
+ */
+declare interface ComplexAttrSource extends AttrSource {
+
+  /** (아이템 또는 세트일 때만) 특정 조건에서만(또는 던전에 입장했을 때만) 적용되는 효과 모음 */
+  branch?: ConditionalNode[]
+
+  /** (아이템/세트/스킬일 때만) "파티원에게" 적용되는 효과 모음  
+   * ("파티원 기능"이 추가되면 파티원에게 장착시킬 수 있다) */
+  gives?: ConditionalNode[]
+
+  /** (아이템/세트일 때만) 특정 조건을 만족했을 때, 발동될 수 있는 킹능성 있는 모든 효과 모음 */
+  exclusive?: ExclusiveSet[]
+}
+
 /** 잘 정리된 아이템 */
 declare interface DFItem {
 
@@ -397,66 +459,6 @@ declare interface DFISet {
 
 
 
-/** 직업 */
-declare interface DFClass {
-
-  /** 직업명 */
-  name: DFClassName
-
-  /** 공격타입 (물리("Physc")|마법("Magic")만 가능, 컨버전 등이 나오면 다른방법을 써야한다.) */
-  atype: Atype
-
-  /** 착용 가능한 무기 */
-  weapons: WeaponType[]
-
-  /** 이 직업에게 항상 적용되는 효과 */
-  attrs: BaseAttrs
-
-  /** 이 직업이 사용가능한 공격 스킬들 이름 */
-  skills: number[]
-
-  /** 이 직업이 사용가능한 패시브/버프 스킬 이름 */
-  selfSkills: number[]
-}
-
-/** 
- * 효과를 내는 것 (아이템/세트효과/스킬효과/아바타/마력결정/길드버프 등 모조리 포함)  
- * 이것은 "추적"이 가능하게 설계되었고, 그래서 `Source`란 이름이 붙었다.
- * 
- * 이 효과는 이미 "적용된 것"으로 간주되어 `branch`, `gives`, `exclusive` 등이 없다.
- */
-declare interface AttrSource {
-
-  /**
-   * (장비/카드/칭호/오라/무기아바타/봉인석/정수 아이템일 때) 아이템 이름  
-   * (세트 효과일 때) "<세트 이름>[<세트 효과 발동에 필요한 갯수>]"  
-   * (패시브/버프일 때) 스킬 이름  
-   * (그 외) "길드"/"마력결정"/"아바타"  
-   */
-  name: string
-
-  /** 내가 받을 효과 */
-  attrs: BaseAttrs
-
-}
-
-
-
-/** 효과를 내는 것 중에서 "조건부"가 있는 것들  
- * 아이템 및 세트효과만 이에 해당한다.
- */
-declare interface ComplexAttrSource extends AttrSource {
-
-  /** (아이템 또는 세트일 때만) 특정 조건에서만(또는 던전에 입장했을 때만) 적용되는 효과 모음 */
-  branch?: ConditionalNode[]
-
-  /** (아이템/세트/스킬일 때만) "파티원에게" 적용되는 효과 모음  
-   * ("파티원 기능"이 추가되면 파티원에게 장착시킬 수 있다) */
-  gives?: ConditionalNode[]
-
-  /** (아이템/세트일 때만) 특정 조건을 만족했을 때, 발동될 수 있는 킹능성 있는 모든 효과 모음 */
-  exclusive?: ExclusiveSet[]
-}
 
 
 
@@ -483,8 +485,6 @@ declare interface CustomSkillOneAttackSpec {
   /** 이 공격에만 적용되는 공격속성 */
   eltype?: Eltype[] | null | undefined
 }
-
-
 
 /** 스킬 레벨이 아직 정해지지 않은 스킬 공격 */
 declare interface UnboundOneAttack {
@@ -609,3 +609,17 @@ declare interface SelfSkill {
   
 }
 
+/** "어느 한 부위"의 모든 아이템 및 효과들 */
+declare interface PartSourceSet {
+  item: DFItem
+  upgrade?: AttrSource
+  card?: DFItem
+  magicProps?: AttrSource
+  emblems?: AttrSource[]
+
+  spells?: DFItem[]
+  blessing?: AttrSource
+
+  artifacts?: DFItem[]
+  artifactProps?: AttrSource[]
+}

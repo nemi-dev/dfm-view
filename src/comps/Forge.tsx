@@ -5,11 +5,10 @@ import { ItemIcon } from "./widgets/Icons"
 import { ModalContext } from "./modals/modalContext"
 import { EquipBatch } from "./EquipBatch"
 import { MagicProps } from "./MagicProps"
-import { selectCard2, selectItem2 } from "../feats/selector/equipSelectors"
+import { selectCard2, selectMainItem, selectArtifact } from "../feats/selector/itemSelectors"
 import { ArmorMaterialSelect, ArtiUpgrade, EmblemArray, Upgrade } from "./Itemy"
 import { hasMagicProps, isCardable, isEquip } from "../items"
 import { CardModalFragment } from "./modals/CardModal"
-import { selectArtifact } from "../feats/selector/creatureSelectors"
 
 
 function CardSlot({ part }: { part: WholePart }) {
@@ -68,7 +67,7 @@ const MagicPropsLayout = styled.div`
 `
 
 function Part({ part }: { part: EquipPart | "칭호" | "봉인석" | "크리쳐" }) {
-  const item = useAppSelector(state => selectItem2(state, undefined, part))
+  const item = useAppSelector(state => selectMainItem(state, undefined, part))
   return (
     <PartLayout className="Part Bordered">
       <PartHeading className={item? `Rarity_${item.rarity}`:""}>

@@ -1,6 +1,6 @@
 import { acceptEmblem } from "../../emblem"
 import { useAppSelector } from "../../feats/hooks"
-import { selectCard2, selectEmblemSpecs2, selectItem2 } from "../../feats/selector/equipSelectors"
+import { selectCard2, selectEmblemSpecs2, selectMainItem } from "../../feats/selector/itemSelectors"
 import { getMaxEmblemCount, isCardable } from "../../items"
 import { ItemName } from "../widgets/ItemNameView"
 import { ItemIcon, EmblemIcon } from "../widgets/Icons"
@@ -28,7 +28,7 @@ interface CurrentPartProps {
 
 export function CurrentPart({ sel }: CurrentPartProps) {
   const part = typeof sel === "string" ? sel : sel.part
-  const mainitem = useAppSelector(state => selectItem2(state, undefined, sel))
+  const mainitem = useAppSelector(state => selectMainItem(state, undefined, sel))
   const card = useAppSelector(state => selectCardGenerous(state, part))
   const emblems = useAppSelector(state => selectEmblemSpecsGenerous(state, part))
   const maxEmblem = getMaxEmblemCount(mainitem)

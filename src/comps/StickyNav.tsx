@@ -3,7 +3,7 @@ import { Edit } from 'react-feather'
 import styled from 'styled-components'
 
 import { useAppSelector } from '../feats/hooks'
-import { selectMyDFClass, selectName } from '../feats/selector/baseSelectors'
+import { selectDFClass, selectName } from '../feats/selector/baseSelectors'
 import { PortraitMode } from '../responsiveContext'
 import { DamageOutput } from './DamageOutput'
 import { DFClassModal } from './modals/DFClassModal'
@@ -112,7 +112,7 @@ export function StickyNav() {
   const portrait = useContext(PortraitMode)
   const { openModal } = useContext(ModalContext)
   const myName = useAppSelector(selectName)
-  const dfclass = useAppSelector(selectMyDFClass)
+  const dfclass = useAppSelector(selectDFClass)
   
   return (
     <StickyNavStyle>

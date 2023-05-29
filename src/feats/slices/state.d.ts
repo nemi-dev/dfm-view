@@ -216,7 +216,7 @@ declare interface CustomSkillState {
 }
 
 /** 여기까지가 "캐릭터 저장" 단위다  */
-declare interface DFCharState {
+declare interface DFChar {
   /** @deprecated  이제 캐릭터에 직접 들어간다 */
   Self?: never
 
@@ -278,7 +278,7 @@ declare interface V5State {
   My?: never
 
   SavedChars: {
-    byID: { [k: string]: DFCharState }
+    byID: { [k: string]: DFChar }
     IDs: string[]
   }
 

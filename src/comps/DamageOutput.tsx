@@ -1,16 +1,16 @@
 import { AtypeAttrKey } from '../constants'
 import { critChance, critFt, getElementalDamage, getPlainDamage } from '../damage'
 import { useAppSelector } from '../feats/hooks'
-import { selectClassAtype, selectMyDFClass } from '../feats/selector/baseSelectors'
-import { selectMyAttr, selectMyFinalEltype } from '../feats/selector/selectors'
+import { selectClassAtype, selectDFClass } from '../feats/selector/baseSelectors'
+import { selectAttr, selectFinalEltype } from '../feats/selector/selectors'
 import { add } from '../utils'
 import { Num } from './widgets/NumberView'
 
 export function DamageOutput({ sk = false, crit = false, id = null }: { sk?: boolean, crit?: boolean | "mean", id?: string }) {
-  const attrs = useAppSelector(selectMyAttr)
-  const dfclass = useAppSelector(selectMyDFClass)
+  const attrs = useAppSelector(selectAttr)
+  const dfclass = useAppSelector(selectDFClass)
   const atype = useAppSelector(selectClassAtype)
-  const eltype = useAppSelector(selectMyFinalEltype)
+  const eltype = useAppSelector(selectFinalEltype)
   let damage: number
 
   if (sk && !(eltype?.length > 0) && (dfclass.name === "엘레멘탈마스터" || dfclass.name === "마도학자"))

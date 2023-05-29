@@ -16,7 +16,7 @@ export function selectDFChar(state: RootState, id = state.currentID) {
 }
 
 /** 내가 활성화한 조건부를 모두 선택한다. */
-export const selectMyChoice = createSelector(
+export const selectChoice = createSelector(
   selectDFChar, dfchar => dfchar.choices
 )
 
@@ -33,44 +33,44 @@ export const selectLevel = createSelector(
 )
 
 /** 업적 레벨을 선택한다. */
-export const selectMyAchievementLevel = createSelector(
+export const selectAchievementLevel = createSelector(
   selectDFChar,
   dfchar => dfchar.achieveLevel
 )
 
 /** 캐릭터 직업을 선택한다 */
-export const selectMyDFClass = createSelector(
+export const selectDFClass = createSelector(
   selectDFChar,
   dfchar => whois(dfchar.dfclass)
 )
 
 /** 캐릭터의 독립공격력을 선택한다. */
-export const selectMyAtkFixed = createSelector(
+export const selectAtkFixed = createSelector(
   selectDFChar,
   dfchar => dfchar.atkFixed
 )
 
 /** 캐릭터 직업의 공격타입을 선택한다. */
 export const selectClassAtype = createSelector(
-  selectMyDFClass,
+  selectDFClass,
   (dfclass) => dfclass?.atype ?? "Physc"
 )
 
 /** 캐릭터 직업의 공격스킬을 모두 선택한다. */
 export const selectClassASkills = createSelector(
-  selectMyDFClass,
+  selectDFClass,
   dfclass => dfclass.skills?.map(skname => getSkill(skname)) ?? []
 )
 
 /** 캐릭터 직업의 패시브/버프 스킬을 모두 선택한다. */
 export const selectClassSelfSkills = createSelector(
-  selectMyDFClass,
+  selectDFClass,
   dfclass => dfclass.selfSkills.map(skname => getSelfSkill(skname))
 )
 
 /** 업적달성레벨로 얻는 보너스 효과를 선택한다.. */
 export const selectAchBonus = createSelector(
-  selectMyAchievementLevel,
+  selectAchievementLevel,
   lv => ({ name: "업적 달성 보너스", attrs: atx("StatAll", lv * 7 - 2)})
 )
 

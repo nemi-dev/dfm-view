@@ -47,7 +47,7 @@ export function m4to5(state: V4._RootState & PersistedState) {
         Calibrate,
         } = saved.DFChar
       
-      const dfc: DFCharState = {
+      const dfc: DFChar = {
         id,
         TimeStamp: saved.TimeStamp,
         name, level, dfclass, achieveLevel, atkFixed,

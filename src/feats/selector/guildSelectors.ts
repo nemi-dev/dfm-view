@@ -61,7 +61,7 @@ export const selectGuilds = createSelector(
   selectGuildAccu,
   (a, b, c, d, e, f, g): AttrSource => {
     return {
-      name: "길드 보너스",
+      name: "길드 버프",
       attrs: combine(a, b, c, d, e, f, g)
     }
   }

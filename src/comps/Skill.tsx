@@ -6,10 +6,10 @@ import { whatElType } from '../attrs'
 import { critFt, getSkillDamage } from '../damage'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import {
-  selectClassASkills, selectClassAtype, selectMyAtkFixed, selectLevel
+  selectClassASkills, selectClassAtype, selectAtkFixed, selectLevel
 } from '../feats/selector/baseSelectors'
 import {
-  selectEnemyDefRate, selectEnemyElRes, selectMyAttr, selectMyCritChance
+  selectEnemyDefRate, selectEnemyElRes, selectAttr, selectCritChance
 } from '../feats/selector/selectors'
 import { bindSkill, getMaxSkillLevelAt, isChargable } from '../skills'
 import { add } from '../utils'
@@ -67,9 +67,9 @@ function SkillDetailView({ attacks }: { attacks: RealOneAttack[] }) {
 function SkillDamage({ skill, attacks }: { skill: AttackSkill, attacks: RealOneAttack[] }) {
 
   const atype = useAppSelector(selectClassAtype)
-  const attrs = useAppSelector(selectMyAttr)
-  const atkFix = useAppSelector(selectMyAtkFixed)
-  const chance = useAppSelector(selectMyCritChance)
+  const attrs = useAppSelector(selectAttr)
+  const atkFix = useAppSelector(selectAtkFixed)
+  const chance = useAppSelector(selectCritChance)
 
   /** 일단 나한테 달려있는 모든 속성부여들 (가장 높은 속성강화 그런거 아직 적용안함) */
   const myEltype = attrs.eltype ?? []
@@ -217,7 +217,7 @@ function SkillLevelConfig({ skill, skLv, skLvBonus }: SkConfigProps) {
 function AttackSkillDefault({ skill, charged = false }: SkillOneProps) {
   const [showDetail, setShowDetail] = useState(false)
   const myLevel = useAppSelector(selectLevel)
-  const myAttrs = useAppSelector(selectMyAttr)
+  const myAttrs = useAppSelector(selectAttr)
   const skLvBonus = useAppSelector(state => selectSkillLevelBonus(state, undefined, skill))
 
   const skLvInput = useAppSelector(state => selectSkillLevel(state, undefined, skill.id ))
@@ -249,7 +249,7 @@ interface AttackSkillVariantProps {
 function AttackSkillVariant({ skill, variant }: AttackSkillVariantProps) {
   const [showDetail, setShowDetail] = useState(false)
   const myLevel = useAppSelector(selectLevel)
-  const myAttrs = useAppSelector(selectMyAttr)
+  const myAttrs = useAppSelector(selectAttr)
 
   /** @todo 스킬레벨을 사용자가 입력하도록 하시오. */
   const baseSkLv = getMaxSkillLevelAt(skill, myLevel, true)

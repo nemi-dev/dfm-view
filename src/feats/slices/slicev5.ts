@@ -32,7 +32,7 @@ function newID() {
   return id
 }
 
-function createNew(draft: V5State, src: DFCharState) {
+function createNew(draft: V5State, src: DFChar) {
   const id = newID()
   draft.currentID = id
   draft.SavedChars.IDs.unshift(id)
@@ -92,7 +92,7 @@ export const dfSlice = createSlice({
          dfch.id = key
       }
     },
-    ImportDF: (state, { payload }: PayloadAction<DFCharState>) => {
+    ImportDF: (state, { payload }: PayloadAction<DFChar>) => {
       createNew(state, payload)
     },
     CloneDF: (state) => {

@@ -10,7 +10,7 @@ import { createSelector } from '@reduxjs/toolkit'
 import _left from '../../../data/sets/left.json'
 import _right from '../../../data/sets/right.json'
 import { useAppDispatch, useAppSelector } from '../../feats/hooks'
-import { selectDFChar, selectMyDFClass } from '../../feats/selector/baseSelectors'
+import { selectDFChar, selectDFClass } from '../../feats/selector/baseSelectors'
 import { SetItems, SetItem } from '../../feats/slices/slicev5'
 import {
     equipParts, getCircus2Items, getItem, getItemsByPart, isAccess, isArmor, isEquip, party
@@ -23,7 +23,7 @@ import { ItemSizeDefiner } from './CommonModalComps'
 import { CurrentPart } from './CurrentPart'
 import { ModalContext } from './modalContext'
 import { ModalItemSelect } from './Select'
-import { selectItem2 } from '../../feats/selector/equipSelectors'
+import { selectMainItem } from '../../feats/selector/itemSelectors'
 
 type EquipShotgun = Partial<Pick<ItemsState, EquipPart>>
 
@@ -119,7 +119,7 @@ function SingleItemList({ part }: { part: WholePart }) {
   const { closeModal } = useContext(ModalContext)
   const [query, setQuery] = useState("")
   const dispatch = useAppDispatch()
-  const myDFclass = useAppSelector(selectMyDFClass)
+  const myDFclass = useAppSelector(selectDFClass)
 
   const onClick = useCallback((item: DFItem) => {
     dispatch(SetItem([undefined, part as EquipPart | "칭호" | "오라" | "무기아바타", item.name]))
@@ -183,7 +183,7 @@ const selectEquipMainItems = createSelector(
 function Circus2List() {
   const { closeModal } = useContext(ModalContext)
   const dispatch = useAppDispatch()
-  const myDFClass = useAppSelector(selectMyDFClass)
+  const myDFClass = useAppSelector(selectDFClass)
   const collection = getCircus2Items(myDFClass.name)
   const currentItems = useAppSelector(selectEquipMainItems)
 
@@ -295,7 +295,7 @@ interface ItemSelectProps {
 
 export function ItemSelect({ sel }: ItemSelectProps) {
   const part = typeof sel === "string" ? sel : sel.part
-  const mainitem = useAppSelector(state => selectItem2(state, undefined, sel))
+  const mainitem = useAppSelector(state => selectMainItem(state, undefined, sel))
   const [activeTab, setActiveTab] = useState("일반")
 
   return (

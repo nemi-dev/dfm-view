@@ -49,7 +49,7 @@ export const initCustomSkill: CustomSkillOneAttackSpec[] = [
 ]
 
 
-export const initCharState: DFCharState = {
+export const initCharState: DFChar = {
   id: "InitID",
   TimeStamp: Date.now(),
   "name": "캐릭터 이름",

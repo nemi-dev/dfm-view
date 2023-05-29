@@ -4,11 +4,11 @@ import styled from 'styled-components'
 
 import { AttrDef, attrDefs } from '../attrs'
 import { useAppSelector } from '../feats/hooks'
-import { selectMySource } from '../feats/selector/selectors'
+import { selectSources } from '../feats/selector/selectors'
 import { CombineItems, Interpolate } from '../items'
 import { AttrItem, SimpleBaseAttrView } from './widgets/AttrsView'
 import { RadioGroup } from './widgets/Forms'
-import { selectMyChoice } from '../feats/selector/baseSelectors'
+import { selectChoice } from '../feats/selector/baseSelectors'
 
 
 const Row = styled.div`
@@ -70,7 +70,7 @@ function SourceGroupErrorView({ error, resetErrorBoundary }: FallbackProps) {
 }
 
 function SourceGroupView() {
-  const sources = useAppSelector(selectMySource)
+  const sources = useAppSelector(selectSources)
   return (
     <ErrorBoundary FallbackComponent={SourceGroupErrorView}>
       {sources.map((source, index) => {
@@ -100,8 +100,8 @@ const AttrGroupStyle = styled.div`
 `
 
 function AttrGroupView() {
-  const sources = useAppSelector(selectMySource)
-  const choice = useAppSelector(selectMyChoice)
+  const sources = useAppSelector(selectSources)
+  const choice = useAppSelector(selectChoice)
   const interpolated = Interpolate(sources, choice)
   const myAttr = CombineItems(sources, choice)
   return (

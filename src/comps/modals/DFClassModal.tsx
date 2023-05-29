@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import styled from 'styled-components'
 
 import { useAppDispatch, useAppSelector } from '../../feats/hooks'
-import { selectMyDFClass, selectName } from '../../feats/selector/baseSelectors'
+import { selectDFClass, selectName } from '../../feats/selector/baseSelectors'
 import { SetMyDFClass, SetMyName } from '../../feats/slices/slicev5'
 import { PortraitMode } from '../../responsiveContext'
 import { DFClassIcon } from '../widgets/Icons'
@@ -33,7 +33,7 @@ const dfclassOrder: DFClassName[] = [
 
 export function DFClassModal() {
   const dispatch = useAppDispatch()
-  const myClass = useAppSelector(selectMyDFClass)
+  const myClass = useAppSelector(selectDFClass)
   const myName = useAppSelector(selectName)
   const portrait = useContext(PortraitMode)
   return (

@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { useAppSelector } from '../feats/hooks'
-import { selectMagicPropNames2 } from '../feats/selector/equipSelectors'
+import { selectMagicPropNames2 } from '../feats/selector/itemSelectors'
 import { selectClassAtype } from '../feats/selector/baseSelectors'
 import { SetMyMagicProps } from '../feats/slices/slicev5'
 import { hasMagicProps } from '../items'

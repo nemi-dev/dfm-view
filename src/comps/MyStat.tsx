@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { AtypeAttrKey, Elemental } from '../constants'
 import { AtkOut, critChance, StatOut } from '../damage'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
-import { selectMyAttr, selectMyAttrTown, selectMyFinalEltype } from '../feats/selector/selectors'
+import { selectAttr, selectAttrTown, selectFinalEltype } from '../feats/selector/selectors'
 import { selectClassAtype, selectCalibrate } from '../feats/selector/baseSelectors'
 import {
   AddMyCaliSkillInc, DeleteMyCaliSkillInc, SetMyCaliSingleAttr, SetMyCaliEltype, SetMyCaliSkillInc
@@ -129,9 +129,9 @@ export function EditEltype() {
 
 export function MyStat() {
   const [excludeCond, setExcludeCond] = useState(false)
-  const me = excludeCond? useAppSelector(selectMyAttrTown) : useAppSelector(selectMyAttr)
+  const me = excludeCond? useAppSelector(selectAttrTown) : useAppSelector(selectAttr)
 
-  const eltype = useAppSelector(selectMyFinalEltype)
+  const eltype = useAppSelector(selectFinalEltype)
   const eltypeExpr = eltype.length? `${eltype.map(e => Elemental[e].속성).join("+")}` : "(속성없음)"
 
   return (

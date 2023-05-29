@@ -6,7 +6,7 @@ import { critFt, dmg } from '../damage'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { selectClassAtype } from '../feats/selector/baseSelectors'
 import {
-    selectEnemyDefRate, selectEnemyElRes, selectMyAttr, selectMyCritChance
+    selectEnemyDefRate, selectEnemyElRes, selectAttr, selectCritChance
 } from '../feats/selector/selectors'
 import {
     SetSkillFixValue, SetSkillInputName, SetSkillMaxHit, SetSkillUsesSkillInc, SetSkillValue
@@ -111,9 +111,9 @@ interface SkillOutputOneProps {
 function CustomSkillAttackOne({ index, SkillOneAttackSpec }: SkillOutputOneProps) {
 
   const atype = useAppSelector(selectClassAtype)
-  const attrs = useAppSelector(selectMyAttr)
+  const attrs = useAppSelector(selectAttr)
   const atkFix = useAppSelector(state => state.SavedChars.byID[state.currentID].atkFixed)
-  const chance = useAppSelector(selectMyCritChance)
+  const chance = useAppSelector(selectCritChance)
 
   const targetElRes = useAppSelector(selectEnemyElRes)
   const defRate = useAppSelector(selectEnemyDefRate)

@@ -2,7 +2,7 @@ import { useCallback, useContext, useState } from 'react'
 
 import { acceptEmblem } from '../../emblem'
 import { useAppDispatch, useAppSelector } from '../../feats/hooks'
-import { selectEmblemSpecs2 } from '../../feats/selector/equipSelectors'
+import { selectEmblemSpecs2 } from '../../feats/selector/itemSelectors'
 import { SetMyEmblem } from '../../feats/slices/slicev5'
 import { getEmblemSocketType } from '../../items'
 import { NumberInput } from '../widgets/Forms'

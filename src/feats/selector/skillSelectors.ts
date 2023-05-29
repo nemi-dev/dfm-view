@@ -1,10 +1,11 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { selectDFChar } from "./baseSelectors";
 import { RootState } from "../store";
-import { selectMyAttr } from "./selectors";
+import { selectAttr } from "./selectors";
 import { querySkill } from "../../skills";
 import { add } from "../../utils";
 
+/** 내가 찍은 스킬 레벨을 선택한다. */
 export const selectSkillLevel = createSelector(
   selectDFChar,
   (state: RootState, charID: string, skId: number) => skId,
@@ -13,8 +14,9 @@ export const selectSkillLevel = createSelector(
   }
 )
 
+/** 지정한 스킬의 스킬레벨 보너스를 선택한다. */
 export const selectSkillLevelBonus = createSelector(
-  selectMyAttr,
+  selectAttr,
   (state: RootState, charID: string, sk: AttackSkill) => sk,
   (myAttrs, sk) => {
     const { sk_lv = {} } = myAttrs

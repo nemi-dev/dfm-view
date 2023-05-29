@@ -6,7 +6,7 @@ import { SetMyChoiceOfBranch, SetMyChoiceOfExclusive, SetMyChoiceOfGives } from 
 import { createCondyceKey2, createExclusiveKey2, getActiveISets } from '../items'
 import { SimpleBaseAttrView } from './widgets/AttrsView'
 import { LabeledNumberInput, LabeledSwitch, RadioGroup } from './widgets/Forms'
-import { selectMyChoice } from '../feats/selector/baseSelectors'
+import { selectChoice } from '../feats/selector/baseSelectors'
 
 interface LeafViewProps {
   itemKey: string
@@ -16,7 +16,7 @@ interface LeafViewProps {
 }
 function LeafView({ itemKey, node, what, Action }: LeafViewProps) {
   const dispatch = useAppDispatch()
-  const value = useAppSelector(state => selectMyChoice(state)[what][itemKey] ?? 0)
+  const value = useAppSelector(state => selectChoice(state)[what][itemKey] ?? 0)
   const maxValue = node.maxRepeat ?? 1
   const pick = node.pick
   if (maxValue === 1) {
@@ -72,7 +72,7 @@ function BranchOrGivesView({ name, nodes, what }: BrachViewProps) {
 
 function ExclusiveNodeView({ prefix, node }: { prefix: string, node: ExclusiveSet }) {
   const dispatch = useAppDispatch()
-  const value = useAppSelector(state => selectMyChoice(state).exclusives[prefix])
+  const value = useAppSelector(state => selectChoice(state).exclusives[prefix])
   const values = node.children.map(n => n.pick)
   return <RadioGroup groupName={node.pickSet} name={prefix} values={values} value={value}
     dispatcher={val => dispatch(SetMyChoiceOfExclusive([prefix, val]))}

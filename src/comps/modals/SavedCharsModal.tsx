@@ -78,7 +78,7 @@ const CharControlStyle = styled.div`
 
 interface CharSelectProps {
   // saved: SavedChar
-  saved: DFCharState
+  saved: DFChar
   onClick: React.MouseEventHandler<HTMLDivElement>
 }
 function CharSelect({ saved, onClick }: CharSelectProps) {

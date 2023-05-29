@@ -4,7 +4,7 @@ import { useAppSelector } from '../feats/hooks'
 import { CrackIcon } from "./widgets/Icons"
 import { MagicProps } from './MagicProps'
 import { ModalContext } from './modals/modalContext'
-import { selectItem2, selectSpells } from "../feats/selector/equipSelectors"
+import { selectMainItem, selectSpells } from "../feats/selector/itemSelectors"
 import { RuneModalFragment, SpellModalFragment } from './modals/CrackModal'
 
 
@@ -61,7 +61,7 @@ const SpellSocket = styled.img<{index: number}>`
 
 export function Cracks() {
   const { openModal } = useContext(ModalContext)
-  const rune = useAppSelector(state => selectItem2(state, undefined, "봉인석"))
+  const rune = useAppSelector(state => selectMainItem(state, undefined, "봉인석"))
   const spells = useAppSelector(selectSpells)
 
   return (

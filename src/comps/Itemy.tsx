@@ -6,8 +6,8 @@ import { acceptEmblem } from '../emblem'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { selectDFChar } from '../feats/selector/baseSelectors'
 import {
-  selectCard2, selectCustomMaterial2, selectEmblemSpecs2, selectItem2, selectUpgradeValue2
-} from '../feats/selector/equipSelectors'
+  selectCard2, selectCustomMaterial2, selectEmblemSpecs2, selectMainItem, selectUpgradeValue2
+} from '../feats/selector/itemSelectors'
 import {
     DecreaseMyEmblemLevel, SetMyArtifactValue, SetMyCreatureStat, SetMyMaterial, SetMyUpgradeValue
 } from '../feats/slices/slicev5'
@@ -78,7 +78,7 @@ interface PartProps {
 export function ArmorMaterialSelect({ part }: PartProps) {
   if (!isArmor(part)) return null
   const dispatch = useAppDispatch()
-  const item = useAppSelector(state => selectItem2(state, undefined, part))
+  const item = useAppSelector(state => selectMainItem(state, undefined, part))
   const material = useAppSelector(state => selectCustomMaterial2(state, undefined, part))
 
   const materialFixed = item?.material
@@ -111,7 +111,7 @@ export function EmblemArray({ part }: PartProps) {
   if (!isCardable(part)) return null
   const { openModal } = useContext(ModalContext)
   const dispatch = useAppDispatch()
-  const item = useAppSelector(state => selectItem2(state, undefined, part))
+  const item = useAppSelector(state => selectMainItem(state, undefined, part))
   const emblems = useAppSelector(state => selectEmblemSpecs2(state, undefined, part))
   const onItemClick = useCallback((index: number) => {
     if (part === "무기" || part === "보조장비" || part === "칭호")

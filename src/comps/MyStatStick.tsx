@@ -4,7 +4,7 @@ import { AtypeAttrKey, Elemental } from '../constants'
 import { AtkOut, critChance, critFt, EldmgFt, StatOut } from '../damage'
 import { useAppSelector } from '../feats/hooks'
 import { selectClassAtype } from '../feats/selector/baseSelectors'
-import { selectMyAttr, selectMyFinalEltype } from '../feats/selector/selectors'
+import { selectAttr, selectFinalEltype } from '../feats/selector/selectors'
 import { add } from '../utils'
 import { Num } from './widgets/NumberView'
 
@@ -65,7 +65,7 @@ function NamedNumber({ name, numStyle = "", value, signed = false, percented = f
 }
 
 function ElValue({ eltype }: { eltype: Eltype }) {
-  const myAttrs = useAppSelector(selectMyAttr)
+  const myAttrs = useAppSelector(selectAttr)
   const elName = Elemental[eltype]["속성"]
   const elKey = Elemental[eltype].el
   const el = myAttrs[elKey] ?? 0
@@ -73,7 +73,7 @@ function ElValue({ eltype }: { eltype: Eltype }) {
 }
 
 function EltypeArray() {
-  const eltypes = useAppSelector(selectMyFinalEltype)
+  const eltypes = useAppSelector(selectFinalEltype)
   if (!eltypes?.length)
   return (
     <NamedValueStyle>
@@ -89,7 +89,7 @@ function EltypeArray() {
 }
 
 function ElAddDamage({ eltype }: { eltype: Eltype }) {
-  const myAttrs = useAppSelector(selectMyAttr)
+  const myAttrs = useAppSelector(selectAttr)
   const elKey = Elemental[eltype].el
   const eldmgKey = Elemental[eltype].eldmg
   const el = myAttrs[elKey]
@@ -119,7 +119,7 @@ const SecondFuckingRow = styled.div`
 `
 
 export function SecondRow() {
-  const myAttrs = useAppSelector(selectMyAttr)
+  const myAttrs = useAppSelector(selectAttr)
   const atype = useAppSelector(selectClassAtype)
   const { 
     Stat: statKey,

@@ -4,7 +4,7 @@ import { useContext, useState } from 'react'
 import styled from 'styled-components'
 
 import { useAppSelector } from '../feats/hooks'
-import { selectItem2 } from '../feats/selector/equipSelectors'
+import { selectMainItem, selectArtifact } from '../feats/selector/itemSelectors'
 import { equipParts } from '../items'
 import { PortraitMode } from '../responsiveContext'
 import { ClosedCondyceSet } from './Choices'
@@ -16,7 +16,6 @@ import { ModalContext } from './modals/modalContext'
 import { SimpleBaseAttrView } from './widgets/AttrsView'
 import { ItemIcon } from './widgets/Icons'
 import { ItemName } from './widgets/ItemNameView'
-import { selectArtifact } from '../feats/selector/creatureSelectors'
 import { ArtifactModalFragment } from './modals/ArtifactModal'
 import { EditEltype } from './MyStat'
 
@@ -45,7 +44,7 @@ const MagicPropsLayout = styled.div`
 `
 
 function SlotHeading({ part, onItemNameClicked }: PartProps & { onItemNameClicked: React.MouseEventHandler<HTMLDivElement> }) {
-  const item = useAppSelector(state => selectItem2(state, undefined, part))
+  const item = useAppSelector(state => selectMainItem(state, undefined, part))
   return (
     <div className="SlotHeading">
       <ItemName item={item} alt={`${part} 없음`} className="EquipName" onClick={onItemNameClicked} />
@@ -62,7 +61,7 @@ interface PartWideProps {
 
 function PartWide({ part }: PartWideProps) {
   const { openModal } = useContext(ModalContext)
-  const item = useAppSelector(state => selectItem2(state, undefined, part))
+  const item = useAppSelector(state => selectMainItem(state, undefined, part))
   const [detail, setDetail] = useState(false)
   return (
     <div className="EquipSlot Bordered Hovering">
@@ -91,7 +90,7 @@ function PartWide({ part }: PartWideProps) {
 
 function PartCompact({ part }: PartProps) {
   const { openModal } = useContext(ModalContext)
-  const item = useAppSelector(state => selectItem2(state, undefined, part))
+  const item = useAppSelector(state => selectMainItem(state, undefined, part))
   return (
     <div className="EquipSlot">
       <div className="EquipPartLayout">
@@ -140,7 +139,7 @@ function ArtiPartCompact({ color }: ArtifactPartProps) {
 }
 
 export function CondsAttrsView() {
-  const items = ([...equipParts, "칭호", "오라", "무기아바타", "크리쳐"] as const).map(part => useAppSelector(state => selectItem2(state, undefined, part)))
+  const items = ([...equipParts, "칭호", "오라", "무기아바타", "크리쳐"] as const).map(part => useAppSelector(state => selectMainItem(state, undefined, part)))
   items.push(
     useAppSelector(selectArtifact("Red")),
     useAppSelector(selectArtifact("Green")),

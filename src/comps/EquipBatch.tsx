@@ -5,7 +5,7 @@ import { createSelector } from '@reduxjs/toolkit'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import {
   selectCustomMaterial2, selectEmblemSpecs2, selectUpgradeValue2
-} from '../feats/selector/equipSelectors'
+} from '../feats/selector/itemSelectors'
 import { selectClassAtype } from '../feats/selector/baseSelectors'
 import {
     SetMyAccessUpgradeAll, SetMyArmorUpgradeAll, SetMyEmblemLevelAll, SetMyMaterialAll,
@@ -13,26 +13,27 @@ import {
 } from '../feats/slices/slicev5'
 import { accessParts, armorParts, oneEmblemParts } from '../items'
 import { LabeledNumberInput, OneClickButtonGroup, RadioGroup } from './widgets/Forms'
+import { RootState } from '../feats/store'
 
 const selectMaxArmorUpgradeValue = createSelector(
-  armorParts.map(part => (state: V5State, charID: V5State["currentID"]) => selectUpgradeValue2(state, charID, part)),
+  armorParts.map(part => (state: RootState, charID: RootState["currentID"]) => selectUpgradeValue2(state, charID, part)),
   Math.max
 )
 
 const selectMaxAccessUpgradeValue = createSelector(
-  accessParts.map(part => (state: V5State, charID: V5State["currentID"]) => selectUpgradeValue2(state, charID, part)),
+  accessParts.map(part => (state: RootState, charID: RootState["currentID"]) => selectUpgradeValue2(state, charID, part)),
   Math.max
 )
 
 const selectColorEmblemLevels = createSelector(
-  oneEmblemParts.map(part => (state: V5State, charID: V5State["currentID"]) => selectEmblemSpecs2(state, charID, part)),
+  oneEmblemParts.map(part => (state: RootState, charID: RootState["currentID"]) => selectEmblemSpecs2(state, charID, part)),
   (...specMatrix) => {
     return specMatrix.flatMap(specs => specs.map(spec => spec[1])).reduce((p, n) => p < n? n : p, 1)
   }
 )
 
 const selectSynchronizedMaterial = createSelector(
-  armorParts.map(part => (state: V5State, charID: V5State["currentID"]) => selectCustomMaterial2(state, charID, part)),
+  armorParts.map(part => (state: RootState, charID: RootState["currentID"]) => selectCustomMaterial2(state, charID, part)),
   (...mats) => mats.find(m => mats[0] != m) ? null : mats[0]
 )
 
