@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { useAppSelector } from '../feats/hooks'
-import { selectMagicPropNames } from '../feats/selector/equipSelectors'
+import { selectMagicPropNames2 } from '../feats/selector/equipSelectors'
 import { selectClassAtype } from '../feats/selector/baseSelectors'
 import { SetMyMagicProps } from '../feats/slices/slicev5'
 import { hasMagicProps } from '../items'
@@ -46,7 +46,7 @@ export function MagicProps({ item, part }: MagicPropsArrayProps) {
   const isPortrait = useContext(PortraitMode)
   const { level, rarity } = item
   const dispatch = useDispatch()
-  const array = useAppSelector(selectMagicPropNames[part])
+  const array = useAppSelector(state => selectMagicPropNames2(state, undefined, part))
   const atype = useAppSelector(selectClassAtype)
   const clickHandler = useCallback((index: number) => {
     const next = nextMagicProps(part, array[index], level, rarity, index === 0)

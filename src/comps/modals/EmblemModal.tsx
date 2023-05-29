@@ -2,7 +2,7 @@ import { useCallback, useContext, useState } from 'react'
 
 import { acceptEmblem } from '../../emblem'
 import { useAppDispatch, useAppSelector } from '../../feats/hooks'
-import { selectEmblemSpecs } from '../../feats/selector/equipSelectors'
+import { selectEmblemSpecs2 } from '../../feats/selector/equipSelectors'
 import { SetMyEmblem } from '../../feats/slices/slicev5'
 import { getEmblemSocketType } from '../../items'
 import { NumberInput } from '../widgets/Forms'
@@ -26,13 +26,13 @@ function EmblemSelect({ part, index, type, level }: { part: CardablePart, index:
 }
 
 export function EmblemModal({ part, index }: { part: CardablePart, index: number }) {
-  const emblems = useAppSelector(selectEmblemSpecs[part])
+  const emblems = useAppSelector(state => selectEmblemSpecs2(state, undefined, part))
   const currentSpec = emblems[index]
   const [newLevel, setNewLevel] = useState(currentSpec[1])
   const availableEmblemTypes = getEmblemSocketType(part)
   return(<>
     <h3>엠블렘</h3>
-    <CurrentPart part={part} index={index} />
+    <CurrentPart sel={part} />
     <div style={{ marginBlockStart: "0.5rem", fontWeight: 700}}>새로 장착할 엠블렘 레벨을 입력한 후, 아래 아이콘을 누르세요</div>
     <div style={{ marginBlockEnd: "0.5rem", fontSize: "smaller" }}>{index + 1}번째 엠블렘 소켓에 장착됩니다</div>
     <div>

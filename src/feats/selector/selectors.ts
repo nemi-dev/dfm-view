@@ -8,9 +8,8 @@ import { add } from '../../utils'
 import {
   selectAchBonus, selectCaliSource, selectClassAtype, selectDFChar, selectMyChoice, selectMyDFClass, selectLevel
 } from './baseSelectors'
-import { selectCracks } from './cracksSelectors'
 import { selectCreatureAndArtis } from './creatureSelectors'
-import { selectCard, selectEmblems, selectEquips, selectItem } from './equipSelectors'
+import { selectCard2, selectEmblems2, selectEquips2, selectItem2, selectCracks } from './equipSelectors'
 import { selectGuilds } from './guildSelectors'
 
 import type { RootState } from "../store"
@@ -41,9 +40,9 @@ export function selectTonics(state: RootState): AttrSource {
 
 /** 칭호를 장착 중일 때, 그 칭호 + 칭호에 박은 보주 + 엠블렘을 선택한다. */
 export const selectDFTitleTown = createSelector(
-  selectItem["칭호"],
-  selectCard["칭호"],
-  selectEmblems["칭호"],
+  (state: V5State, charID: V5State["currentID"]) => selectItem2(state, charID, "칭호"),
+  (state: V5State, charID: V5State["currentID"]) => selectCard2(state, charID, "칭호"),
+  (state: V5State, charID: V5State["currentID"]) => selectEmblems2(state, charID, "칭호"),
   (dftitle, card, emblem): AttrSource[] => {
     if (!dftitle) return []
     return [dftitle, card, ...emblem]
@@ -92,8 +91,8 @@ export const selectWearAvatarSource = createSelector(
 export const selectAvatars = createSelector(
   selectDFTitleTown,
   selectWearAvatarSource,
-  selectItem["무기아바타"],
-  selectItem["오라"],
+  (state: V5State, charID: V5State["currentID"]) => selectItem2(state, charID, "오라"),
+  (state: V5State, charID: V5State["currentID"]) => selectItem2(state, charID, "무기아바타"),
   (dftitle, wears, weaponAvatar, aura) => 
   [
     ...dftitle,
@@ -111,7 +110,7 @@ export const selectAvatars = createSelector(
  */
 export const selectMySource = createSelector(
   selectMyDFClass,
-  selectEquips,
+  selectEquips2,
   selectAvatars,
   selectCreatureAndArtis,
   selectTonics,
@@ -210,7 +209,7 @@ export const selectExpressionDamage = createSelector(
       Crit: critKey, CritCh: critChKey,
     } = AtypeAttrKey[atype]
     const chance = critChance(attrs[critKey], attrs[critChKey])
-    let damage = (dfcl.name == "엘레멘탈마스터" || dfcl.name == "마도학자")?
+    let damage = (eltypes.length == 0 && (dfcl.name == "엘레멘탈마스터" || dfcl.name == "마도학자"))?
     getElementalDamage(attrs) : getPlainDamage(atype, eltypes, attrs)
 
     damage *= (1 + add(attrs["sk_inc"], attrs["sk_inc_sum"]) / 100)

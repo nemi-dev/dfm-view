@@ -1,43 +1,38 @@
-import { acceptEmblem } from "../../emblem";
-import { useAppSelector } from "../../feats/hooks";
-import { selectCard, selectEmblemSpecs, selectItem } from "../../feats/selector/equipSelectors";
-import { getMaxEmblemCount, isCardable } from "../../items";
-import { ItemName } from "../widgets/ItemNameView";
-import { ItemIcon, EmblemIcon } from "../widgets/Icons";
-import { selectSpell } from "../../feats/selector/cracksSelectors";
-import { selectArtifact } from "../../feats/selector/creatureSelectors";
-import { RootState } from "../../feats/store";
+import { acceptEmblem } from "../../emblem"
+import { useAppSelector } from "../../feats/hooks"
+import { selectCard2, selectEmblemSpecs2, selectItem2 } from "../../feats/selector/equipSelectors"
+import { getMaxEmblemCount, isCardable } from "../../items"
+import { ItemName } from "../widgets/ItemNameView"
+import { ItemIcon, EmblemIcon } from "../widgets/Icons"
+import { RootState } from "../../feats/store"
 
-
-
-export function mainItemSelector(part: WholePart, index?: number | ArtifactColor) {
-  if (part === "정수") return selectSpell(index as number)
-  if (part === "아티팩트") return selectArtifact(index as ArtifactColor)
-  return selectItem[part]
-}
 
 function selectCardGenerous(state: RootState, part: WholePart) {
-  if (isCardable(part)) return selectCard[part](state)
+  if (isCardable(part))  //return selectCard[part](state)
+    return selectCard2(state, undefined, part)
   else return null
 }
 
 function selectEmblemSpecsGenerous(state: RootState, part: WholePart) {
-  if (isCardable(part)) return selectEmblemSpecs[part](state)
+  if (isCardable(part)) // return selectEmblemSpecs[part](state)
+    return selectEmblemSpecs2(state, undefined, part)
   else return []
 }
 
 
 
 interface CurrentPartProps {
-  part: WholePart;
-  index?: number | ArtifactColor;
+  sel: MainItemSelector
 }
-export function CurrentPart({ part, index }: CurrentPartProps) {
-  const mainitem = useAppSelector(mainItemSelector(part, index))
+
+
+export function CurrentPart({ sel }: CurrentPartProps) {
+  const part = typeof sel === "string" ? sel : sel.part
+  const mainitem = useAppSelector(state => selectItem2(state, undefined, sel))
   const card = useAppSelector(state => selectCardGenerous(state, part))
   const emblems = useAppSelector(state => selectEmblemSpecsGenerous(state, part))
   const maxEmblem = getMaxEmblemCount(mainitem)
-  const accept = acceptEmblem(part as EquipPart | "칭호")
+  const accept = acceptEmblem(part as CardablePart)
   return (
     <header>
       <div className="EquipSlot AlwaysEquipPartLayout CurrentPartItem">
@@ -53,5 +48,5 @@ export function CurrentPart({ part, index }: CurrentPartProps) {
           </div> : null}
       </div>
     </header>
-  );
+  )
 }

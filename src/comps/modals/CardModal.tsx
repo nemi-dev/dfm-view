@@ -38,7 +38,7 @@ export function CardModalFragment({ part }: { part: CardablePart }) {
   return (
     <>
     <h3>카드</h3>
-    <CurrentPart part={part} index={0} />
+    <CurrentPart sel={part} />
     <div className="ModalMenuScrollable">
       <header>
         <CheckieInline label="선택한 카드를 가능한 모든 부위에 바르기" checked={all} onChange={setAll} />

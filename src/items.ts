@@ -41,13 +41,13 @@ export const isArmor = (key: WholePart): key is ArmorPart => armorParts.includes
 export const isAccess = (key: WholePart): key is AccessPart => accessParts.includes(key as AccessPart)
 
 /** `p`가 주 장비 10부위인가? */
-export const isEquip = (p: WholePart): p is EquipPart => equipParts.includes(p as any)
+export const isEquip = (p: any): p is EquipPart => equipParts.includes(p)
 
 /** p가 카드/엠블렘 장착 가능 부위인가? */
-export const isCardable = (p: WholePart): p is CardablePart => cardableParts.includes(p as any)
+export const isCardable = (p: any): p is CardablePart => cardableParts.includes(p)
 
 /** `p`가 마법봉인 있는 부위인가? */
-export const hasMagicProps = (p: WholePart): p is MagicPropsPart => magicPropsParts.includes(p as any)
+export const hasMagicProps = (p: any): p is MagicPropsPart => magicPropsParts.includes(p)
 
 /** itype을 Part로 바꾼다. */
 export function party(i: Itype) {

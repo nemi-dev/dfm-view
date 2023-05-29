@@ -8,7 +8,6 @@ import { ModalContext } from "./modalContext"
 import { DFClassIcon, ItemIcon } from "../widgets/Icons"
 import { PlusCircle, Copy, Trash2, Download, ChevronUp, ChevronDown } from "react-feather"
 import { MoveDFCharDown, MoveDFCharUp } from "../../feats/slices/slicev5"
-import { DamageOutput } from "../DamageOutput"
 import { selectExpressionDamage } from "../../feats/selector/selectors"
 import { Num } from "../widgets/NumberView"
 
@@ -16,8 +15,6 @@ import { ErrorBoundary } from 'react-error-boundary'
 
 
 function selectSavedChars(state: RootState) {
-  //return state.SavedChars.IDs.map(id => state.SavedChars.byID[id])
-  // issue #2 이거 안되면 좀 죠때따데스
   return Object.values(state.SavedChars.byID)
 }
 

@@ -4,7 +4,7 @@ import { createSelector } from '@reduxjs/toolkit'
 
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import {
-    selectCustomMaterial, selectEmblemSpecs, selectUpgradeValue
+  selectCustomMaterial2, selectEmblemSpecs2, selectUpgradeValue2
 } from '../feats/selector/equipSelectors'
 import { selectClassAtype } from '../feats/selector/baseSelectors'
 import {
@@ -15,36 +15,35 @@ import { accessParts, armorParts, oneEmblemParts } from '../items'
 import { LabeledNumberInput, OneClickButtonGroup, RadioGroup } from './widgets/Forms'
 
 const selectMaxArmorUpgradeValue = createSelector(
-  armorParts.map(part => selectUpgradeValue[part]),
+  armorParts.map(part => (state: V5State, charID: V5State["currentID"]) => selectUpgradeValue2(state, charID, part)),
   Math.max
 )
 
 const selectMaxAccessUpgradeValue = createSelector(
-  accessParts.map(part => selectUpgradeValue[part]),
+  accessParts.map(part => (state: V5State, charID: V5State["currentID"]) => selectUpgradeValue2(state, charID, part)),
   Math.max
 )
 
 const selectColorEmblemLevels = createSelector(
-  oneEmblemParts.map(part => selectEmblemSpecs[part]),
+  oneEmblemParts.map(part => (state: V5State, charID: V5State["currentID"]) => selectEmblemSpecs2(state, charID, part)),
   (...specMatrix) => {
     return specMatrix.flatMap(specs => specs.map(spec => spec[1])).reduce((p, n) => p < n? n : p, 1)
   }
 )
 
 const selectSynchronizedMaterial = createSelector(
-  armorParts.map(part => selectCustomMaterial[part]),
+  armorParts.map(part => (state: V5State, charID: V5State["currentID"]) => selectCustomMaterial2(state, charID, part)),
   (...mats) => mats.find(m => mats[0] != m) ? null : mats[0]
 )
 
 export function EquipBatch() {
   const myAtype = useAppSelector(selectClassAtype)
   
-
   const dispatch = useAppDispatch()
-  const armorUpgradeValue = useAppSelector(selectMaxArmorUpgradeValue)
-  const accessUpgradeValue = useAppSelector(selectMaxAccessUpgradeValue)
-  const colorEmblemLevel = useAppSelector(selectColorEmblemLevels)
-  const mat = useAppSelector(selectSynchronizedMaterial)
+  const armorUpgradeValue = useAppSelector(state => selectMaxArmorUpgradeValue(state, undefined))
+  const accessUpgradeValue = useAppSelector(state => selectMaxAccessUpgradeValue(state, undefined))
+  const colorEmblemLevel = useAppSelector(state => selectColorEmblemLevels(state, undefined))
+  const mat = useAppSelector(state => selectSynchronizedMaterial(state, undefined))
   const onButtonClick = useCallback((v: string) => {
     switch (v) {
       case "magicPropLeft":

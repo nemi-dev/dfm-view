@@ -6,7 +6,7 @@ import { acceptEmblem } from '../emblem'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { selectDFChar } from '../feats/selector/baseSelectors'
 import {
-    selectCard, selectCustomMaterial, selectEmblemSpecs, selectItem, selectUpgradeValue
+  selectCard2, selectCustomMaterial2, selectEmblemSpecs2, selectItem2, selectUpgradeValue2
 } from '../feats/selector/equipSelectors'
 import {
     DecreaseMyEmblemLevel, SetMyArtifactValue, SetMyCreatureStat, SetMyMaterial, SetMyUpgradeValue
@@ -42,7 +42,8 @@ export function UpgradeFlex({ value, setValue }: UpgradeFlexProps) {
 
 function UpgradeEquip({ part }: EquipProps) {
   const dispatch = useAppDispatch()
-  const value = useAppSelector(selectUpgradeValue[part])
+  // const value = useAppSelector(selectUpgradeValue[part])
+  const value = useAppSelector(state => selectUpgradeValue2(state, undefined, part))
   return <UpgradeFlex value={value} setValue={v => dispatch(SetMyUpgradeValue([part, v]))} />
 }
 
@@ -77,8 +78,8 @@ interface PartProps {
 export function ArmorMaterialSelect({ part }: PartProps) {
   if (!isArmor(part)) return null
   const dispatch = useAppDispatch()
-  const item = useAppSelector(selectItem[part])
-  const material = useAppSelector(selectCustomMaterial[part])
+  const item = useAppSelector(state => selectItem2(state, undefined, part))
+  const material = useAppSelector(state => selectCustomMaterial2(state, undefined, part))
 
   const materialFixed = item?.material
   if (!item || materialFixed) return null
@@ -97,7 +98,7 @@ export function ArmorMaterialSelect({ part }: PartProps) {
 export function CardSlot({ part }: PartProps) {
   if (!isCardable(part)) return null
   const { openModal } = useContext(ModalContext)
-  const card = useAppSelector(selectCard[part])
+  const card = useAppSelector(state => selectCard2(state, undefined, part))
   return (
     <ItemIcon className="Card" item={card}
         onClick={() => openModal(<CardModalFragment part={part} />)}
@@ -110,8 +111,8 @@ export function EmblemArray({ part }: PartProps) {
   if (!isCardable(part)) return null
   const { openModal } = useContext(ModalContext)
   const dispatch = useAppDispatch()
-  const item = useAppSelector(selectItem[part])
-  const emblems = useAppSelector(selectEmblemSpecs[part])
+  const item = useAppSelector(state => selectItem2(state, undefined, part))
+  const emblems = useAppSelector(state => selectEmblemSpecs2(state, undefined, part))
   const onItemClick = useCallback((index: number) => {
     if (part === "무기" || part === "보조장비" || part === "칭호")
       openModal(<EmblemModal part={part} index={index} />)

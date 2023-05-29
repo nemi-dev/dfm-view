@@ -5,8 +5,8 @@ import { ItemIcon } from "./widgets/Icons"
 import { ModalContext } from "./modals/modalContext"
 import { EquipBatch } from "./EquipBatch"
 import { MagicProps } from "./MagicProps"
-import { selectCard, selectItem } from "../feats/selector/equipSelectors"
-import { ArmorMaterialSelect, ArtiUpgrade, EmblemArray, Upgrade, UpgradeFlex } from "./Itemy"
+import { selectCard2, selectItem2 } from "../feats/selector/equipSelectors"
+import { ArmorMaterialSelect, ArtiUpgrade, EmblemArray, Upgrade } from "./Itemy"
 import { hasMagicProps, isCardable, isEquip } from "../items"
 import { CardModalFragment } from "./modals/CardModal"
 import { selectArtifact } from "../feats/selector/creatureSelectors"
@@ -15,7 +15,7 @@ import { selectArtifact } from "../feats/selector/creatureSelectors"
 function CardSlot({ part }: { part: WholePart }) {
   if (!isCardable(part)) return null
   const { openModal } = useContext(ModalContext)
-  const card = useAppSelector(selectCard[part])
+  const card = useAppSelector(state => selectCard2(state, undefined, part))
   return(
     <ItemIcon className="Card" item={card}
       onClick={() => openModal(<CardModalFragment part={part} />)}
@@ -68,7 +68,7 @@ const MagicPropsLayout = styled.div`
 `
 
 function Part({ part }: { part: EquipPart | "칭호" | "봉인석" | "크리쳐" }) {
-  const item = useAppSelector(selectItem[part])
+  const item = useAppSelector(state => selectItem2(state, undefined, part))
   return (
     <PartLayout className="Part Bordered">
       <PartHeading className={item? `Rarity_${item.rarity}`:""}>

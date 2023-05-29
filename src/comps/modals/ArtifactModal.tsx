@@ -19,7 +19,7 @@ export function ArtifactModalFragment({ artiColor }: { artiColor: ArtifactColor 
   }, [artiColor])
   return (
     <>
-      <CurrentPart part="아티팩트" index={artiColor} />
+      <CurrentPart sel={{ part: "아티팩트", index: artiColor }} />
       <ItemSizeDefiner className="ItemSelectArray">
         {items.map(item => (
           <ModalItemSelect key={item.name} item={item} onClick={() => onClick(item.name)} />

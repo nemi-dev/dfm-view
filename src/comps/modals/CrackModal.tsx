@@ -24,7 +24,7 @@ export function RuneModalFragment() {
       <header>
         <h3>성안의 봉인 - 봉인석</h3>
       </header>
-      <CurrentPart part="봉인석" />
+      <CurrentPart sel="봉인석" />
       <div className="ItemSelectArray">
         {items.map((item) => (
           <ModalItemSelect key={item.name} item={item} onClick={() => onClick(item.name)} />
@@ -55,7 +55,7 @@ export function SpellModalFragment({ index }: { index: number }) {
       <h3>성안의 봉인 - 정수</h3>
       <Checkie2 label="선택한 정수 5개 끼기" checked={all} onChange={setAll} />
     </header>
-      <CurrentPart part="정수" index={index} />
+      <CurrentPart sel={{ part: "정수", index }} />
       <div className="ItemSelectArray">
       {items.map((item) => (
         <ModalItemSelect key={item.name} item={item} onClick={() => onClick(item.name)} />

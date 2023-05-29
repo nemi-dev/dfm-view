@@ -62,21 +62,28 @@ declare interface LinearValue {
   inc: number
 }
 
+
+declare type MainItemSelector = 
+| SingleItemPart
+| { part: "정수", index: number }
+| { part: "아티팩트", index: ArtifactColor }
+
+
 /** 특정 아이템을 선택하고 설정하기 위한 타입 */
 declare type ItemPositionDescriptor = {
-  charID: number | undefined
+  charID: string | undefined
   part: Exclude<WholePart, "정수" | "아티팩트">
 } | {
-  charID: number | undefined
+  charID: string | undefined
   part: "정수"
   index: number
 } | {
-  charID: number | undefined
+  charID: string | undefined
   part: "아티팩트"
   index: ArtifactColor
 }
 
-declare type ItemSetDescriptor = ItemPositionDescriptor & {
+declare type ItemValueDispatchType = ItemPositionDescriptor & {
   value: ItemIdentifier
 }
 

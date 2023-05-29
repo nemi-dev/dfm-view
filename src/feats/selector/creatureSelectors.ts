@@ -5,7 +5,7 @@ import { createSelector } from '@reduxjs/toolkit'
 import { atx, combine } from '../../attrs'
 import { getActiveISets, getItem } from '../../items'
 import { selectDFChar } from './baseSelectors'
-import { selectItem } from './equipSelectors'
+import { selectItem2 } from './equipSelectors'
 
 /** 아티팩트 하나를 선택한다 */
 export const selectArtifact = memoizee(
@@ -39,38 +39,28 @@ export const selectGreenArtiProp = createSelector(
   })
 )
 
-/** 크리쳐 스탯 효과를 선택한다. */
-export const selectCreatureStatAttr = createSelector(
-  selectDFChar,
-  (dfchar) => {
-    const stat = dfchar.creatureValues.Creature
-    return atx("StatAll", stat)
-  }
-)
-
 /** 
  * 크리쳐를 선택한다. (?!)  
- * 
- * *현재까지는 모든 크리쳐가 레벨업 스탯 빼고는 마을 옵션이 없다. 그래서 모든 크리쳐의 `attrs`는 `{}`일 거임.*
  */
 export const selectCreature = createSelector(
-  selectItem["크리쳐"],
-  selectCreatureStatAttr,
-  (creatureSelf, stat) => {
+  selectDFChar,
+  (state: V5State, charID: V5State["currentID"]) => selectItem2(state, charID, "크리쳐"),
+  (dfchar, creatureSelf) => {
+    const stat = dfchar.creatureValues.Creature
+    const statAttr = atx("StatAll", stat)
     if (!creatureSelf) return creatureSelf
     const creatureWithstat: DFItem = {
       ...creatureSelf,
-      attrs: combine(creatureSelf.attrs, stat)
+      attrs: combine(creatureSelf.attrs, statAttr)
     }
     return creatureWithstat
   }
 )
 
 
-
 /** 크리쳐+아티팩트로 활성화되는 세트를 모두 선택한다. */
 export const selectCreatureSets = createSelector(
-  selectItem["크리쳐"],
+  (state: V5State, charID: V5State["currentID"]) => selectItem2(state, charID, "크리쳐"),
   selectArtifact("Red"),
   selectArtifact("Green"),
   selectArtifact("Blue"),

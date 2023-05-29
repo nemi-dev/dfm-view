@@ -1,6 +1,5 @@
 import { createSelector } from "@reduxjs/toolkit"
 import { combine } from "../../attrs"
-import { RootState } from "../store"
 import { GuildAccu, GuildAtk, GuildCrit, GuildEl, GuildSpeedAtk, GuildStat, GuildStatPublic } from "../../guild"
 import { selectDFChar, selectClassAtype } from "./baseSelectors"
 

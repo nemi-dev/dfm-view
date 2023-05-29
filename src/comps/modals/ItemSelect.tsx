@@ -20,9 +20,10 @@ import { ItemIcon } from '../widgets/Icons'
 import { ItemDetail } from '../widgets/ItemView'
 import { NavLink, Tab } from '../widgets/Tab'
 import { ItemSizeDefiner } from './CommonModalComps'
-import { CurrentPart, mainItemSelector } from './CurrentPart'
+import { CurrentPart } from './CurrentPart'
 import { ModalContext } from './modalContext'
 import { ModalItemSelect } from './Select'
+import { selectItem2 } from '../../feats/selector/equipSelectors'
 
 type EquipShotgun = Partial<Pick<ItemsState, EquipPart>>
 
@@ -288,14 +289,18 @@ const SelectType = styled.div`
 `
 
 
+interface ItemSelectProps {
+  sel: MainItemSelector
+}
 
-export function ItemSelect({ part }: { part: WholePart }) {
-  const mainitem = useAppSelector(mainItemSelector(part))
+export function ItemSelect({ sel }: ItemSelectProps) {
+  const part = typeof sel === "string" ? sel : sel.part
+  const mainitem = useAppSelector(state => selectItem2(state, undefined, sel))
   const [activeTab, setActiveTab] = useState("일반")
 
   return (
     <TabContext.Provider value={{ activeTab, setActiveTab }}>
-      <CurrentPart part={part} />
+      <CurrentPart sel={sel} />
       <ItemSizeDefiner>
         <SelectType>
           <NavLink name="효과">효과 보기</NavLink>

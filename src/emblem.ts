@@ -42,7 +42,7 @@ function createEmblem([key, level]: EmblemSpec): AttrSource {
 
 
 /** !! 이건 엠블렘 아이콘에서만 사용되는 것임!!!! */
-export function acceptEmblem(part: EquipPart | "칭호") {
+export function acceptEmblem(part: CardablePart) {
   switch (part) {
     case "무기": return "Weapon"
     case "상의": case "하의": return "Red"
