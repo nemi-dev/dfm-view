@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import { createContext } from "react"
 
 export interface ModalContextType {
 
@@ -15,4 +15,15 @@ export const ModalContext = createContext<ModalContextType>({
   fragment: <></>,
   openModal: (children) => {},
   closeModal: () => {},
+})
+
+export interface TabContextType {
+  activeTab: string
+  setActiveTab: React.Dispatch<React.SetStateAction<string>>
+}
+
+export const PortraitMode = createContext(false)
+export const TabContext = createContext<TabContextType>({
+  activeTab: "장비",
+  setActiveTab: (s) => {}
 })

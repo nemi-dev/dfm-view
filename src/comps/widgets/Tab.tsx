@@ -1,6 +1,6 @@
 import { useContext, useCallback } from "react"
 import { FallbackProps, ErrorBoundary } from "react-error-boundary"
-import { TabContext } from "../../responsiveContext"
+import { TabContext } from "../../feats/contexts"
 import styled from "styled-components"
 
 const NavLinkStyle = styled.span<{ active: boolean }>`

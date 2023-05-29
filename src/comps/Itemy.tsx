@@ -14,7 +14,7 @@ import {
 import { getMaxEmblemCount, isArmor, isCardable, isEquip } from '../items'
 import { CardModalFragment } from './modals/CardModal'
 import { EmblemModal } from './modals/EmblemModal'
-import { ModalContext } from './modals/modalContext'
+import { ModalContext } from '../feats/contexts'
 import { NumberInput } from './widgets/Forms'
 import { EmblemIcon, ItemIcon } from './widgets/Icons'
 

@@ -7,7 +7,7 @@ import { SetItem, SetSpellAll } from '../../feats/slices/slicev5'
 import { getCracksOnly } from '../../items'
 import { LabeledSwitch } from '../widgets/Forms'
 import { CurrentPart } from './CurrentPart'
-import { ModalContext } from './modalContext'
+import { ModalContext } from '../../feats/contexts'
 import { ModalItemSelect } from './Select'
 
 export function RuneModalFragment() {

@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../../feats/hooks'
 import { selectDFClass, selectName } from '../../feats/selector/baseSelectors'
 import { SetMyDFClass, SetMyName } from '../../feats/slices/slicev5'
-import { PortraitMode } from '../../responsiveContext'
+import { PortraitMode } from '../../feats/contexts'
 import { DFClassIcon } from '../widgets/Icons'
 
 const DFClassLayout = styled.div<{ columns: number }>`

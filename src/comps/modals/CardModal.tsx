@@ -9,7 +9,7 @@ import { ItemIcon } from '../widgets/Icons'
 import { ItemName } from '../widgets/ItemNameView'
 import { ItemSizeDefiner } from './CommonModalComps'
 import { CurrentPart } from './CurrentPart'
-import { ModalContext } from './modalContext'
+import { ModalContext } from '../../feats/contexts'
 
 const CheckieInline = styled(LabeledSwitch)`
   display: inline-flex;

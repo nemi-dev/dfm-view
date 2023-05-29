@@ -1,7 +1,7 @@
 import "../../style/Modal.scss"
 import Modal from "react-modal"
 import { useContext } from "react"
-import { ModalContext } from "./modalContext"
+import { ModalContext } from "../../feats/contexts"
 import { X } from "react-feather"
 import { ErrorBoundary, FallbackProps } from "react-error-boundary"
 

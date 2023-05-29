@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { SetMyAchieveLevel, SetMyAtkFixed, SetMyLevel } from '../feats/slices/slicev5'
-import { PortraitMode } from '../responsiveContext'
+import { PortraitMode } from '../feats/contexts'
 import { Avatars } from './Avatar'
 import { Guilds } from './Guilds'
 import { Tonic } from './Tonic'

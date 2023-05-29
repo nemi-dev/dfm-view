@@ -5,7 +5,7 @@ import { SetItem } from '../../feats/slices/slicev5'
 import { getItemsByPart } from '../../items'
 import { ItemSizeDefiner } from './CommonModalComps'
 import { CurrentPart } from './CurrentPart'
-import { ModalContext } from './modalContext'
+import { ModalContext } from '../../feats/contexts'
 import { ModalItemSelect } from './Select'
 
 export function ArtifactModalFragment({ artiColor }: { artiColor: ArtifactColor }) {

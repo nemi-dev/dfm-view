@@ -3,7 +3,7 @@ import { useContext } from 'react'
 import { useAppSelector } from '../feats/hooks'
 import { CrackIcon } from "./widgets/Icons"
 import { MagicProps } from './MagicProps'
-import { ModalContext } from './modals/modalContext'
+import { ModalContext } from '../feats/contexts'
 import { selectMainItem, selectSpells } from "../feats/selector/itemSelectors"
 import { RuneModalFragment, SpellModalFragment } from './modals/CrackModal'
 

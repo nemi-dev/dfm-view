@@ -15,13 +15,13 @@ import { SetItems, SetItem } from '../../feats/slices/slicev5'
 import {
     equipParts, getCircus2Items, getItem, getItemsByPart, isAccess, isArmor, isEquip, party
 } from '../../items'
-import { TabContext } from '../../responsiveContext'
+import { TabContext } from '../../feats/contexts'
 import { ItemIcon } from '../widgets/Icons'
 import { ItemDetail } from '../widgets/ItemView'
 import { NavLink, Tab } from '../widgets/Tab'
 import { ItemSizeDefiner } from './CommonModalComps'
 import { CurrentPart } from './CurrentPart'
-import { ModalContext } from './modalContext'
+import { ModalContext } from '../../feats/contexts'
 import { ModalItemSelect } from './Select'
 import { selectMainItem } from '../../feats/selector/itemSelectors'
 

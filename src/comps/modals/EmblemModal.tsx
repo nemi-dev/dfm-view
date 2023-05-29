@@ -8,7 +8,7 @@ import { getEmblemSocketType } from '../../items'
 import { NumberInput } from '../widgets/Forms'
 import { EmblemIcon } from '../widgets/Icons'
 import { CurrentPart } from './CurrentPart'
-import { ModalContext } from './modalContext'
+import { ModalContext } from '../../feats/contexts'
 
 function EmblemSelect({ part, index, type, level }: { part: CardablePart, index: number, type: EmblemType, level: number }) {
   const { closeModal } = useContext(ModalContext)

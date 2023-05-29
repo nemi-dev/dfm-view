@@ -8,7 +8,7 @@ import { selectClassAtype } from '../feats/selector/baseSelectors'
 import { SetMyMagicProps } from '../feats/slices/slicev5'
 import { hasMagicProps } from '../items'
 import { getOneMagicPropValue, getRealAttrKey, nextMagicProps } from '../magicProps'
-import { PortraitMode } from '../responsiveContext'
+import { PortraitMode } from '../feats/contexts'
 import { AttrIcon } from './widgets/Icons'
 import { Num } from './widgets/NumberView'
 
