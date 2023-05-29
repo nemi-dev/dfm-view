@@ -6,8 +6,8 @@ import styled from 'styled-components'
 import { AtypeAttrKey, Elemental } from '../constants'
 import { AtkOut, critChance, StatOut } from '../damage'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
-import { selectCalibrate, selectMyAttr, selectMyAttrTown, selectMyFinalEltype } from '../feats/selector/selectors'
-import { selectClassAtype } from '../feats/selector/baseSelectors'
+import { selectMyAttr, selectMyAttrTown, selectMyFinalEltype } from '../feats/selector/selectors'
+import { selectClassAtype, selectCalibrate } from '../feats/selector/baseSelectors'
 import {
   AddMyCaliSkillInc, DeleteMyCaliSkillInc, SetMyCaliSingleAttr, SetMyCaliEltype, SetMyCaliSkillInc
 } from '../feats/slices/slicev5'

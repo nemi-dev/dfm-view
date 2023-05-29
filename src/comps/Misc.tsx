@@ -8,7 +8,7 @@ import { Avatars } from './Avatar'
 import { Guilds } from './Guilds'
 import { Tonic } from './Tonic'
 import { LabeledNumberInput } from './widgets/Forms'
-import { selectMyAchievementLevel, selectMyAtkFixed, selectMyLevel } from '../feats/selector/baseSelectors'
+import { selectMyAchievementLevel, selectMyAtkFixed, selectLevel } from '../feats/selector/baseSelectors'
 
 const GridyTwo = styled.div`
   display: grid;
@@ -27,7 +27,7 @@ export function MiscScreen() {
   const dispatch = useAppDispatch()
   const Wrapper = portrait? React.Fragment: GridyTwo
   const
-    myLevel = useAppSelector(selectMyLevel),
+    myLevel = useAppSelector(selectLevel),
     AchieveLevel = useAppSelector(selectMyAchievementLevel),
     atkFixed = useAppSelector(selectMyAtkFixed)
   return (

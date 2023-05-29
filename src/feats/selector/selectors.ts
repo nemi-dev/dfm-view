@@ -1,15 +1,12 @@
 import { createSelector } from '@reduxjs/toolkit'
 
-import { applyAddMaxEldmg, atx, dualTrigger, whatElType } from '../../attrs'
+import { applyAddMaxEldmg, atx, combine, dualTrigger, whatElType } from '../../attrs'
 import { AtypeAttrKey } from '../../constants'
 import { critChance, critFt, defRate, getElementalDamage, getPlainDamage, getRealdef } from '../../damage'
 import { CombineItems } from '../../items'
-import { add, compound } from '../../utils'
+import { add } from '../../utils'
 import {
-  selectRareAvatarSetActive, selectUncommonAvatarSetActive, selectWearAvatarsCombined
-} from './avatarSelectors'
-import {
-  selectAchBonus, selectClassAtype, selectDFChar, selectMyChoice, selectMyDFClass, selectMyLevel
+  selectAchBonus, selectCaliSource, selectClassAtype, selectDFChar, selectMyChoice, selectMyDFClass, selectLevel
 } from './baseSelectors'
 import { selectCracks } from './cracksSelectors'
 import { selectCreatureAndArtis } from './creatureSelectors'
@@ -17,6 +14,9 @@ import { selectCard, selectEmblems, selectEquips, selectItem } from './equipSele
 import { selectGuilds } from './guildSelectors'
 
 import type { RootState } from "../store"
+import { avatarParts, makeAvatarSet, rareSet, uncommonSet, getAvatarAttr } from '../../avatar'
+
+
 /** 마력결정 스탯보너스를 모두 얻는다. */
 export function selectTonics(state: RootState): AttrSource {
   const { el_all, hpmax, mpmax, strn_intl, vit_psi, def_ph, def_mg, Crit, Accu } = state.Tonic
@@ -39,25 +39,6 @@ export function selectTonics(state: RootState): AttrSource {
   }
 }
 
-/** 스탯 보정값을 선택한다. (복리스증이 배열로 되어있는 그시끼) */
-export const selectCalibrate = createSelector(selectDFChar, (ch) => ch.calibrate)
-
-/** 스탯보정 효과를 선택한다. */
-export const selectCaliSource = createSelector(
-  selectCalibrate,
-  (cal) => {
-    const sk_inc = cal.sk_inc.reduce(compound, 0)
-    return {
-      name: "스탯 조정값",
-      attrs: {
-        ...cal, sk_inc
-      }
-    }
-  }
-)
-
-
-
 /** 칭호를 장착 중일 때, 그 칭호 + 칭호에 박은 보주 + 엠블렘을 선택한다. */
 export const selectDFTitleTown = createSelector(
   selectItem["칭호"],
@@ -70,22 +51,55 @@ export const selectDFTitleTown = createSelector(
 )
 
 
+/** 지금 착용중인 레어 아바타의 수를 선택한다. */
+export const selectRareAvatarCount = createSelector(
+  selectDFChar,
+  (dfchar) => avatarParts
+    .map(part => dfchar.avatars[part])
+    .reduce((n, rarity) => rarity === "Rare" ? n + 1 : n, 0)
+)
+
+/** 지금 착용중인 언커먼 아바타의 수를 선택한다. */
+export const selectUncommonAvatarCount = createSelector(
+  selectDFChar,
+  (dfchar) => avatarParts
+    .map(part => dfchar.avatars[part])
+    .reduce((n, rarity) => rarity === "Uncommon" ? n + 1 : n, 0)
+)
+
+
+/** "아바타" 부분을 선택한다. */
+export const selectWearAvatarSource = createSelector(
+  selectDFChar,
+  selectRareAvatarCount,
+  selectUncommonAvatarCount,
+  (dfchar, rareCount, uncommonCount) => {
+    const rareSets = makeAvatarSet(rareSet, "레어아바타 세트")(rareCount)
+    const uncommonSets = makeAvatarSet(uncommonSet, "상급아바타 세트")(uncommonCount)
+    return [
+      {
+        name: "아바타 (모든부위 효과)",
+        attrs: combine(...avatarParts.map(p => getAvatarAttr(p, dfchar.avatars[p])))
+      },
+      rareSets,
+      uncommonSets
+    ]
+  }
+)
+
+
 /** 칭호+오라+무기아바타+다른 아바타 효과+아바타 세트효과를 모두 선택한다. */
 export const selectAvatars = createSelector(
   selectDFTitleTown,
-  selectWearAvatarsCombined,
-  selectRareAvatarSetActive,
-  selectUncommonAvatarSetActive,
+  selectWearAvatarSource,
   selectItem["무기아바타"],
   selectItem["오라"],
-  (dftitle, wears, asetRare, asetUnco, weaponAvatar, aura) => 
+  (dftitle, wears, weaponAvatar, aura) => 
   [
     ...dftitle,
     aura,
     weaponAvatar,
-    wears,
-    asetRare,
-    asetUnco
+    ...wears
   ]
 )
 
@@ -239,7 +253,7 @@ export const selectEnemyElRes = createSelector(
 
 /** 현재 상태의 내 레벨과 적 방어력(방깎적용)으로부터 방어율을 계산한다. */
 export const selectEnemyDefRate = createSelector(
-  selectMyLevel,
+  selectLevel,
   selectEnemyDefense,
   defRate
 )

@@ -32,7 +32,7 @@ export const getAvatarAttr = memoizee(
 , { primitive: true })
 
 
-export const UncommonSet: Record<number, BaseAttrs> = {
+export const uncommonSet: Record<number, BaseAttrs> = {
   3: { strn: 20, intl: 20, vit: 10, psi: 10 },
   5: { hpmax: 100, mpmax: 100 },
   8: { strn: 20, intl:20, vit: 10, psi: 10, speed_atk: 1, speed_cast: 1, speed_move: 1}

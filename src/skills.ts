@@ -91,8 +91,7 @@ export function bindSkill(
   { variant, charged = false }: BindSkillOption = {}
   ) {
   const attacks = variant?
-    sk.variant?.find(v => v.vaName == variant)?.attacks
-    : (sk.attacks ?? [])
+    sk.variant?.find(v => v.vaName == variant)?.attacks: (sk.attacks ?? [])
   const { sk_lv = {} } = attrs
   const sklvBonus = (sk_lv[sk.name] ?? 0)
 

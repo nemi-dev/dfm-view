@@ -550,6 +550,9 @@ declare interface AttackSkill {
   /** 이 스킬을 썼을 때 나갈 공격들 */
   attacks?: UnboundOneAttack[]
 
+  /** "다른 스킬 공격력의 X%" 등으로 표기된 스킬이 참고하는 스킬 (ex. 웨스턴 파이어: 헤드샷의 120%) */
+  reference?: string | number
+
   /** 풀충전 또는 대성공 등 스칼라배할 값 */
   chargeup?: number
 

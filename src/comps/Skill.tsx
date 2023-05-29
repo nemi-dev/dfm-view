@@ -6,7 +6,7 @@ import { whatElType } from '../attrs'
 import { critFt, getSkillDamage } from '../damage'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import {
-  selectClassASkills, selectClassAtype, selectMyAtkFixed, selectMyLevel
+  selectClassASkills, selectClassAtype, selectMyAtkFixed, selectLevel
 } from '../feats/selector/baseSelectors'
 import {
   selectEnemyDefRate, selectEnemyElRes, selectMyAttr, selectMyCritChance
@@ -216,7 +216,7 @@ function SkillLevelConfig({ skill, skLv, skLvBonus }: SkConfigProps) {
 /** 그냥 사용 or 풀충전 스킬 사용 */
 function AttackSkillDefault({ skill, charged = false }: SkillOneProps) {
   const [showDetail, setShowDetail] = useState(false)
-  const myLevel = useAppSelector(selectMyLevel)
+  const myLevel = useAppSelector(selectLevel)
   const myAttrs = useAppSelector(selectMyAttr)
   const skLvBonus = useAppSelector(state => selectSkillLevelBonus(state, undefined, skill))
 
@@ -248,7 +248,7 @@ interface AttackSkillVariantProps {
 /** 바리에이션이 적용된 스킬 */
 function AttackSkillVariant({ skill, variant }: AttackSkillVariantProps) {
   const [showDetail, setShowDetail] = useState(false)
-  const myLevel = useAppSelector(selectMyLevel)
+  const myLevel = useAppSelector(selectLevel)
   const myAttrs = useAppSelector(selectMyAttr)
 
   /** @todo 스킬레벨을 사용자가 입력하도록 하시오. */

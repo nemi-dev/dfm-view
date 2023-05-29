@@ -22,7 +22,6 @@ export const selectSkillLevelBonus = createSelector(
     const v: number[] = []
     for (const key in sk_lv) {
       if (key.startsWith("@")) {
-        // const match = /^@((?<dfclass>Mage):)?Lv(?<aqLv>\d+)(-(?<aqLvMax>\d+))?$/
         const skills = querySkill(key)
         if (skills.includes(sk)) {
           v.push(sk_lv[key])
