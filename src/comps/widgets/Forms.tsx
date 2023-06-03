@@ -21,7 +21,7 @@ export function NumberInput({ onWheel, value, type, onChange, ...props }: Number
     if (Number.isNaN(newValue)) onChange(0)
     else onChange(newValue)
 
-  }, [])
+  }, [onChange])
 
   return <input type="number" value={value} onChange={_onChange} ref={ref} {...props} />
 }

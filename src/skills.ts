@@ -118,7 +118,6 @@ export const querySkill = memoizee(function querySkill(query: string) {
   if (aqLvMax == null) {
     return heap.filter(sk => sk.level == parseInt(aqLv))
   } else {
-    console.log(query)
     return heap.filter(sk => sk.level >= parseInt(aqLv) && sk.level <= parseInt(aqLvMax))
   }
 

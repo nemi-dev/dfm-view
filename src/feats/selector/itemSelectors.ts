@@ -52,9 +52,6 @@ export const selectMagicPropNames2 = createSelector(
   (dfchar, part) => dfchar.magicProps[part]
 )
 
-
-
-
 /** 특정 부위의 아이템에 박은 엠블렘 스펙을 모두 선택한다 */
 export const selectEmblemSpecs2 = createSelector(
   selectDFChar,
@@ -64,23 +61,10 @@ export const selectEmblemSpecs2 = createSelector(
   }
 )
 
-/** 특정 부위의 엠블렘 효과를 선택한다. */
-export const selectEmblems2 = createSelector(
-  (state: RootState, id: RootState["currentID"], part: CardablePart) => selectMainItem(state, id, part),
-  selectEmblemSpecs2,
-  (item, emblemSpecs) => {
-    const maxEmblemCount = getMaxEmblemCount(item)
-    const emblems = emblemSpecs.slice(0, maxEmblemCount).map(getEmblem)
-
-    return emblems
-  }
-)
-
-
 
 /**
- * 어떤 한 장비 부의의 아이템 옵션, 업그레이드 보너스, 마법봉인, 엠블렘, 카드 옵션을 얻는다.  
- * 주 아이템이 없으면 강화, 카드, 마법봉인, 엠블렘 효과가 모두 무효가 된다. (이것들은 애초에 장비에 붙어있는 것이니까.)
+ * 어떤 한 부의의 아이템 옵션, 업그레이드 보너스, 마법봉인, 엠블렘, 카드 옵션을 얻는다.  
+ * 주 아이템이 없으면 강화, 카드, 마법봉인, 엠블렘 효과가 모두 무효가 된다.
  */
 const selectEquipPart2
  = createSelector(

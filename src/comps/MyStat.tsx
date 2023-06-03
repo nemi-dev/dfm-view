@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useCallback, useContext, useState } from 'react'
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
 import { PlusCircle } from 'react-feather'
 import styled from 'styled-components'
@@ -31,11 +31,16 @@ function OneAttrEditable({ numStyle = "", aKey, name, percent = false, signed = 
   const me = useContext(MyAttrsContext)
   const { [aKey]: value = 0 } = useAppSelector(selectCalibrate)
   const dispatch = useAppDispatch()
+
+  const valueChangeHandler = useCallback((v: number) => {
+    dispatch(SetMyCaliSingleAttr([aKey, v]))
+  }, [numStyle, aKey])
+
   return (
     <div className="FormDF AttrItem">
       {name? <div className="KeyName">{name}</div>: null}
       <Num className={"AttrValue " + numStyle} value={me[aKey]} signed={signed} percented={percent} />
-      <NumberInput value={value} onChange={v => dispatch(SetMyCaliSingleAttr([aKey, v]))} />
+      <NumberInput value={value} onChange={valueChangeHandler} />
     </div>
   )
 }
