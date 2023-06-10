@@ -2,7 +2,7 @@ import { useCallback, useContext, useState } from 'react'
 
 import { acceptEmblem } from '../../emblem'
 import { useAppDispatch, useAppSelector } from '../../feats/hooks'
-import { selectEmblemSpecs2 } from '../../feats/selector/itemSelectors'
+import { selectEmblemSpecs } from '../../feats/selector/itemSelectors'
 import { SetMyEmblem } from '../../feats/slices/slicev5'
 import { getEmblemSocketType } from '../../items'
 import { NumberInput } from '../widgets/Forms'
@@ -26,7 +26,7 @@ function EmblemSelect({ part, index, type, level }: { part: CardablePart, index:
 }
 
 export function EmblemModal({ part, index }: { part: CardablePart, index: number }) {
-  const emblems = useAppSelector(state => selectEmblemSpecs2(state, undefined, part))
+  const emblems = useAppSelector(state => selectEmblemSpecs(state, undefined, part))
   const currentSpec = emblems[index]
   const [newLevel, setNewLevel] = useState(currentSpec[1])
   const availableEmblemTypes = getEmblemSocketType(part)

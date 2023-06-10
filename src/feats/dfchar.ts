@@ -82,7 +82,7 @@ export function getArtifactProps(dfchar: DFChar) {
 /** 이 캐릭터가 착용중인 어느 한 "부위"를 선택한다. */
 export function getPartSource(dfchar: DFChar, part: SingleItemPart) {
   const item = getCurrentMainItem(dfchar, part)
-  const partSource: PartSourceSet = { item }
+  const partSource: PartSourceSet = { type: part, item }
   if (!item) return null
 
   if (isEquip(part)) {

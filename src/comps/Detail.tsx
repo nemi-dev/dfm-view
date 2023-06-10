@@ -48,7 +48,7 @@ function SourcedAttrOne({ attrDef, value, sources }: { attrDef: AttrDef, value: 
   )
 }
 
-function SourceGroupErrorView({ error, resetErrorBoundary }: FallbackProps) {
+function PartSourceErrorView({ error, resetErrorBoundary }: FallbackProps) {
   return (
     <div>
       <header>
@@ -69,17 +69,39 @@ function SourceGroupErrorView({ error, resetErrorBoundary }: FallbackProps) {
   )
 }
 
-function SourceGroupView() {
+
+
+const PartSourceStyle = styled.div`
+  h3 {
+    color: white;
+    font-size: 1.1rem;
+    text-align: center;
+    margin: 4px;
+  }  
+`
+
+function PartSourceView({ source }: { source: AttrSource }) {
+  if (!source) return null
+  return <PartSourceStyle>
+    <h3>{source.name}</h3>
+    <div><SimpleBaseAttrView attrs={source.attrs}/></div>
+  </PartSourceStyle>
+}
+
+const PartSourceContainerStyle = styled.div`
+  padding: 8px;
+`
+
+
+function PartSourcesContainerView() {
   const sources = useAppSelector(selectSources)
   return (
-    <ErrorBoundary FallbackComponent={SourceGroupErrorView}>
-      {sources.map((source, index) => {
-        if (source == null) return null
-        return <div key={index}>
-          <div>{source.name}</div>
-          <div><SimpleBaseAttrView attrs={source.attrs}/></div>
-        </div>
-      })}
+    <ErrorBoundary FallbackComponent={PartSourceErrorView}>
+      <PartSourceContainerStyle>
+      {sources.map((source, index) => 
+        <PartSourceView key={index} source={source} />
+      )}
+      </PartSourceContainerStyle>
     </ErrorBoundary>
   )
 }
@@ -105,7 +127,7 @@ function AttrGroupView() {
   const interpolated = Interpolate(sources, choice)
   const myAttr = CombineItems(sources, choice)
   return (
-    <ErrorBoundary FallbackComponent={SourceGroupErrorView}>
+    <ErrorBoundary FallbackComponent={PartSourceErrorView}>
       <AttrGroupStyle>
         {attrDefs.array.map(attrDef => {
           const value = myAttr[attrDef.key]
@@ -127,7 +149,7 @@ export function Detail() {
           labels={["효과", "아이템"]}
           dispatcher={v => setBy(v)}
         />
-        {by === "Part"? <SourceGroupView /> : null}
+        {by === "Part"? <PartSourcesContainerView /> : null}
         {by === "Attr"? <AttrGroupView /> : null}
       </div>
     </div>

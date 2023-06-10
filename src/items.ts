@@ -265,6 +265,32 @@ export function getActiveISets(...items: DFItem[]) {
   return iset_info
 }
 
+export function getActiveISetsFromPartSources(...sources: PartSourceSet[]) {
+  const items: DFItem[] = []
+  for (const source of sources) {
+    if (source.item) items.push(source.item)
+    if (source.type === "봉인석") {
+      items.push(...(source.spells ?? []))
+    }
+    if (source.type === "크리쳐") {
+      items.push(...(source.artifacts ?? []))
+    }
+  }
+
+  const counts = countISets(items)
+  const iset_info: ComplexAttrSource[] = []
+  for (const iset_name in counts) {
+    const count = counts[iset_name];
+    const iset = ISetsNameMap[iset_name]
+    if (!iset) continue
+    for (let c = count; c > 0; c--) {
+      if (iset[c]) iset_info.push(iset[c])
+      
+    }
+  }
+  return iset_info
+}
+
 /** 주어진 부위의 장비에 바를 수 있는 카드(+보주) 목록을 얻는다. */
 export const getCardsForPart = memoizee(
   function _getCardsForPart(part: CardablePart) {

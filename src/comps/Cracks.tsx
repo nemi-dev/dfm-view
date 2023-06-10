@@ -4,10 +4,17 @@ import { useAppSelector } from '../feats/hooks'
 import { CrackIcon } from "./widgets/Icons"
 import { MagicProps } from './MagicProps'
 import { ModalContext } from '../feats/contexts'
-import { selectMainItem, selectSpells } from "../feats/selector/itemSelectors"
+import { selectMainItem } from "../feats/selector/itemSelectors"
 import { RuneModalFragment, SpellModalFragment } from './modals/CrackModal'
+import { createSelector } from '@reduxjs/toolkit'
+import { selectDFChar } from '../feats/selector/baseSelectors'
+import { getItem } from '../items'
 
-
+/** 현재 장착 중인 모든 정수를 선택한다. */
+const selectSpells = createSelector(
+  selectDFChar,
+  (dfchar) => dfchar.items.정수.map(getItem)
+)
 
 const MagicPropsLayout = styled.div`
   flex-grow: 1;

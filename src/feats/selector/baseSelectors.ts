@@ -71,7 +71,7 @@ export const selectClassSelfSkills = createSelector(
 /** 업적달성레벨로 얻는 보너스 효과를 선택한다.. */
 export const selectAchBonus = createSelector(
   selectAchievementLevel,
-  lv => ({ name: "업적 달성 보너스", attrs: atx("StatAll", lv * 7 - 2)})
+  lv => ({ name: "업적 달성 보너스", attrs: atx("StatAll", lv * 7 - 2)} as AttrSource)
 )
 
 /** 스탯 보정값을 선택한다. */
@@ -90,6 +90,6 @@ export const selectCaliSource = createSelector(
       attrs: {
         ...cal, sk_inc
       }
-    }
+    } as AttrSource
   }
 )

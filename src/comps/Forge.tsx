@@ -5,7 +5,7 @@ import { ItemIcon } from "./widgets/Icons"
 import { ModalContext } from "../feats/contexts"
 import { EquipBatch } from "./EquipBatch"
 import { MagicProps } from "./MagicProps"
-import { selectCard2, selectMainItem, selectArtifact } from "../feats/selector/itemSelectors"
+import { selectCard, selectMainItem, selectArtifact } from "../feats/selector/itemSelectors"
 import { ArmorMaterialSelect, ArtiUpgrade, EmblemArray, Upgrade } from "./Itemy"
 import { hasMagicProps, isCardable, isEquip } from "../items"
 import { CardModalFragment } from "./modals/CardModal"
@@ -14,7 +14,7 @@ import { CardModalFragment } from "./modals/CardModal"
 function CardSlot({ part }: { part: WholePart }) {
   if (!isCardable(part)) return null
   const { openModal } = useContext(ModalContext)
-  const card = useAppSelector(state => selectCard2(state, undefined, part))
+  const card = useAppSelector(state => selectCard(state, undefined, part))
   return(
     <ItemIcon className="Card" item={card}
       onClick={() => openModal(<CardModalFragment part={part} />)}

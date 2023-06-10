@@ -6,7 +6,7 @@ import { acceptEmblem } from '../emblem'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { selectDFChar } from '../feats/selector/baseSelectors'
 import {
-  selectCard2, selectCustomMaterial2, selectEmblemSpecs2, selectMainItem, selectUpgradeValue2
+  selectCard, selectCustomMaterial2, selectEmblemSpecs, selectMainItem, selectUpgradeValue
 } from '../feats/selector/itemSelectors'
 import {
     DecreaseMyEmblemLevel, SetMyArtifactValue, SetMyCreatureStat, SetMyMaterial, SetMyUpgradeValue
@@ -42,8 +42,7 @@ export function UpgradeFlex({ value, setValue }: UpgradeFlexProps) {
 
 function UpgradeEquip({ part }: EquipProps) {
   const dispatch = useAppDispatch()
-  // const value = useAppSelector(selectUpgradeValue[part])
-  const value = useAppSelector(state => selectUpgradeValue2(state, undefined, part))
+  const value = useAppSelector(state => selectUpgradeValue(state, undefined, part))
   return <UpgradeFlex value={value} setValue={v => dispatch(SetMyUpgradeValue([part, v]))} />
 }
 
@@ -98,7 +97,7 @@ export function ArmorMaterialSelect({ part }: PartProps) {
 export function CardSlot({ part }: PartProps) {
   if (!isCardable(part)) return null
   const { openModal } = useContext(ModalContext)
-  const card = useAppSelector(state => selectCard2(state, undefined, part))
+  const card = useAppSelector(state => selectCard(state, undefined, part))
   return (
     <ItemIcon className="Card" item={card}
         onClick={() => openModal(<CardModalFragment part={part} />)}
@@ -112,7 +111,7 @@ export function EmblemArray({ part }: PartProps) {
   const { openModal } = useContext(ModalContext)
   const dispatch = useAppDispatch()
   const item = useAppSelector(state => selectMainItem(state, undefined, part))
-  const emblems = useAppSelector(state => selectEmblemSpecs2(state, undefined, part))
+  const emblems = useAppSelector(state => selectEmblemSpecs(state, undefined, part))
   const onItemClick = useCallback((index: number) => {
     if (part === "무기" || part === "보조장비" || part === "칭호")
       openModal(<EmblemModal part={part} index={index} />)

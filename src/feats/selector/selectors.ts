@@ -3,12 +3,12 @@ import { createSelector } from '@reduxjs/toolkit'
 import { applyAddMaxEldmg, atx, combine, dualTrigger, whatElType } from '../../attrs'
 import { AtypeAttrKey } from '../../constants'
 import { critChance, critFt, defRate, getElementalDamage, getPlainDamage, getRealdef } from '../../damage'
-import { CombineItems } from '../../items'
+import { CombineItems, getActiveISetsFromPartSources } from '../../items'
 import { add } from '../../utils'
 import {
   selectAchBonus, selectCaliSource, selectClassAtype, selectDFChar, selectChoice, selectDFClass, selectLevel
 } from './baseSelectors'
-import { selectMainItem, selectCracks, selectEquips2, selectCreatureSource } from './itemSelectors'
+import { selectMainItem, selectCracks, selectWholeEquips, selectCreatureSource } from './itemSelectors'
 import { selectGuilds } from './guildSelectors'
 
 import type { RootState } from "../store"
@@ -87,6 +87,10 @@ export const selectWearAvatarSource = createSelector(
   }
 )
 
+function expandSource({ item, card, emblems = [], magicProps, upgrade, spells = [], blessing, artifacts = [], artifactProps = [] }: PartSourceSet) {
+  const a = [ item, upgrade, card, magicProps, ...emblems, ...artifacts, ...artifactProps, ...spells, blessing ]
+  return a.filter(v => v != null)
+}
 
 /** 
  * 모든 "소스"를 선택한다.  
@@ -95,7 +99,7 @@ export const selectWearAvatarSource = createSelector(
  */
 export const selectSources = createSelector(
   selectDFClass,
-  selectEquips2,
+  selectWholeEquips,
   selectDFTitleTown,
   (state: RootState, charID: RootState["currentID"]) => selectMainItem(state, charID, "오라"),
   (state: RootState, charID: RootState["currentID"]) => selectMainItem(state, charID, "무기아바타"),
@@ -106,21 +110,24 @@ export const selectSources = createSelector(
   selectGuilds,
   selectAchBonus,
   selectCaliSource,
-  (dfc, equips, dftitle, aura, weaponAvatar, creatures, wears, tonic, cracks, guild, ach, cal) => {
-    return [
+  (dfc, equips, dftitle, aura, weaponAvatar, pCreature, wears, tonic, pCracks, guild, ach, cal) => {
+    const isets = getActiveISetsFromPartSources(...equips, pCreature, pCracks)
+    const z = [
       dfc,
-      ...equips,
+      ...equips.flatMap(expandSource),
       ...dftitle, 
       ...wears,
       weaponAvatar,
       aura,
-      ...creatures,
+      ...expandSource(pCreature),
       tonic,
-      ...cracks,
+      ...expandSource(pCracks),
+      ...isets,
       guild,
       ach,
       cal,
     ]
+    return z
   }
 )
 

@@ -460,6 +460,23 @@ declare interface DFISet {
 
 
 
+/** "어느 한 부위"의 모든 아이템 및 효과들 */
+declare interface PartSourceSet {
+  type: string
+  item: DFItem
+  upgrade?: AttrSource
+  card?: DFItem
+  magicProps?: AttrSource
+  emblems?: AttrSource[]
+
+  spells?: DFItem[]
+  blessing?: AttrSource
+
+  artifacts?: DFItem[]
+  artifactProps?: AttrSource[]
+}
+
+
 
 
 /** 공격 스킬의 공격 하나하나를 나타낸다. */
@@ -607,19 +624,4 @@ declare interface SelfSkill {
   /** 수치로 표현하기 어려운 효과, 또는 관심없는 효과 */
   misc?: string[]
   
-}
-
-/** "어느 한 부위"의 모든 아이템 및 효과들 */
-declare interface PartSourceSet {
-  item: DFItem
-  upgrade?: AttrSource
-  card?: DFItem
-  magicProps?: AttrSource
-  emblems?: AttrSource[]
-
-  spells?: DFItem[]
-  blessing?: AttrSource
-
-  artifacts?: DFItem[]
-  artifactProps?: AttrSource[]
 }

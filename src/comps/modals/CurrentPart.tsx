@@ -1,6 +1,6 @@
 import { acceptEmblem } from "../../emblem"
 import { useAppSelector } from "../../feats/hooks"
-import { selectCard2, selectEmblemSpecs2, selectMainItem } from "../../feats/selector/itemSelectors"
+import { selectCard, selectEmblemSpecs, selectMainItem } from "../../feats/selector/itemSelectors"
 import { getMaxEmblemCount, isCardable } from "../../items"
 import { ItemName } from "../widgets/ItemNameView"
 import { ItemIcon, EmblemIcon } from "../widgets/Icons"
@@ -8,14 +8,14 @@ import { RootState } from "../../feats/store"
 
 
 function selectCardGenerous(state: RootState, part: WholePart) {
-  if (isCardable(part))  //return selectCard[part](state)
-    return selectCard2(state, undefined, part)
+  if (isCardable(part))
+    return selectCard(state, undefined, part)
   else return null
 }
 
 function selectEmblemSpecsGenerous(state: RootState, part: WholePart) {
-  if (isCardable(part)) // return selectEmblemSpecs[part](state)
-    return selectEmblemSpecs2(state, undefined, part)
+  if (isCardable(part))
+    return selectEmblemSpecs(state, undefined, part)
   else return []
 }
 
