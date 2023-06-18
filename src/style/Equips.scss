@@ -23,7 +23,7 @@
   --icon-size: var(--item-size, 64px) !important;
 }
 
-.Card {
+.Card, .Artifact, .Spell {
   --icon-size: var(--card-size, 30px) !important;
 }
 

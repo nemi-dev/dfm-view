@@ -5,7 +5,7 @@ import { CrackIcon } from "./widgets/Icons"
 import { MagicProps } from './MagicProps'
 import { ModalContext } from '../feats/contexts'
 import { selectMainItem } from "../feats/selector/itemSelectors"
-import { RuneModalFragment, SpellModalFragment } from './modals/CrackModal'
+import { CracksModal, SpellModalFragment } from './modals/CrackModal'
 import { createSelector } from '@reduxjs/toolkit'
 import { selectDFChar } from '../feats/selector/baseSelectors'
 import { getItem } from '../items'
@@ -86,7 +86,7 @@ export function Cracks() {
             />
           ))}
           <CrackIcon item={rune}
-            onClick={() => openModal(<RuneModalFragment />)}
+            onClick={() => openModal(<CracksModal />)}
           />
         </div>
       </CrackWrapper>

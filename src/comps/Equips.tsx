@@ -1,11 +1,11 @@
 import '../style/Equips.scss'
 
-import { useContext, useState } from 'react'
+import { Fragment, useContext, useState } from 'react'
 import styled from 'styled-components'
 
 import { useAppSelector } from '../feats/hooks'
 import { selectMainItem, selectArtifact } from '../feats/selector/itemSelectors'
-import { equipParts } from '../items'
+import { equipParts, getItem } from '../items'
 import { PortraitMode } from '../feats/contexts'
 import { ClosedCondyceSet } from './Choices'
 import { EquipBatch } from './EquipBatch'
@@ -16,15 +16,13 @@ import { ModalContext } from '../feats/contexts'
 import { SimpleBaseAttrView } from './widgets/AttrsView'
 import { ItemIcon } from './widgets/Icons'
 import { ItemName } from './widgets/ItemNameView'
-import { ArtifactModalFragment } from './modals/ArtifactModal'
 import { EditEltype } from './MyStat'
+import { CreatureModal } from './modals/CreatureModal'
+import { selectDFChar } from '../feats/selector/baseSelectors'
+import { CracksModal } from './modals/CrackModal'
 
 interface PartProps {
   part: EquipPart | "칭호" | "오라" | "무기아바타" | "크리쳐"
-}
-
-interface ArtifactPartProps {
-  color: ArtifactColor
 }
 
 
@@ -94,49 +92,86 @@ function PartCompact({ part }: PartProps) {
   return (
     <div className="EquipSlot">
       <div className="EquipPartLayout">
-        <ItemIcon item={item}
-          onClick={() => openModal(<ItemSelect sel={part} />)}
+        <ItemIcon item={item} onClick={() => openModal(<ItemSelect sel={part} />)}
         />
       </div>
     </div>
   )
 }
 
-function ArtiPartWide({ color }: ArtifactPartProps) {
+
+function CreaturePartWide() {
   const { openModal } = useContext(ModalContext)
-  const item = useAppSelector(selectArtifact(color))
+  const creature = useAppSelector(state => selectMainItem(state, undefined, "크리쳐"))
+  const red = useAppSelector(state => selectArtifact("Red")(state, undefined))
+  const green = useAppSelector(state => selectArtifact("Green")(state, undefined))
+  const blue = useAppSelector(state => selectArtifact("Blue")(state, undefined))
   return (
     <div className="EquipSlot Bordered Hovering">
       <div className="EquipPartLayout">
-        <ItemIcon item={item}
-          onClick={() => openModal(<ArtifactModalFragment artiColor={color} />)}
-        />
+        <ItemIcon item={creature} onClick={() => openModal(<CreatureModal />)} />
         <div className="SlotHeading">
-          <ItemName item={item} alt={`${color} 아티팩트 없음`} className="EquipName" />
+          <ItemName item={creature} alt={`크리쳐 없음`} className="EquipName" />
         </div>
-        {item? 
           <div className="PartAddons">
-            <ArtiUpgrade color={color} />
-          </div> : null}
+            <ItemIcon className="Artifact" item={red} onClick={() => openModal(<CreatureModal />)} />
+            <ItemIcon className="Artifact" item={green} onClick={() => openModal(<CreatureModal />)} />
+            <ItemIcon className="Artifact" item={blue} onClick={() => openModal(<CreatureModal />)} />
+          </div>
       </div>
     </div>
   )
 }
 
 
-function ArtiPartCompact({ color }: ArtifactPartProps) {
+function CreaturePartCompact() {
   const { openModal } = useContext(ModalContext)
-  const item = useAppSelector(selectArtifact(color))
+  const item = useAppSelector(state => selectMainItem(state, undefined, "크리쳐"))
   return (
     <div className="EquipSlot">
       <div className="EquipPartLayout">
-        <ItemIcon item={item}
-          onClick={() => openModal(<ArtifactModalFragment artiColor={color} />)}
+        <ItemIcon item={item} onClick={() => openModal(<CreatureModal />)}
         />
       </div>
     </div>
   )
 }
+
+function CracksPartWide() {
+  const { openModal } = useContext(ModalContext)
+  const item = useAppSelector(state => selectMainItem(state, undefined, "봉인석"))
+  const spells = useAppSelector(state => selectDFChar(state, undefined).items.정수.map(getItem) )
+  return (
+    <div className="EquipSlot Bordered Hovering">
+      <div className="EquipPartLayout">
+        <ItemIcon item={item} onClick={() => openModal(<CracksModal />)} />
+        <div className="SlotHeading">
+          <ItemName item={item} alt={`크리쳐 없음`} className="EquipName" />
+        </div>
+          <div className="PartAddons">
+            {spells.map((s, i) => <ItemIcon className="Artifact" item={s} key={i} onClick={() => openModal(<CracksModal />)} />)}
+          </div>
+          <MagicPropsLayout>
+            <MagicProps item={item} part="봉인석" />
+          </MagicPropsLayout>
+      </div>
+    </div>
+  )
+}
+
+function CracksPartCompact() {
+  const { openModal } = useContext(ModalContext)
+  const item = useAppSelector(state => selectMainItem(state, undefined, "봉인석"))
+  return (
+    <div className="EquipSlot">
+      <div className="EquipPartLayout">
+        <ItemIcon item={item} onClick={() => openModal(<CracksModal />)}
+        />
+      </div>
+    </div>
+  )
+}
+
 
 export function CondsAttrsView() {
   const items = ([...equipParts, "칭호", "오라", "무기아바타", "크리쳐"] as const).map(part => useAppSelector(state => selectMainItem(state, undefined, part)))
@@ -175,46 +210,36 @@ const EquipsArrayLayout = styled.div`
   }
 `
 
-const ExtraEquipsLayout = styled.div`
+const ExtraEquipsStyle = styled.div`
+  grid-column-start: 1;
+  grid-column-end: -1;
+
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   align-items: start;
   gap: 4px;
-  margin-top: 4px;
 `
 
-const CreatureLayout = styled.div`
-  display: grid;
-  grid-template-columns: 3fr repeat(3, 2fr);
-  align-items: start;
-  gap: 4px;
-  margin-top: 4px;
-  @media screen and (max-width: 999px) {
-    grid-template-columns: repeat(4, 1fr);
-  }
-`
 
 export function Equips() {
   const portrait = useContext(PortraitMode)
   const Part = portrait? PartCompact : PartWide
-  const ArtiPart = portrait? ArtiPartCompact : ArtiPartWide
+  const CreaturePart = portrait? CreaturePartCompact : CreaturePartWide
+  const CracksPart = portrait? CracksPartCompact : CracksPartWide
   const order = portrait? compactOrder : wideOrder
+  const ExtraEquips = portrait? Fragment : ExtraEquipsStyle
   return (
     <div className="Equips">
       <EquipsArrayLayout className="EquipsArrayLayout">
         {order.map(part => <Part key={part} part={part} />)}
+        <CreaturePart />
+        <CracksPart />
+        <ExtraEquips>
+          <Part part="칭호" />
+          <Part part="오라" />
+          <Part part="무기아바타" />
+        </ExtraEquips>
       </EquipsArrayLayout>
-      <ExtraEquipsLayout>
-        <Part part="칭호" />
-        <Part part="오라" />
-        <Part part="무기아바타" />
-      </ExtraEquipsLayout>
-      <CreatureLayout>
-        <Part part="크리쳐" />
-        <ArtiPart color="Red" />
-        <ArtiPart color="Green" />
-        <ArtiPart color="Blue" />
-      </CreatureLayout>
       {portrait && <div>
         <div className="CondContainerName">속성부여</div>
         <EditEltype />

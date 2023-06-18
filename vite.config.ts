@@ -10,7 +10,8 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        "view" : resolve(__dirname, "view.html")
+        "view" : resolve(__dirname, "view.html"),
+        "index" : resolve(__dirname, "index.html")
       },
       output: {
         manualChunks (id) {

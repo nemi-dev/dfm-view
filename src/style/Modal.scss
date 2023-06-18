@@ -59,6 +59,9 @@
     text-align: center;
   }
 
+  .CrackIcon {
+    --icon-size: 48px;
+  }
 }
 
 .ModalMenuScrollable {
@@ -116,9 +119,6 @@
 
 }
 
-.CrackIcon {
-  --icon-size: 64px;
-}
 
 @media (min-width: 1000px) {
   .ReactModal__Content {

@@ -62,7 +62,7 @@ export function Upgrade({ part }: PartProps) {
 
 export function ArtiUpgrade({ color }: { color: ArtifactColor }) {
   const dispatch = useAppDispatch()
-  const value = useAppSelector(state => selectCreatureValue(state)[color])
+  const value = useAppSelector(state => selectCreatureValue(state, undefined)[color])
   const setValue = useCallback((v: number) => {
     dispatch(SetMyArtifactValue([color, v]))
   }, [color])

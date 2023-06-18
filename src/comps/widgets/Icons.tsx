@@ -42,7 +42,7 @@ interface ItemIconProps extends HTMLProps<HTMLDivElement> {
   item: DFItem | undefined | null
 }
 
-export function ItemIcon({ item, children, className, ...props }: ItemIconProps) {
+export function ItemIcon({ item, children, className = "", ...props }: ItemIconProps) {
   if (!item)
     return <SquareIcon className={"ItemIcon " + (className ?? "")} children={children} src="" frame="/img/frame/Common.png" {...props} />
   const [src, frame] = imageSource(item)
@@ -76,8 +76,8 @@ export function EmblemIcon({ spec: [type, level], className = "", accept, ...pro
 }
 
 
-export function CrackIcon({ item, className, ...props }: { item: DFItem } & HTMLProps<HTMLDivElement>) {
-  return <RoundIcon className="CrackIcon" src={im`/img/item/${item}.png`} frame={`/img/crack/${item.rarity}.png`} {...props} />
+export function CrackIcon({ item, className = "", ...props }: { item: DFItem } & HTMLProps<HTMLDivElement>) {
+  return <RoundIcon className={"CrackIcon "+className} src={im`/img/item/${item}.png`} frame={`/img/crack/${item.rarity}.png`} {...props} />
 }
 
 type AttrIconProps = { attrKey: keyof BaseAttrs | "DontMind" } & Omit<React.HTMLProps<HTMLImageElement>, "src" | "alt" >
