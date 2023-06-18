@@ -1,0 +1,91 @@
+#root > h1 {
+  margin: 0;
+  font-size: 3rem;
+  padding: 2em;
+}
+
+a {
+  transition-property: color, background-color;
+  transition-duration: 0.1s;
+  transition-timing-function: linear;
+
+  &:hover {
+    background-color: var(--color-epic);
+    color: black;
+  }
+}
+
+#Enter {
+  display: block;
+  text-align: center;
+  font-size: 2rem;
+  padding: 1em;
+
+}
+
+main {
+  width: 800px;
+  max-width: calc(100vw - 2rem);
+  margin: auto;
+  box-sizing: border-box;
+  border: 1px solid rgba($color: #ffffff, $alpha: 0.5);
+  border-radius: 8px;
+  padding: 1rem;
+
+  img {
+    max-width: 80%;
+    margin: auto;
+    text-align: center;
+  }
+}
+
+main > * {
+  border-bottom: 1px solid rgba($color: #ffffff, $alpha: 0.5);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+main > a {
+  display: block;
+  padding: 1rem;
+}
+
+summary {
+  list-style: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 8px;
+
+  transition-property: color, background-color;
+  transition-duration: 0.1s;
+  transition-timing-function: linear;
+  
+  &:hover {
+    background-color: rgba(130, 207, 255, 0.249);
+  }
+}
+
+details summary::-webkit-details-marker {
+  display:none;
+}
+
+details[open] summary {
+  position: sticky;
+  top: 0;
+  background-color: rgb(51, 44, 37);
+  background-image: url('/img/bg.jpg');
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  border-radius: 0;
+
+  .BF {
+    background-color: #1e191580;
+  }
+}
+
+.BF {
+  padding: 1rem;
+}

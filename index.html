@@ -7,7 +7,192 @@
     <title>던파모바일 스탯계산기!!!</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <h1>던파모바일 스탯계산기!!!</h1>
+      <div>
+        <a id="Enter" href="/view.html" target="_blank" rel="noreferrer noopener">스탯계산기</a>
+      </div>
+      <main>
+        <details>
+          <summary>
+            <div class="BF">README</div>
+          </summary>
+        <h1 id="이게-뭐죠">이게 뭐죠?</h1>
+        <p><strong>던파모바일 스탯계산기!!!</strong> 는 던파모바일의 아이템 세팅을 직접 입력해서 스탯과 데미지를 계산하는 웹 애플리케이션입니다.</p>
+        <blockquote>
+        <h1 id="존나-중요함">존나 중요함!!!</h1>
+        <ul>
+        <li>이 앱은 여러분이 생각하는 미심쩍은 기능(인게임 핵, 매크로, 계정 데이터 추출 등)은 일절 <strong>포함되어 있지 않습니다</strong>.</li>
+        <li>이 앱은 광고 등 <strong>어떠한 수익도 창출하지 않습니다</strong>. 서버에 접속 로그는 남을 수 있으나, 이외의 어떠한 개인정보도 수집하지 않습니다.</li>
+        </ul>
+        </blockquote>
+        <p>업데이트 내역은 <a href="CHANGELOG.md">여기</a>를 참고하세요.</p>
+        <ul>
+        <li><a href="#%EC%9D%B4%EA%B2%8C-%EB%AD%90%EC%A3%A0">이게 뭐죠?</a></li>
+        <li><a href="#%EC%82%AC%EC%9A%A9-%EB%B0%A9%EB%B2%95">사용 방법</a><ul>
+        <li><a href="#%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0">시작하기</a></li>
+        <li><a href="#%EC%95%84%EC%9D%B4%ED%85%9C">아이템</a><ul>
+        <li><a href="#%EC%95%84%EC%9D%B4%ED%85%9C-%EC%84%A4%EC%A0%95%ED%95%98%EA%B8%B0">아이템 설정하기</a><ul>
+        <li><a href="#%ED%99%98%EC%98%81%EA%B7%B9%EB%8B%A8-2%EB%A7%89">환영극단 2막</a></li>
+        </ul>
+        </li>
+        <li><a href="#%EB%B0%A9%EC%96%B4%EA%B5%AC%EC%9E%AC%EC%A7%88-%EC%84%A4%EC%A0%95%ED%95%98%EA%B8%B0">방어구재질 설정하기</a></li>
+        <li><a href="#%EA%B0%95%ED%99%94-%EC%88%98%EC%B9%98-%EC%84%A4%EC%A0%95%ED%95%98%EA%B8%B0">강화 수치 설정하기</a></li>
+        <li><a href="#%EB%A7%88%EB%B2%95%EB%B6%80%EC%97%AC-%EC%84%A4%EC%A0%95%ED%95%98%EA%B8%B0">마법부여 설정하기</a></li>
+        <li><a href="#%EC%97%A0%EB%B8%94%EB%A0%98-%EC%84%A4%EC%A0%95%ED%95%98%EA%B8%B0">엠블렘 설정하기</a></li>
+        <li><a href="#%EB%A7%88%EB%B2%95%EB%B4%89%EC%9D%B8-%EC%84%A4%EC%A0%95%ED%95%98%EA%B8%B0">마법봉인 설정하기</a></li>
+        <li><a href="#%EC%A1%B0%EA%B1%B4%EB%B6%80-%ED%9A%A8%EA%B3%BC">조건부 효과</a></li>
+        <li><a href="#%EC%9E%A5%EB%B9%84-%EB%AA%A8%EB%91%90-%EC%84%A4%EC%A0%95">장비 모두 설정</a></li>
+        </ul>
+        </li>
+        <li><a href="#%EA%B8%B0%ED%83%80-%EC%9A%94%EC%86%8C">기타 요소</a></li>
+        <li><a href="#%EB%8B%A4%EC%BA%90%EB%A6%AD%ED%84%B0">다캐릭터</a></li>
+        <li><a href="#%EC%8A%A4%ED%83%AF">스탯</a><ul>
+        <li><a href="#%EC%8A%A4%ED%83%AF-%EC%A1%B0%EC%A0%95%ED%95%98%EA%B8%B0">스탯 조정하기</a></li>
+        </ul>
+        </li>
+        <li><a href="#%EC%8A%A4%ED%82%AC">스킬</a><ul>
+        <li><a href="#%EC%8A%A4%ED%82%AC-%EC%A7%81%EC%A0%91-%EC%9E%85%EB%A0%A5%ED%95%98%EA%B8%B0">스킬 직접 입력하기</a></li>
+        </ul>
+        </li>
+        </ul>
+        </li>
+        <li><a href="#%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0">설치하기?</a></li>
+        <li><a href="#%EB%AC%B8%EC%9D%98">문의</a></li>
+        </ul>
+        <h1 id="사용-방법">사용 방법</h1>
+        <h2 id="시작하기">시작하기</h2>
+        <p>요즘 사용하는 브라우저(Chrome, Edge, Firefox, Safari 등)로 <a href="https://dfm.nemi.ml/view">https://dfm.nemi.ml/view</a>에 접속합니다. PC, 모바일 모두 가능합니다.</p>
+        <h2 id="아이템">아이템</h2>
+        <h3 id="아이템-설정하기">아이템 설정하기</h3>
+        <p>[아이템] 탭에서 아이템 아이콘을 누르면, 적용할 아이템을 선택할 수 있습니다. (앞서 언급한대로 계정 데이터를 임의로 추출하는 기능은 없습니다. ㅈㅅ!)</p>
+        <p>[아이템] 탭에서 적용 가능한 아이템은 다음과 같습니다.</p>
+        <ul>
+        <li>무기</li>
+        <li>방어구(상의, 하의, 머리어깨, 벨트, 신발)</li>
+        <li>악세서리(팔찌, 목걸이, 반지)</li>
+        <li>보조장비</li>
+        <li>크리쳐, 아티팩트</li>
+        <li>봉인석, 정수</li>
+        <li>칭호</li>
+        <li>오라, 무기아바타</li>
+        </ul>
+        <p>무기/방어구/악세서리/보조장비 선택 시, 아이템 선택 창의 [세트] 탭에서 에픽 세트 아이템 또는 영할/영블/영악 세팅을 한번에 적용할 수 있습니다.</p>
+        <p>칭호, 오라, 무기아바타는 효과가 같은 것은 하나로 묶어놨습니다.</p>
+        <h4 id="환영극단-2막">환영극단 2막</h4>
+        <p><img src="/docs/circus2select.jpeg" alt=""></p>
+        <p>무기/방어구/악세서리/보조장비 선택 시, 아이템 선택 창의 [환영극단 2막] 탭에서 자신이 착용할 환영극단 2막 유니크 장비 부위를 선택할 수 있습니다.</p>
+        <ul>
+        <li>[환영극단 2막] 탭에서는 장비를 누르면 장비가 즉시 적용되지 않고 임시로 저장되며, [착용하기] 버튼을 눌러야 실제로 적용됩니다. [착용하기] 버튼을 누르지 않고 선택 창을 닫으면 세팅이 적용되지 않습니다.</li>
+        <li>적용 예정인 장비들은 그 아이콘이 선명하게 표시됩니다.</li>
+        <li>왼쪽(PC) 또는 위(모바일)에 나타나는 세트 이름을 누르면 그 세트의 장비 10종이 모두 활성화됩니다. 이렇게 하고 나머지 2부위를 다른 것으로 선택하면 됩니다.</li>
+        </ul>
+        <h3 id="방어구재질-설정하기">방어구재질 설정하기</h3>
+        <p><img src="/docs/materialselect.jpeg" alt=""></p>
+        <p>PC에서는 [아이템] 탭에서 방어구 이름 옆에 방어구재질 선택 메뉴가 나타납니다. 모바일에서는 [강화] 탭에서 각 방어구 부위에 방어구재질 선택 메뉴가 나타납니다.</p>
+        <p>PC, 모바일 공통으로, 어떤 부위에 착용중인 방어구가 재질변경이 불가능한 경우(ex.환영극단 2막), 방어구재질 선택 메뉴가 나타나지 않습니다.</p>
+        <h3 id="강화-수치-설정하기">강화 수치 설정하기</h3>
+        <p><img src="/docs/upgradebonus.jpeg" alt=""></p>
+        <p>PC(넓은 화면)에서는 [아이템] 탭에서, 모바일(좁은 화면)에서는 [강화] 탭에서, 장비의 각 부위에 나타난 노란색 숫자 값을 입력하여 강화 효과를 설정할 수 있습니다.</p>
+        <ul>
+        <li><strong>무기</strong>: 물리/마법공격력 증가량</li>
+        <li><strong>그 외</strong>: 힘/지능 증가량</li>
+        </ul>
+        <blockquote>
+        <p>개발 초기에 <strong>방어력</strong> 보너스는 중요하지 않다 생각하여 <strong>일단 제외</strong>되었습니다. 여유가 된다면 추가예정!</p>
+        </blockquote>
+        <h3 id="마법부여-설정하기">마법부여 설정하기</h3>
+        <p>PC에서는 [아이템] 탭에서, 모바일에서는 [강화] 탭에서, 장비의 각 부위에 나타난 카드 슬롯을 눌러 카드/보주를 선택할 수 있습니다.</p>
+        <p>&quot;선택한 카드를 가능한 모든 부위에 바르기&quot;를 켜면, 마법부여할 카드를 눌렀을 때 그 카드를 쓸 수 있는 모든 부위에 적용됩니다. 예를 들어, &quot;타르타로스 카드&quot;를 모든 부위에 바르기하면 팔찌, 목걸이, 반지의 마법부여가 모두 &quot;타르타로스 카드&quot;가 됩니다.</p>
+        <p>효과가 같은 여러 카드는 그 중 하나만 포함했습니다. (ex.지그하르트 / 달리아 스콧)</p>
+        <h3 id="엠블렘-설정하기">엠블렘 설정하기</h3>
+        <p>PC에서는 [아이템] 탭에서, 모바일에서는 [강화] 탭에서 엠블렘을 설정할 수 있습니다.</p>
+        <ul>
+        <li><strong>무기, 보조장비, 칭호 이외의 부위의</strong> 엠블렘을 누르면 해당 엠블렘의 레벨이 1 감소합니다. 엠블렘 레벨이 3일 때 누르면 엠블렘 레벨이 10으로 설정됩니다.</li>
+        <li><strong>무기, 보조장비, 칭호</strong> 엠블렘을 누르면 엠블렘 선택 창이 나타나며, 그곳에 엠블렘 레벨 입력필드와 해당 슬롯에 착용할 수 있는 모든 엠블렘이 나타납니다. <strong>레벨을 먼저 입력한 후, 적용할 엠블렘 아이콘을 눌러야 합니다.</strong> 엠블렘 레벨 입력 후 창을 닫아버리면 엠블렘 레벨 입력값이 적용되지 않습니다. 가능한 엠블렘 레벨은 3~10입니다.</li>
+        </ul>
+        <h3 id="마법봉인-설정하기">마법봉인 설정하기</h3>
+        <p>PC에서는 [아이템] 탭에서, 모바일에서는 [강화] 탭에서, 장비의 각 부위에 나타난 마법봉인 옵션 하나를 누르면 가능한 다음 마법봉인으로 바뀝니다.</p>
+        <p>적용되는 마법봉인은 다음과 같습니다.</p>
+        <ul>
+        <li>데미지 증가</li>
+        <li>힘/지능</li>
+        <li>크리티컬</li>
+        <li>속성 강화</li>
+        <li>적중</li>
+        <li>공격속도</li>
+        </ul>
+        <p><img src="/img/attr/DontMind.png" alt="">
+        &lt;&lt; 이 아이콘은 &quot;관심 없는 옵션&quot;으로, 위의 어느 것에도 해당하지 않음을 나타냅니다.</p>
+        <blockquote>
+        <p>모바일에서는 마법봉인 효과의 수치가 생략됩니다.</p>
+        </blockquote>
+        <h3 id="조건부-효과">조건부 효과</h3>
+        <p><img src="/docs/choice.jpeg" alt=""></p>
+        <p>&quot;공격 시 xx% 확률로&quot;, &quot;공격 시 xx초 동안&quot;, &quot;던전 입장 시&quot;, &quot;파티원 모두에게&quot; 등 <strong>마을에서 적용되지 않는 효과</strong>는 [아이템] 탭에서 아이템 선택 영역 아래에 나타납니다. 이 효과들을 눌러서 적용 여부를 ON/OFF할 수 있습니다. &quot;(최대 x중첩)&quot;이 붙은 효과는 중첩 횟수를 입력합니다.</p>
+        <p>대양 무기, &quot;칠흑의 예언자&quot; 세트, &quot;새벽의 기도&quot; 세트 등 여러 효과 중 하나만 적용되는 효과는 그 효과를 간단하게 나타낸 텍스트를 눌러서 적용할 수 있습니다.</p>
+        <blockquote>
+        <p>&quot;공격 시 x% 추가 데미지&quot;는 무조건 적용되는 효과로 분류됩니다.<br>단, &quot;공격 시 xx% 확률로 y% 추가 데미지&quot;는 &quot;확률&quot;이 있으므로 조건부 효과로 분류됩니다.</p>
+        <p>간혹 ON/OFF 스위치가 나타나지 않는 조건부 효과가 있는데, 이들은 &quot;던전 입장 시&quot; 효과로 조건부 효과이면서 항상 적용됩니다 (아래의 <a href="#%EC%8A%A4%ED%83%AF">스탯</a> 참고).</p>
+        </blockquote>
+        <h3 id="장비-모두-설정">장비 모두 설정</h3>
+        <p><img src="/docs/equipbatch.jpeg" alt=""></p>
+        <p>PC에서는 [아이템] 탭에서, 모바일에서는 [강화] 탭에서, 각 장비 부위의 설정을 한번에 적용할 수 있습니다.</p>
+        <p>&quot;방어구 강화보너스&quot;는 방어구의 모든 힘/지능 강화보너스를 한번에 설정합니다. &quot;악세서리 강화보너스&quot;는 악세서리의 모든 힘/지능 강화보너스를 한번에 설정합니다.</p>
+        <p>&quot;고정엠블렘 레벨&quot;은 <strong>무기, 보조장비, 칭호 이외의 모든 엠블렘</strong>의 레벨을 한꺼번에 설정합니다.</p>
+        <p>&quot;방어구 재질&quot;은 모든 방어구 재질을 한꺼번에 설정할 수 있습니다.</p>
+        <h2 id="기타-요소">기타 요소</h2>
+        <p><img src="/docs/extrasetting.jpeg" alt=""></p>
+        <p>이 탭에서는 캐릭터 레벨, 캐릭터 업적 레벨, 독립 공격력, 길드 버프, 마력결정, 의상 아바타의 레어리티를 설정할 수 있습니다.</p>
+        <blockquote>
+        <p>마력 결정은 <strong>모든 캐릭터에게 동일하게 적용됩니다.</strong> (아래의 <a href="#%EB%8B%A4%EC%BA%90%EB%A6%AD%ED%84%B0">다캐릭터</a> 참조)</p>
+        </blockquote>
+        <h2 id="다캐릭터">다캐릭터</h2>
+        <p><img src="/docs/venture1.jpeg" alt=""></p>
+        <p>왼쪽 위의 캐릭터 초상화를 누르면 자신이 만든 캐릭터 목록이 나타납니다.</p>
+        <ul>
+        <li>캐릭터 목록에는 각 캐릭터들의 직업, 이름, <strong>계수 100%인 스킬의 평균 예상 데미지</strong>, 10장비(무기, 방어구, 악세서리, 보조장비)가 간략하게 표시됩니다. 캐릭터를 누르면 그 캐릭터가 열립니다.</li>
+        <li>캐릭터는 다운로드받거나 삭제할 수 있습니다. 현재 열려있는 캐릭터는 삭제할 수 없습니다.</li>
+        <li>[새 캐릭터]를 누르면 캐릭터를 새로 만든 후 그 캐릭터가 열립니다.</li>
+        <li>[현재 셋팅 복제]를 누르면 지금 열려있는 캐릭터와 똑같은 캐릭터를 하나 더 만들고, 그 캐릭터가 열립니다.</li>
+        </ul>
+        <p><img src="/docs/setchar.jpeg" alt=""></p>
+        <p>왼쪽 위의 캐릭터 이름 바로 오른쪽에 있는 아이콘을 누르면 <strong>현재 열려있는 캐릭터</strong>의 이름, 직업을 설정할 수 있습니다.</p>
+        <h2 id="스탯">스탯</h2>
+        <p><img src="/docs/calibrate.jpeg" alt=""></p>
+        <p>PC에서는 화면 오른쪽에서, 모바일에서는 [스탯 조정] 탭에서, 현재 세팅에서 각 스탯의 결괏값을 종합해서 볼 수 있습니다.</p>
+        <h3 id="스탯-조정하기">스탯 조정하기</h3>
+        <p>이 값이 인게임에서 보이는 것과 다르다면, 각 스탯의 오른쪽에 나타난 입력 필드를 통해서 값을 직접 조정할 수 있습니다.</p>
+        <p>위의 [마을스탯 보기]를 체크하면 <strong>스탯 영역</strong>에 한해서 <a href="#%EC%A1%B0%EA%B1%B4%EB%B6%80-%ED%9A%A8%EA%B3%BC">조건부 효과</a>가 모두 무효화됩니다. [마을스탯 보기]는 오른쪽 위의 평균 데미지 및 스킬 데미지에는 영향을 주지 않습니다.</p>
+        <h2 id="스킬">스킬</h2>
+        <p>현재 세팅에서, 캐릭터의 현재 레벨에서 가능한 최대 레벨인 스킬의 예상 데미지를 볼 수 있습니다. 여기에 나타나는 스킬은 TP 및 &quot;스킬 레벨 증가&quot;, &quot;스킬 공격력 증가&quot;, &quot;{특정 스킬} 공격력 증가 +x%&quot; 효과가 모두 적용됩니다.</p>
+        <h3 id="스킬-직접-입력하기">스킬 직접 입력하기</h3>
+        <p>스킬은 <a href="https://github.com/nemi-dev">메인 개발자</a>가 인게임에서 스킬 계수를 직접 입력하기 때문에, 그가 현재 던파모바일에서 키우고 있는 직업들의 스킬만 입력되어 있습니다.</p>
+        <p>[스킬계수 직접 입력]에서는 사용자가 직접 스킬 계수를 입력할 수 있습니다. 이 영역의 데미지 표기값은 <strong>&quot;스킬 데미지 증가&quot; 효과만 적용됩니다</strong>.</p>
+        <blockquote>
+        <p>인게임에서 나타난 스킬 계수는 TP 및 &quot;스킬 레벨 증가&quot;, &quot;{특정 스킬} 공격력 증가 +x%&quot; 효과가 이미 모두 적용된 상태입니다. 이 계수를 보고 직접 입력하기만 하면 됩니다. 아쉽게도, 비교하려는 아이템을 갖고있지 않을 때는 스킬 계수를 따로 계산해야 합니다.</p>
+        <p>tip&gt; TP 및 모든 &quot;{특정 스킬} 공격력 증가 +x%&quot; 효과는 <strong>모두 복리로 계산됩니다</strong>.</p>
+        </blockquote>
+        <h1 id="설치하기">설치하기?</h1>
+        <p>데스크탑 앱으로 포팅(<a href="https://www.electronjs.org/">Electron</a> 등)할 계획이 있긴 합니다만, 아직까지는 개발 단계이기 때문에 오프라인에서 사용하려면 git을 이용해 이 리포지토리를 복제하는 방법밖에 없습니다(서버에 별도로 데이터를 저장하지 않으므로 이 방법이 가능은 하다는 것에 의의를 둡시다).</p>
+        <ol>
+        <li>Node.js와 git을 설치합니다.</li>
+        <li>이 리포지토리를 로컬에 복제하고, 패키지를 설치합니다.<pre><code class="language-shell">git clone https://github.com/nemi-dev/dfm-view.git
+        cd dfm-view
+        npm install
+        </code></pre>
+        </li>
+        <li>프리뷰 서버를 실행합니다.<pre><code class="language-shell">npm run preview
+        </code></pre>
+        </li>
+        <li>브라우저로 localhost:4173/view.html 에 접속합니다. 경우에 따라 &quot;4173&quot; 외에 다른 숫자를 입력해야 할 수 있습니다. 터미널 출력을 확인해주세요.</li>
+        </ol>
+        <h1 id="문의">문의</h1>
+        <p>기본적으로 <a href="https://github.com/nemi-dev/dfm-view/issues">Issue</a>에서 버그/오류 제보를 받고 있습니다만, 이는 GitHub 계정이 필요하므로 타 사이트의 커뮤니티에서 남긴 댓글 제보도 확인하고 있습니다.</p>        
+        </details>
+        <a href="https://github.com/nemi-dev/dfm-view" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </main>  
+    </div>
     <footer>
       <div id="support">
         버그/오류 제보는 <a href="https://github.com/nemi-dev/dfm-view/issues" target="_blank" rel="noopener noreferrer">여기에서</a>
@@ -16,11 +201,8 @@
         <div>
           DFM View v<span class="version"></span>
         </div>
-        <div>
-          <a href="https://github.com/nemi-dev/dfm-view" target="_blank" rel="noopener noreferrer"><i id="github"></i></a>
-        </div>
       </div>
     </footer>
-    <script type="module" src="/src/index.tsx"></script>
+    <script type="module" src="/src/index.ts"></script>
   </body>
 </html>

@@ -25,6 +25,12 @@
 
   padding-bottom: 100px;
 
+  --color-epic: #ffd15b;
+  --color-unique: #ffa2f7;
+  --color-rare: #b993ff;
+  --color-uncommon: #6ad5ff;
+  --color-common: #ededed;
+  --color-green: #adff77;
 }
 
 a {
