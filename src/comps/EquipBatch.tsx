@@ -4,7 +4,7 @@ import { createSelector } from '@reduxjs/toolkit'
 
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import {
-  selectCustomMaterial2, selectEmblemSpecs, selectUpgradeValue
+  selectCustomMaterial, selectEmblemSpecs, selectUpgradeValue
 } from '../feats/selector/itemSelectors'
 import { selectClassAtype } from '../feats/selector/baseSelectors'
 import {
@@ -33,7 +33,7 @@ const selectColorEmblemLevels = createSelector(
 )
 
 const selectSynchronizedMaterial = createSelector(
-  armorParts.map(part => (state: RootState, charID: RootState["currentID"]) => selectCustomMaterial2(state, charID, part)),
+  armorParts.map(part => (state: RootState, charID: RootState["currentID"]) => selectCustomMaterial(state, charID, part)),
   (...mats) => mats.find(m => mats[0] != m) ? null : mats[0]
 )
 

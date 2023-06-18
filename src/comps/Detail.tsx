@@ -4,11 +4,12 @@ import styled from 'styled-components'
 
 import { AttrDef, attrDefs } from '../attrs'
 import { useAppSelector } from '../feats/hooks'
-import { selectSources } from '../feats/selector/selectors'
-import { CombineItems, Interpolate } from '../items'
+import { expandSource, selectActiveISets, selectExpandedSources, selectPartSource, selectTonics, selectWearAvatarSource } from '../feats/selector/selectors'
+import { CombineItems, createActiveCondyces, expandChoice, partsWithMainItem } from '../items'
 import { AttrItem, SimpleBaseAttrView } from './widgets/AttrsView'
 import { RadioGroup } from './widgets/Forms'
-import { selectChoice } from '../feats/selector/baseSelectors'
+import { selectAchBonus, selectCaliSource, selectChoice, selectDFClass } from '../feats/selector/baseSelectors'
+import { selectGuilds } from '../feats/selector/guildSelectors'
 
 
 const Row = styled.div`
@@ -71,40 +72,156 @@ function PartSourceErrorView({ error, resetErrorBoundary }: FallbackProps) {
 
 
 
-const PartSourceStyle = styled.div`
+const OneSourceStyle = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
   h3 {
+    margin: 0;
     color: white;
-    font-size: 1.1rem;
-    text-align: center;
-    margin: 4px;
-  }  
+    font-size: 1rem;
+    text-align: start;
+    flex-basis: 200px;
+
+    position: sticky;
+    top: 45px;
+  }
+  .AttrsView {
+    flex-grow: 1;
+
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .AttrItem {
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding-inline: 3rem;
+  }
 `
 
-function PartSourceView({ source }: { source: AttrSource }) {
+function OneSourceView({ source }: { source: AttrSource }) {
   if (!source) return null
-  return <PartSourceStyle>
+  return <OneSourceStyle>
     <h3>{source.name}</h3>
-    <div><SimpleBaseAttrView attrs={source.attrs}/></div>
-  </PartSourceStyle>
+    <div className="AttrsView"><SimpleBaseAttrView attrs={source.attrs}/></div>
+  </OneSourceStyle>
 }
 
-const PartSourceContainerStyle = styled.div`
-  padding: 8px;
+function OneISetView({ source }: { source: ComplexAttrSource }) {
+  if (!source) return null
+  const choice = useAppSelector(state => selectChoice(state, undefined))
+  const condyce = createActiveCondyces(source, choice)
+  return (<>
+    {/* <OneSourceStyle>
+      <h3>{source.name}</h3>
+      <div className="AttrsView"><SimpleBaseAttrView attrs={source.attrs}/></div>
+    </OneSourceStyle> */}
+    <OneSourceView source={source} />
+    {condyce.map(s => 
+      <OneSourceView key={s.name} source={s} />
+    )}
+  </>
+  )
+}
+
+const PartSourceStyle = styled.div`
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px;
 `
 
+function PartSourceView({ part }: { part: EquipPart | "칭호" | "오라" | "무기아바타" | "크리쳐" | "봉인석" }) {
+  const partSource = useAppSelector(state => selectPartSource(state, undefined, part))
+  const choice = useAppSelector(state => selectChoice(state, undefined))
+  const condyce = createActiveCondyces(partSource.item, choice)
+  const expanded = expandSource(partSource)//.concat(condyce)
+  expanded.splice(1, 0, ...condyce)
+  return (
+    <>
+      <div className="SourceType">
+        <span className="StickyName">
+        {partSource.type}
+        </span>
+      </div>
+      <div className="SourceZone">
+        {expanded.map((s, index) => 
+          <OneSourceView key={index} source={s} />
+        )}
+      </div>
+    </>
+  )
+}
+
+
+
+const PartSourceContainerStyle = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+
+  .SourceType {
+
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--color-epic);
+
+    .StickyName {
+      position: sticky;
+      top: 45px;
+    }
+  }
+
+  .SourceZone {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+`
 
 function PartSourcesContainerView() {
-  const sources = useAppSelector(selectSources)
+  const dfclass = useAppSelector(selectDFClass)
+  const achievements = useAppSelector(selectAchBonus)
+  const wearAvatars = useAppSelector(selectWearAvatarSource)
+  const isets = useAppSelector(selectActiveISets)
+  const tonic = useAppSelector(selectTonics)
+  const guild = useAppSelector(selectGuilds)
+  const cal = useAppSelector(selectCaliSource)
+
   return (
     <ErrorBoundary FallbackComponent={PartSourceErrorView}>
       <PartSourceContainerStyle>
-      {sources.map((source, index) => 
-        <PartSourceView key={index} source={source} />
-      )}
+      <OneSourceView source={dfclass} />
+      <OneSourceView source={achievements} />
+      <PartSourceStyle>
+      {
+        partsWithMainItem.map(part => 
+          <PartSourceView key={part} part={part} />
+        )
+      }
+      </PartSourceStyle>
+      {
+        isets.map((so, index) => 
+          <OneISetView key={so.name} source={so} />
+        )
+      }
+      {
+        wearAvatars.map((so, index) => 
+          <OneSourceView key={index} source={so} />
+        )
+      }
+      <OneSourceView source={tonic} />
+      <OneSourceView source={guild} />
+      <OneSourceView source={cal} />
       </PartSourceContainerStyle>
     </ErrorBoundary>
   )
 }
+
+
 
 const AttrGroupStyle = styled.div`
   details {
@@ -122,9 +239,12 @@ const AttrGroupStyle = styled.div`
 `
 
 function AttrGroupView() {
-  const sources = useAppSelector(selectSources)
+  const dfclass = useAppSelector(selectDFClass)
+  const wearAvatars = useAppSelector(selectWearAvatarSource)
+  const tonic = useAppSelector(selectTonics)
+  const sources = useAppSelector(selectExpandedSources)
   const choice = useAppSelector(selectChoice)
-  const interpolated = Interpolate(sources, choice)
+  const interpolated = expandChoice(sources, choice)
   const myAttr = CombineItems(sources, choice)
   return (
     <ErrorBoundary FallbackComponent={PartSourceErrorView}>

@@ -31,14 +31,28 @@ function _getEmblem([key, level]: EmblemSpec): BaseAttrs {
 }  
 , { primitive: true })
 
+const emblemNameMap = {
+  "Red": "레드",
+  "Green": "그린",
+  "Blue": "블루",
+  "Yellow": "옐로우",
+  "Stren": "힘",
+  "Intel": "지능",
+  "Fire": "파이어",
+  "Ice": "아이스",
+  "Light": "썬더",
+  "Dark": "다크",
+} as const
+
 export const getEmblem = memoizee(
 function createEmblem([key, level]: EmblemSpec): AttrSource {
   return {
-    name: `${key} 엠블렘[${level}]`,
+    name: `Lv${level} ${emblemNameMap[key]} 엠블렘`,
     attrs: getEmblemAttrs([key, level])
   }
 }
 )
+
 
 
 /** !! 이건 엠블렘 아이콘에서만 사용되는 것임!!!! */

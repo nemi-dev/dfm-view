@@ -10,13 +10,13 @@ import { getCurrentMainItem, getPartSource } from '../dfchar'
 import memoizee from 'memoizee'
 
 /** 세 번째 것을 그대로 뱉어내는 함수를 만든다. */
-function partExposer<T> () {
+export function partExposer<T> () {
   return (_state: RootState, _dfcharID: RootState["currentID"], part: T ) => part
 }
 
 
 /** 특정 부위의 "내가 선택한" 방어구 재질을 선택한다 (해당 방어구재질이 고정되어있는지 여부는 고려하지 않는다.) */
-export const selectCustomMaterial2 = createSelector(
+export const selectCustomMaterial = createSelector(
   selectDFChar,
   partExposer<ArmorPart>(),
   (dfchar, part) => dfchar.materials[part]
@@ -72,37 +72,9 @@ const selectEquipPart
   (dfchar, part) => getPartSource(dfchar, part)
 )
 
-/** 10장비의 모든 아이템+강화+카드+엠블렘+마법봉인 효과를 선택한다. */
-export const selectWholeEquips = createSelector(
-  equipParts.map(part => (state: RootState, charID: RootState["currentID"]) => selectEquipPart(state, charID, part)),
-  (...srcs) => srcs
-)
-
-
-
-
-
-
-
-
-
-export const selectCracks = createSelector(
-  selectDFChar,
-  (dfchar) => getPartSource(dfchar, "봉인석")
-)
-
-
-
-
-
 
 
 /** 아티팩트 하나를 선택한다 */
 export const selectArtifact = memoizee(
   (color: ArtifactColor) => createSelector(selectDFChar, dfchar => getItem(dfchar.items.아티팩트[color])),
 { primitive: true })
-
-export const selectCreatureSource = createSelector(
-  selectDFChar,
-  (dfchar) => getPartSource(dfchar, "크리쳐")
-)

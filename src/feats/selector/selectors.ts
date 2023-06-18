@@ -3,12 +3,12 @@ import { createSelector } from '@reduxjs/toolkit'
 import { applyAddMaxEldmg, atx, combine, dualTrigger, whatElType } from '../../attrs'
 import { AtypeAttrKey } from '../../constants'
 import { critChance, critFt, defRate, getElementalDamage, getPlainDamage, getRealdef } from '../../damage'
-import { CombineItems, getActiveISetsFromPartSources } from '../../items'
+import { CombineItems, createActiveCondyces, getActiveISetsFromPartSources, partsWithMainItem } from '../../items'
 import { add } from '../../utils'
 import {
   selectAchBonus, selectCaliSource, selectClassAtype, selectDFChar, selectChoice, selectDFClass, selectLevel
 } from './baseSelectors'
-import { selectMainItem, selectCracks, selectWholeEquips, selectCreatureSource } from './itemSelectors'
+import { partExposer } from './itemSelectors'
 import { selectGuilds } from './guildSelectors'
 
 import type { RootState } from "../store"
@@ -37,19 +37,6 @@ export function selectTonics(state: RootState): AttrSource {
     }
   }
 }
-
-/** 칭호를 장착 중일 때, 그 칭호 + 칭호에 박은 보주 + 엠블렘을 선택한다. */
-export const selectDFTitleTown = createSelector(
-  selectDFChar,
-  (dfchar) => {
-    const source = getPartSource(dfchar, "칭호")
-    if (!source) return []
-
-    const { item, card, emblems } = source
-    return [item, card, ...emblems]
-  }
-)
-
 
 /** 지금 착용중인 레어 아바타의 수를 선택한다. */
 export const selectRareAvatarCount = createSelector(
@@ -87,44 +74,57 @@ export const selectWearAvatarSource = createSelector(
   }
 )
 
-function expandSource({ item, card, emblems = [], magicProps, upgrade, spells = [], blessing, artifacts = [], artifactProps = [] }: PartSourceSet) {
+export function expandSource(source: PartSourceSet) {
+  if (!source) return []
+  const { item, card, emblems = [], magicProps, upgrade, spells = [], blessing, artifacts = [], artifactProps = [] } = source
   const a = [ item, upgrade, card, magicProps, ...emblems, ...artifacts, ...artifactProps, ...spells, blessing ]
   return a.filter(v => v != null)
 }
 
+
+/** 10장비의 모든 아이템+강화+카드+엠블렘+마법봉인 효과를 선택한다. */
+export const selectPartSource = createSelector(
+  selectDFChar,
+  partExposer<EquipPart | "칭호" | "오라" | "무기아바타" | "크리쳐" | "봉인석">(),
+  (dfchar, part) => getPartSource(dfchar, part)
+)
+
 /** 
- * 모든 "소스"를 선택한다.  
+ * 내 캐릭터의, "10장비 + 칭호 + 오라 + 무기아바타 + 크리쳐 + 아티팩트 + 성안의 봉인" 내에서 활성화된 세트효과를 선택한다.
+ * (정말 이상한 게 생긴다면, 이를테면 무기 + 상의 아바타 세트 등이 생긴다면 그건 적용되지 않는다.)
+ */
+export const selectActiveISets = createSelector(
+  (state: RootState, id: RootState["currentID"] = undefined) => partsWithMainItem.map(m => selectPartSource(state, id, m)),
+  (mainSources) => {
+    const isets = getActiveISetsFromPartSources(...mainSources)
+    return isets
+  }
+)
+
+
+/** 
+ * 오체분시된 소스를 선택한다.  
  * 
  * 직업 + 장비 + 아바타 + 크리쳐 + 마력결정 + 성안의봉인 + 길드 + 업적보너스 + 보정값  
  */
-export const selectSources = createSelector(
+export const selectExpandedSources = createSelector(
   selectDFClass,
-  selectWholeEquips,
-  selectDFTitleTown,
-  (state: RootState, charID: RootState["currentID"]) => selectMainItem(state, charID, "오라"),
-  (state: RootState, charID: RootState["currentID"]) => selectMainItem(state, charID, "무기아바타"),
-  selectCreatureSource,
+  (state: RootState, id: RootState["currentID"] = undefined) => partsWithMainItem.map(m => selectPartSource(state, id, m)),
+  selectActiveISets,
   selectWearAvatarSource,
   selectTonics,
-  selectCracks,
   selectGuilds,
   selectAchBonus,
   selectCaliSource,
-  (dfc, equips, dftitle, aura, weaponAvatar, pCreature, wears, tonic, pCracks, guild, ach, cal) => {
-    const isets = getActiveISetsFromPartSources(...equips, pCreature, pCracks)
-    const z = [
+  (dfc, mainSources, isets, wears, tonic, guild, ach, cal) => {
+    const z: AttrSource[] = [
       dfc,
-      ...equips.flatMap(expandSource),
-      ...dftitle, 
-      ...wears,
-      weaponAvatar,
-      aura,
-      ...expandSource(pCreature),
-      tonic,
-      ...expandSource(pCracks),
-      ...isets,
-      guild,
       ach,
+      ...mainSources.flatMap(s => expandSource(s)),
+      ...isets,
+      ...wears,
+      tonic,
+      guild,
       cal,
     ]
     return z
@@ -137,7 +137,7 @@ export const selectSources = createSelector(
  * **듀얼트리거/최대 속성강화 추가데미지가 포함되었다면 여기서 적용된다.**
 */
 export const selectAttrTown = createSelector(
-  selectSources,
+  selectExpandedSources,
   (sources) => {
     const a = CombineItems(sources)
     return applyAddMaxEldmg(dualTrigger(a))
@@ -149,7 +149,7 @@ export const selectAttrTown = createSelector(
  * **듀얼트리거/최대 속성강화 추가데미지가 포함되었다면 여기서 적용된다.**
 */
 export const selectAttr = createSelector(
-  selectSources,
+  selectExpandedSources,
   selectChoice,
   (sources, choice) => {
     const a = CombineItems(sources, choice)
@@ -171,29 +171,6 @@ export const selectCritChance = createSelector(
 export const selectFinalEltype = createSelector(
   selectAttr,
   whatElType
-)
-
-/** 던전에서 스증도, 크증도 적용되지 않은 내 퍼센트 물/마공 데미지를 선택한다. */
-export const selectVanDamage = createSelector(
-  selectAttr,
-  selectClassAtype,
-  selectFinalEltype,
-  (attrs, atype, eltypes) => {
-    return getPlainDamage(atype, eltypes, attrs)
-  }
-)
-
-/** 던전에서 스증+크증이 모두 적용된 내 퍼센트 물/마공 데미지를 선택한다. */
-export const selectDamage = createSelector(
-  selectAttr,
-  selectClassAtype,
-  selectFinalEltype,
-  (attrs, atype, eltypes) => {
-    return +
-    getPlainDamage(atype, eltypes, attrs)
-    * critFt(attrs["cdmg_inc"], attrs["catk_inc"])
-    * (1 + add(attrs["sk_inc"], attrs["sk_inc_sum"]) / 100)
-  }
 )
 
 /** 캐릭터 선택창에서 보일 데미지를 선택한다. */

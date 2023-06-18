@@ -6,7 +6,7 @@ import { acceptEmblem } from '../emblem'
 import { useAppDispatch, useAppSelector } from '../feats/hooks'
 import { selectDFChar } from '../feats/selector/baseSelectors'
 import {
-  selectCard, selectCustomMaterial2, selectEmblemSpecs, selectMainItem, selectUpgradeValue
+  selectCard, selectCustomMaterial, selectEmblemSpecs, selectMainItem, selectUpgradeValue
 } from '../feats/selector/itemSelectors'
 import {
     DecreaseMyEmblemLevel, SetMyArtifactValue, SetMyCreatureStat, SetMyMaterial, SetMyUpgradeValue
@@ -78,7 +78,7 @@ export function ArmorMaterialSelect({ part }: PartProps) {
   if (!isArmor(part)) return null
   const dispatch = useAppDispatch()
   const item = useAppSelector(state => selectMainItem(state, undefined, part))
-  const material = useAppSelector(state => selectCustomMaterial2(state, undefined, part))
+  const material = useAppSelector(state => selectCustomMaterial(state, undefined, part))
 
   const materialFixed = item?.material
   if (!item || materialFixed) return null

@@ -68,6 +68,9 @@ img.AttrIcon {
 
 .MyStat {
 
+  position: sticky;
+  top: calc(45px + 1rem);
+
   .InputGroup label {
     flex-basis: 50px;
   }

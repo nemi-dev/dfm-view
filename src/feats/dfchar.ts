@@ -33,6 +33,7 @@ export function getCurrentMainItem(dfchar: DFChar, part: MainItemSelector) {
   }
 }
 
+/** 마법봉인을 선택한다. */
 export function getMagicProps(dfchar: DFChar, part: MagicPropsPart) {
   const item = getItem(dfchar.items[part])
   const atype = whois(dfchar.dfclass).atype ?? "Physc"
@@ -79,7 +80,7 @@ export function getArtifactProps(dfchar: DFChar) {
   return artifactProps
 }
 
-/** 이 캐릭터가 착용중인 어느 한 "부위"를 선택한다. */
+/** 이 캐릭터의 어느 한 소스를 선택한다. */
 export function getPartSource(dfchar: DFChar, part: SingleItemPart) {
   const item = getCurrentMainItem(dfchar, part)
   const partSource: PartSourceSet = { type: part, item }

@@ -31,6 +31,9 @@ export const cardableParts: readonly CardablePart[] = Object.freeze([...equipPar
 /** 마법봉인이 있는 부위 */
 export const magicPropsParts: readonly MagicPropsPart[] = Object.freeze([...equipParts, "봉인석"])
 
+export const partsWithMainItem = ["무기", "상의", "하의", "머리어깨", "벨트", "신발", "팔찌", "목걸이", "반지", "보조장비", "칭호", "오라", "무기아바타", "크리쳐", "봉인석"] as const
+
+
 /** 이 아이템 타입은 무기인가? */
 export const isWeapon = (itype: Itype | "무기"): itype is WeaponType => (itype === "무기" || weaponType.includes(itype))
 
@@ -415,7 +418,7 @@ function getCracksOnly(itype: "봉인석" | "정수", atype: Atype) {
 
 
 /** 아이템 목록에서 choice로 활성화되는 효과들을 각 아이템 뒤에 붙인다. */
-export function Interpolate(sources: (AttrSource | ComplexAttrSource | null | undefined)[], choice: Choices): (AttrSource | ComplexAttrSource)[] {
+export function expandChoice(sources: (AttrSource | ComplexAttrSource | null | undefined)[], choice: Choices): (AttrSource | ComplexAttrSource)[] {
   if (!sources) return []
   return sources.flatMap(s => {
     if (!s) return []
@@ -435,6 +438,6 @@ export function Interpolate(sources: (AttrSource | ComplexAttrSource | null | un
 export function CombineItems(sources: (AttrSource | ComplexAttrSource | null | undefined)[], choice: Choices | null = null): BaseAttrs {
   if (!sources) return {}
   if (!choice) return combine(...sources.map(s => s?.attrs))
-  return combine(...Interpolate(sources, choice).map(s => s?.attrs))
+  return combine(...expandChoice(sources, choice).map(s => s?.attrs))
 }
 
