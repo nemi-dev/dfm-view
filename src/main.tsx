@@ -1,4 +1,4 @@
-import './index.css'
+import './style/index.scss'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import Modal from 'react-modal'
