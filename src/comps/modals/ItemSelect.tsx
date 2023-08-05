@@ -77,7 +77,7 @@ function loadShotgun(part: WholePart) {
   else return
 
   const w: IsetCatalog[] = []
-  for (const isetname of Object.keys(v).sort()) {
+  for (const isetname of Object.keys(v)) {
     w.push({
       name: isetname,
       items: inflate(v[isetname]),

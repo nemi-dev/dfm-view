@@ -12,6 +12,7 @@ import { selectExpressionDamage } from "../../feats/selector/selectors"
 import { Num } from "../widgets/NumberView"
 
 import { ErrorBoundary } from 'react-error-boundary'
+import { download } from "../../utils/download"
 
 
 function selectSavedChars(state: RootState) {
@@ -100,12 +101,7 @@ function CharSelect({ saved, onClick }: CharSelectProps) {
   const askExport = useCallback(() => {
     const fname = `${saved.name.trim().replace(/\\\/\:\*\?"\<\>\|/g, '')} - ${saved.dfclass}.json`
     const content = JSON.stringify(saved, null, 2)
-    const blob = new Blob([content], { type: "application/json" })
-
-    const a = document.createElement('a')
-    a.setAttribute("download", fname)
-    a.setAttribute("href", window.URL.createObjectURL(blob))
-    a.click()
+    download(fname, content, "application/json")
   }, [saved.id])
 
   const moveUp = useCallback(() => {

@@ -22,6 +22,9 @@ export default defineConfig({
       }
     }
   },
+  server: {
+    port: 3240
+  },
   define: {
     APP_VERSION: JSON.stringify(process.env.npm_package_version),
     IS_DEV: process.env.NODE_ENV === 'development'

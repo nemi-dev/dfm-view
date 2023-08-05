@@ -56,9 +56,13 @@ const reduce_eltype = (p: Eltype[], n: Eltype[]) => {
   return v
 }
 
+const concat = <T>(p: T[], n: T[]) => {
+  return p.concat(n)
+}
+
 
 export type AttrExpressionType = 
-"Flat" | "Percent" | "MapFlat" | "MapPercent" | "DearEltype" | "DualTrigger"
+"Flat" | "Percent" | "MapFlat" | "MapPercent" | "DearEltype" | "DualTrigger" | "DoT" | "Recool" | "Superarmor"
 
 export interface AttrDef {
   key: keyof BaseAttrs
@@ -69,84 +73,99 @@ export interface AttrDef {
 
 const _attrDefs: { [k in keyof BaseAttrs]: AttrDef } = {}
 
-function defineAttr(key: keyof BaseAttrs, name: string, reducer: (a: any, b: any) => any, expression: AttrExpressionType) {
+function a<K extends keyof BaseAttrs>(key: K, name: string, reducer: (a: BaseAttrs[K], b: BaseAttrs[K]) => BaseAttrs[K], expression: AttrExpressionType) {
   const _a = { key, name, reducer, expression }
   _attrDefs[key] = _a
   return _a
 }
 
 const attrDefsArray = [
-  defineAttr("strn", "힘", add, "Flat"),
-  defineAttr("intl", "지능", add, "Flat"),
-  defineAttr("str_inc", "힘 증가", add, "Percent"),
-  defineAttr("int_inc", "지능 증가", add, "Percent"),
 
-  defineAttr("atk_ph", "물리 공격력", add, "Flat"),
-  defineAttr("atk_mg", "마법 공격력", add, "Flat"),
-  defineAttr("atk_ph_inc", "물리 공격력 증가", add, "Percent"),
-  defineAttr("atk_mg_inc", "마법 공격력 증가", add, "Percent"),
+  a("atk_ph", "물리 공격력", add, "Flat"),
+  a("atk_mg", "마법 공격력", add, "Flat"),
+  a("atk_ph_inc", "물리 공격력 증가", add, "Percent"),
+  a("atk_mg_inc", "마법 공격력 증가", add, "Percent"),
+  a("def_ph", "물리 방어력", add, "Flat"),
+  a("def_mg", "마법 방어력", add, "Flat"),
+  a("def_ph_pct", "물리 방어력 증가", add, "Percent"),
+  a("def_mg_pct", "마법 방어력 증가", add, "Percent"),
 
-  defineAttr("crit_ph", "물리 크리티컬", add, "Flat"),
-  defineAttr("crit_mg", "마법 크리티컬", add, "Flat"),
-  defineAttr("crit_ph_pct", "물리 크리티컬 확률 증가", add, "Percent"),
-  defineAttr("crit_mg_pct", "마법 크리티컬 확률 증가", add, "Percent"),
+  a("strn", "힘", add, "Flat"),
+  a("intl", "지능", add, "Flat"),
+  a("vit", "체력", add, "Flat"),
+  a("psi", "정신력", add, "Flat"),
+  a("hpmax", "HP MAX", add, "Flat"),
+  a("mpmax", "MP MAX", add, "Flat"),
+  a("str_inc", "힘 증가", add, "Percent"),
+  a("int_inc", "지능 증가", add, "Percent"),
 
-  defineAttr("dmg_inc", "데미지 증가", add, "Percent"),
-  defineAttr("cdmg_inc", "크리티컬 데미지 증가", add, "Percent"),
-  defineAttr("catk_inc", "크리티컬 공격력 증가", add, "Percent"),
-  defineAttr("dmg_add", "추가 데미지", add, "Percent"),
+  a("speed_atk", "공격속도", add, "Percent"),
+  a("speed_cast", "캐스팅속도", add, "Percent"),
+  a("speed_move", "이동속도", add, "Percent"),
 
-  defineAttr("eltype", "공격속성", reduce_eltype, "DearEltype"),
-  defineAttr("el_fire", "화속성 강화", add, "Flat"),
-  defineAttr("el_ice", "수속성 강화", add, "Flat"),
-  defineAttr("el_lght", "명속성 강화", add, "Flat"),
-  defineAttr("el_dark", "암속성 강화", add, "Flat"),
-  defineAttr("eldmg_fire", "화속성 추가 데미지", add, "Percent"),
-  defineAttr("eldmg_ice", "수속성 추가 데미지", add, "Percent"),
-  defineAttr("eldmg_lght", "명속성 추가 데미지", add, "Percent"),
-  defineAttr("eldmg_dark", "암속성 추가 데미지", add, "Percent"),
-  defineAttr("AddMaxEldmg", "속성 추가 데미지 (내 최대속성)", add, "Percent"),
-  defineAttr("DualTrigger", "듀얼 트리거", anyOf, "DualTrigger"),
+  a("crit_ph", "물리 크리티컬", add, "Flat"),
+  a("crit_mg", "마법 크리티컬", add, "Flat"),
+  a("crit_ph_pct", "물리 크리티컬 확률 증가", add, "Percent"),
+  a("crit_mg_pct", "마법 크리티컬 확률 증가", add, "Percent"),
+  a("Accu", "적중", add, "Flat"),
+  a("AccuPct", "적중 확률 증가", add, "Percent"),
+  a("Evd", "회피", add, "Flat"),
+  a("EvPct", "회피 확률 증가", add, "Percent"),
 
-  defineAttr("sk_inc", "스킬 공격력 증가", compound, "Percent"),
-  defineAttr("sk_inc_sum", "스킬 공격력 증가(단리합)", add, "Percent"),
-  defineAttr("sk_val", "스킬 공격력 증가", mul_object, "MapPercent"),
-  defineAttr("skb_add", "버프 수치 증가", add_object, "MapFlat"),
-  defineAttr("sk_hit", "타격 횟수 증가", add_object, "MapFlat"),
-  defineAttr("sk_lv", "스킬 레벨 증가", add_object, "MapFlat"),
-  defineAttr("sk_dur", "스킬 지속시간 증가", add_object, "MapFlat"),
-  defineAttr("sk_cool", "스킬 쿨타임 감소", add_object, "MapPercent"),
-  defineAttr("sk_chargeup_add", "스킬 충전시 배율 추가", add_object, "MapPercent"),
+  a("eltype", "공격속성", reduce_eltype, "DearEltype"),
+  a("el_fire", "화속성 강화", add, "Flat"),
+  a("el_ice", "수속성 강화", add, "Flat"),
+  a("el_lght", "명속성 강화", add, "Flat"),
+  a("el_dark", "암속성 강화", add, "Flat"),
+  a("DualTrigger", "듀얼 트리거", anyOf, "DualTrigger"),
+  a("res_fire", "화속성 저항", add, "Flat"),
+  a("res_ice",  "수속성 저항", add, "Flat"),
+  a("res_lght", "명속성 저항", add, "Flat"),
+  a("res_dark", "암속성 저항", add, "Flat"),
 
-  defineAttr("target_def", "적 방어력", add, "Flat"),
-  defineAttr("target_res", "적 모든속성 저항", add, "Flat"),
-  defineAttr("DefBreak", "적 방어력 감소", add, "Percent"),
+  a("dmg_inc", "데미지 증가", add, "Percent"),
+  a("cdmg_inc", "크리티컬 데미지 증가", add, "Percent"),
+  a("catk_inc", "크리티컬 공격력 증가", add, "Percent"),
+  a("dmg_add", "추가 데미지", add, "Percent"),
 
-  defineAttr("speed_atk", "공격속도", add, "Percent"),
-  defineAttr("speed_cast", "캐스팅속도", add, "Percent"),
-  defineAttr("speed_move", "이동속도", add, "Percent"),
+  a("eldmg_fire", "화속성 추가 데미지", add, "Percent"),
+  a("eldmg_ice", "수속성 추가 데미지", add, "Percent"),
+  a("eldmg_lght", "명속성 추가 데미지", add, "Percent"),
+  a("eldmg_dark", "암속성 추가 데미지", add, "Percent"),
+  a("AddMaxEldmg", "속성 추가 데미지 (내 최대속성)", add, "Percent"),
 
-  defineAttr("Accu", "적중", add, "Flat"),
-  defineAttr("AccuPct", "적중 확률 증가", add, "Percent"),
+  a("target_def", "적 방어력", add, "Flat"),
+  a("target_res", "적 모든속성 저항", add, "Flat"),
+  a("DefBreak", "적 방어력 감소", add, "Percent"),
+  a("TargetResDark", "적 암속성 저항 감소", add, "Flat"),
 
-  defineAttr("hpmax", "HP MAX", add, "Flat"),
-  defineAttr("mpmax", "MP MAX", add, "Flat"),
-  defineAttr("vit", "체력", add, "Flat"),
-  defineAttr("psi", "정신력", add, "Flat"),
+  a("dot", "상변데미지", concat, "DoT"),
+  a("sdinc_elect", "감전 데미지 증가", add, "Percent"),
+  a("sdinc_toxic", "중독 데미지 증가", add, "Percent"),
+  a("sdinc_bleed", "출혈 데미지 증가", add, "Percent"),
+  a("sdinc_ignite", "화상 데미지 증가", add, "Percent"),
 
-  defineAttr("def_ph", "물리 방어력", add, "Flat"),
-  defineAttr("def_mg", "마법 방어력", add, "Flat"),
-  defineAttr("def_ph_pct", "물리 방어력 증가", add, "Percent"),
-  defineAttr("def_mg_pct", "마법 방어력 증가", add, "Percent"),
-  
-  defineAttr("res_fire", "화속성 저항", add, "Flat"),
-  defineAttr("res_ice",  "수속성 저항", add, "Flat"),
-  defineAttr("res_lght", "명속성 저항", add, "Flat"),
-  defineAttr("res_dark", "암속성 저항", add, "Flat"),
+  a("sk_inc", "스킬 공격력 증가", compound, "Percent"),
+  a("sk_inc_sum", "스킬 공격력 증가(단리합)", add, "Percent"),
+  a("sk_lv", "스킬 레벨 증가", add_object, "MapFlat"),
+  a("tp_lv", "스킬 TP레벨 증가", add_object, "MapFlat"),
+  a("sk_val", "스킬 공격력 증가", mul_object, "MapPercent"),
+  a("skb_add", "버프 수치 증가", add_object, "MapFlat"),
+  a("sk_hit", "타격 횟수 증가", add_object, "MapFlat"),
+  a("sk_dur", "스킬 지속시간 증가", add_object, "MapFlat"),
+  a("sk_cool", "스킬 쿨타임 감소", add_object, "MapPercent"),
+  a("sk_cool_sec", "스킬 쿨타임 감소 (초)", add_object, "MapFlat"),
+  a("sk_chargeup_add", "스킬 충전시 배율 추가", add_object, "MapPercent"),
 
-  defineAttr("Evd", "회피", add, "Flat"),
-  defineAttr("EvPct", "회피 확률 증가", add, "Percent"),
-  defineAttr("Walk", "마을 이동속도 증가", add, "Percent")
+  a("moreMP", "스킬 MP 소모량", add_object, "MapPercent"),
+  a("consumeMP", "스킬 사용시 MP 소모", add_object, "MapPercent"),
+
+  a("Recool", "쿨타임 초기화", concat, "Recool"),
+
+  a("Enlight", "암흑의 시야 페널티 감소", Math.max, "Percent"),
+  a("Superarmor", "슈퍼아머", concat, "Superarmor"),
+
+  a("Walk", "마을 이동속도 증가", add, "Percent")
 
 ]
 

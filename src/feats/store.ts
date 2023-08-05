@@ -17,7 +17,7 @@ const migration = {
 }
 
 const persistedReducer = persistReducer({
-  key: "root",
+  key: "dfmview",
   version: 5, 
   storage,
   migrate: createMigrate(migration, { debug: false })
@@ -25,7 +25,8 @@ const persistedReducer = persistReducer({
 
 
 export const store = configureStore({
-  reducer: persistedReducer,
+  // reducer: persistedReducer,
+  reducer: v5reducer,
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware({
       serializableCheck: {

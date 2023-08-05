@@ -56,6 +56,35 @@ function SkillValue({ name, values = {}, percented = false }: SkillValueProps) {
 
 
 
+function DOTAttr({ name, factors }: { name: string, factors: DOTFactor[] }) {
+  return (
+    <>{factors.map(
+      ({ dotType, on = "공격 시", chance = 100, dur, cool = 0}) => 
+      <div key={name+"::"+(on)} className="AttrItem">
+        {on} {chance}% 확률로 {dur}초 동안 {dotType} 걺 {cool && `(쿨타임 ${cool}초)`}
+      </div>
+    )}</>
+  )
+}
+
+function RecoolAttr({ name, factors }: { name: string, factors: RecoolFactor[] }) {
+  return (
+    <>{factors.map(
+      ({ on = "던전에서", chance, selectSk, cooltime }) => 
+      <div key={name+"::"+(on)} className="AttrItem">
+        {on} {(chance <= 100) && <>{chance}% 확률로</>} {selectSk} 스킬의 쿨타임을 초기화 (쿨타임 {cooltime}초)
+      </div>
+    )}</>
+  )
+}
+
+function SuperarmorView({ name, factors }: { name: string, factors: string[] }) {
+  return (
+    <div className="AttrItem">{factors.join("/")} 슈퍼아머 적용</div>
+  )
+}
+
+
 export function AttrItem({ attrDef, value, useName = true }: { attrDef: AttrDef, value: any, useName?: boolean }) {
   if (!attrDef || !value || (value instanceof Array && value.length == 0) ) return null
   const { name, expression } = attrDef
@@ -66,6 +95,9 @@ export function AttrItem({ attrDef, value, useName = true }: { attrDef: AttrDef,
     case "Percent": return <OneValue name={name} percented value={value as number} useName={useName} />
     case "MapFlat": return <SkillValue name={name} values={value as Record<string, number>} />
     case "MapPercent": return <SkillValue name={name} percented values={value as Record<string, number>} />
+    case "DoT": return <DOTAttr name={name} factors={value} />
+    case "Recool": return <RecoolAttr name={name} factors={value} />
+    case "Superarmor": return <SuperarmorView name={name} factors={value}/>
   }
 }
 
@@ -77,6 +109,7 @@ export function SimpleBaseAttrView({ attrs }: { attrs: BaseAttrs | undefined | n
     {(Object.keys(attrs) as (keyof BaseAttrs)[]).map(attrKey => 
       <AttrItem key={attrKey} attrDef={attrDefs[attrKey]} value={attrs[attrKey]} />
     )}
+    
   </ErrorBoundary>
 }
 

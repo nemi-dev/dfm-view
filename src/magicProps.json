@@ -1,4 +1,44 @@
 {
+  "65/Epic/무기-고유": [
+    ["dmg_inc", 7], ["dmg_add", 7], ["Stat", 40],
+    ["el_fire", 9], ["el_ice", 9], ["el_lght", 9], ["el_dark", 9],
+    ["Atk", 16]
+  ],
+  "65/Epic/무기": [
+    ["Stat", 20],
+    ["Atk", 8],
+    ["speed_atk", 0.8], ["Accu", 54]
+  ],
+  "65/Epic/방어구-고유": [
+    ["Stat", 40],
+    ["Crit", 23]
+  ],
+  "65/Epic/방어구": [
+    ["Stat", 20],
+    ["Crit", 13],
+    ["speed_atk", 0.8], ["Accu", 54]
+  ],
+  "65/Epic/악세서리-고유": [
+    ["el_fire", 9], ["el_ice", 9], ["el_lght", 9], ["el_dark", 9],
+    ["Stat", 40]
+  ],
+  "65/Epic/악세서리": [
+    ["el_fire", 3], ["el_ice", 3], ["el_lght", 3], ["el_dark", 3],
+    ["Stat", 20],
+    ["speed_atk", 0.8], ["Accu", 54]
+  ],
+  "65/Epic/보조장비-고유": [
+    ["Stat", 40],
+    ["Atk", 16],
+    ["Crit", 52],
+    ["Accu", 60]
+  ],
+  "65/Epic/보조장비": [
+    ["Stat", 20],
+    ["Atk", 8],
+    ["Crit", 12],
+    ["speed_atk", 0.8], ["Accu", 54]
+  ],
   "60/Epic/무기-고유": [
     ["dmg_inc", 6], ["Stat", 37],
     ["el_fire", 8], ["el_ice", 8], ["el_lght", 8], ["el_dark", 8],

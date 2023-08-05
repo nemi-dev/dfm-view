@@ -90,19 +90,46 @@ declare type ItemValueDispatchType = ItemPositionDescriptor & {
 /** 스킬레벨이 정해지지 않았을 때 스킬 수치 (계수, 스탯증가 등) */
 declare type SkillValue = number | LinearValue
 
+
+/** 상변데미지를 발생시키는 단위조건 */
+declare interface DOTFactor {
+  /** 상변데미지 종류 */
+  dotType: "감전" | "중독" | "출혈" | "화상"
+
+  /** 상변데미지를 줄 조건 (없으면 "공격 시") */
+  on?: string
+
+  /** 상변데미지를 줄 조건을 만족했을 때, 상변데미지를 걸 확률 (%, 없으면 100) */
+  chance?: number
+
+  /** 상변데미지 지속시간 */
+  dur?: number
+
+  /** 뭐 계수겠지 */
+  value?: number
+
+  /** 해당 상변데미지 요소가 다시 적용 가능하기까지 쿨타임 [초] */
+  cool?: number
+}
+
+
+/** 스킬 쿨타임 초기화 효과 */
+declare interface RecoolFactor {
+  /** 쿨초를 발동시킬 조건 */
+  on?: string
+
+  /** 조건을 만족했을 때, 쿨초를 발동시킬 확률 */
+  chance?: number
+
+  /** 초기화할 스킬 선택 */
+  selectSk?: string
+
+  /** 이 쿨초 효과가 다시 적용되기까지의 쿨타임 (초) */
+  cooltime?: number
+}
+
 /** 아이템/아이템 세트/버프 스킬/패시브 스킬 등의 (항상 적용되는) 효과 */
 declare interface BaseAttrs {
-  /** 힘 */
-  strn?: number
-
-  /** 지능 */
-  intl?: number
-
-  /** 힘 증가 (%) */
-  str_inc?: number
-
-  /** 지능 증가 (%) */
-  int_inc?: number
 
   /** 물리 공격력 */
   atk_ph?: number
@@ -115,6 +142,57 @@ declare interface BaseAttrs {
 
   /** 마법 공격력 증가 (%) */
   atk_mg_inc?: number
+
+  /** 물리 방어력 */
+  def_ph?: number
+
+  /** 마법 방어력 */
+  def_mg?: number
+
+  /** 물리 방어력 (%) */
+  def_ph_pct?: number
+
+  /** 마법 방어력 (%) */
+  def_mg_pct?: number
+
+
+
+  /** 힘 */
+  strn?: number
+
+  /** 지능 */
+  intl?: number
+
+  /** 체력 */
+  vit?: number
+
+  /** 정신력 */
+  psi?: number
+
+  /** HP MAX (실적용 제외) */
+  hpmax?: number
+
+  /** MP MAX (실적용 제외) */
+  mpmax?: number
+
+  /** 힘 증가 (%) */
+  str_inc?: number
+
+  /** 지능 증가 (%) */
+  int_inc?: number
+
+
+
+  /** 공격 속도 +X% */
+  speed_atk?: number
+  
+  /** 캐스팅 속도 +X% */
+  speed_cast?: number
+
+  /** 이동 속도 +X% */
+  speed_move?: number
+
+
   
   /** 물리 크리티컬 */
   crit_ph?: number
@@ -128,17 +206,19 @@ declare interface BaseAttrs {
   /** 마법 크리티컬 확률 증가 (%) */
   crit_mg_pct?: number
 
-  /** 데미지 증가 (%) */
-  dmg_inc?: number
+  /** 적중 */
+  Accu?: number
 
-  /** 크리티컬 데미지 증가 [%] (암살복, 엘리신발 등) */
-  cdmg_inc?: number
+  /** 적중 확률 증가 (%) */
+  AccuPct?: number
 
-  /** 크리티컬 공격력 증가 [%] (버서커/이단심판관 버프, 암살단원의 칼날반지에 있는거) */
-  catk_inc?: number
+  /** 회피 */
+  Evd?: number
 
-  /** 추가 데미지 (%) */
-  dmg_add?: number
+  /** 회피 확률 증가 [%] */
+  EvPct?: number
+
+
 
   /** 속성 부여 */
   eltype?: Eltype[]
@@ -155,6 +235,34 @@ declare interface BaseAttrs {
   /** 암속성 강화 */
   el_dark?: number
 
+  /** 화속강과 명속강이 큰쪽으로 같아진다. (런처, 이단심판관) */
+  DualTrigger?: boolean
+
+  /** 화속성 저항 */
+  res_fire?: number
+
+  /** 수속성 저항 */
+  res_ice?: number
+
+  /** 명속성 저항 */
+  res_lght?: number
+
+  /** 암속성 저항 */
+  res_dark?: number
+
+
+  /** 데미지 증가 (%) */
+  dmg_inc?: number
+
+  /** 크리티컬 데미지 증가 [%] (암살복, 엘리신발 등) */
+  cdmg_inc?: number
+
+  /** 크리티컬 공격력 증가 [%] (버서커/이단심판관 버프, 암살단원의 칼날반지에 있는거) */
+  catk_inc?: number
+
+  /** 추가 데미지 (%) */
+  dmg_add?: number
+
   /** 화속성 추가 데미지 (%) */
   eldmg_fire?: number
 
@@ -170,35 +278,7 @@ declare interface BaseAttrs {
   /** 속성강화가 가장 높은 속성 추가 데미지 */
   AddMaxEldmg?: number
 
-  /** 이게 있으면 화속강과 명속강이 큰쪽으로 같아진다. (런처, 이단심판관) */
-  DualTrigger?: boolean
 
-  /** 스킬 공격력 증가 (%) */
-  sk_inc?: number
-
-  /** 단리 적용되는 (ex. 패시브 스킬) 스킬 공격력 증가 (%) */
-  sk_inc_sum?: number
-
-  /** 특정 스킬 공격력 증가(%) */
-  sk_val?: { [k: string]: number }
-
-  /** 특정 스킬의 버프 수치 증가 */
-  skb_add?: { [k: string]: number }
-
-  /** 스킬 1회 사용 시 타격횟수 증가 */
-  sk_hit?: { [k: string]: number }
-
-  /** 특정 스킬 레벨 증가 */
-  sk_lv?: { [k: string]: number }
-
-  /** 특정 스킬 지속시간 증가 */
-  sk_dur?: { [k: string]: number }
-
-  /** 특정 스킬 쿨타임 증가/감소 (%) */
-  sk_cool?: { [k: string]: number }
-
-  /** 특정 스킬의 충전시 공격력 배율 증가 (%) */
-  sk_chargeup_add?: { [k: string]: number }
 
   /** 적 방어력 변화 (내가 공격한 적 + 방어 감소 오라 모두 포함) */
   target_def?: number
@@ -209,62 +289,77 @@ declare interface BaseAttrs {
   /** 적 방어력 감소 (%) */
   DefBreak?: number
 
-  /** 공격 속도 +X% */
-  speed_atk?: number
+  /** 적 속성저항 변화 (암속성) */
+  TargetResDark? :number
+
+
+
+  /** 적에게 상변데미지를 줌 */
+  dot?: DOTFactor[]
+
+  /** 감전 데미지 증가 (%) */
+  sdinc_elect?: number
   
-  /** 캐스팅 속도 +X% */
-  speed_cast?: number
+  /** 중독 데미지 증가 (%) */
+  sdinc_toxic?: number
 
-  /** 이동 속도 +X% */
-  speed_move?: number
+  /** 출혈 데미지 증가 (%) */
+  sdinc_bleed?: number
 
-  /** 적중 */
-  Accu?: number
+  /** 화상 데미지 증가 (%) */
+  sdinc_ignite?: number
 
-  /** 적중 확률 증가 (%) */
-  AccuPct?: number
 
-  /** HP MAX (실적용 제외) */
-  hpmax?: number
 
-  /** MP MAX (실적용 제외) */
-  mpmax?: number
+  /** 스킬 공격력 증가 (%) */
+  sk_inc?: number
 
-  /** 체력 */
-  vit?: number
+  /** 단리 적용되는 (ex. 패시브 스킬) 스킬 공격력 증가 (%) */
+  sk_inc_sum?: number
 
-  /** 정신력 */
-  psi?: number
+  /** 특정 스킬 레벨 증가 */
+  sk_lv?: { [k: string]: number }
 
-  /** 물리 방어력 */
-  def_ph?: number
+  /** 특정 스킬의 TP 레벨 증가 */
+  tp_lv?: { [k: string]: number }
 
-  /** 마법 방어력 */
-  def_mg?: number
+  /** 특정 스킬 공격력 증가(%) */
+  sk_val?: { [k: string]: number }
 
-  /** 물리 방어력 (%) */
-  def_ph_pct?: number
+  /** 특정 스킬의 버프 수치 증가 */
+  skb_add?: { [k: string]: number }
 
-  /** 마법 방어력 (%) */
-  def_mg_pct?: number
+  /** 스킬 1회 사용 시 타격횟수 증가 */
+  sk_hit?: { [k: string]: number }
 
-  /** 화속성 저항 */
-  res_fire?: number
+  /** 특정 스킬 지속시간 증가 */
+  sk_dur?: { [k: string]: number }
 
-  /** 수속성 저항 */
-  res_ice?: number
+  /** 특정 스킬 쿨타임 증가/감소 (%) */
+  sk_cool?: { [k: string]: number }
 
-  /** 명속성 저항 */
-  res_lght?: number
+  /** 특정 스킬 쿨타임 증가/감소 (초) */
+  sk_cool_sec?: { [k: string]: number }
 
-  /** 암속성 저항 */
-  res_dark?: number
+  /** 특정 스킬의 충전시 공격력 배율 증가 (%) */
+  sk_chargeup_add?: { [k: string]: number }
 
-  /** 회피 */
-  Evd?: number
+  /** 특정 스킬의 MP 소모량 증가/감소 (%; 음수가 감소) */
+  moreMP?: { [k: string]: number }
 
-  /** 회피 확률 증가 [%] */
-  EvPct?: number
+  /** 특정 스킬 사용 시, 해당 퍼센트만큼 자신의 MP 감소 (%) */
+  consumeMP?: { [k: string]: number }
+
+  /** 특정 조건 만족 시 지정한 스킬 쿨타임 초기화 */
+  Recool?: RecoolFactor[]
+
+
+  
+  /** 암흑 효과의 시야 페널티 감소 [%] (심해, 다크홀 등) */
+  Enlight?: number
+
+  /** 특정 조건에서 슈퍼아머 적용 */
+  Superarmor?: string[]
 
   /** 마을 이동 속도 증가 [%] */
   Walk?: number
