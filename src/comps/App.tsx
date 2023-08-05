@@ -69,8 +69,8 @@ function App() {
   const [isModalOpen, setOpen] = useState(false)
   const [modalFrag, setModalFrag] = useState<JSX.Element>()
   const lastIDs = useAppSelector(state => state.SavedChars.IDs)
-  const rehydrated = store.getState()._persist?.rehydrated ?? true
-  // const rehydrated = true
+  // const rehydrated = store.getState()._persist?.rehydrated ?? true
+  const rehydrated = true
 
   const closeModal = useCallback(() => {
     setOpen(false)
