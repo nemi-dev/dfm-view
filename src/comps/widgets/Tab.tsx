@@ -10,16 +10,18 @@ const NavLinkStyle = styled.span<{ active: boolean }>`
   text-align: center;
   height: 36px;
   line-height: 36px;
-  flex-grow: 1;
+  /* flex-grow: 1; */
+  padding-inline: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
   border-top: 0px solid transparent;
   border-bottom: 0px solid transparent;
   transition-property: color, padding, border;
-  transition-duration: 0.2s;
+  transition-duration: 0.1s;
   transition-timing-function: linear;
   box-sizing: border-box;
+  white-space: nowrap;
 
   ${props => props.active? `
     color: var(--color-epic);

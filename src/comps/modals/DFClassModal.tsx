@@ -1,9 +1,9 @@
-import { useContext } from 'react'
+import { useCallback, useContext } from 'react'
 import styled from 'styled-components'
 
 import { useAppDispatch, useAppSelector } from '../../feats/hooks'
 import { selectDFClass, selectName } from '../../feats/selector/baseSelectors'
-import { SetMyDFClass, SetMyName } from '../../feats/slices/slicev5'
+import { SetDFClass, SetMyDFClass, SetMyName, SetName } from '../../feats/slices/slicev5'
 import { PortraitMode } from '../../feats/contexts'
 import { DFClassIcon } from '../widgets/Icons'
 
@@ -29,24 +29,25 @@ const dfclassOrder: DFClassName[] = [
   "크루세이더(남)", "인파이터", "와일드베인", "윈드시어",
 ]
 
-export function DFClassModal() {
+export function DFClassModal({ id }: { id: string | undefined }) {
   const dispatch = useAppDispatch()
-  const myClass = useAppSelector(selectDFClass)
-  const myName = useAppSelector(selectName)
+  const dfclass = useAppSelector(state => selectDFClass(state, id))
+  const dfcharName = useAppSelector(state => selectName(state, id))
   const portrait = useContext(PortraitMode)
+
   return (
     <div>
       <header>
         <h3>캐릭터/직업 설정하기</h3>
       </header>
       <div>
-        <DFClassIcon dfclassName={myClass?.name} />
+        <DFClassIcon dfclassName={dfclass?.name} />
       </div>
-      <DFCharNameInput type="text" maxLength={20} value={myName} onChange={ev => dispatch(SetMyName(ev.target.value))} />
+      <DFCharNameInput type="text" maxLength={20} value={dfcharName} onChange={ev => dispatch(SetName([id, ev.target.value]))} />
       <div className="ModalMenuScrollable">
       <DFClassLayout columns={portrait? 4 : 8}>
       {dfclassOrder.map((name, index) => 
-        <DFClassIcon key={name ?? `null${index}`} dfclassName={name} onClick={() => dispatch(SetMyDFClass(name))} />
+        <DFClassIcon key={name ?? `null${index}`} dfclassName={name} onClick={() => dispatch(SetDFClass([id, name]))} />
       )}
       </DFClassLayout>
       </div>

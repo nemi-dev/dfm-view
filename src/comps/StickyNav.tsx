@@ -107,24 +107,3 @@ function OutputZone() {
     <DamageOne name="스킬"><DamageOutput crit="mean" sk /></DamageOne>
   </OutputZoneStyle>
 }
-
-export function StickyNav() {
-  const portrait = useContext(PortraitMode)
-  const { openModal } = useContext(ModalContext)
-  const myName = useAppSelector(selectName)
-  const dfclass = useAppSelector(selectDFClass)
-  
-  return (
-    <StickyNavStyle>
-      <FirstRow>
-        <DFCharInfo>
-          <DFClassIcon dfclassName={dfclass?.name} onClick={() => openModal(<SavedCharsFragment />)} />
-          <span>{myName}</span>
-          <Edit className="Rarity_Epic" onClick={() => openModal(<DFClassModal />)} />
-        </DFCharInfo>
-        <OutputZone />
-      </FirstRow>
-      {portrait && <SecondRow />}
-    </StickyNavStyle>
-  )
-}

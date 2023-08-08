@@ -23,7 +23,7 @@
 
 .ItemName { align-self: center; }
 
-.Hovering {
+.Hovering, .Active {
   box-sizing: border-box;
   border-width: 1px;
   border-radius: 5px;
@@ -34,7 +34,7 @@
   transition-timing-function: linear;
   transition-property: background-color, border-color, color;
 
-  &:hover {
+  &:hover, &.Active {
     background-color: rgba($color: #ffae00, $alpha: 0.1);
     border-color: rgba($color: #ffd67e, $alpha: 1.0);
   }

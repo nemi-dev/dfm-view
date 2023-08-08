@@ -18,29 +18,31 @@ import { MiscScreen } from './Misc'
 import AppModal from './modals/index'
 import { ModalContext, ModalContextType } from '../feats/contexts'
 import { MyStat } from './MyStat'
-import { StickyNav } from './StickyNav'
 import { NavLink, Tab } from './widgets/Tab'
 import { Skill } from './Skill'
 import { ErrorBoundary } from 'react-error-boundary'
 import { CommonFallbackComponent } from './CommonFallbackComponent'
+import { Ventures } from './Ventures'
 
 
-function Navigator() {
+function MainNav() {
   const portrait = useContext(PortraitMode)
   if (!portrait)
   return (
-    <nav className="Navigator">
+    <nav className="MainNav">
+      <NavLink name="모험단">모험단</NavLink>
       <NavLink name="아이템">아이템</NavLink>
-      <NavLink name="봉인석">봉인석</NavLink>
+      {/* <NavLink name="봉인석">봉인석</NavLink> */}
       <NavLink name="기타">기타</NavLink>
       <NavLink name="자세히">자세히</NavLink>
     </nav>
   )
   else return (
-    <nav className="Navigator">
+    <nav className="MainNav">
+      <NavLink name="모험단">모험단</NavLink>
       <NavLink name="아이템">아이템</NavLink>
       <NavLink name="강화">강화</NavLink>
-      <NavLink name="봉인석">봉인석</NavLink>
+      {/* <NavLink name="봉인석">봉인석</NavLink> */}
       <NavLink name="기타">기타</NavLink>
       <NavLink name="자세히">자세히</NavLink>
       <NavLink name="스탯 조정">스탯 조정</NavLink>
@@ -51,9 +53,9 @@ function Navigator() {
 function Content() {
   return (
     <>
+      <Tab name="모험단"><Ventures /></Tab>
       <Tab name="아이템"><Equips /></Tab>
       <Tab name="강화"><Forge /></Tab>
-      <Tab name="봉인석"><Cracks /></Tab>
       <Tab name="기타"><MiscScreen /></Tab>
       <Tab name="자세히"><Detail /></Tab>
       <Tab name="스탯 조정"><MyStat /></Tab>
@@ -105,10 +107,9 @@ function App() {
       <AppModal isOpen={isModalOpen}/>
       <ErrorBoundary FallbackComponent={CommonFallbackComponent}>
       {lastIDs.length > 0 && rehydrated? <div className="App">
-        <StickyNav />
+        <MainNav />
         <div className="MainWrapper">
           <div className="LeftSide">
-            <Navigator />
             <Content />
           </div>
           <div className="RightSide">

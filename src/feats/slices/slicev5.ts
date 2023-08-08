@@ -125,6 +125,14 @@ export const dfSlice = createSlice({
       const dfch = selectDFChar(state)
       if (dfclassNames.includes(payload)) dfch.dfclass = payload
     },
+    SetName: (state, { payload: [id, name] }: PayloadAction<[string | undefined, string]>) => {
+      const dfch = selectDFChar(state, id)
+      dfch.name = name
+    },
+    SetDFClass: (state, { payload: [id, dfc] }: PayloadAction<[string|undefined, DFClassName]>) => {
+      const dfch = selectDFChar(state, id)
+      if (dfclassNames.includes(dfc)) dfch.dfclass = dfc
+    },
     SetMyLevel: (state, { payload }: PayloadAction<number>) => {
       const dfch = selectDFChar(state)
       dfch.level = payload
@@ -448,6 +456,8 @@ export const {
 
   SetMyName,
   SetMyDFClass,
+  SetName,
+  SetDFClass,
   SetMyLevel,
   SetMyAchieveLevel,
   SetMyAtkFixed,

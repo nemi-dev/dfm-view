@@ -22,10 +22,20 @@ label {
   @extend %no_selection;
 }
 
-nav.Navigator {
+nav.MainNav {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 2px 8px;
+  border-bottom: 1px solid rgba(127, 104, 72, 0.771);
+  background-color: rgba(44, 36, 33, 0.75);
+  backdrop-filter: blur(20px);
+  z-index: 5;
+
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
 
   -ms-overflow-style: none;  /* IE and Edge */
@@ -47,7 +57,7 @@ nav.Navigator {
 }
 
 @media (max-width: 999px) {
-  nav.Navigator {
+  nav.MainNav {
     overflow-x: scroll;
     flex-wrap: nowrap;
     align-items: normal;

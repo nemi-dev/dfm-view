@@ -140,11 +140,6 @@ function CharSelect({ saved, onClick }: CharSelectProps) {
   )
 }
 
-const SavedCharList = styled.div`
-  overflow-y: scroll;
-  height: 80cqh;
-`
-
 
 const SavedCharsFragmentLayout = styled.div`
   container-type: size;
@@ -157,6 +152,13 @@ const SavedCharsFragmentLayout = styled.div`
     padding: 4px;
   }
 `
+
+
+const SavedCharList = styled.div`
+  overflow-y: scroll;
+  height: 80cqh;
+`
+
 
 const CreatingSection = styled.div`
   display: flex;
