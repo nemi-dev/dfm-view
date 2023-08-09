@@ -19,11 +19,12 @@ function atx(is: "StatAll" | "Stat" | "Atk" | "Crit" | "El", val: number): BaseA
   }
 }, { primitive: true} )
 
-/** 중첩될 때 합연산되는 어떤 효과를 k배한다. "스킬 공격력 증가"는 사라지지만, 아직 스증이 "최대 x회 중첩"되는 아이템은 없다.  */
+/** 효과를 스칼라배한다. 이제 공허셋이 추가되어 스증도 합연산으로 반복된다. */
 export function scalarProduct(attr: BaseAttrs, k: number) {
   const copy: BaseAttrs = { }
   for (const key in attr) {
-    if (attrDefs[key as keyof BaseAttrs]?.reducer === add)
+    const reducer = attrDefs[key as keyof BaseAttrs]?.reducer
+    if (reducer === add || reducer === compound)
     // @ts-ignore
     copy[key] = attr[key] * k
   }
@@ -36,13 +37,14 @@ export function scalarProduct(attr: BaseAttrs, k: number) {
  * 아이템 옵션에 "최대 x중첩"이 없거나, `k` === 1이면 노드를 그대로 돌려받는다.
   */
 export function createCondyceAttr(parentName: string, node: ConditionalNode, repeat: number = 1): AttrSource {
+  const name = `${parentName}::${node.pick ?? "던전에서"}`
   if (node?.maxRepeat == null || repeat === 1) return {
-    name: `${parentName}::${node.pick ?? "던전에서"}`,
+    name,
     attrs: { ...node.attrs }
   }
   repeat = Math.min(node.maxRepeat, repeat)
   return {
-    name: `${parentName}::${node.pick ?? "던전에서"}`,
+    name,
     attrs: scalarProduct(node.attrs, repeat)
   }
 }
