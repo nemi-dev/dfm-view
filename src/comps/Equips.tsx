@@ -66,7 +66,7 @@ function Part({ part }: PartWideProps) {
   const item = useAppSelector(state => selectMainItem(state, undefined, part))
   const [detail, setDetail] = useState(false)
   return (
-    <div className="EquipSlot Bordered Hovering" style={{ "--equip_area": part }}>
+    <div className="EquipSlot Bordered Hovering" style={{ "--equip_area": part } as any}>
       <div className="EquipPartLayout">
         <ItemIcon item={item}
           onClick={() => openModal(<ItemSelect sel={part} />)}
@@ -98,7 +98,7 @@ function CreaturePart() {
   const green = useAppSelector(state => selectArtifact("Green")(state, undefined))
   const blue = useAppSelector(state => selectArtifact("Blue")(state, undefined))
   return (
-    <div className="EquipSlot Bordered Hovering" style={{ "--equip_area": "크리쳐" }}>
+    <div className="EquipSlot Bordered Hovering" style={{ "--equip_area": "크리쳐" } as any}>
       <div className="EquipPartLayout">
         <ItemIcon item={creature} onClick={() => openModal(<CreatureModal />)} />
         <div className="SlotHeading">
@@ -119,7 +119,7 @@ function CracksPart() {
   const item = useAppSelector(state => selectMainItem(state, undefined, "봉인석"))
   const spells = useAppSelector(state => selectDFChar(state, undefined).items.정수.map(getItem) )
   return (
-    <div className="EquipSlot Bordered Hovering" style={{ "--equip_area": "봉인석" }}>
+    <div className="EquipSlot Bordered Hovering" style={{ "--equip_area": "봉인석" } as any}>
       <div className="EquipPartLayout Cracks">
         <ItemIcon item={item} onClick={() => openModal(<CracksModal />)} />
         <div className="SlotHeading">

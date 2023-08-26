@@ -19,7 +19,7 @@ export function m3to4(state: V3._RootState & PersistedState) {
 
 export function m4to5(state: V4._RootState & PersistedState) {
 
-  return produce<V4._RootState, DFMRootState>(state, draft => {
+  return produce<V4._RootState, V5.V5State>(state, draft => {
     // My를 없애기
     delete draft.My
 
@@ -47,7 +47,7 @@ export function m4to5(state: V4._RootState & PersistedState) {
         Calibrate,
         } = saved.DFChar
       
-      const dfc: DFChar = {
+      const dfc: V5.DFChar = {
         id,
         TimeStamp: saved.TimeStamp,
         name, level, dfclass, achieveLevel, atkFixed,
