@@ -19,7 +19,7 @@ export function m3to4(state: V3._RootState & PersistedState) {
 
 export function m4to5(state: V4._RootState & PersistedState) {
 
-  return produce<V4._RootState, V5State>(state, draft => {
+  return produce<V4._RootState, DFMRootState>(state, draft => {
     // My를 없애기
     delete draft.My
 

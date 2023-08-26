@@ -14,6 +14,7 @@ import {
 import { accessParts, armorParts, oneEmblemParts } from '../items'
 import { LabeledNumberInput, OneClickButtonGroup, RadioGroup } from './widgets/Forms'
 import { RootState } from '../feats/store'
+import { EditEltype } from './MyStat'
 
 const selectMaxArmorUpgradeValue = createSelector(
   armorParts.map(part => (state: RootState, charID: RootState["currentID"]) => selectUpgradeValue(state, charID, part)),
@@ -58,7 +59,6 @@ export function EquipBatch() {
   }, [myAtype])
   return (
     <div className="EquipBatch">
-      <h4>장비 모두 설정</h4>
       <div className="EquipBatchLayout">
         <LabeledNumberInput label="방어구 강화보너스" value={armorUpgradeValue} onChange={v => {
           dispatch(SetMyArmorUpgradeAll(v))
@@ -78,6 +78,7 @@ export function EquipBatch() {
           values={["magicPropLeft", "magicPropFire", "magicPropIce", "magicPropLight", "magicPropDark"]}
           labels={["내 스탯", "화속강", "수속강", "명속강", "암속강"]}
         />
+        <EditEltype />
       </div>
     </div>
   )

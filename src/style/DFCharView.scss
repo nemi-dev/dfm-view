@@ -1,0 +1,84 @@
+.DFCharView {
+  background-color: rgba(0, 0, 0, 0.5);
+  min-height: 200px;
+  background-position: left top ;
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+
+  // display: flex;
+  // align-items: center;
+  // justify-content: center;
+  // flex-direction: column;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  align-items: stretch;
+
+  h3 {
+    margin-block: 4px;
+    color: white;
+  }
+
+  .KeyName {
+    font-size: 1rem;
+  }
+
+  .AttrValue {
+    font-size: 1.3rem;
+  }
+
+  .DamageGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+
+    .DamageOne {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+
+
+    }
+  }
+
+  @media screen and (max-width: 999px) {
+    font-size: 80%;
+    min-height: 140px;
+
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 6;
+
+    border-top: 1px solid rgba(127, 104, 72, 0.771);
+  
+
+    h3 {
+      font-size: 1rem;
+    }
+
+    .KeyName {
+      font-size: 0.8rem;
+    }
+
+    .AttrValue {
+      font-size: 1rem;
+    }
+  }
+}
+
+.OutputZone {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+  flex-wrap: wrap;
+  gap: 4px;
+
+
+  
+}

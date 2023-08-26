@@ -14,10 +14,6 @@ details summary::-webkit-details-marker {
   min-width: 360px;
 }
 
-.MainWrapper {
-  margin-inline: auto;
-}
-
 label {
   @extend %no_selection;
 }
@@ -47,14 +43,6 @@ nav.MainNav {
 
 }
 
-@media (min-width: 1000px) {
-  
-  .MainWrapper {
-    display: grid;
-    grid-template-columns: 1fr 480px;
-  }
-
-}
 
 @media (max-width: 999px) {
   nav.MainNav {

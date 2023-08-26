@@ -10,7 +10,7 @@ const NavLinkStyle = styled.span<{ active: boolean }>`
   text-align: center;
   height: 36px;
   line-height: 36px;
-  /* flex-grow: 1; */
+  flex-grow: 1;
   padding-inline: 1rem;
   display: flex;
   align-items: center;

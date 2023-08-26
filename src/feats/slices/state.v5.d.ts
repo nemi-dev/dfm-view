@@ -1,3 +1,5 @@
+declare namespace V5 {
+
 declare type ItemIdentifier = string | null | undefined
 
 /** @deprecated 이제 DFChar에 직접 들어간다. */
@@ -20,8 +22,17 @@ declare interface SelfState {
 
 }
 
-declare type EquipsGenericState<T> = Record<EquipPart, T>
-declare interface ItemsState extends EquipsGenericState<ItemIdentifier> {
+declare interface ItemsState {
+  무기: ItemIdentifier
+  상의: ItemIdentifier
+  하의: ItemIdentifier
+  머리어깨: ItemIdentifier
+  벨트: ItemIdentifier
+  신발: ItemIdentifier
+  팔찌: ItemIdentifier
+  목걸이: ItemIdentifier
+  반지: ItemIdentifier
+  보조장비: ItemIdentifier
   칭호: ItemIdentifier
   오라: ItemIdentifier
   무기아바타: ItemIdentifier
@@ -35,20 +46,60 @@ declare interface ItemsState extends EquipsGenericState<ItemIdentifier> {
   }
 }
 
-declare interface CardState extends EquipsGenericState<ItemIdentifier> {
+declare interface CardState {
+  무기: ItemIdentifier
+  상의: ItemIdentifier
+  하의: ItemIdentifier
+  머리어깨: ItemIdentifier
+  벨트: ItemIdentifier
+  신발: ItemIdentifier
+  팔찌: ItemIdentifier
+  목걸이: ItemIdentifier
+  반지: ItemIdentifier
+  보조장비: ItemIdentifier
   칭호: ItemIdentifier
 }
 
-declare interface EmblemState extends EquipsGenericState<EmblemSpec[]> {
+declare interface EmblemState {
+  무기: EmblemSpec[]
+  상의: EmblemSpec[]
+  하의: EmblemSpec[]
+  머리어깨: EmblemSpec[]
+  벨트: EmblemSpec[]
+  신발: EmblemSpec[]
+  팔찌: EmblemSpec[]
+  목걸이: EmblemSpec[]
+  반지: EmblemSpec[]
+  보조장비: EmblemSpec[]
   칭호: EmblemSpec[]
 }
 
-declare interface MagicPropsState extends EquipsGenericState<MagicPropsCareAbout[]> {
+declare interface MagicPropsState {
+  무기: MagicPropsCareAbout[]
+  상의: MagicPropsCareAbout[]
+  하의: MagicPropsCareAbout[]
+  머리어깨: MagicPropsCareAbout[]
+  벨트: MagicPropsCareAbout[]
+  신발: MagicPropsCareAbout[]
+  팔찌: MagicPropsCareAbout[]
+  목걸이: MagicPropsCareAbout[]
+  반지: MagicPropsCareAbout[]
+  보조장비: MagicPropsCareAbout[]
   봉인석: MagicPropsCareAbout[]
 }
 
-declare type EquipsUpState = EquipsGenericState<number>
-declare type SkillruneState = EquipsGenericState<string[]>
+declare interface UpgradeOrKaledoState {
+  무기: number
+  상의: number
+  하의: number
+  머리어깨: number
+  벨트: number
+  신발: number
+  팔찌: number
+  목걸이: number
+  반지: number
+  보조장비: number
+}
 
 declare interface MaterialState {
   상의: ArmorMaterial
@@ -58,7 +109,7 @@ declare interface MaterialState {
   신발: ArmorMaterial
 }
 
-declare type AvatarRarityState = Record<WearAvatarPart, WearAvatarRarity>
+declare type AvatarRarityState = { [k in WearAvatarPart]: WearAvatarRarity }
 
 declare interface TonicState {
   el_all: number
@@ -184,11 +235,8 @@ declare interface DFChar {
   cards: CardState
   emblems: EmblemState
   magicProps: MagicPropsState
-  upgradeValues: EquipsUpState
+  upgradeValues: UpgradeOrKaledoState
   materials: MaterialState
-  unlimitValues: EquipsUpState
-  skillrunes: SkillruneState
-
   avatars: AvatarRarityState
   guild: GuildState
   creatureValues: CreaturePropState
@@ -225,7 +273,7 @@ declare interface CustomSkillPreset {
   Skills: CustomSkillState
 }
 
-declare interface DFMRootState {
+declare interface V5State {
   currentID: string
 
   /** @deprecated 이제 Chars에 바로 접근한다. */
@@ -256,4 +304,6 @@ declare interface DFMRootState {
     byID: { [k: string]: CustomSkillPreset }
     IDs: string[]
   }
+}
+
 }

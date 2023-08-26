@@ -1,4 +1,5 @@
 import type { MouseEventHandler } from 'react'
+import "../../style/ItemName.scss"
 
 interface ItemNameProps {
   item: DFItem
@@ -8,9 +9,9 @@ interface ItemNameProps {
 }
 
 export function ItemName({ item, alt = "아이템 없음", className, onClick }: ItemNameProps) {
-  if (!item) return <span className="ItemName Empty">{alt}</span>
-  const { name, rarity } = item
   const classList = ["ItemName"]
+  if (!item) return <span className={[...classList, "Empty"].join(" ")}>{alt}</span>
+  const { name, rarity } = item
   if (rarity) classList.push("Rarity_" + rarity)
   if (className) classList.push(className)
   return (

@@ -1,0 +1,8 @@
+.ItemName {
+  align-self: center;
+
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+}

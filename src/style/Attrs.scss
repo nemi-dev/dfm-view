@@ -68,8 +68,8 @@ img.AttrIcon {
 
 .MyStat {
 
-  position: sticky;
-  top: calc(45px + 1rem);
+  // position: sticky;
+  // top: calc(45px + 1rem);
 
   .InputGroup label {
     flex-basis: 50px;
@@ -132,7 +132,10 @@ img.AttrIcon {
     font-size: 0.6rem;
     font-weight: 400;
     opacity: 0.6;
-    
+  }
+
+  @media screen and (max-width: 999px) {
+    display: none;
   }
 
 }

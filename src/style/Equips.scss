@@ -21,37 +21,84 @@
 
 .ItemIcon {
   --icon-size: var(--item-size, 64px) !important;
+
+  @media screen and (max-width: 999px) {
+    --icon-size: var(--item-size, 52px) !important;
+  }
 }
 
 .Card, .Artifact, .Spell {
   --icon-size: var(--card-size, 30px) !important;
-}
 
-@media screen and (max-width: 999px) {
-  .Equips .Emblem {
-    --emblem-size: 21px;
-
-    .EmblemLevel {
-      font-size: 0.75rem;
-    }
-  }
-  .ItemIcon {
-    --icon-size: var(--item-size, 52px) !important;
-  }
-  .Card {
+  @media screen and (max-width: 999px) {
     --icon-size: var(--card-size, 30px) !important;
   }
-  
 }
 
 
 
 .Equips {
-  .ItemName:hover {
-    cursor: pointer;
-    text-decoration: underline;
+
+  @media screen and (min-width: 1000px) {
+    display: grid;
+
+    grid-template-columns: 3fr 2fr;
+    // grid-template-rows: 3fr 2fr;
+  }
+
+  @media screen and (max-width: 999px) {
+
+    .Emblem {
+      --emblem-size: 24px;
+  
+      .EmblemLevel {
+        font-size: 0.75rem;
+      }
+    }
+
+    .PartAddons {
+      align-self: start !important;
+      display: flex;
+      align-items: flex-end;
+      flex-direction: row;
+    }
+  }
+
+}
+
+
+.EquipsArrayLayout {
+  display: grid;
+  align-items: stretch;
+  gap: 4px;
+
+  grid-template-areas:
+  "머리어깨  무기    크리쳐"
+  "상의     팔찌    봉인석"
+  "하의     목걸이   칭호"
+  "벨트     반지     오라"
+  "신발     보조장비  무기아바타"
+  ;
+
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: repeat(5, auto);
+
+  > .EquipSlot {
+    grid-area: var(--equip_area);
+  }
+
+
+  @media screen and (max-width: 999px) {
+  
+    gap: 0;
+    grid-template-columns: 3fr 3fr 2fr;
+
+    .ItemName {
+      display: none;
+    }
   }
 }
+
 
 
 
@@ -66,11 +113,14 @@
   }
 
   @media screen and (max-width: 999px) {
+    margin: -0.5px;
+
     .ItemIcon {
-      --item-size: 52px;
+      --item-size: 46px;
     }
+
     .SquareIcon.Card {
-      --card-size: 21px;
+      --card-size: 24px;
     }
   }
 
@@ -111,54 +161,55 @@
 
 }
 
-@media screen and (min-width: 1000px) {
 
-  .EquipPartLayout {
-    display: grid;
+.EquipPartLayout {
+  display: grid;
+  grid-template-areas: 
+  "im nm mgp"
+  "im xt mgp"
+  ;
+  grid-template-rows: auto auto auto;
+  grid-template-columns: auto 1fr auto;
+  
+  
+  .SquareIcon {
+    grid-area: im;
+  }
+  
+  .SlotHeading {
+    grid-area: nm; 
+  }
+
+  .PartAddons {
+    grid-area: xt;
+    align-self: end;
+    
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+  }
+
+  @media screen and (max-width: 999px) {
     grid-template-areas: 
-    "im nm mgp"
-    "im xt mgp"
+    "im xt xt"
+    "nm mgp mgp"
     ;
     grid-template-rows: auto auto auto;
     grid-template-columns: auto 1fr auto;
-    
-    
-    .SquareIcon {
-      grid-area: im;
-    }
-    
-    .SlotHeading {
-      grid-area: nm; 
-    }
 
-    .PartAddons {
-      grid-area: xt;
-      align-self: end;
-      
-      display: flex;
-      align-items: flex-end;
-      flex-wrap: wrap;
+    &.Cracks {
+      grid-template-areas: 
+      "im"
+      "mgp"
+      ;
+      grid-template-rows: auto auto;
+      grid-template-columns: auto;
     }
   }
+
+
 }
 
-@media screen and (max-width: 999px) {
-  .Equips {
-    .EquipPartLayout {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-  
-    }
-    .PartAddons {
-      display: flex;
-      align-items: flex-end;
-      flex-direction: row;
-    }
-  }
-  
-}
 
 
 .EquipBatchLayout {
@@ -188,21 +239,23 @@
 
 }
 
-
-.DF_Title {
-  .DF_Titles {
-    display: flex;
-    
-    .EquipPartLayout {
-      flex-grow: 1;
-    }
-  }
-}
-
-
 .CondContainerName {
   text-align: center;
   font-weight: 800;
   color: white;
   margin-block: 0.5rem;
+}
+
+
+
+.CrackSpells {
+  @media screen and (max-width: 999px) {
+    display: none!important;
+  }
+}
+
+.PartAddons .Artifact {
+  @media screen and (max-width: 999px) {
+    --icon-size: 24px !important;
+  }
 }

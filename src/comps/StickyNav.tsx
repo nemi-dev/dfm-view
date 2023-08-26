@@ -66,29 +66,6 @@ const DFCharInfo = styled.div`
   justify-content: start;
 `
 
-const OutputZoneStyle = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: start;
-  flex-wrap: wrap;
-  gap: 4px;
-  .DamageOne {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-  }
-  .KeyName {
-    font-size: 0.8rem;
-  }
-  @media screen and (max-width: 999px) {
-    .KeyName {
-      font-size: 0.6rem;
-    }
-  }
-`
 
 interface DamageOneProps {
   name: string
@@ -102,8 +79,8 @@ function DamageOne({ name, children }: React.PropsWithChildren<DamageOneProps>) 
 }
 
 function OutputZone() {
-  return <OutputZoneStyle className="OutputZone">
+  return <div className="OutputZone">
     <DamageOne name="평타"><DamageOutput crit="mean" /></DamageOne>
     <DamageOne name="스킬"><DamageOutput crit="mean" sk /></DamageOne>
-  </OutputZoneStyle>
+  </div>
 }
